@@ -11,7 +11,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
-<title>STREG — Alpha 3.32</title>
+<title>STREG — Alpha 3.33</title>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500;1,9..144,600&family=Inter:wght@400;500;600;700;800&family=Rajdhani:wght@600;700&family=Kalam:wght@400;700&family=Playfair+Display:wght@400;500;600;700&family=Baloo+2:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Permanent+Marker&family=Orbitron:wght@400;500;600;700&family=Cinzel:wght@400;500;600;700&family=Michroma&family=Anton&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <style>
@@ -1690,7 +1690,7 @@ html[data-tabcolors="on"] .tabbtn.active[data-color="moss"]::before{background:v
         <button class="btn-outline" id="tourBtn" style="margin-top:18px;">Vis introduktion igen</button>
         <button class="btn-outline" id="exportBtn">Eksportér mine data</button>
         <button class="btn-outline danger" id="resetBtn">Nulstil alt</button>
-        <p class="hint" style="display:block;text-align:center;margin:16px 0 20px;">STREG Alpha 3.32 · ingen reklamer, aldrig</p>
+        <p class="hint" style="display:block;text-align:center;margin:16px 0 20px;">STREG Alpha 3.33 · ingen reklamer, aldrig</p>
       </div>
     </div>
 
@@ -3185,7 +3185,7 @@ const Cloud = (function(){
       if(signOutBtn) signOutBtn.disabled = false;
       if(hadConflict){
         toast('Den Google-konto findes allerede som en STREG-konto — logger dig ind på den i stedet…', 4000);
-        setTimeout(function(){ client.auth.signInWithOAuth({ provider:'google' }); }, 1400);
+        setTimeout(function(){ client.auth.signInWithOAuth({ provider:'google', options:{ redirectTo: window.location.origin + window.location.pathname } }); }, 1400);
       }
       // fires again later when a magic-link click or Google redirect completes,
       // even though this same tab never explicitly re-called boot() -- guarded
@@ -3223,22 +3223,23 @@ const Cloud = (function(){
 
   async function sendMagicLink(email){
     if(!ready) return { error:'not-ready' };
+    const redirectTo = window.location.origin + window.location.pathname;
     try{
       if(wasSecuredBefore()){
         // this browser has already had a real account before -- almost certainly
         // signing back in rather than upgrading a fresh anonymous session, so skip
         // straight to a normal sign-in instead of an attempt that would just fail
-        const r = await client.auth.signInWithOtp({ email: email });
+        const r = await client.auth.signInWithOtp({ email: email, options: { emailRedirectTo: redirectTo } });
         if(r.error) throw r.error;
         return { ok:true, existing:true };
       }
-      const { error } = await client.auth.updateUser({ email: email });
+      const { error } = await client.auth.updateUser({ email: email }, { emailRedirectTo: redirectTo });
       if(error){
         // this email already belongs to a different, existing account -- linking
         // it to the current (possibly fresh, post-logout) session isn't possible,
         // so fall back to a normal sign-in link for that existing account instead
         if(/already (registered|linked|exists|associated|in use)/i.test(error.message || '')){
-          const r2 = await client.auth.signInWithOtp({ email: email });
+          const r2 = await client.auth.signInWithOtp({ email: email, options: { emailRedirectTo: redirectTo } });
           if(r2.error) throw r2.error;
           return { ok:true, existing:true };
         }
@@ -3253,13 +3254,14 @@ const Cloud = (function(){
 
   async function signInGoogle(){
     if(!ready) return { error:'not-ready' };
+    const redirectTo = window.location.origin + window.location.pathname;
     try{
       if(wasSecuredBefore()){
-        const { error } = await client.auth.signInWithOAuth({ provider:'google' });
+        const { error } = await client.auth.signInWithOAuth({ provider:'google', options: { redirectTo: redirectTo } });
         if(error) throw error;
         return { ok:true };
       }
-      const { error } = await client.auth.linkIdentity({ provider:'google' });
+      const { error } = await client.auth.linkIdentity({ provider:'google', options: { redirectTo: redirectTo } });
       if(error) throw error;
       return { ok:true }; // browser navigates away to Google before this resolves, on success
     }catch(e){
