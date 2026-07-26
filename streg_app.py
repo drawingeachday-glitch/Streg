@@ -15,7 +15,7 @@ HTML = r"""<!DOCTYPE html>
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
-<title>STREG — Alpha 3.32</title>
+<title>STREG — Alpha 3.35</title>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500;1,9..144,600&family=Inter:wght@400;500;600;700;800&family=Rajdhani:wght@600;700&family=Kalam:wght@400;700&family=Playfair+Display:wght@400;500;600;700&family=Baloo+2:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Permanent+Marker&family=Orbitron:wght@400;500;600;700&family=Cinzel:wght@400;500;600;700&family=Michroma&family=Anton&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <style>
@@ -61,6 +61,51 @@ HTML = r"""<!DOCTYPE html>
   --shadow-l:0 20px 48px -12px rgba(0,0,0,.6);
   --sheet:#1A2429;
 }
+
+/* ===================================================================
+   LAYOUT MODE: MINIMAL -- an alternate, calmer visual language,
+   researched from Apple's current Liquid Glass / HIG motion guidance.
+   Layers on top of whichever color theme is active; only spacing,
+   depth, borders, motion timing, and information density change.
+   =================================================================== */
+[data-layout="minimal"]{
+  --r-s:14px; --r-m:20px; --r-l:27px; --r-xl:34px;
+  --glide:cubic-bezier(.32,.72,0,1); /* critically-damped, Apple-style settle -- no overshoot */
+  --line:transparent; --line-2:rgba(22,36,43,.07);
+  --shadow-s:0 1px 3px rgba(22,36,43,.05);
+  --shadow-m:0 6px 20px -6px rgba(22,36,43,.10);
+  --shadow-l:0 16px 40px -10px rgba(22,36,43,.16);
+}
+[data-layout="minimal"][data-theme="dark"]{
+  --line:transparent; --line-2:rgba(255,255,255,.09);
+  --shadow-s:0 1px 3px rgba(0,0,0,.25);
+  --shadow-m:0 6px 20px -6px rgba(0,0,0,.4);
+  --shadow-l:0 16px 40px -10px rgba(0,0,0,.55);
+}
+/* Chrome (topbar) becomes a translucent floating layer with content
+   scrolling underneath, instead of an opaque bar with a hard rule --
+   the core Liquid Glass pattern, reserved for navigation only. */
+[data-layout="minimal"] .topbar{
+  background:color-mix(in srgb, var(--card) 72%, transparent);
+  backdrop-filter:blur(20px) saturate(180%);
+  -webkit-backdrop-filter:blur(20px) saturate(180%);
+  border-bottom:1px solid rgba(127,127,127,.09);
+  box-shadow:none;
+}
+/* Cards: spacing and shadow carry hierarchy instead of borders */
+[data-layout="minimal"] .card{padding:19px 20px;margin-bottom:14px;}
+[data-layout="minimal"] .content{padding:8px 20px 20px;}
+/* Hero: one clear focal point, not several competing motions at once */
+[data-layout="minimal"] .hero{padding:28px 24px 22px;}
+[data-layout="minimal"] .hero-glow.two{display:none;}
+[data-layout="minimal"] .hero-glow{animation-duration:11s;opacity:.55;}
+[data-layout="minimal"] .flame{animation-duration:2.6s;}
+[data-layout="minimal"] .streak-num{letter-spacing:-.02em;text-shadow:0 4px 20px rgba(224,138,60,.22);}
+/* Capture card: a calm invitation, not a dashed instructional box */
+[data-layout="minimal"] .capture{border-style:solid;border-width:1px;border-color:var(--line-2);}
+[data-layout="minimal"] .cap-icon{border-color:var(--line-2);}
+[data-layout="minimal"] .btn:active{transition-duration:.1s;}
+[data-layout="minimal"] .date-pill{border-color:transparent;background:rgba(127,127,127,.1);}
 
 /* ===================================================================
    THEME: LIQUID GLASS -- Apple-style translucent material.
@@ -284,13 +329,6 @@ button{font-family:var(--font-body);color:inherit;text-transform:inherit;}
 }
 .topbar-stat b{color:var(--ink);font-weight:800;}
 #topStreakWrap b{color:var(--amber);}
-.topbar-gear{
-  background:var(--paper-2);border:1px solid var(--line);border-radius:50%;
-  width:32px;height:32px;display:flex;align-items:center;justify-content:center;
-  font-size:15px;cursor:pointer;transition:transform .2s var(--spring);flex-shrink:0;
-  padding:0;
-}
-.topbar-gear:active{transform:scale(.88) rotate(35deg);}
 
 .content{flex:1;overflow-y:auto;padding:6px 18px 18px;-webkit-overflow-scrolling:touch;}
 .content::-webkit-scrollbar{display:none;}
@@ -669,6 +707,26 @@ html[data-tabcolors="on"] .tabbtn.active[data-color="moss"]::before{background:v
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
 /* ============ MODAL / SHEET ============ */
+.info-btn{
+  display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;
+  width:18px;height:18px;border-radius:50%;border:none;background:none;padding:0;
+  color:var(--ink-soft);cursor:pointer;vertical-align:-4px;
+}
+.info-btn:active{transform:scale(.85);}
+.info-popup{
+  position:fixed;z-index:9800;max-width:250px;background:var(--ink);color:#FBF8F2;
+  font-size:12px;line-height:1.5;padding:11px 13px;border-radius:var(--r-s);
+  box-shadow:var(--shadow-l);opacity:0;transform:translateY(4px) scale(.96);
+  pointer-events:none;transition:opacity .18s var(--glide),transform .18s var(--glide);
+}
+.info-popup.open{opacity:1;transform:none;pointer-events:auto;}
+.info-popup-arrow{
+  position:absolute;top:-5px;left:16px;width:10px;height:10px;background:var(--ink);
+  transform:rotate(45deg);border-radius:2px;
+}
+[data-theme="dark"] .info-popup{background:#F0EDE6;color:#16242B;}
+[data-theme="dark"] .info-popup-arrow{background:#F0EDE6;}
+
 .scrim{position:fixed;inset:0;background:rgba(10,16,18,.62);backdrop-filter:blur(6px);z-index:9700;display:none;align-items:center;justify-content:center;padding:22px;}
 .scrim.open{display:flex;animation:lbIn .28s ease;}
 .modal{
@@ -1242,7 +1300,6 @@ html[data-tabcolors="on"] .tabbtn.active[data-color="moss"]::before{background:v
         <span class="topbar-stat" id="topCoinsWrap"><svg class="icn" width="12" height="12" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.6"/><path d="M12 7.2v9.6M9.3 9.6c0-1.1 1.1-1.8 2.7-1.8s2.7.7 2.7 1.7c0 2.4-5.4 1-5.4 3.4 0 1 1.1 1.8 2.7 1.8s2.7-.7 2.7-1.8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg> <b id="topCoins">0</b></span>
       </div>
     </div>
-    <button class="topbar-gear" id="topGear" aria-label="Indstillinger"><svg class="icn" width="16" height="16" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.6"/><path d="M12 3.5v2.4M12 18.1v2.4M20.5 12h-2.4M5.9 12H3.5M17.8 6.2l-1.7 1.7M7.9 16.1l-1.7 1.7M17.8 17.8l-1.7-1.7M7.9 7.9 6.2 6.2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
   </div>
   <div class="content">
 
@@ -1299,13 +1356,7 @@ html[data-tabcolors="on"] .tabbtn.active[data-color="moss"]::before{background:v
     <!-- ============ SHOP ============ -->
     <div class="tab-content" id="tab-shop">
       <div class="brandrow">
-        <h2 style="font-size:21px;">Butik</h2>
-        <div class="date-pill" id="shopCoins">0 <svg class="icn" width="13" height="13" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.6"/><path d="M12 7.2v9.6M9.3 9.6c0-1.1 1.1-1.8 2.7-1.8s2.7.7 2.7 1.7c0 2.4-5.4 1-5.4 3.4 0 1 1.1 1.8 2.7 1.8s2.7-.7 2.7-1.8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></div>
-      </div>
-
-      <div class="shop-hero">
-        <div class="shop-hero-label">Dine mønter</div>
-        <div class="shop-hero-coins" id="shopHeroCoins">0 <svg class="icn" width="26" height="26" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.6"/><path d="M12 7.2v9.6M9.3 9.6c0-1.1 1.1-1.8 2.7-1.8s2.7.7 2.7 1.7c0 2.4-5.4 1-5.4 3.4 0 1 1.1 1.8 2.7 1.8s2.7-.7 2.7-1.8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></div>
+        <h2 style="font-size:21px;">Butik <button class="info-btn" data-info="Alt her er kosmetisk — intet giver dig fordele udover streg-fryseren."><svg viewBox="0 0 24 24" fill="none" width="16" height="16"><circle cx="12" cy="12" r="9.5" stroke="currentColor" stroke-width="1.5"/><path d="M12 11v6M12 7.5v.01" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button></h2>
       </div>
 
       <div class="shop-subtabs" id="shopSubtabs">
@@ -1326,8 +1377,7 @@ html[data-tabcolors="on"] .tabbtn.active[data-color="moss"]::before{background:v
         <div class="shop-freeze-card">
           <div class="shop-freeze-icon"><svg class="icn" width="30" height="30" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><path d="M12 2.5v19M4 7l16 10M20 7 4 17M12 8.5l-2.2-1.3M12 8.5l2.2-1.3M12 15.5l-2.2 1.3M12 15.5l2.2 1.3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></div>
           <div class="shop-freeze-body">
-            <div class="shop-freeze-title">Beskyt din streg</div>
-            <div class="shop-freeze-sub">Misser du en dag, bruges en fryser automatisk, så din streg ikke nulstilles.</div>
+            <div class="shop-freeze-title">Beskyt din streg <button class="info-btn" data-info="Misser du en dag, bruges en fryser automatisk, så din streg ikke nulstilles."><svg viewBox="0 0 24 24" fill="none" width="16" height="16"><circle cx="12" cy="12" r="9.5" stroke="currentColor" stroke-width="1.5"/><path d="M12 11v6M12 7.5v.01" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button></div>
           </div>
           <div style="text-align:right;">
             <div class="shop-freeze-count" id="shopFreezeCount">3</div>
@@ -1383,8 +1433,6 @@ html[data-tabcolors="on"] .tabbtn.active[data-color="moss"]::before{background:v
         </div>
         <div class="shop-grid stagger" id="shopFontsExclusive"></div>
       </div>
-
-      <p class="hint" style="display:block;text-align:center;margin:6px 0 20px;">Alt her er kosmetisk — intet giver dig fordele udover streg-fryseren.</p>
     </div>
 
     <!-- ============ MAP ============ -->
@@ -1398,20 +1446,14 @@ html[data-tabcolors="on"] .tabbtn.active[data-color="moss"]::before{background:v
         <button class="map-btn on" id="followBtn"><svg class="icn" width="14" height="14" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><path d="M12 21.5s-6.2-5.8-6.2-10.5A6.2 6.2 0 0 1 18.2 11c0 4.7-6.2 10.5-6.2 10.5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><circle cx="12" cy="10.7" r="2.1" stroke="currentColor" stroke-width="1.6"/></svg> Følg mig</button>
         <button class="map-btn" id="fitBtn"><svg class="icn" width="14" height="14" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><path d="M9 4 4 6v14l5-2 6 2 5-2V4l-5 2-6-2Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M9 4v14M15 6v14" stroke="currentColor" stroke-width="1.3"/></svg> Vis alle</button>
       </div>
-      <div class="legend">
-        <div class="legend-item"><span class="legend-dot" style="background:#2C7BE5;"></span>Dig live</div>
-        <div class="legend-item"><span class="legend-dot" style="background:var(--brick);"></span>Optaget zone</div>
-        <div class="legend-item"><span class="legend-dot" style="background:var(--moss);"></span>Dit billede</div>
-      </div>
-      <p class="hint" id="gpsStatus" style="display:block;margin-bottom:6px;">GPS: starter…</p>
-      <p class="hint" style="display:block;">Tip: tryk på kortet for at gemme et test-sted.</p>
+      <p class="hint" id="gpsStatus" style="display:none;">GPS: starter…</p>
     </div>
 
     <!-- ============ CHALLENGES ============ -->
     <div class="tab-content" id="tab-challenges">
       <div class="brandrow">
         <h2 style="font-size:21px;">Challenges</h2>
-        <div class="date-pill" id="chCoins">0 <svg class="icn" width="13" height="13" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.6"/><path d="M12 7.2v9.6M9.3 9.6c0-1.1 1.1-1.8 2.7-1.8s2.7.7 2.7 1.7c0 2.4-5.4 1-5.4 3.4 0 1 1.1 1.8 2.7 1.8s2.7-.7 2.7-1.8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></div>
+        <button class="btn-chip" id="rerollBtn"><svg class="icn" width="14" height="14" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><path d="M3.5 7h3.3L15 17h5.5M17 6.5h3.5V10M3.5 17h3.3L11 11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="m17.5 4 3 2.5-3 2.5M17.5 20l3-2.5-3-2.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Reroll</button>
       </div>
 
       <div class="ch-subtabs" id="challengeSubtabs">
@@ -1421,10 +1463,6 @@ html[data-tabcolors="on"] .tabbtn.active[data-color="moss"]::before{background:v
       </div>
 
       <div class="ch-pane on" id="pane-ch-daily">
-        <div class="toolbar">
-          <p class="hint">Nulstilles ved midnat · reroll er gratis</p>
-          <button class="btn-chip" id="rerollBtn"><svg class="icn" width="14" height="14" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><path d="M3.5 7h3.3L15 17h5.5M17 6.5h3.5V10M3.5 17h3.3L11 11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="m17.5 4 3 2.5-3 2.5M17.5 20l3-2.5-3-2.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Reroll</button>
-        </div>
         <div id="challengeList" class="stagger"></div>
       </div>
 
@@ -1551,18 +1589,6 @@ html[data-tabcolors="on"] .tabbtn.active[data-color="moss"]::before{background:v
 
       <!-- ---- PANE: SETTINGS ---- -->
       <div class="subpane" id="pane-settings">
-        <p class="eyebrow" style="margin:0 0 8px;">Sky</p>
-        <div class="set-list" style="margin-bottom:18px;">
-          <div class="set-row">
-            <div class="set-label">
-              <span id="cloudStatusText">Forbinder…</span>
-              <span class="set-sub" id="cloudSub">Dine data synkroniseres automatisk i baggrunden</span>
-            </div>
-            <span id="cloudDot" style="width:11px;height:11px;border-radius:50%;background:var(--ink-soft);flex-shrink:0;transition:background .3s;"></span>
-          </div>
-        </div>
-        <button class="btn-outline" id="cloudSyncBtn" style="margin-top:-8px;margin-bottom:18px;"><svg class="icn" width="14" height="14" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><path d="M7.5 18a4 4 0 0 1-.5-8 5 5 0 0 1 9.6-1.6A4.2 4.2 0 0 1 17 18H7.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg> Synkronisér nu</button>
-
         <p class="eyebrow" style="margin:0 0 8px;">Konto</p>
         <div id="acctSecured" style="display:none;margin-bottom:10px;" class="set-list">
           <div class="set-row">
@@ -1627,6 +1653,14 @@ html[data-tabcolors="on"] .tabbtn.active[data-color="moss"]::before{background:v
           </button>
         </div>
         <p class="hint" style="display:block;margin:-10px 0 16px;"><svg class="icn" width="12" height="12" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><rect x="5.5" y="10.5" width="13" height="9" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg> Premium-temaer købes i Butikken</p>
+
+        <p class="eyebrow" style="margin:0 0 8px;">Layout</p>
+        <div class="set-list" style="margin-bottom:16px;">
+          <div class="set-row">
+            <div class="set-label"><span>Visning</span><span class="set-sub">Minimalistisk giver mere luft og roligere bevægelse</span></div>
+            <div class="seg" id="setLayoutMode"><button data-v="normal">Normal</button><button data-v="minimal">Minimal</button></div>
+          </div>
+        </div>
 
         <p class="eyebrow" style="margin:0 0 8px;">Indstillinger</p>
         <div class="set-list">
@@ -1694,7 +1728,7 @@ html[data-tabcolors="on"] .tabbtn.active[data-color="moss"]::before{background:v
         <button class="btn-outline" id="tourBtn" style="margin-top:18px;">Vis introduktion igen</button>
         <button class="btn-outline" id="exportBtn">Eksportér mine data</button>
         <button class="btn-outline danger" id="resetBtn">Nulstil alt</button>
-        <p class="hint" style="display:block;text-align:center;margin:16px 0 20px;">STREG Alpha 3.32 · ingen reklamer, aldrig</p>
+        <p class="hint" style="display:block;text-align:center;margin:16px 0 20px;">STREG Alpha 3.35 · ingen reklamer, aldrig</p>
       </div>
     </div>
 
@@ -1783,6 +1817,8 @@ html[data-tabcolors="on"] .tabbtn.active[data-color="moss"]::before{background:v
 </div>
 
 <!-- ============ MODAL ============ -->
+<div class="info-popup" id="infoPopup"><div class="info-popup-arrow"></div><div id="infoPopupText"></div></div>
+
 <div class="scrim" id="scrim">
   <div class="modal" id="modal">
     <div class="modal-rays" id="modalRays"></div>
@@ -1918,7 +1954,7 @@ const DEFAULTS = {
   settings: {
     sound: true, vibe: true, minDist: 50, cooldownDays: 30,
     habit: '', mapTheme: 'street', dark: false, style: 'nature',
-    tabColors: true, font: 'default',
+    tabColors: true, font: 'default', layoutMode: 'normal',
   },
 };
 
@@ -1973,6 +2009,36 @@ function toast(msg, ms){
   clearTimeout(toast._h);
   toast._h = setTimeout(function(){ t.classList.remove('show'); }, ms || 2600);
 }
+
+// Reusable "blue circle" info popup: any button with class="info-btn" and a
+// data-info="..." attribute gets a tap-to-reveal explanation, anchored below
+// the button. One handler covers every instance anywhere in the app.
+function showInfoPopup(btn){
+  const popup = $('infoPopup');
+  $('infoPopupText').textContent = btn.dataset.info || '';
+  const rect = btn.getBoundingClientRect();
+  const popupWidth = 250;
+  const left = Math.max(10, Math.min(rect.left - 8, window.innerWidth - popupWidth - 26));
+  popup.style.left = left + 'px';
+  popup.style.top = (rect.bottom + 8) + 'px';
+  popup.querySelector('.info-popup-arrow').style.left = Math.max(10, rect.left - left + 4) + 'px';
+  popup.classList.add('open');
+  popup._openFor = btn;
+}
+function hideInfoPopup(){
+  $('infoPopup').classList.remove('open');
+  $('infoPopup')._openFor = null;
+}
+document.addEventListener('click', function(e){
+  const btn = e.target.closest('.info-btn');
+  const popup = $('infoPopup');
+  if(btn){
+    e.stopPropagation();
+    if(popup._openFor === btn){ hideInfoPopup(); } else { SFX.pop(); showInfoPopup(btn); }
+    return;
+  }
+  if(!e.target.closest('#infoPopup')) hideInfoPopup();
+});
 
 function vibrate(p){ if(S.settings.vibe && navigator.vibrate){ try{ navigator.vibrate(p); }catch(e){} } }
 
@@ -2779,8 +2845,6 @@ const Shop = (function(){
   }
 
   function render(){
-    $('shopCoins').innerHTML = S.coins + ' ' + icon('coin',13);
-    $('shopHeroCoins').innerHTML = S.coins + ' ' + icon('coin',26);
     $('shopFreezeCount').textContent = S.freezes;
     $('shopFreezeMax').textContent = 'maks. ' + FREEZE_MAX;
     const buyBtn = $('shopBuyFreeze');
@@ -2849,7 +2913,6 @@ function renderAll(){
   countTo($('pCoins'), S.coins, 500);
   countTo($('pXp'), S.xp, 700);
 
-  $('chCoins').innerHTML = S.coins + ' ' + icon('coin',13);
   $('mapCount').textContent = S.photos.length + (S.photos.length === 1 ? ' sted' : ' steder');
   $('galCount').textContent = S.photos.length + (S.photos.length === 1 ? ' billede' : ' billeder');
   $('capHint').textContent = 'Find et sted mindst ' + S.settings.minDist + ' m fra dine tidligere';
@@ -3189,7 +3252,7 @@ const Cloud = (function(){
       if(signOutBtn) signOutBtn.disabled = false;
       if(hadConflict){
         toast('Den Google-konto findes allerede som en STREG-konto — logger dig ind på den i stedet…', 4000);
-        setTimeout(function(){ client.auth.signInWithOAuth({ provider:'google' }); }, 1400);
+        setTimeout(function(){ client.auth.signInWithOAuth({ provider:'google', options:{ redirectTo: window.location.origin + window.location.pathname } }); }, 1400);
       }
       // fires again later when a magic-link click or Google redirect completes,
       // even though this same tab never explicitly re-called boot() -- guarded
@@ -3227,22 +3290,23 @@ const Cloud = (function(){
 
   async function sendMagicLink(email){
     if(!ready) return { error:'not-ready' };
+    const redirectTo = window.location.origin + window.location.pathname;
     try{
       if(wasSecuredBefore()){
         // this browser has already had a real account before -- almost certainly
         // signing back in rather than upgrading a fresh anonymous session, so skip
         // straight to a normal sign-in instead of an attempt that would just fail
-        const r = await client.auth.signInWithOtp({ email: email });
+        const r = await client.auth.signInWithOtp({ email: email, options: { emailRedirectTo: redirectTo } });
         if(r.error) throw r.error;
         return { ok:true, existing:true };
       }
-      const { error } = await client.auth.updateUser({ email: email });
+      const { error } = await client.auth.updateUser({ email: email }, { emailRedirectTo: redirectTo });
       if(error){
         // this email already belongs to a different, existing account -- linking
         // it to the current (possibly fresh, post-logout) session isn't possible,
         // so fall back to a normal sign-in link for that existing account instead
         if(/already (registered|linked|exists|associated|in use)/i.test(error.message || '')){
-          const r2 = await client.auth.signInWithOtp({ email: email });
+          const r2 = await client.auth.signInWithOtp({ email: email, options: { emailRedirectTo: redirectTo } });
           if(r2.error) throw r2.error;
           return { ok:true, existing:true };
         }
@@ -3257,13 +3321,14 @@ const Cloud = (function(){
 
   async function signInGoogle(){
     if(!ready) return { error:'not-ready' };
+    const redirectTo = window.location.origin + window.location.pathname;
     try{
       if(wasSecuredBefore()){
-        const { error } = await client.auth.signInWithOAuth({ provider:'google' });
+        const { error } = await client.auth.signInWithOAuth({ provider:'google', options: { redirectTo: redirectTo } });
         if(error) throw error;
         return { ok:true };
       }
-      const { error } = await client.auth.linkIdentity({ provider:'google' });
+      const { error } = await client.auth.linkIdentity({ provider:'google', options: { redirectTo: redirectTo } });
       if(error) throw error;
       return { ok:true }; // browser navigates away to Google before this resolves, on success
     }catch(e){
@@ -3765,12 +3830,6 @@ const Chat = (function(){
   };
 })();
 
-$('cloudSyncBtn').addEventListener('click', function(){
-  SFX.pop();
-  toast('Synkroniserer med skyen…');
-  Cloud.syncNow();
-});
-
 // quiet background sync -- no toast, just keeps the Sky status current.
 // Manual "Synkronisér nu" stays for when someone wants an immediate, visible check.
 setInterval(function(){
@@ -3891,7 +3950,6 @@ const MapView = (function(){
       this.setTheme(S.settings.mapTheme);
       layer = L.layerGroup().addTo(map);
       map.on('dragstart', function(){ MapView.setFollow(false); });
-      map.on('click', function(e){ saveSpot(e.latlng.lat, e.latlng.lng, true); });
       S.photos.forEach(drawPhoto);
       Geo.onUpdate(function(p){
         if(!ready) return;
@@ -4826,6 +4884,7 @@ const Settings = (function(){
     const style = S.settings.style || 'nature';
     document.documentElement.setAttribute('data-theme', S.settings.dark ? 'dark' : 'light');
     document.documentElement.setAttribute('data-style', style);
+    document.documentElement.setAttribute('data-layout', S.settings.layoutMode || 'normal');
     document.documentElement.setAttribute('data-tabcolors', S.settings.tabColors ? 'on' : 'off');
     if(S.settings.font && S.settings.font !== 'default'){
       document.documentElement.setAttribute('data-font', S.settings.font);
@@ -4845,6 +4904,7 @@ const Settings = (function(){
     seg($('setDist'), S.settings.minDist);
     seg($('setCool'), S.settings.cooldownDays);
     seg($('setMapTheme'), S.settings.mapTheme);
+    seg($('setLayoutMode'), S.settings.layoutMode || 'normal');
     $('setHabit').value = S.settings.habit || '';
     document.querySelectorAll('.theme-swatch').forEach(function(b){
       b.classList.toggle('on', b.dataset.style === (S.settings.style || 'nature'));
@@ -4935,6 +4995,13 @@ const Settings = (function(){
     const b = e.target.closest('button'); if(!b) return;
     S.settings.mapTheme = b.dataset.v;
     save(); refresh(); MapView.setTheme(S.settings.mapTheme); SFX.pop();
+  });
+
+  $('setLayoutMode').addEventListener('click', function(e){
+    const b = e.target.closest('button'); if(!b) return;
+    S.settings.layoutMode = b.dataset.v;
+    save(); refresh(); applyTheme(); SFX.pop();
+    toast(b.dataset.v === 'minimal' ? 'Minimalistisk visning slået til' : 'Normal visning');
   });
 
   $('setHabit').addEventListener('change', function(){
@@ -5104,15 +5171,6 @@ function switchTab(id){
 
 document.querySelectorAll('.tabbtn').forEach(function(b){
   b.addEventListener('click', function(){ SFX.unlock(); switchTab(b.dataset.tab); });
-});
-
-$('topGear').addEventListener('click', function(){
-  SFX.unlock(); SFX.pop(); vibrate(15);
-  switchTab('tab-profile');
-  setTimeout(function(){
-    const settingsTab = document.querySelector('.subtab[data-pane="pane-settings"]');
-    if(settingsTab) settingsTab.click();
-  }, 360);
 });
 
 $('goChallengesBtn').addEventListener('click', function(){
