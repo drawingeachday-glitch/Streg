@@ -11,7 +11,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
-<title>STREG — Alpha 3.33</title>
+<title>STREG — Alpha 3.34</title>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500;1,9..144,600&family=Inter:wght@400;500;600;700;800&family=Rajdhani:wght@600;700&family=Kalam:wght@400;700&family=Playfair+Display:wght@400;500;600;700&family=Baloo+2:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Permanent+Marker&family=Orbitron:wght@400;500;600;700&family=Cinzel:wght@400;500;600;700&family=Michroma&family=Anton&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <style>
@@ -57,6 +57,52 @@
   --shadow-l:0 20px 48px -12px rgba(0,0,0,.6);
   --sheet:#1A2429;
 }
+
+/* ===================================================================
+   LAYOUT MODE: MINIMAL -- an alternate, calmer visual language,
+   researched from Apple's current Liquid Glass / HIG motion guidance.
+   Layers on top of whichever color theme is active; only spacing,
+   depth, borders, motion timing, and information density change.
+   =================================================================== */
+[data-layout="minimal"]{
+  --r-s:14px; --r-m:20px; --r-l:27px; --r-xl:34px;
+  --glide:cubic-bezier(.32,.72,0,1); /* critically-damped, Apple-style settle -- no overshoot */
+  --line:transparent; --line-2:rgba(22,36,43,.07);
+  --shadow-s:0 1px 3px rgba(22,36,43,.05);
+  --shadow-m:0 6px 20px -6px rgba(22,36,43,.10);
+  --shadow-l:0 16px 40px -10px rgba(22,36,43,.16);
+}
+[data-layout="minimal"][data-theme="dark"]{
+  --line:transparent; --line-2:rgba(255,255,255,.09);
+  --shadow-s:0 1px 3px rgba(0,0,0,.25);
+  --shadow-m:0 6px 20px -6px rgba(0,0,0,.4);
+  --shadow-l:0 16px 40px -10px rgba(0,0,0,.55);
+}
+/* Chrome (topbar) becomes a translucent floating layer with content
+   scrolling underneath, instead of an opaque bar with a hard rule --
+   the core Liquid Glass pattern, reserved for navigation only. */
+[data-layout="minimal"] .topbar{
+  background:color-mix(in srgb, var(--card) 72%, transparent);
+  backdrop-filter:blur(20px) saturate(180%);
+  -webkit-backdrop-filter:blur(20px) saturate(180%);
+  border-bottom:1px solid rgba(127,127,127,.09);
+  box-shadow:none;
+}
+[data-layout="minimal"] .topbar-gear{background:rgba(127,127,127,.1);border-color:transparent;}
+/* Cards: spacing and shadow carry hierarchy instead of borders */
+[data-layout="minimal"] .card{padding:19px 20px;margin-bottom:14px;}
+[data-layout="minimal"] .content{padding:8px 20px 20px;}
+/* Hero: one clear focal point, not several competing motions at once */
+[data-layout="minimal"] .hero{padding:28px 24px 22px;}
+[data-layout="minimal"] .hero-glow.two{display:none;}
+[data-layout="minimal"] .hero-glow{animation-duration:11s;opacity:.55;}
+[data-layout="minimal"] .flame{animation-duration:2.6s;}
+[data-layout="minimal"] .streak-num{letter-spacing:-.02em;text-shadow:0 4px 20px rgba(224,138,60,.22);}
+/* Capture card: a calm invitation, not a dashed instructional box */
+[data-layout="minimal"] .capture{border-style:solid;border-width:1px;border-color:var(--line-2);}
+[data-layout="minimal"] .cap-icon{border-color:var(--line-2);}
+[data-layout="minimal"] .btn:active{transition-duration:.1s;}
+[data-layout="minimal"] .date-pill{border-color:transparent;background:rgba(127,127,127,.1);}
 
 /* ===================================================================
    THEME: LIQUID GLASS -- Apple-style translucent material.
@@ -1624,6 +1670,14 @@ html[data-tabcolors="on"] .tabbtn.active[data-color="moss"]::before{background:v
         </div>
         <p class="hint" style="display:block;margin:-10px 0 16px;"><svg class="icn" width="12" height="12" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><rect x="5.5" y="10.5" width="13" height="9" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg> Premium-temaer købes i Butikken</p>
 
+        <p class="eyebrow" style="margin:0 0 8px;">Layout</p>
+        <div class="set-list" style="margin-bottom:16px;">
+          <div class="set-row">
+            <div class="set-label"><span>Visning</span><span class="set-sub">Minimalistisk giver mere luft og roligere bevægelse</span></div>
+            <div class="seg" id="setLayoutMode"><button data-v="normal">Normal</button><button data-v="minimal">Minimal</button></div>
+          </div>
+        </div>
+
         <p class="eyebrow" style="margin:0 0 8px;">Indstillinger</p>
         <div class="set-list">
           <div class="set-row">
@@ -1690,7 +1744,7 @@ html[data-tabcolors="on"] .tabbtn.active[data-color="moss"]::before{background:v
         <button class="btn-outline" id="tourBtn" style="margin-top:18px;">Vis introduktion igen</button>
         <button class="btn-outline" id="exportBtn">Eksportér mine data</button>
         <button class="btn-outline danger" id="resetBtn">Nulstil alt</button>
-        <p class="hint" style="display:block;text-align:center;margin:16px 0 20px;">STREG Alpha 3.33 · ingen reklamer, aldrig</p>
+        <p class="hint" style="display:block;text-align:center;margin:16px 0 20px;">STREG Alpha 3.34 · ingen reklamer, aldrig</p>
       </div>
     </div>
 
@@ -1914,7 +1968,7 @@ const DEFAULTS = {
   settings: {
     sound: true, vibe: true, minDist: 50, cooldownDays: 30,
     habit: '', mapTheme: 'street', dark: false, style: 'nature',
-    tabColors: true, font: 'default',
+    tabColors: true, font: 'default', layoutMode: 'normal',
   },
 };
 
@@ -4824,6 +4878,7 @@ const Settings = (function(){
     const style = S.settings.style || 'nature';
     document.documentElement.setAttribute('data-theme', S.settings.dark ? 'dark' : 'light');
     document.documentElement.setAttribute('data-style', style);
+    document.documentElement.setAttribute('data-layout', S.settings.layoutMode || 'normal');
     document.documentElement.setAttribute('data-tabcolors', S.settings.tabColors ? 'on' : 'off');
     if(S.settings.font && S.settings.font !== 'default'){
       document.documentElement.setAttribute('data-font', S.settings.font);
@@ -4843,6 +4898,7 @@ const Settings = (function(){
     seg($('setDist'), S.settings.minDist);
     seg($('setCool'), S.settings.cooldownDays);
     seg($('setMapTheme'), S.settings.mapTheme);
+    seg($('setLayoutMode'), S.settings.layoutMode || 'normal');
     $('setHabit').value = S.settings.habit || '';
     document.querySelectorAll('.theme-swatch').forEach(function(b){
       b.classList.toggle('on', b.dataset.style === (S.settings.style || 'nature'));
@@ -4933,6 +4989,13 @@ const Settings = (function(){
     const b = e.target.closest('button'); if(!b) return;
     S.settings.mapTheme = b.dataset.v;
     save(); refresh(); MapView.setTheme(S.settings.mapTheme); SFX.pop();
+  });
+
+  $('setLayoutMode').addEventListener('click', function(e){
+    const b = e.target.closest('button'); if(!b) return;
+    S.settings.layoutMode = b.dataset.v;
+    save(); refresh(); applyTheme(); SFX.pop();
+    toast(b.dataset.v === 'minimal' ? 'Minimalistisk visning slået til' : 'Normal visning');
   });
 
   $('setHabit').addEventListener('change', function(){
