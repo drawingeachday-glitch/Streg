@@ -15,7 +15,7 @@ HTML = r"""<!DOCTYPE html>
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
-<title>STREG — Alpha 3.35</title>
+<title>STREG — Alpha 3.36</title>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500;1,9..144,600&family=Inter:wght@400;500;600;700;800&family=Rajdhani:wght@600;700&family=Kalam:wght@400;700&family=Playfair+Display:wght@400;500;600;700&family=Baloo+2:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Permanent+Marker&family=Orbitron:wght@400;500;600;700&family=Cinzel:wght@400;500;600;700&family=Michroma&family=Anton&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <style>
@@ -707,6 +707,16 @@ html[data-tabcolors="on"] .tabbtn.active[data-color="moss"]::before{background:v
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
 /* ============ MODAL / SHEET ============ */
+.offline-bar{
+  position:fixed;left:0;right:0;z-index:9600;
+  top:calc(env(safe-area-inset-top,0px) + 58px);
+  background:var(--brick);color:#fff;font-size:11.5px;font-weight:700;
+  text-align:center;padding:7px 14px;
+  transform:translateY(-130%);transition:transform .32s var(--glide);
+  pointer-events:none;
+}
+.offline-bar.show{transform:none;}
+
 .info-btn{
   display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;
   width:18px;height:18px;border-radius:50%;border:none;background:none;padding:0;
@@ -1728,7 +1738,7 @@ html[data-tabcolors="on"] .tabbtn.active[data-color="moss"]::before{background:v
         <button class="btn-outline" id="tourBtn" style="margin-top:18px;">Vis introduktion igen</button>
         <button class="btn-outline" id="exportBtn">Eksportér mine data</button>
         <button class="btn-outline danger" id="resetBtn">Nulstil alt</button>
-        <p class="hint" style="display:block;text-align:center;margin:16px 0 20px;">STREG Alpha 3.35 · ingen reklamer, aldrig</p>
+        <p class="hint" style="display:block;text-align:center;margin:16px 0 20px;">STREG Alpha 3.36 · ingen reklamer, aldrig</p>
       </div>
     </div>
 
@@ -1817,6 +1827,8 @@ html[data-tabcolors="on"] .tabbtn.active[data-color="moss"]::before{background:v
 </div>
 
 <!-- ============ MODAL ============ -->
+<div class="offline-bar" id="offlineBar"><svg class="icn" width="13" height="13" viewBox="0 0 24 24" fill="none" style="vertical-align:-2px"><path d="M3 3l18 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M5 12.5a10 10 0 0 1 4-2.4M19 12.5a10 10 0 0 0-6.5-2.9M8.5 16a5.5 5.5 0 0 1 6-.7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><circle cx="12" cy="19.5" r="1.1" fill="currentColor"/></svg> Offline — dine billeder gemmes og synkroniseres senere</div>
+
 <div class="info-popup" id="infoPopup"><div class="info-popup-arrow"></div><div id="infoPopupText"></div></div>
 
 <div class="scrim" id="scrim">
@@ -1984,10 +1996,12 @@ function save(){
     if(typeof Cloud !== 'undefined' && Cloud.ready) Cloud.pushProfile();
     return true;
   }catch(e){
-    // ~5MB quota; photos eat it. Drop oldest images (keep the pin) until it fits.
+    // ~5MB quota; only heavy inline base64 images are worth dropping. Cloud
+    // URLs are ~100 bytes -- deleting one blanks a photo and saves nothing,
+    // so they're skipped entirely here.
     const byAge = S.photos.slice().sort(function(a,b){ return a.ts - b.ts; });
     for(let i = 0; i < byAge.length; i++){
-      if(!byAge[i].img) continue;
+      if(!byAge[i].img || byAge[i].img.indexOf('data:') !== 0) continue;
       delete byAge[i].img;
       try{ localStorage.setItem(KEY, JSON.stringify(S)); return true; }catch(e2){}
     }
@@ -3405,20 +3419,27 @@ const Cloud = (function(){
       const { data, error } = await client.from('photos').select('*').eq('user_id', userId);
       if(error) throw error;
       if(data && data.length){
-        const localIds = {};
-        S.photos.forEach(function(p){ localIds[p.id] = true; });
-        let added = false;
+        const localById = {};
+        S.photos.forEach(function(p){ localById[p.id] = p; });
+        let changed = false;
         data.forEach(function(row){
-          if(!localIds[row.id] && row.image_url){
+          if(!row.image_url) return;
+          const existing = localById[row.id];
+          if(!existing){
             S.photos.push({
               id: row.id, lat: row.lat, lng: row.lng,
               ts: new Date(row.taken_at).getTime(),
               img: row.image_url,
             });
-            added = true;
+            changed = true;
+          } else if(!existing.img){
+            // this photo lost its image locally (quota eviction) but the cloud
+            // still has it -- heal it instead of leaving a permanently blank tile
+            existing.img = row.image_url;
+            changed = true;
           }
         });
-        if(added){
+        if(changed){
           localStorage.setItem(KEY, JSON.stringify(S));
           renderAll();
           MapView.redraw();
@@ -4069,7 +4090,20 @@ function saveSpot(lat, lng, manual, img){
   checkAchievements();
   if(typeof WeeklyChallenges !== 'undefined') WeeklyChallenges.checkProgress();
   if(typeof MonthlyChallenges !== 'undefined') MonthlyChallenges.checkProgress();
-  if(typeof Cloud !== 'undefined' && Cloud.ready) Cloud.uploadPhoto(photo);
+  if(typeof Cloud !== 'undefined' && Cloud.ready){
+    Cloud.uploadPhoto(photo).then(function(publicUrl){
+      // Once the image is safely in cloud Storage, the local base64 copy is
+      // pure waste -- swap it for the URL. Turns a ~25KB localStorage entry
+      // into ~100 bytes, which is what actually keeps the quota from filling.
+      if(publicUrl){
+        const p = S.photos.find(function(x){ return x.id === photo.id; });
+        if(p && p.img && p.img.indexOf('data:') === 0){
+          p.img = publicUrl;
+          save();
+        }
+      }
+    });
+  }
   return true;
 }
 
@@ -5207,6 +5241,28 @@ try{
   if(!S.onboarded) setTimeout(function(){ Onb.start(); }, 400);
   setTimeout(function(){ try{ MapView.init(); }catch(e){} }, 350);
   setTimeout(function(){ try{ Cloud.boot(); }catch(e){ console.warn('cloud boot', e); } }, 200);
+
+  /* Offline support. Registered late and guarded so a failure here can never
+     block the app itself -- this is an enhancement, not a dependency. */
+  if('serviceWorker' in navigator && location.protocol.indexOf('http') === 0){
+    window.addEventListener('load', function(){
+      navigator.serviceWorker.register('sw.js').catch(function(err){
+        console.warn('sw register failed (app still works normally)', err);
+      });
+    });
+  }
+
+  /* Tell people when they're offline. Without this, a failed sync just looks
+     like the app is broken -- which matters here, because being out in nature
+     with no signal is the normal case, not an edge case. */
+  function renderOfflineState(){
+    const bar = $('offlineBar');
+    if(!bar) return;
+    bar.classList.toggle('show', !navigator.onLine);
+  }
+  window.addEventListener('online', function(){ renderOfflineState(); toast('Online igen — synkroniserer'); });
+  window.addEventListener('offline', renderOfflineState);
+  renderOfflineState();
 }catch(e){
   if(window.__fatal) window.__fatal('boot: ' + (e && e.message ? e.message : e) + '\n' + (e && e.stack ? e.stack.split('\n').slice(0,4).join('\n') : ''));
 }
@@ -5237,6 +5293,115 @@ MANIFEST_JSON = r"""{
 """
 MANIFEST_BYTES = MANIFEST_JSON.encode("utf-8")
 
+SW_JS = r"""/* STREG service worker
+   Why this exists: people use STREG *outdoors*, in nature, where signal is
+   worst. Without this, a weak connection means the app simply doesn't load --
+   failing at exactly the moment it's needed. With it, the app opens instantly
+   from cache and works fully offline; photos queue up locally and sync later.
+
+   Strategy:
+   - App shell (HTML/icons/manifest): network-first, cache fallback.
+     Network-first so updates actually reach people; cache fallback so a dead
+     connection never blocks the app.
+   - CDN libs (Leaflet, Supabase): cache-first. They're versioned and heavy.
+   - Supabase API + map tiles: never cached -- always live, fail gracefully.
+*/
+
+const VERSION = 'streg-v1';
+const SHELL = VERSION + '-shell';
+const LIBS = VERSION + '-libs';
+
+const SHELL_URLS = [
+  './',
+  './index.html',
+  './manifest.json',
+  './icon-192.png',
+  './icon-512.png',
+  './apple-touch-icon.png',
+];
+
+self.addEventListener('install', function(event){
+  event.waitUntil(
+    caches.open(SHELL).then(function(cache){
+      // addAll is atomic -- one 404 would reject the whole install and leave
+      // people with no offline support at all, so add individually instead.
+      return Promise.all(SHELL_URLS.map(function(url){
+        return cache.add(url).catch(function(){ /* non-fatal */ });
+      }));
+    }).then(function(){ return self.skipWaiting(); })
+  );
+});
+
+self.addEventListener('activate', function(event){
+  event.waitUntil(
+    caches.keys().then(function(names){
+      return Promise.all(names.map(function(name){
+        if(name.indexOf(VERSION) !== 0) return caches.delete(name);
+      }));
+    }).then(function(){ return self.clients.claim(); })
+  );
+});
+
+function isLib(url){
+  return url.hostname === 'cdnjs.cloudflare.com'
+      || url.hostname === 'cdn.jsdelivr.net'
+      || url.hostname === 'unpkg.com';
+}
+
+function isNeverCache(url){
+  // Live data and map imagery: stale versions here would be worse than
+  // an honest failure the app already knows how to handle.
+  return url.hostname.indexOf('supabase.co') !== -1
+      || url.hostname.indexOf('tile.openstreetmap.org') !== -1
+      || url.hostname.indexOf('basemaps.cartocdn.com') !== -1
+      || url.hostname.indexOf('arcgisonline.com') !== -1
+      || url.hostname.indexOf('accounts.google.com') !== -1;
+}
+
+self.addEventListener('fetch', function(event){
+  const req = event.request;
+  if(req.method !== 'GET') return;
+
+  let url;
+  try{ url = new URL(req.url); }catch(e){ return; }
+
+  if(isNeverCache(url)) return; // straight to network, untouched
+
+  if(isLib(url)){
+    event.respondWith(
+      caches.match(req).then(function(hit){
+        if(hit) return hit;
+        return fetch(req).then(function(res){
+          if(res && res.status === 200){
+            const copy = res.clone();
+            caches.open(LIBS).then(function(c){ c.put(req, copy); });
+          }
+          return res;
+        });
+      })
+    );
+    return;
+  }
+
+  // App shell: prefer fresh, fall back to cache when the network is gone.
+  if(req.mode === 'navigate' || url.origin === self.location.origin){
+    event.respondWith(
+      fetch(req).then(function(res){
+        if(res && res.status === 200){
+          const copy = res.clone();
+          caches.open(SHELL).then(function(c){ c.put(req, copy); });
+        }
+        return res;
+      }).catch(function(){
+        return caches.match(req).then(function(hit){
+          return hit || caches.match('./index.html') || caches.match('./');
+        });
+      })
+    );
+  }
+});
+"""
+
 # app icons, base64-embedded so the whole app stays a single file --
 # needed for "Add to Home Screen" on iPhone (PWA install) to show a real icon
 ICON_512 = base64.b64decode("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")
@@ -5263,6 +5428,8 @@ class Handler(http.server.BaseHTTPRequestHandler):
             self._send(ICON_192, "image/png")
         elif path == "/apple-touch-icon.png":
             self._send(ICON_TOUCH, "image/png")
+        elif path == "/sw.js":
+            self._send(SW_JS.encode("utf-8"), "text/javascript; charset=utf-8")
         else:
             self._send(HTML_BYTES, "text/html; charset=utf-8")
 
