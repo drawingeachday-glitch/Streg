@@ -11,7 +11,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
-<title>STREG — Alpha 3.35</title>
+<title>STREG — Alpha 3.36</title>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500;1,9..144,600&family=Inter:wght@400;500;600;700;800&family=Rajdhani:wght@600;700&family=Kalam:wght@400;700&family=Playfair+Display:wght@400;500;600;700&family=Baloo+2:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Permanent+Marker&family=Orbitron:wght@400;500;600;700&family=Cinzel:wght@400;500;600;700&family=Michroma&family=Anton&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <style>
@@ -703,6 +703,16 @@ html[data-tabcolors="on"] .tabbtn.active[data-color="moss"]::before{background:v
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
 /* ============ MODAL / SHEET ============ */
+.offline-bar{
+  position:fixed;left:0;right:0;z-index:9600;
+  top:calc(env(safe-area-inset-top,0px) + 58px);
+  background:var(--brick);color:#fff;font-size:11.5px;font-weight:700;
+  text-align:center;padding:7px 14px;
+  transform:translateY(-130%);transition:transform .32s var(--glide);
+  pointer-events:none;
+}
+.offline-bar.show{transform:none;}
+
 .info-btn{
   display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;
   width:18px;height:18px;border-radius:50%;border:none;background:none;padding:0;
@@ -1724,7 +1734,7 @@ html[data-tabcolors="on"] .tabbtn.active[data-color="moss"]::before{background:v
         <button class="btn-outline" id="tourBtn" style="margin-top:18px;">Vis introduktion igen</button>
         <button class="btn-outline" id="exportBtn">Eksportér mine data</button>
         <button class="btn-outline danger" id="resetBtn">Nulstil alt</button>
-        <p class="hint" style="display:block;text-align:center;margin:16px 0 20px;">STREG Alpha 3.35 · ingen reklamer, aldrig</p>
+        <p class="hint" style="display:block;text-align:center;margin:16px 0 20px;">STREG Alpha 3.36 · ingen reklamer, aldrig</p>
       </div>
     </div>
 
@@ -1813,6 +1823,8 @@ html[data-tabcolors="on"] .tabbtn.active[data-color="moss"]::before{background:v
 </div>
 
 <!-- ============ MODAL ============ -->
+<div class="offline-bar" id="offlineBar"><svg class="icn" width="13" height="13" viewBox="0 0 24 24" fill="none" style="vertical-align:-2px"><path d="M3 3l18 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M5 12.5a10 10 0 0 1 4-2.4M19 12.5a10 10 0 0 0-6.5-2.9M8.5 16a5.5 5.5 0 0 1 6-.7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><circle cx="12" cy="19.5" r="1.1" fill="currentColor"/></svg> Offline — dine billeder gemmes og synkroniseres senere</div>
+
 <div class="info-popup" id="infoPopup"><div class="info-popup-arrow"></div><div id="infoPopupText"></div></div>
 
 <div class="scrim" id="scrim">
@@ -1980,10 +1992,12 @@ function save(){
     if(typeof Cloud !== 'undefined' && Cloud.ready) Cloud.pushProfile();
     return true;
   }catch(e){
-    // ~5MB quota; photos eat it. Drop oldest images (keep the pin) until it fits.
+    // ~5MB quota; only heavy inline base64 images are worth dropping. Cloud
+    // URLs are ~100 bytes -- deleting one blanks a photo and saves nothing,
+    // so they're skipped entirely here.
     const byAge = S.photos.slice().sort(function(a,b){ return a.ts - b.ts; });
     for(let i = 0; i < byAge.length; i++){
-      if(!byAge[i].img) continue;
+      if(!byAge[i].img || byAge[i].img.indexOf('data:') !== 0) continue;
       delete byAge[i].img;
       try{ localStorage.setItem(KEY, JSON.stringify(S)); return true; }catch(e2){}
     }
@@ -3401,20 +3415,27 @@ const Cloud = (function(){
       const { data, error } = await client.from('photos').select('*').eq('user_id', userId);
       if(error) throw error;
       if(data && data.length){
-        const localIds = {};
-        S.photos.forEach(function(p){ localIds[p.id] = true; });
-        let added = false;
+        const localById = {};
+        S.photos.forEach(function(p){ localById[p.id] = p; });
+        let changed = false;
         data.forEach(function(row){
-          if(!localIds[row.id] && row.image_url){
+          if(!row.image_url) return;
+          const existing = localById[row.id];
+          if(!existing){
             S.photos.push({
               id: row.id, lat: row.lat, lng: row.lng,
               ts: new Date(row.taken_at).getTime(),
               img: row.image_url,
             });
-            added = true;
+            changed = true;
+          } else if(!existing.img){
+            // this photo lost its image locally (quota eviction) but the cloud
+            // still has it -- heal it instead of leaving a permanently blank tile
+            existing.img = row.image_url;
+            changed = true;
           }
         });
-        if(added){
+        if(changed){
           localStorage.setItem(KEY, JSON.stringify(S));
           renderAll();
           MapView.redraw();
@@ -4065,7 +4086,20 @@ function saveSpot(lat, lng, manual, img){
   checkAchievements();
   if(typeof WeeklyChallenges !== 'undefined') WeeklyChallenges.checkProgress();
   if(typeof MonthlyChallenges !== 'undefined') MonthlyChallenges.checkProgress();
-  if(typeof Cloud !== 'undefined' && Cloud.ready) Cloud.uploadPhoto(photo);
+  if(typeof Cloud !== 'undefined' && Cloud.ready){
+    Cloud.uploadPhoto(photo).then(function(publicUrl){
+      // Once the image is safely in cloud Storage, the local base64 copy is
+      // pure waste -- swap it for the URL. Turns a ~25KB localStorage entry
+      // into ~100 bytes, which is what actually keeps the quota from filling.
+      if(publicUrl){
+        const p = S.photos.find(function(x){ return x.id === photo.id; });
+        if(p && p.img && p.img.indexOf('data:') === 0){
+          p.img = publicUrl;
+          save();
+        }
+      }
+    });
+  }
   return true;
 }
 
@@ -5203,6 +5237,28 @@ try{
   if(!S.onboarded) setTimeout(function(){ Onb.start(); }, 400);
   setTimeout(function(){ try{ MapView.init(); }catch(e){} }, 350);
   setTimeout(function(){ try{ Cloud.boot(); }catch(e){ console.warn('cloud boot', e); } }, 200);
+
+  /* Offline support. Registered late and guarded so a failure here can never
+     block the app itself -- this is an enhancement, not a dependency. */
+  if('serviceWorker' in navigator && location.protocol.indexOf('http') === 0){
+    window.addEventListener('load', function(){
+      navigator.serviceWorker.register('sw.js').catch(function(err){
+        console.warn('sw register failed (app still works normally)', err);
+      });
+    });
+  }
+
+  /* Tell people when they're offline. Without this, a failed sync just looks
+     like the app is broken -- which matters here, because being out in nature
+     with no signal is the normal case, not an edge case. */
+  function renderOfflineState(){
+    const bar = $('offlineBar');
+    if(!bar) return;
+    bar.classList.toggle('show', !navigator.onLine);
+  }
+  window.addEventListener('online', function(){ renderOfflineState(); toast('Online igen — synkroniserer'); });
+  window.addEventListener('offline', renderOfflineState);
+  renderOfflineState();
 }catch(e){
   if(window.__fatal) window.__fatal('boot: ' + (e && e.message ? e.message : e) + '\n' + (e && e.stack ? e.stack.split('\n').slice(0,4).join('\n') : ''));
 }
