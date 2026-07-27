@@ -11,7 +11,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
-<title>STREG — Alpha 3.36</title>
+<title>STREG — Alpha 3.37</title>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500;1,9..144,600&family=Inter:wght@400;500;600;700;800&family=Rajdhani:wght@600;700&family=Kalam:wght@400;700&family=Playfair+Display:wght@400;500;600;700&family=Baloo+2:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Permanent+Marker&family=Orbitron:wght@400;500;600;700&family=Cinzel:wght@400;500;600;700&family=Michroma&family=Anton&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <style>
@@ -1734,7 +1734,7 @@ html[data-tabcolors="on"] .tabbtn.active[data-color="moss"]::before{background:v
         <button class="btn-outline" id="tourBtn" style="margin-top:18px;">Vis introduktion igen</button>
         <button class="btn-outline" id="exportBtn">Eksportér mine data</button>
         <button class="btn-outline danger" id="resetBtn">Nulstil alt</button>
-        <p class="hint" style="display:block;text-align:center;margin:16px 0 20px;">STREG Alpha 3.36 · ingen reklamer, aldrig</p>
+        <p class="hint" style="display:block;text-align:center;margin:16px 0 20px;">STREG Alpha 3.37 · ingen reklamer, aldrig</p>
       </div>
     </div>
 
@@ -5250,15 +5250,31 @@ try{
 
   /* Tell people when they're offline. Without this, a failed sync just looks
      like the app is broken -- which matters here, because being out in nature
-     with no signal is the normal case, not an edge case. */
-  function renderOfflineState(){
+     with no signal is the normal case, not an edge case.
+     navigator.onLine is unreliable (always false on some localhost setups,
+     intermittently wrong on mobile) so we do a real fetch-based probe. */
+  async function probeOnline(){
+    if(navigator.onLine === false){
+      // do a lightweight real-network probe before trusting the browser flag
+      try{
+        await fetch('https://www.gstatic.com/generate_204', { method:'HEAD', mode:'no-cors', cache:'no-store' });
+        return true; // fetch succeeded, we're online despite onLine===false
+      }catch(e){
+        return false;
+      }
+    }
+    return true;
+  }
+  async function renderOfflineState(){
     const bar = $('offlineBar');
     if(!bar) return;
-    bar.classList.toggle('show', !navigator.onLine);
+    const online = await probeOnline();
+    bar.classList.toggle('show', !online);
   }
   window.addEventListener('online', function(){ renderOfflineState(); toast('Online igen — synkroniserer'); });
   window.addEventListener('offline', renderOfflineState);
-  renderOfflineState();
+  // delay first check so it doesn't flash during initial page load
+  setTimeout(renderOfflineState, 3000);
 }catch(e){
   if(window.__fatal) window.__fatal('boot: ' + (e && e.message ? e.message : e) + '\n' + (e && e.stack ? e.stack.split('\n').slice(0,4).join('\n') : ''));
 }
