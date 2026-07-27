@@ -11,7 +11,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
-<title>STREG — Alpha 3.39</title>
+<title>STREG — Alpha 3.40</title>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500;1,9..144,600&family=Inter:wght@400;500;600;700;800&family=Rajdhani:wght@600;700&family=Kalam:wght@400;700&family=Playfair+Display:wght@400;500;600;700&family=Baloo+2:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Permanent+Marker&family=Orbitron:wght@400;500;600;700&family=Cinzel:wght@400;500;600;700&family=Michroma&family=Anton&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <style>
@@ -378,13 +378,39 @@ button{font-family:var(--font-body);color:inherit;text-transform:inherit;}
 .hero-meta div{font-size:10.5px;color:#9EABA5;flex:1;}
 .hero-meta b{display:block;color:#FBF8F2;font-size:15px;font-family:var(--font-display);font-weight:600;margin-bottom:1px;}
 
-.hero-split{display:flex;align-items:center;gap:14px;position:relative;}
-.hero-streak-side{flex:1;min-width:0;}
-.hero-divider{width:1px;align-self:stretch;background:rgba(255,255,255,.16);flex-shrink:0;}
-.hero-shield-side{flex-shrink:0;text-align:center;padding:0 4px;color:#FBF8F2;}
-.hero-shield-icon{color:var(--sky);margin-bottom:2px;display:flex;justify-content:center;}
-.hero-shield-count{font-family:var(--font-display);font-size:26px;font-weight:600;line-height:1;}
-.hero-shield-label{font-size:9.5px;color:#9EABA5;font-weight:700;letter-spacing:.05em;text-transform:uppercase;margin-top:2px;}
+/* centered streak with a big flame watermark burning behind the number */
+.hero-center{position:relative;z-index:2;text-align:center;padding:6px 0 2px;}
+.hero-center .eyebrow{display:block;margin-bottom:2px;}
+.hero-center .streak-num{font-size:92px;line-height:.92;display:block;margin:0 auto;}
+.hero-center .streak-sub{display:block;margin-top:6px;max-width:280px;margin-left:auto;margin-right:auto;}
+.hero-flame-bg{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-52%);
+  width:190px;height:190px;color:var(--amber);opacity:.13;
+  pointer-events:none;z-index:1;
+  animation:flameBreathe 4.5s ease-in-out infinite;
+}
+.hero-flame-bg svg{width:100%;height:100%;}
+@keyframes flameBreathe{
+  0%,100%{transform:translate(-50%,-52%) scale(1) rotate(-1.5deg);opacity:.13;}
+  50%{transform:translate(-50%,-54%) scale(1.09) rotate(2deg);opacity:.2;}
+}
+
+/* live "can I shoot here?" readout -- replaces the old static distance hint */
+.geo-status{
+  display:inline-flex;align-items:center;gap:7px;
+  font-size:12px;font-weight:700;line-height:1.4;
+  padding:7px 13px;border-radius:20px;margin-top:2px;
+  transition:background .35s,color .35s;
+}
+.geo-status .geo-dot{
+  width:8px;height:8px;border-radius:50%;flex-shrink:0;background:currentColor;
+}
+.geo-status.checking{background:var(--paper-2);color:var(--ink-soft);}
+.geo-status.checking .geo-dot{animation:geoPulse 1.4s ease-in-out infinite;}
+.geo-status.ready{background:var(--moss-soft);color:var(--moss-dark);}
+.geo-status.ready .geo-dot{animation:geoPulse 2.2s ease-in-out infinite;}
+.geo-status.blocked{background:var(--brick-soft);color:var(--brick);}
+@keyframes geoPulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.45;transform:scale(.82);}}
 
 /* ============ CARDS ============ */
 .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r-m);padding:16px 18px;margin-bottom:12px;box-shadow:var(--shadow-s);}
@@ -626,34 +652,46 @@ button{font-family:var(--font-body);color:inherit;text-transform:inherit;}
 }
 .tabbtn{
   background:none;border:none;cursor:pointer;position:relative;
-  display:flex;flex-direction:column;align-items:center;gap:2px;
-  color:var(--ink-soft);padding:6px 1px;border-radius:12px;
+  display:flex;flex-direction:column;align-items:center;gap:0;
+  color:var(--ink-soft);padding:8px 1px 4px;border-radius:12px;
   transition:color .24s;overflow:hidden;flex:1;min-width:0;
 }
-.tabbtn span{font-size:7.3px;font-weight:700;white-space:nowrap;font-family:var(--font-ui);}
-.tabbtn svg{width:19px;height:19px;transition:transform .3s var(--spring);}
+/* Only the active tab is labelled. Seven 7px labels competing at once was
+   the actual clutter -- icons alone read fine, and the one label that IS
+   shown becomes a clear "you are here" marker instead of noise. */
+.tabbtn span{
+  font-size:8.5px;font-weight:800;white-space:nowrap;font-family:var(--font-ui);
+  letter-spacing:.02em;
+  max-height:0;opacity:0;overflow:hidden;
+  transition:max-height .26s var(--glide),opacity .2s ease,margin-top .26s var(--glide);
+}
+.tabbtn svg{width:21px;height:21px;transition:transform .3s var(--spring);}
 .tabbtn.active{color:var(--moss-dark);}
-.tabbtn.active svg{transform:translateY(-2px) scale(1.14);}
-.tabbtn.active span{animation:labelPop .32s ease;}
+.tabbtn.active svg{transform:translateY(-1px) scale(1.1);}
+.tabbtn.active span{max-height:14px;opacity:1;margin-top:3px;}
 @keyframes labelPop{0%{transform:scale(.82);opacity:.5;}100%{transform:scale(1);opacity:1;}}
-.tabbtn::before{content:"";position:absolute;top:0;left:50%;width:0;height:3px;background:var(--moss);border-radius:0 0 4px 4px;transform:translateX(-50%);transition:width .3s var(--spring);}
-.tabbtn.active::before{width:26px;}
-.tabbtn .dot{position:absolute;top:5px;right:6px;width:6px;height:6px;border-radius:50%;background:var(--amber);display:none;animation:radar 2s infinite;}
+.tabbtn::before{display:none;}
+.tabbtn .dot{position:absolute;top:6px;right:22%;width:6px;height:6px;border-radius:50%;background:var(--amber);display:none;animation:radar 2s infinite;}
 .tabbtn .dot.show{display:block;}
 
 /* center FAB tab (Streg) -- bigger, raised above the bar line */
 .tabbtn-fab{overflow:visible;color:var(--ink-soft);padding-top:0;}
-.tabbtn-fab span{margin-top:1px;}
+.tabbtn-fab.active span{margin-top:2px;}
 .fab-circle{
   width:50px;height:50px;border-radius:50%;
-  background:linear-gradient(150deg,var(--amber),var(--amber-2));
+  background:var(--paper-2);
   display:flex;align-items:center;justify-content:center;
-  margin-top:-22px;box-shadow:0 6px 16px -3px rgba(224,138,60,.55),var(--shadow-s);
-  transition:transform .3s var(--spring),box-shadow .3s;
+  margin-top:-22px;box-shadow:var(--shadow-s);
+  transition:transform .3s var(--spring),box-shadow .3s,background .3s;
   border:3px solid var(--card);
 }
-.tabbtn-fab svg{width:23px;height:23px;color:#16242B;transition:transform .3s var(--spring);}
-.tabbtn-fab.active .fab-circle{transform:scale(1.08);box-shadow:0 8px 20px -3px rgba(224,138,60,.7),var(--shadow-m);}
+.tabbtn-fab svg{width:23px;height:23px;color:var(--ink-soft);transition:transform .3s var(--spring),color .3s;}
+.tabbtn-fab.active .fab-circle{
+  background:linear-gradient(150deg,var(--amber),var(--amber-2));
+  transform:scale(1.08);
+  box-shadow:0 8px 20px -3px rgba(224,138,60,.7),var(--shadow-m);
+}
+.tabbtn-fab.active svg{color:#16242B;}
 .tabbtn-fab.active span{color:var(--amber-2);animation:labelPop .32s ease;}
 .tabbtn-fab::before{display:none;}
 .tabbtn-fab:active .fab-circle{transform:scale(.92);}
@@ -1305,6 +1343,7 @@ html[data-tabcolors="on"] .tabbtn.active[data-color="moss"]::before{background:v
         <span class="topbar-stat" id="topStreakWrap"><svg class="icn" width="13" height="13" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><path d="M12 2.5c-.6 3.3-3.4 4.6-3.4 8.7a3.4 3.4 0 0 0 6.8 0c0-1 -.3-1.8-.7-2.5 1.6 1.3 2.3 3 2.3 5a5 5 0 0 1-10 0c0-4.6 3.4-5.7 3.4-10.3.6.6 1.1 1.4 1.6 2.1" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg> <b id="topStreak">0</b></span>
         <span class="topbar-stat">Lv <b id="topLevel">1</b></span>
         <span class="topbar-stat" id="topCoinsWrap"><svg class="icn" width="12" height="12" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.6"/><path d="M12 7.2v9.6M9.3 9.6c0-1.1 1.1-1.8 2.7-1.8s2.7.7 2.7 1.7c0 2.4-5.4 1-5.4 3.4 0 1 1.1 1.8 2.7 1.8s2.7-.7 2.7-1.8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg> <b id="topCoins">0</b></span>
+        <span class="topbar-stat" id="topShieldWrap"><svg class="icn" width="12" height="12" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><path d="M12 3 5 5.5v5.3c0 4.7 3 8.2 7 9.7 4-1.5 7-5 7-9.7V5.5L12 3Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 12l2 2 4-4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> <b id="topShields">3</b></span>
       </div>
     </div>
   </div>
@@ -1315,22 +1354,12 @@ html[data-tabcolors="on"] .tabbtn.active[data-color="moss"]::before{background:v
       <div class="hero">
         <div class="hero-glow"></div>
         <div class="hero-glow two"></div>
-        <div class="hero-split">
-          <div class="hero-streak-side">
-            <div class="eyebrow">Streg</div>
-            <div class="streak-wrap">
-              <div class="streak-num" id="streakNum">0</div>
-              <div class="flame" id="flame" style="display:none;"><svg class="icn" width="24" height="24" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><path d="M12 2.5c-.6 3.3-3.4 4.6-3.4 8.7a3.4 3.4 0 0 0 6.8 0c0-1 -.3-1.8-.7-2.5 1.6 1.3 2.3 3 2.3 5a5 5 0 0 1-10 0c0-4.6 3.4-5.7 3.4-10.3.6.6 1.1 1.4 1.6 2.1" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></div>
-            </div>
-          </div>
-          <div class="hero-divider"></div>
-          <div class="hero-shield-side">
-            <div class="hero-shield-icon"><svg class="icn" width="30" height="30" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><path d="M12 3 5 5.5v5.3c0 4.7 3 8.2 7 9.7 4-1.5 7-5 7-9.7V5.5L12 3Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 12l2 2 4-4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-            <div class="hero-shield-count" id="statFreeze">3</div>
-            <div class="hero-shield-label">skjolde</div>
-          </div>
+        <div class="hero-flame-bg" id="heroFlameBg"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2.5c-.6 3.3-3.4 4.6-3.4 8.7a3.4 3.4 0 0 0 6.8 0c0-1 -.3-1.8-.7-2.5 1.6 1.3 2.3 3 2.3 5a5 5 0 0 1-10 0c0-4.6 3.4-5.7 3.4-10.3.6.6 1.1 1.4 1.6 2.1" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg></div>
+        <div class="hero-center">
+          <div class="eyebrow">Streg</div>
+          <div class="streak-num" id="streakNum">0</div>
+          <div class="streak-sub" id="streakSub">Tag dit første billede for at starte</div>
         </div>
-        <div class="streak-sub" id="streakSub">Tag dit første billede for at starte</div>
       </div>
 
       <div class="capture" id="captureCard">
@@ -1340,9 +1369,8 @@ html[data-tabcolors="on"] .tabbtn.active[data-color="moss"]::before{background:v
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 8.5C4 7.4 4.9 6.5 6 6.5h2l1-2h6l1 2h2c1.1 0 2 .9 2 2V17c0 1.1-.9 2-2 2H6c-1.1 0-2-.9-2-2V8.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="12" cy="13" r="3.2" stroke="currentColor" stroke-width="1.5"/></svg>
             </div>
             <p class="cap-title" id="capTitle">Klar til dagens billede?</p>
-            <p class="hint" id="capHint">Find et sted mindst 50 m fra dine tidligere</p>
+            <div class="geo-status checking" id="capHint"><span class="geo-dot"></span><span id="geoStatusText">Finder din placering…</span></div>
             <button class="btn btn-primary" id="captureBtn">Tag billede</button>
-            <button class="btn-ghost" id="testBtn"><svg class="icn" width="12" height="12" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><path d="M10 3.5h4M10.5 3.5v5.8L5.8 18a1.6 1.6 0 0 0 1.4 2.4h9.6a1.6 1.6 0 0 0 1.4-2.4L13.5 9.3V3.5" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M8.3 14.5h7.4" stroke="currentColor" stroke-width="1.3"/></svg> Test uden kamera</button>
           </div>
           <div class="capture-panel">
             <div class="cap-icon">
@@ -1727,6 +1755,7 @@ html[data-tabcolors="on"] .tabbtn.active[data-color="moss"]::before{background:v
           <button class="btn-outline" id="devApply" style="margin-top:0;">Gem ændringer</button>
           <button class="btn-outline" id="devLoc"><svg class="icn" width="13" height="13" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><path d="M12 21.5s-6.2-5.8-6.2-10.5A6.2 6.2 0 0 1 18.2 11c0 4.7-6.2 10.5-6.2 10.5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><circle cx="12" cy="10.7" r="2.1" stroke="currentColor" stroke-width="1.6"/></svg> Brug disse koordinater som min position</button>
           <button class="btn-outline" id="devUnlock"><svg class="icn" width="13" height="13" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><rect x="5.5" y="10.5" width="13" height="9" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M8 10.5V7.5a4 4 0 0 1 7.5-2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg> Lås dagens billede op igen</button>
+          <button class="btn-outline" id="devTestPhoto"><svg class="icn" width="13" height="13" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><path d="M10 3.5h4M10.5 3.5v5.8L5.8 18a1.6 1.6 0 0 0 1.4 2.4h9.6a1.6 1.6 0 0 0 1.4-2.4L13.5 9.3V3.5" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M8.3 14.5h7.4" stroke="currentColor" stroke-width="1.3"/></svg> Tag dagens billede uden kamera</button>
           <button class="btn-outline" id="devFake"><svg class="icn" width="13" height="13" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg> Tilføj 5 test-billeder</button>
           <button class="btn-outline" id="devAch"><svg class="icn" width="13" height="13" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><path d="M11.5 4h6.5v6.5L9.5 19 3 12.5 11.5 4Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="15" cy="7.5" r="1.3" stroke="currentColor" stroke-width="1.3"/></svg> Lås alle bedrifter op</button>
           <button class="btn-outline danger" id="devClearPhotos"><svg class="icn" width="13" height="13" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><path d="M5 7h14M9.5 7V5a1.5 1.5 0 0 1 1.5-1.5h2A1.5 1.5 0 0 1 14.5 5v2M7 7l1 12.5a1.5 1.5 0 0 0 1.5 1.4h5a1.5 1.5 0 0 0 1.5-1.4L18 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Slet alle billeder</button>
@@ -1735,7 +1764,7 @@ html[data-tabcolors="on"] .tabbtn.active[data-color="moss"]::before{background:v
         <button class="btn-outline" id="tourBtn" style="margin-top:18px;">Vis introduktion igen</button>
         <button class="btn-outline" id="exportBtn">Eksportér mine data</button>
         <button class="btn-outline danger" id="resetBtn">Nulstil alt</button>
-        <p class="hint" style="display:block;text-align:center;margin:16px 0 20px;">STREG Alpha 3.39 · ingen reklamer, aldrig</p>
+        <p class="hint" style="display:block;text-align:center;margin:16px 0 20px;">STREG Alpha 3.40 · ingen reklamer, aldrig</p>
       </div>
     </div>
 
@@ -2334,6 +2363,42 @@ function countdownText(){
   return m + ' min';
 }
 
+/* Live proximity readout. The old copy just restated the rule ("mindst 50 m
+   fra dine tidligere"); this answers the question you actually have while
+   standing somewhere: can I shoot HERE, right now? It updates on every GPS
+   tick, so walking out of a blocked zone flips it to ready in real time.
+   Deliberately does NOT disable the shutter -- GPS drifts, and locking
+   someone out on a bad fix is worse than the existing post-shot check. */
+function refreshGeoStatus(){
+  const box = $('capHint');
+  if(!box) return;
+  // The capture flow writes its result badge into this same element, which
+  // wipes the inner span. Rebuild it rather than assuming it survived.
+  let txt = $('geoStatusText');
+  if(!txt){
+    box.innerHTML = '<span class="geo-dot"></span><span id="geoStatusText"></span>';
+    txt = $('geoStatusText');
+  }
+  const p = Geo.last;
+  if(!p){
+    box.className = 'geo-status checking';
+    txt.textContent = 'Finder din placering…';
+    return;
+  }
+  const d = nearestDist(p.lat, p.lng);
+  const need = S.settings.minDist;
+  if(d === Infinity){
+    box.className = 'geo-status ready';
+    txt.textContent = 'Klar — det bliver dit første sted';
+  } else if(d >= need){
+    box.className = 'geo-status ready';
+    txt.textContent = 'Du kan tage et billede her · ' + Math.round(d) + ' m fra nærmeste';
+  } else {
+    box.className = 'geo-status blocked';
+    txt.textContent = 'For tæt — gå ' + Math.ceil(need - d) + ' m længere væk';
+  }
+}
+
 function refreshCaptureCard(){
   const card = $('captureCard'), btn = $('captureBtn'), slider = $('captureSlider');
   if(!card) return;
@@ -2467,8 +2532,7 @@ const Dev = (function(){
     $('capIcon').classList.remove('big');
     $('capIcon').innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 8.5C4 7.4 4.9 6.5 6 6.5h2l1-2h6l1 2h2c1.1 0 2 .9 2 2V17c0 1.1-.9 2-2 2H6c-1.1 0-2-.9-2-2V8.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="12" cy="13" r="3.2" stroke="currentColor" stroke-width="1.5"/></svg>';
     $('capTitle').textContent = 'Klar til dagens billede?';
-    $('capHint').textContent = 'Find et sted mindst ' + S.settings.minDist + ' m fra dine tidligere';
-    SFX.chime();
+      SFX.chime();
     toast('Dagens billede låst op');
   });
 
@@ -2900,12 +2964,12 @@ function renderAll(){
     el.classList.remove('bump'); void el.offsetWidth; el.classList.add('bump');
   } else { el.textContent = S.streak; }
 
-  $('flame').style.display = S.streak > 0 ? 'block' : 'none';
   $('streakSub').textContent = S.streak
     ? 'dage i træk — ét billede hver dag, altid et nyt sted'
     : 'Tag dit første billede for at starte';
-
-  $('statFreeze').textContent = S.freezes;
+  // the flame watermark only burns once there's actually a streak to show off
+  $('heroFlameBg').style.display = S.streak > 0 ? 'block' : 'none';
+  $('topShields').textContent = S.freezes;
 
   const shownTitle = currentTitleName();
   $('pTitle').textContent = 'Niveau ' + lv.lvl + ' · ' + shownTitle;
@@ -2929,7 +2993,6 @@ function renderAll(){
 
   $('mapCount').textContent = S.photos.length + (S.photos.length === 1 ? ' sted' : ' steder');
   $('galCount').textContent = S.photos.length + (S.photos.length === 1 ? ' billede' : ' billeder');
-  $('capHint').textContent = 'Find et sted mindst ' + S.settings.minDist + ' m fra dine tidligere';
 
   const undone = S.challenges.items.filter(function(c){ return !c.done; }).length;
   $('chDot').classList.toggle('show', undone > 0);
@@ -2940,6 +3003,7 @@ function renderAll(){
   renderHeat();
   renderMyPhotos();
   refreshCaptureCard();
+  refreshGeoStatus();
 }
 
 function renderThumbs(){
@@ -4166,11 +4230,14 @@ function saveSpot(lat, lng, manual, img){
     $('cameraInput').value = '';
   });
 
-  $('testBtn').addEventListener('click', function(){
+  // Dev-only: exercise the real daily-streak capture path without a camera.
+  // Same code the on-screen "Test uden kamera" button used to run; moved here
+  // so the home screen stays clean but the flow is still testable.
+  $('devTestPhoto').addEventListener('click', function(){
     SFX.unlock();
     if(dailyDone()){
       SFX.reject();
-      toast('Dagens billede er taget — lås op i udvikler-værktøjer for at teste igen');
+      toast('Dagens billede er taget — brug "Lås dagens billede op igen" først');
       return;
     }
     SFX.pop();
@@ -5237,6 +5304,7 @@ document.querySelectorAll('.ch-subtab').forEach(function(b){
 try{
   Settings.applyTheme();
   Geo.start();
+  Geo.onUpdate(refreshGeoStatus);
   Challenges.ensureToday();
   Challenges.render();
   WeeklyChallenges.checkProgress();
