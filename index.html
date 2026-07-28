@@ -11,7 +11,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
-<title>STREG — Alpha 3.41</title>
+<title>STREG — Alpha 3.44</title>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500;1,9..144,600&family=Inter:wght@400;500;600;700;800&family=Rajdhani:wght@600;700&family=Kalam:wght@400;700&family=Playfair+Display:wght@400;500;600;700&family=Baloo+2:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Permanent+Marker&family=Orbitron:wght@400;500;600;700&family=Cinzel:wght@400;500;600;700&family=Michroma&family=Anton&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <style>
@@ -19,6 +19,7 @@
    TOKENS
    =================================================================== */
 :root{
+  color-scheme:light;
   --ink:#16242B; --ink-2:#31424A; --ink-soft:#5C6B66;
   --paper:#FBF8F2; --paper-2:#F4EFE3; --card:#FFFFFF;
   --line:#E7E1D3; --line-2:#D8D0BD;
@@ -45,6 +46,7 @@
   --card-border-style:solid;
 }
 [data-theme="dark"]{
+  color-scheme:dark;
   --ink:#F0EDE6; --ink-2:#D3CFC5; --ink-soft:#9BA5A0;
   --paper:#10171A; --paper-2:#161F23; --card:#1A2429;
   --line:#2A363C; --line-2:#374449;
@@ -378,6 +380,100 @@ button{font-family:var(--font-body);color:inherit;text-transform:inherit;}
 .hero-meta div{font-size:10.5px;color:#9EABA5;flex:1;}
 .hero-meta b{display:block;color:#FBF8F2;font-size:15px;font-family:var(--font-display);font-weight:600;margin-bottom:1px;}
 
+/* left-right hero: outlined flame + number on the left, title/description on
+   the right -- the reference layout, kept alongside .hero-center so either
+   arrangement can be used without duplicating the base .hero card rules */
+.hero-lr{display:flex;align-items:center;gap:18px;position:relative;z-index:2;}
+.hero-flame-outline{
+  position:relative;flex-shrink:0;width:78px;height:78px;color:var(--amber);
+}
+.hero-flame-outline svg{width:100%;height:100%;position:absolute;inset:0;}
+.hero-flame-num{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-display);font-weight:700;font-size:30px;color:#FBF8F2;
+  padding-top:6px;
+}
+.hero-lr-text{min-width:0;}
+.hero-lr-title{font-family:var(--font-display);font-size:22px;font-weight:700;color:#FBF8F2;line-height:1.1;}
+.hero-lr-sub{font-size:13px;color:#C4CFCA;margin-top:1px;}
+.hero-lr-desc{font-size:12px;color:#9EABA5;margin-top:8px;line-height:1.5;}
+
+/* personalized greeting row -- own section above the hero, distinct from the
+   persistent cross-tab topbar; bigger photo-based avatar when one exists */
+.home-greet{display:flex;justify-content:space-between;align-items:center;padding:8px 2px 16px;}
+.home-greet-left{display:flex;align-items:center;gap:11px;}
+.home-avatar{
+  width:46px;height:46px;border-radius:50%;flex-shrink:0;background-size:cover;background-position:center;
+  background-image:linear-gradient(135deg,var(--moss),var(--sky));
+  display:flex;align-items:center;justify-content:center;color:#fff;
+  font-family:var(--font-display);font-weight:700;font-size:13px;
+}
+.home-greet-text{font-family:var(--font-display);font-size:17px;font-weight:600;}
+.home-greet-level{font-size:11.5px;color:var(--ink-soft);font-weight:600;margin-top:1px;}
+.home-greet-level b{color:var(--amber-2);font-weight:800;}
+.home-streak-badge{text-align:center;flex-shrink:0;}
+.home-streak-badge-top{
+  display:flex;align-items:center;justify-content:center;gap:5px;
+  font-family:var(--font-display);font-size:19px;font-weight:700;color:var(--amber-2);
+}
+.home-streak-badge-label{font-size:8.5px;font-weight:800;letter-spacing:.06em;color:var(--ink-soft);margin-top:1px;}
+
+/* circular countdown ring -- replaces the old "go to challenges" prompt once
+   today's photo is done. SVG stroke-dashoffset driven live from JS. */
+.next-photo-panel{display:flex;flex-direction:column;align-items:center;}
+.ring-wrap{position:relative;width:88px;height:88px;margin:0 auto 12px;}
+.ring-svg{width:100%;height:100%;transform:rotate(-90deg);}
+.ring-track{fill:none;stroke:var(--line-2);stroke-width:7;}
+.ring-fill{
+  fill:none;stroke:var(--amber);stroke-width:7;stroke-linecap:round;
+  stroke-dasharray:264;stroke-dashoffset:264;transition:stroke-dashoffset .6s var(--glide);
+}
+.ring-icon{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  color:var(--ink);
+}
+.next-photo-time{font-family:var(--font-display);font-size:26px;font-weight:700;margin:2px 0 4px;}
+
+/* section header with a "see all" link -- used above the featured challenge
+   and the recent-photos row */
+.section-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:9px;}
+.section-head .eyebrow{margin:0;}
+.see-all{background:none;border:none;color:var(--amber-2);font-size:11.5px;font-weight:700;cursor:pointer;padding:2px;}
+.see-all:active{opacity:.6;}
+
+/* featured challenge card -- one weekly challenge surfaced on the home screen */
+.featured-challenge{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--r-m);
+  padding:13px;display:flex;align-items:center;gap:12px;margin-bottom:18px;
+  box-shadow:var(--shadow-s);cursor:pointer;transition:transform .13s var(--spring);
+}
+.featured-challenge:active{transform:scale(.98);}
+.featured-challenge-icon{
+  width:44px;height:44px;border-radius:var(--r-s);flex-shrink:0;
+  background:var(--amber-soft);color:var(--amber-2);
+  display:flex;align-items:center;justify-content:center;
+}
+.featured-challenge-body{flex:1;min-width:0;}
+.featured-challenge-title{font-family:var(--font-display);font-size:14.5px;font-weight:600;}
+.featured-challenge-sub{font-size:11px;color:var(--ink-soft);margin:1px 0 7px;}
+.featured-challenge-track{height:6px;background:var(--moss-soft);border-radius:4px;overflow:hidden;}
+.featured-challenge-fill{height:100%;background:var(--amber);border-radius:4px;transition:width .5s var(--glide);}
+.featured-challenge-count{font-size:10px;color:var(--ink-soft);font-weight:600;margin-top:4px;text-align:right;}
+.featured-challenge-chevron{color:var(--ink-soft);flex-shrink:0;}
+.featured-challenge-empty{
+  text-align:center;padding:20px 14px;color:var(--ink-soft);font-size:12px;
+  background:var(--card);border:1px solid var(--line);border-radius:var(--r-m);margin-bottom:18px;
+}
+
+/* recent-photos row upgraded to a horizontally scrollable strip so it can
+   show more than 3 without needing its own dedicated screen */
+.thumbrow-scroll{
+  display:flex;gap:9px;overflow-x:auto;padding-bottom:2px;margin-bottom:4px;
+  -webkit-overflow-scrolling:touch;scrollbar-width:none;
+}
+.thumbrow-scroll::-webkit-scrollbar{display:none;}
+.thumbrow-scroll .thumb{flex:0 0 104px;}
+
 /* centered streak with a big flame watermark burning behind the number */
 .hero-center{position:relative;z-index:2;text-align:center;padding:6px 0 2px;}
 .hero-center .eyebrow{display:block;margin-bottom:2px;}
@@ -659,7 +755,7 @@ button{font-family:var(--font-body);color:inherit;text-transform:inherit;}
 /* Only the active tab is labelled. Seven 7px labels competing at once was
    the actual clutter -- icons alone read fine, and the one label that IS
    shown becomes a clear "you are here" marker instead of noise. */
-.tabbtn span{
+.tabbtn .tab-label{
   font-size:8.5px;font-weight:800;white-space:nowrap;font-family:var(--font-ui);
   letter-spacing:.02em;
   max-height:0;opacity:0;overflow:hidden;
@@ -668,7 +764,7 @@ button{font-family:var(--font-body);color:inherit;text-transform:inherit;}
 .tabbtn svg{width:21px;height:21px;transition:transform .3s var(--spring);}
 .tabbtn.active{color:var(--moss-dark);}
 .tabbtn.active svg{transform:translateY(-1px) scale(1.1);}
-.tabbtn.active span{max-height:14px;opacity:1;margin-top:3px;}
+.tabbtn.active .tab-label{max-height:14px;opacity:1;margin-top:3px;}
 @keyframes labelPop{0%{transform:scale(.82);opacity:.5;}100%{transform:scale(1);opacity:1;}}
 .tabbtn::before{display:none;}
 .tabbtn .dot{position:absolute;top:6px;right:22%;width:6px;height:6px;border-radius:50%;background:var(--amber);display:none;animation:radar 2s infinite;}
@@ -676,17 +772,17 @@ button{font-family:var(--font-body);color:inherit;text-transform:inherit;}
 
 /* center FAB tab (Streg) -- bigger, raised above the bar line */
 .tabbtn-fab{overflow:visible;color:var(--ink-soft);padding-top:0;}
-.tabbtn-fab.active span{margin-top:2px;}
+.tabbtn-fab.active .tab-label{margin-top:2px;}
 .fab-circle{
-  width:50px;height:50px;border-radius:50%;
-  /* without this the flex column squashes it into an oval as the label
-     shows/hides -- the height is not negotiable, it has to stay a circle */
-  flex-shrink:0;
+  width:50px;height:50px;min-width:50px;max-width:50px;min-height:50px;max-height:50px;
+  border-radius:50%;box-sizing:border-box;
+  /* aspect-ratio is the direct, modern fix: it tells the browser the
+     intended shape outright, rather than relying on width/height alone
+     surviving whatever the flex cross-axis computation decides to do --
+     belt-and-suspenders against the exact rendering quirk seen on device. */
+  aspect-ratio:1/1;
+  flex-shrink:0;flex-grow:0;
   background:var(--card);
-  /* a real outline: the previous white-on-white ring made the whole button
-     disappear against the bar whenever it wasn't the selected tab.
-     Longhand rather than the `border:` shorthand so the width/style stay
-     parseable by tooling that can't resolve var() inside a shorthand. */
   border-width:2px;
   border-style:solid;
   border-color:var(--line-2);
@@ -702,7 +798,7 @@ button{font-family:var(--font-body);color:inherit;text-transform:inherit;}
   box-shadow:0 8px 20px -3px rgba(224,138,60,.5),var(--shadow-m);
 }
 .tabbtn-fab.active svg{color:#16242B;}
-.tabbtn-fab.active span{color:var(--amber-2);}
+.tabbtn-fab.active .tab-label{color:var(--amber-2);}
 .tabbtn-fab::before{display:none;}
 .tabbtn-fab:active .fab-circle{transform:scale(.92);}
 
@@ -1361,14 +1457,34 @@ html[data-tabcolors="on"] .tabbtn.active[data-color="moss"]::before{background:v
 
     <!-- ============ HOME ============ -->
     <div class="tab-content active" id="tab-home">
-      <div class="hero">
+      <div class="home-greet">
+        <div class="home-greet-left">
+          <div class="home-avatar" id="homeAvatar">DIG</div>
+          <div class="home-greet-info">
+            <div class="home-greet-text" id="homeGreetText">Godmorgen, Dig</div>
+            <div class="home-greet-level">Niveau <b id="homeLevel">1</b></div>
+          </div>
+        </div>
+        <div class="home-streak-badge">
+          <div class="home-streak-badge-top">
+            <svg class="icn" width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 2.5c-.6 3.3-3.4 4.6-3.4 8.7a3.4 3.4 0 0 0 6.8 0c0-1 -.3-1.8-.7-2.5 1.6 1.3 2.3 3 2.3 5a5 5 0 0 1-10 0c0-4.6 3.4-5.7 3.4-10.3.6.6 1.1 1.4 1.6 2.1" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+            <span id="homeStreakNum">0</span>
+          </div>
+          <div class="home-streak-badge-label">DAGE I TRÆK</div>
+        </div>
+      </div>
+
+      <div class="hero hero-lr">
         <div class="hero-glow"></div>
         <div class="hero-glow two"></div>
-        <div class="hero-flame-bg" id="heroFlameBg"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2.5c-.6 3.3-3.4 4.6-3.4 8.7a3.4 3.4 0 0 0 6.8 0c0-1 -.3-1.8-.7-2.5 1.6 1.3 2.3 3 2.3 5a5 5 0 0 1-10 0c0-4.6 3.4-5.7 3.4-10.3.6.6 1.1 1.4 1.6 2.1" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg></div>
-        <div class="hero-center">
-          <div class="eyebrow">Streg</div>
-          <div class="streak-num" id="streakNum">0</div>
-          <div class="streak-sub" id="streakSub">Tag dit første billede for at starte</div>
+        <div class="hero-flame-outline">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M12 2.5c-.6 3.3-3.4 4.6-3.4 8.7a3.4 3.4 0 0 0 6.8 0c0-1 -.3-1.8-.7-2.5 1.6 1.3 2.3 3 2.3 5a5 5 0 0 1-10 0c0-4.6 3.4-5.7 3.4-10.3.6.6 1.1 1.4 1.6 2.1" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+          <span class="hero-flame-num" id="streakNum">0</span>
+        </div>
+        <div class="hero-lr-text">
+          <div class="hero-lr-title">Streak</div>
+          <div class="hero-lr-sub">dage i træk</div>
+          <div class="hero-lr-desc" id="streakSub">Ét billede hver dag, altid et nyt sted.</div>
         </div>
       </div>
 
@@ -1382,20 +1498,33 @@ html[data-tabcolors="on"] .tabbtn.active[data-color="moss"]::before{background:v
             <div class="geo-status checking" id="capHint"><span class="geo-dot"></span><span id="geoStatusText">Finder din placering…</span></div>
             <button class="btn btn-primary" id="captureBtn">Tag billede</button>
           </div>
-          <div class="capture-panel">
-            <div class="cap-icon">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="4.3" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg>
+          <div class="capture-panel next-photo-panel">
+            <div class="ring-wrap">
+              <svg class="ring-svg" viewBox="0 0 100 100">
+                <circle class="ring-track" cx="50" cy="50" r="42"></circle>
+                <circle class="ring-fill" id="ringFill" cx="50" cy="50" r="42"></circle>
+              </svg>
+              <div class="ring-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M4 8.5C4 7.4 4.9 6.5 6 6.5h2l1-2h6l1 2h2c1.1 0 2 .9 2 2V17c0 1.1-.9 2-2 2H6c-1.1 0-2-.9-2-2V8.5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><circle cx="12" cy="13" r="3.2" stroke="currentColor" stroke-width="1.6"/></svg></div>
             </div>
-            <p class="cap-title">Klar til nogle challenges?</p>
-            <p class="hint" id="capNextHint">Dagens billede er i hus</p>
-            <button class="btn btn-primary" id="goChallengesBtn">Ja!</button>
+            <p class="cap-title">Næste billede om</p>
+            <p class="next-photo-time" id="capNextHint">—</p>
+            <p class="hint">Hold streaken i live!</p>
           </div>
         </div>
         <input type="file" accept="image/*" capture="environment" id="cameraInput" style="display:none;">
       </div>
 
-      <p class="eyebrow" style="margin-bottom:9px;">Seneste billeder</p>
-      <div class="thumbrow stagger" id="thumbrow"></div>
+      <div class="section-head">
+        <p class="eyebrow">Challenges</p>
+        <button class="see-all" data-goto="tab-challenges">Se alle</button>
+      </div>
+      <div class="featured-challenge-card" id="featuredChallengeCard"></div>
+
+      <div class="section-head">
+        <p class="eyebrow">Seneste billeder</p>
+        <button class="see-all" data-goto="tab-journey">Se alle</button>
+      </div>
+      <div class="thumbrow-scroll stagger" id="thumbrow"></div>
     </div>
 
     <!-- ============ SHOP ============ -->
@@ -1774,7 +1903,7 @@ html[data-tabcolors="on"] .tabbtn.active[data-color="moss"]::before{background:v
         <button class="btn-outline" id="tourBtn" style="margin-top:18px;">Vis introduktion igen</button>
         <button class="btn-outline" id="exportBtn">Eksportér mine data</button>
         <button class="btn-outline danger" id="resetBtn">Nulstil alt</button>
-        <p class="hint" style="display:block;text-align:center;margin:16px 0 20px;">STREG Alpha 3.41 · ingen reklamer, aldrig</p>
+        <p class="hint" style="display:block;text-align:center;margin:16px 0 20px;">STREG Alpha 3.44 · ingen reklamer, aldrig</p>
       </div>
     </div>
 
@@ -1783,34 +1912,34 @@ html[data-tabcolors="on"] .tabbtn.active[data-color="moss"]::before{background:v
   <div class="tabbar">
     <button class="tabbtn" data-tab="tab-shop" data-color="gold">
       <svg viewBox="0 0 24 24" fill="none"><path d="M6 8h12l-1 12a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L6 8Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 8V6a3 3 0 0 1 6 0v2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-      <span>Butik</span>
+      <span class="tab-label">Butik</span>
     </button>
     <button class="tabbtn" data-tab="tab-map" data-color="sky">
       <svg viewBox="0 0 24 24" fill="none"><path d="M12 21s-6.5-6.1-6.5-11A6.5 6.5 0 0 1 18.5 10c0 4.9-6.5 11-6.5 11Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><circle cx="12" cy="10" r="2.2" stroke="currentColor" stroke-width="1.6"/></svg>
-      <span>Kort</span>
+      <span class="tab-label">Kort</span>
     </button>
     <button class="tabbtn" data-tab="tab-challenges" data-color="brick">
       <svg viewBox="0 0 24 24" fill="none"><path d="M6 3v18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M6 4h11l-2.5 3.2L17 10.4H6" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
-      <span>Challenges</span>
+      <span class="tab-label">Challenges</span>
       <span class="dot" id="chDot"></span>
     </button>
     <button class="tabbtn tabbtn-fab active" data-tab="tab-home">
       <span class="fab-circle">
         <svg viewBox="0 0 24 24" fill="none"><path d="M4 8.5C4 7.4 4.9 6.5 6 6.5h2l1-2h6l1 2h2c1.1 0 2 .9 2 2V17c0 1.1-.9 2-2 2H6c-1.1 0-2-.9-2-2V8.5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><circle cx="12" cy="13" r="3.1" stroke="currentColor" stroke-width="1.7"/></svg>
       </span>
-      <span>Streg</span>
+      <span class="tab-label">Streg</span>
     </button>
     <button class="tabbtn" data-tab="tab-friends" data-color="amber">
       <svg viewBox="0 0 24 24" fill="none"><circle cx="9" cy="8.5" r="2.6" stroke="currentColor" stroke-width="1.6"/><path d="M3.8 19v-1a4.6 4.6 0 0 1 4.6-4.6h1.2A4.6 4.6 0 0 1 14.2 18v1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="16.6" cy="8" r="2.1" stroke="currentColor" stroke-width="1.6"/><path d="M15.5 12.7a4.2 4.2 0 0 1 4.7 4.2V18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-      <span>Connections</span>
+      <span class="tab-label">Connections</span>
     </button>
     <button class="tabbtn" data-tab="tab-journey" data-color="moss">
       <svg viewBox="0 0 24 24" fill="none"><rect x="3.5" y="3.5" width="7" height="7" rx="2" stroke="currentColor" stroke-width="1.6"/><rect x="13.5" y="3.5" width="7" height="7" rx="2" stroke="currentColor" stroke-width="1.6"/><rect x="3.5" y="13.5" width="7" height="7" rx="2" stroke="currentColor" stroke-width="1.6"/><rect x="13.5" y="13.5" width="7" height="7" rx="2" stroke="currentColor" stroke-width="1.6"/></svg>
-      <span>Rejse</span>
+      <span class="tab-label">Rejse</span>
     </button>
     <button class="tabbtn" data-tab="tab-profile" data-color="gold">
       <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8.2" r="3.2" stroke="currentColor" stroke-width="1.6"/><path d="M5 20v-.6A5.4 5.4 0 0 1 10.4 14h3.2A5.4 5.4 0 0 1 19 19.4v.6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-      <span>Profil</span>
+      <span class="tab-label">Profil</span>
     </button>
   </div>
 </div>
@@ -2409,13 +2538,26 @@ function refreshGeoStatus(){
   }
 }
 
+// Ring fills up as the day progresses toward the next available photo --
+// reads as "getting closer", not a draining countdown. Circumference for
+// r=42 is 2*pi*42 ~= 263.9, matching the stroke-dasharray set in CSS.
+function updateNextPhotoRing(){
+  const ring = $('ringFill');
+  if(!ring) return;
+  const totalMs = 86400000;
+  const elapsed = totalMs - msToMidnight();
+  const frac = Math.max(0, Math.min(1, elapsed / totalMs));
+  ring.style.strokeDashoffset = String(263.9 * (1 - frac));
+}
+
 function refreshCaptureCard(){
   const card = $('captureCard'), btn = $('captureBtn'), slider = $('captureSlider');
   if(!card) return;
   if(dailyDone()){
     slider.classList.add('show-challenge');
     const nextHint = $('capNextHint');
-    if(nextHint) nextHint.innerHTML = 'Næste billede om <span class="lock-time">' + countdownText() + '</span>';
+    if(nextHint) nextHint.textContent = countdownText();
+    updateNextPhotoRing();
     btn.disabled = true;
     btn.textContent = 'Kom igen i morgen';
   } else {
@@ -2964,6 +3106,61 @@ const Shop = (function(){
 /* ===================================================================
    RENDER
    =================================================================== */
+function greetingWord(){
+  const h = new Date().getHours();
+  if(h < 5) return 'Godnat';
+  if(h < 10) return 'Godmorgen';
+  if(h < 18) return 'Goddag';
+  return 'Godaften';
+}
+
+function renderHomeGreeting(){
+  const lv = levelFor(S.xp);
+  $('homeGreetText').textContent = greetingWord() + ', Dig';
+  $('homeLevel').textContent = lv.lvl;
+  countTo($('homeStreakNum'), S.streak, 500);
+  // uses your own most recent photo as a personal touch once you have one,
+  // falling back to the same gradient-initial style used everywhere else
+  const avatar = $('homeAvatar');
+  const recent = S.photos.length ? S.photos.slice().sort(function(a,b){ return b.ts - a.ts; })[0] : null;
+  if(recent && recent.img){
+    avatar.style.backgroundImage = 'url(' + recent.img + ')';
+    avatar.textContent = '';
+  } else {
+    avatar.style.backgroundImage = '';
+    avatar.textContent = 'DIG';
+  }
+}
+
+// Surfaces one active weekly challenge on the home screen (the reference's
+// "X/Y dage" progress style matches our weekly challenges, not the
+// single-photo daily ones). Picks the first not-yet-done item.
+function renderFeaturedChallenge(){
+  const wrap = $('featuredChallengeCard');
+  if(!wrap) return;
+  const items = (S.weekly && S.weekly.items) || [];
+  const pick = items.find(function(it){ return !it.done; }) || items[0];
+  if(!pick){
+    wrap.className = 'featured-challenge-empty';
+    wrap.innerHTML = 'Ingen aktive challenges lige nu';
+    return;
+  }
+  const WeeklyDef = (typeof WeeklyChallenges !== 'undefined' && WeeklyChallenges._findDef) ? WeeklyChallenges._findDef(pick.id) : null;
+  const cur = pick.done ? pick.target : Math.min(pick.target, WeeklyDef ? WeeklyDef.get() : 0);
+  const pct = Math.min(100, (cur / pick.target) * 100);
+  wrap.className = 'featured-challenge';
+  wrap.innerHTML =
+    '<div class="featured-challenge-icon">' + icon(pick.icon, 21) + '</div>' +
+    '<div class="featured-challenge-body">' +
+      '<div class="featured-challenge-title">' + pick.title + '</div>' +
+      '<div class="featured-challenge-sub">' + (pick.done ? 'Klaret! ' : '') + '+' + pick.xp + ' XP · +' + pick.coins + ' mønter</div>' +
+      '<div class="featured-challenge-track"><div class="featured-challenge-fill" style="width:' + pct + '%"></div></div>' +
+      '<div class="featured-challenge-count">' + cur + ' / ' + pick.target + ' dage</div>' +
+    '</div>' +
+    '<div class="featured-challenge-chevron">' + icon('arrowRight', 16) + '</div>';
+  wrap.onclick = function(){ SFX.pop(); switchTab('tab-challenges'); };
+}
+
 function renderAll(){
   const lv = levelFor(S.xp);
 
@@ -2976,10 +3173,10 @@ function renderAll(){
 
   $('streakSub').textContent = S.streak
     ? 'dage i træk — ét billede hver dag, altid et nyt sted'
-    : 'Tag dit første billede for at starte';
-  // the flame watermark only burns once there's actually a streak to show off
-  $('heroFlameBg').style.display = S.streak > 0 ? 'block' : 'none';
+    : 'Ét billede hver dag, altid et nyt sted.';
   $('topShields').textContent = S.freezes;
+  renderHomeGreeting();
+  renderFeaturedChallenge();
 
   const shownTitle = currentTitleName();
   $('pTitle').textContent = 'Niveau ' + lv.lvl + ' · ' + shownTitle;
@@ -3019,8 +3216,10 @@ function renderAll(){
 function renderThumbs(){
   const row = $('thumbrow');
   row.innerHTML = '';
-  const recent = S.photos.slice().sort(function(a,b){ return b.ts - a.ts; }).slice(0,3);
-  for(let i = 0; i < 3; i++){
+  // scrollable now, so it can show more than the old fixed 3-column row --
+  // "see all" still leads to the full gallery for everything beyond this
+  const recent = S.photos.slice().sort(function(a,b){ return b.ts - a.ts; }).slice(0,8);
+  for(let i = 0; i < Math.max(3, recent.length); i++){
     const p = recent[i];
     const d = document.createElement('div');
     if(p){
@@ -4760,7 +4959,7 @@ const WeeklyChallenges = (function(){
     });
   }
 
-  return { ensureCurrent: ensureCurrent, checkProgress: checkProgress, render: render };
+  return { ensureCurrent: ensureCurrent, checkProgress: checkProgress, render: render, _findDef: findDef };
 })();
 
 const MonthlyChallenges = (function(){
@@ -5290,9 +5489,8 @@ document.querySelectorAll('.tabbtn').forEach(function(b){
   b.addEventListener('click', function(){ SFX.unlock(); switchTab(b.dataset.tab); });
 });
 
-$('goChallengesBtn').addEventListener('click', function(){
-  SFX.unlock(); SFX.pop(); vibrate(15);
-  switchTab('tab-challenges');
+document.querySelectorAll('.see-all').forEach(function(b){
+  b.addEventListener('click', function(){ SFX.unlock(); SFX.pop(); switchTab(b.dataset.goto); });
 });
 
 document.querySelectorAll('.ch-subtab').forEach(function(b){
