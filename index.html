@@ -11,7 +11,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
-<title>STREG — Alpha 3.40</title>
+<title>STREG — Alpha 3.41</title>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500;1,9..144,600&family=Inter:wght@400;500;600;700;800&family=Rajdhani:wght@600;700&family=Kalam:wght@400;700&family=Playfair+Display:wght@400;500;600;700&family=Baloo+2:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Permanent+Marker&family=Orbitron:wght@400;500;600;700&family=Cinzel:wght@400;500;600;700&family=Michroma&family=Anton&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <style>
@@ -645,7 +645,7 @@ button{font-family:var(--font-body);color:inherit;text-transform:inherit;}
 
 /* ============ TAB BAR ============ */
 .tabbar{
-  flex-shrink:0;display:flex;justify-content:space-around;align-items:center;
+  flex-shrink:0;display:flex;justify-content:space-around;align-items:flex-start;
   padding:7px 2px calc(env(safe-area-inset-bottom,0) + 9px);
   background:var(--card);border-top:1px solid var(--line);
   position:sticky;bottom:0;z-index:500;
@@ -679,20 +679,30 @@ button{font-family:var(--font-body);color:inherit;text-transform:inherit;}
 .tabbtn-fab.active span{margin-top:2px;}
 .fab-circle{
   width:50px;height:50px;border-radius:50%;
-  background:var(--paper-2);
+  /* without this the flex column squashes it into an oval as the label
+     shows/hides -- the height is not negotiable, it has to stay a circle */
+  flex-shrink:0;
+  background:var(--card);
+  /* a real outline: the previous white-on-white ring made the whole button
+     disappear against the bar whenever it wasn't the selected tab.
+     Longhand rather than the `border:` shorthand so the width/style stay
+     parseable by tooling that can't resolve var() inside a shorthand. */
+  border-width:2px;
+  border-style:solid;
+  border-color:var(--line-2);
   display:flex;align-items:center;justify-content:center;
   margin-top:-22px;box-shadow:var(--shadow-s);
-  transition:transform .3s var(--spring),box-shadow .3s,background .3s;
-  border:3px solid var(--card);
+  transition:transform .3s var(--spring),box-shadow .3s,background .3s,border-color .3s;
 }
 .tabbtn-fab svg{width:23px;height:23px;color:var(--ink-soft);transition:transform .3s var(--spring),color .3s;}
 .tabbtn-fab.active .fab-circle{
   background:linear-gradient(150deg,var(--amber),var(--amber-2));
-  transform:scale(1.08);
-  box-shadow:0 8px 20px -3px rgba(224,138,60,.7),var(--shadow-m);
+  border-color:var(--card); /* white ring now earns its place: separates orange from the bar */
+  transform:scale(1.06);
+  box-shadow:0 8px 20px -3px rgba(224,138,60,.5),var(--shadow-m);
 }
 .tabbtn-fab.active svg{color:#16242B;}
-.tabbtn-fab.active span{color:var(--amber-2);animation:labelPop .32s ease;}
+.tabbtn-fab.active span{color:var(--amber-2);}
 .tabbtn-fab::before{display:none;}
 .tabbtn-fab:active .fab-circle{transform:scale(.92);}
 
@@ -1764,7 +1774,7 @@ html[data-tabcolors="on"] .tabbtn.active[data-color="moss"]::before{background:v
         <button class="btn-outline" id="tourBtn" style="margin-top:18px;">Vis introduktion igen</button>
         <button class="btn-outline" id="exportBtn">Eksportér mine data</button>
         <button class="btn-outline danger" id="resetBtn">Nulstil alt</button>
-        <p class="hint" style="display:block;text-align:center;margin:16px 0 20px;">STREG Alpha 3.40 · ingen reklamer, aldrig</p>
+        <p class="hint" style="display:block;text-align:center;margin:16px 0 20px;">STREG Alpha 3.41 · ingen reklamer, aldrig</p>
       </div>
     </div>
 
