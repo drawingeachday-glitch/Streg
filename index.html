@@ -5254,6 +5254,1851 @@ body.photo-celebration-open{
   }
 }
 
+
+/* =========================================================
+   CHOOSE PROFILE IMAGE
+   ========================================================= */
+.p-avatar-wrap{
+  position:relative;
+  width:92px;
+  height:92px;
+  margin:0 auto 11px;
+  display:grid;
+  place-items:center;
+}
+.p-avatar-wrap .p-avatar{
+  margin:0;
+  background-size:cover;
+  background-position:center;
+}
+.p-avatar-edit{
+  position:absolute;
+  right:-1px;
+  bottom:0;
+  width:34px;
+  height:34px;
+  display:grid;
+  place-items:center;
+  border:3px solid var(--paper);
+  border-radius:50%;
+  color:#17242B;
+  background:linear-gradient(145deg,var(--amber),var(--amber-2));
+  box-shadow:
+    0 8px 18px rgba(224,138,60,.28),
+    inset 0 1px rgba(255,255,255,.45);
+  cursor:pointer;
+  transition:transform .18s var(--spring),box-shadow .2s ease;
+  z-index:6;
+}
+.p-avatar-edit:active{
+  transform:scale(.91);
+}
+.p-avatar-actions{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  margin-top:11px;
+}
+.p-avatar-action{
+  border:0;
+  border-radius:999px;
+  padding:9px 13px;
+  font:850 10.5px/1 Inter,sans-serif;
+  cursor:pointer;
+  transition:transform .17s var(--spring),opacity .2s ease;
+}
+.p-avatar-action:active{
+  transform:scale(.95);
+}
+.p-avatar-action.primary{
+  color:#fff;
+  background:linear-gradient(135deg,var(--amber),var(--amber-2));
+  box-shadow:0 8px 18px rgba(224,138,60,.18);
+}
+.p-avatar-action.remove{
+  color:var(--brick);
+  background:var(--brick-soft);
+}
+.p-avatar.image-loading,
+.home-avatar.image-loading,
+.topbar-avatar.image-loading{
+  opacity:.55;
+  filter:blur(2px);
+}
+.avatar{
+  background-size:cover!important;
+  background-position:center!important;
+}
+
+/* Keep ring effects above the selected image */
+.p-avatar,
+.home-avatar,
+.topbar-avatar{
+  background-size:cover;
+  background-position:center;
+}
+
+
+/* =========================================================
+   EVENT CHALLENGE COMPLETE CUTSCENE
+   ========================================================= */
+.event-claim-cutscene{
+  position:fixed;
+  inset:0;
+  z-index:1400;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .28s ease;
+}
+.event-claim-cutscene.show{
+  opacity:1;
+  pointer-events:auto;
+}
+.event-claim-cutscene[aria-hidden="true"]{
+  visibility:hidden;
+}
+.event-claim-cutscene-backdrop{
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(circle at 50% 38%,rgba(223,113,255,.22),transparent 24%),
+    radial-gradient(circle at 15% 85%,rgba(88,125,255,.18),transparent 34%),
+    linear-gradient(180deg,rgba(4,4,16,.82),rgba(4,6,18,.95));
+  backdrop-filter:blur(12px) saturate(1.15);
+  -webkit-backdrop-filter:blur(12px) saturate(1.15);
+}
+.event-claim-cutscene-nebula{
+  position:absolute;
+  inset:-12%;
+  background:
+    radial-gradient(circle at 50% 25%,rgba(255,133,234,.2),transparent 18%),
+    radial-gradient(circle at 75% 40%,rgba(153,105,255,.18),transparent 23%),
+    radial-gradient(circle at 24% 70%,rgba(72,227,255,.14),transparent 20%);
+  filter:blur(26px);
+  animation:eventClaimNebulaFloat 8.2s ease-in-out infinite alternate;
+  pointer-events:none;
+}
+@keyframes eventClaimNebulaFloat{
+  from{transform:translate3d(-1.5%,0,0) scale(1);}
+  to{transform:translate3d(1.5%,-2%,0) scale(1.05);}
+}
+.event-claim-cutscene-particles,
+.event-claim-cutscene-burst{
+  position:absolute;
+  inset:0;
+  overflow:hidden;
+  pointer-events:none;
+}
+.event-claim-cutscene-card{
+  position:relative;
+  width:min(92vw,420px);
+  padding:30px 24px 24px;
+  border-radius:30px;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.035)),
+    linear-gradient(145deg,rgba(15,9,34,.96),rgba(21,11,41,.97));
+  border:1px solid rgba(235,193,255,.18);
+  box-shadow:
+    0 30px 90px rgba(0,0,0,.46),
+    0 0 0 1px rgba(255,255,255,.03) inset,
+    0 0 48px rgba(170,87,255,.16);
+  transform:translateY(18px) scale(.92);
+  opacity:0;
+  overflow:hidden;
+}
+.event-claim-cutscene.show .event-claim-cutscene-card{
+  animation:eventClaimCardIn .74s cubic-bezier(.16,.84,.22,1) forwards;
+}
+@keyframes eventClaimCardIn{
+  0%{transform:translateY(18px) scale(.92);opacity:0;}
+  60%{transform:translateY(-4px) scale(1.02);opacity:1;}
+  100%{transform:translateY(0) scale(1);opacity:1;}
+}
+.event-claim-cutscene-ring{
+  position:absolute;
+  left:50%;
+  top:118px;
+  width:168px;
+  height:168px;
+  border-radius:50%;
+  transform:translateX(-50%);
+  border:1px solid rgba(234,192,255,.12);
+  box-shadow:
+    0 0 0 10px rgba(177,92,255,.045),
+    0 0 44px rgba(179,100,255,.16);
+  pointer-events:none;
+}
+.event-claim-cutscene-ring::before,
+.event-claim-cutscene-ring::after{
+  content:"";
+  position:absolute;
+  inset:-11px;
+  border-radius:50%;
+  border:1px solid rgba(145,225,255,.18);
+  animation:eventClaimPulse 2.8s ease-in-out infinite;
+}
+.event-claim-cutscene-ring::after{
+  inset:-22px;
+  border-color:rgba(228,127,255,.16);
+  animation-delay:.4s;
+}
+@keyframes eventClaimPulse{
+  0%,100%{transform:scale(.96);opacity:.45;}
+  50%{transform:scale(1.05);opacity:1;}
+}
+.event-claim-kicker{
+  text-align:center;
+  color:#EFD9FF;
+  font:900 11px/1 Inter,sans-serif;
+  letter-spacing:.22em;
+  text-transform:uppercase;
+  margin-bottom:18px;
+  text-shadow:0 0 18px rgba(216,128,255,.26);
+}
+.event-claim-icon-wrap{
+  position:relative;
+  width:112px;
+  height:112px;
+  margin:0 auto 16px;
+  border-radius:32px;
+  display:grid;
+  place-items:center;
+  background:
+    radial-gradient(circle at 30% 26%,rgba(255,255,255,.28),transparent 22%),
+    linear-gradient(145deg,#7B51FF,#C361FF 58%,#FF8CDC);
+  box-shadow:
+    0 20px 36px rgba(156,79,255,.34),
+    0 0 0 1px rgba(255,255,255,.14) inset;
+  animation:eventClaimIconFloat 2.6s ease-in-out infinite;
+}
+@keyframes eventClaimIconFloat{
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(-4px);}
+}
+.event-claim-icon-wrap svg{
+  width:52px;
+  height:52px;
+  color:#fff;
+  filter:drop-shadow(0 8px 14px rgba(27,8,55,.28));
+}
+.event-claim-complete{
+  text-align:center;
+  font:1000 28px/1.02 Inter,sans-serif;
+  color:#fff;
+  letter-spacing:-.03em;
+  margin-bottom:7px;
+}
+.event-claim-title{
+  text-align:center;
+  font:780 13px/1.35 Inter,sans-serif;
+  color:rgba(246,238,255,.84);
+  max-width:290px;
+  margin:0 auto 15px;
+}
+.event-claim-xp{
+  text-align:center;
+  font:1000 44px/1 Inter,sans-serif;
+  color:#FFD2F7;
+  letter-spacing:-.04em;
+  text-shadow:
+    0 0 24px rgba(255,160,236,.24),
+    0 0 8px rgba(255,255,255,.3);
+  margin-bottom:6px;
+}
+.event-claim-xp-sub{
+  text-align:center;
+  font:850 12px/1 Inter,sans-serif;
+  color:#9FEAFF;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  margin-bottom:18px;
+}
+.event-claim-progress{
+  margin:0 auto 12px;
+  width:min(100%,290px);
+}
+.event-claim-progress-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  color:rgba(246,241,255,.84);
+  font:800 10px/1 Inter,sans-serif;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  margin-bottom:8px;
+}
+.event-claim-progress-track{
+  position:relative;
+  height:12px;
+  border-radius:999px;
+  overflow:hidden;
+  background:rgba(0,0,0,.36);
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow:inset 0 2px 6px rgba(0,0,0,.3);
+}
+.event-claim-progress-fill{
+  position:absolute;
+  inset:0 auto 0 0;
+  width:0%;
+  border-radius:inherit;
+  background:linear-gradient(90deg,#7F5DFF,#CA6BFF 56%,#FF90D9);
+  box-shadow:0 0 18px rgba(207,108,255,.42);
+  transition:width 1.2s cubic-bezier(.18,.86,.24,1);
+}
+.event-claim-rewardline{
+  margin-top:14px;
+  text-align:center;
+  font:780 12px/1.4 Inter,sans-serif;
+  color:rgba(241,235,255,.86);
+  min-height:34px;
+}
+.event-claim-rewardline b{
+  color:#fff;
+}
+.event-claim-foot{
+  margin-top:16px;
+  display:flex;
+  justify-content:center;
+  gap:8px;
+}
+.event-claim-continue{
+  border:0;
+  border-radius:999px;
+  min-width:140px;
+  padding:11px 16px;
+  font:900 11px/1 Inter,sans-serif;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:#1B1232;
+  background:linear-gradient(145deg,#FFD16B,#F2A745);
+  box-shadow:0 12px 22px rgba(242,167,69,.24);
+  cursor:pointer;
+  transition:transform .18s var(--spring), filter .18s ease;
+}
+.event-claim-continue:active{
+  transform:scale(.95);
+}
+.event-claim-skip{
+  position:absolute;
+  top:15px;
+  right:15px;
+  border:0;
+  border-radius:999px;
+  padding:8px 11px;
+  color:rgba(242,236,255,.86);
+  background:rgba(255,255,255,.06);
+  font:850 10px/1 Inter,sans-serif;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  cursor:pointer;
+}
+.event-claim-burst{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  pointer-events:none;
+  transform:translate(-50%,-50%);
+}
+.event-claim-burst span{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:4px;
+  height:26px;
+  margin:-13px 0 0 -2px;
+  border-radius:999px;
+  background:linear-gradient(180deg,#fff,#FFACEE 44%,transparent);
+  transform-origin:center 58px;
+  opacity:0;
+}
+.event-claim-cutscene.show .event-claim-burst span{
+  animation:eventClaimBurst .9s ease-out forwards;
+}
+@keyframes eventClaimBurst{
+  0%{transform:rotate(var(--rot)) translateY(0) scale(.5);opacity:0;}
+  20%{opacity:1;}
+  100%{transform:rotate(var(--rot)) translateY(-64px) scale(1);opacity:0;}
+}
+@media(max-width:400px){
+  .event-claim-cutscene-card{padding:28px 18px 20px;}
+  .event-claim-complete{font-size:24px;}
+  .event-claim-xp{font-size:38px;}
+}
+
+
+
+/* =========================================================
+   HEX MAP + CHEST CUTSCENE
+   ========================================================= */
+.hex-map-shell{
+  background:linear-gradient(180deg,#FBF9F3,#F6F1E8);
+  border:1px solid rgba(80,99,88,.08);
+  border-radius:28px;
+  padding:14px;
+  box-shadow:0 18px 40px rgba(33,43,36,.08);
+}
+.hex-map-head{
+  display:flex;
+  justify-content:space-between;
+  gap:8px;
+  margin-bottom:12px;
+  flex-wrap:wrap;
+}
+.hex-map-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  padding:10px 14px;
+  border-radius:999px;
+  background:#fff;
+  border:1px solid rgba(92,107,102,.12);
+  color:#24312B;
+  font:800 12px/1 Inter,sans-serif;
+  box-shadow:0 8px 18px rgba(20,24,22,.05);
+}
+.hex-map-badge.live{
+  background:linear-gradient(135deg,rgba(236,255,244,.95),rgba(226,243,255,.95));
+  color:#33534B;
+}
+.hex-board-wrap{
+  position:relative;
+  min-height:465px;
+  border-radius:26px;
+  padding:18px 10px 12px;
+  background:
+    radial-gradient(circle at 50% 20%,rgba(145,198,255,.22),transparent 34%),
+    radial-gradient(circle at 8% 12%,rgba(155,220,174,.18),transparent 24%),
+    radial-gradient(circle at 92% 88%,rgba(255,195,124,.16),transparent 28%),
+    linear-gradient(180deg,#F8F5EE,#EAE4D7 68%,#E3DACC);
+  overflow:hidden;
+  border:1px solid rgba(83,96,89,.09);
+}
+.hex-board-wrap::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    linear-gradient(rgba(255,255,255,.4),rgba(255,255,255,0) 40%),
+    radial-gradient(circle at 50% 50%,rgba(255,255,255,.22),transparent 54%);
+  pointer-events:none;
+}
+.hex-board{
+  position:relative;
+  width:100%;
+  height:430px;
+}
+.hex-cell{
+  position:absolute;
+  width:88px;
+  height:100px;
+  border:none;
+  background:none;
+  padding:0;
+  cursor:pointer;
+  filter:drop-shadow(0 10px 16px rgba(48,55,48,.08));
+  transition:transform .18s cubic-bezier(.2,.8,.2,1),filter .18s ease;
+}
+.hex-cell:active{ transform:scale(.97); }
+.hex-shape{
+  position:absolute;
+  inset:0;
+  clip-path:polygon(50% 0, 95% 24%, 95% 76%, 50% 100%, 5% 76%, 5% 24%);
+  border-radius:18px;
+  background:linear-gradient(180deg,#FFFDFC,#F0EADF);
+  border:2px solid rgba(111,123,115,.16);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.9),
+    0 12px 18px rgba(60,67,63,.06);
+}
+.hex-cell.current .hex-shape{
+  border-color:#7DB98C;
+  box-shadow:0 0 0 5px rgba(125,185,140,.14), inset 0 1px 0 rgba(255,255,255,.9);
+}
+.hex-cell.selected{ transform:translateY(-4px) scale(1.03); z-index:4; }
+.hex-cell.selected .hex-shape{
+  border-color:#5C8DFF;
+  box-shadow:
+    0 0 0 5px rgba(92,141,255,.15),
+    0 18px 32px rgba(52,87,163,.15),
+    inset 0 1px 0 rgba(255,255,255,.95);
+}
+.hex-cell.captured .hex-shape{
+  background:linear-gradient(180deg,#FDE7E3,#F2B2A5 74%,#D76A5A);
+  border-color:#C85849;
+  box-shadow:
+    0 0 0 5px rgba(200,88,73,.11),
+    0 14px 30px rgba(164,62,45,.18),
+    inset 0 1px 0 rgba(255,255,255,.45);
+}
+.hex-label{
+  position:absolute;
+  left:50%;
+  top:11px;
+  transform:translateX(-50%);
+  font:800 10px/1 Inter,sans-serif;
+  letter-spacing:.08em;
+  color:#7B887E;
+  text-transform:uppercase;
+}
+.hex-thumb{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:56px;
+  height:56px;
+  transform:translate(-50%,-46%);
+  border-radius:18px;
+  background-size:cover;
+  background-position:center;
+  border:3px solid rgba(255,255,255,.95);
+  box-shadow:0 10px 18px rgba(0,0,0,.16);
+}
+.hex-cell.captured .hex-label{ color:#FFFFFFCC; }
+.hex-spark{
+  position:absolute;
+  right:14px;
+  top:19px;
+  color:#FFF4BA;
+  text-shadow:0 0 18px rgba(255,209,89,.7);
+  font-size:15px;
+  animation:hexSpark 1.6s ease-in-out infinite;
+}
+@keyframes hexSpark{
+  0%,100%{ transform:translateY(0) scale(.95); opacity:.65; }
+  50%{ transform:translateY(-4px) scale(1.15); opacity:1; }
+}
+.hex-chest{
+  position:absolute;
+  left:50%;
+  top:52%;
+  width:44px;
+  height:34px;
+  transform:translate(-50%,-40%);
+}
+.hex-chest-base{
+  position:absolute;
+  left:0; right:0; bottom:0;
+  height:20px;
+  border-radius:9px;
+  background:linear-gradient(180deg,#C68647,#8D5729);
+  border:2px solid rgba(82,47,17,.22);
+  box-shadow:0 7px 14px rgba(90,52,18,.25);
+}
+.hex-chest-lid{
+  position:absolute;
+  left:2px; right:2px; top:2px;
+  height:15px;
+  border-radius:9px 9px 6px 6px;
+  background:linear-gradient(180deg,#F8C272,#D98736);
+  border:2px solid rgba(82,47,17,.18);
+}
+.hex-chest-band{
+  position:absolute;
+  left:50%; top:5px;
+  width:8px; height:24px;
+  transform:translateX(-50%);
+  border-radius:8px;
+  background:linear-gradient(180deg,#FFF0B2,#D1A33B);
+  box-shadow:0 0 0 1px rgba(112,75,20,.12) inset;
+}
+.hex-cell.chest-rare .hex-chest-base{ background:linear-gradient(180deg,#8C7CFF,#5A48C7); }
+.hex-cell.chest-rare .hex-chest-lid{ background:linear-gradient(180deg,#B8ADFF,#7A64E0); }
+.hex-cell.chest-epic .hex-chest-base{ background:linear-gradient(180deg,#FF8AD4,#D94AAA); }
+.hex-cell.chest-epic .hex-chest-lid{ background:linear-gradient(180deg,#FFC1EB,#F56AC4); }
+.hex-cell.loot-pulse{ animation:hexChestPulse .92s ease; }
+@keyframes hexChestPulse{
+  0%{ transform:translateY(0) scale(1); }
+  35%{ transform:translateY(-6px) scale(1.08); }
+  100%{ transform:translateY(0) scale(1); }
+}
+.hex-map-actions{ margin-top:12px; }
+.hex-current-card{
+  margin-top:10px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  background:rgba(255,255,255,.82);
+  border:1px solid rgba(92,107,102,.12);
+  border-radius:22px;
+  padding:12px;
+  box-shadow:0 12px 24px rgba(34,41,38,.06);
+}
+.hex-current-thumb{
+  width:58px;
+  height:58px;
+  border-radius:18px;
+  flex:0 0 58px;
+  background:#EAE5DA;
+  display:grid;
+  place-items:center;
+  color:#7B887E;
+  font:900 18px/1 Inter,sans-serif;
+  overflow:hidden;
+  border:2px solid rgba(255,255,255,.88);
+}
+.hex-current-thumb.empty{ background:linear-gradient(180deg,#EFEADF,#E5DECF); }
+.hex-current-thumb img{ width:100%; height:100%; object-fit:cover; display:block; }
+.hex-current-copy{ min-width:0; flex:1; }
+.hex-current-label{
+  font:900 15px/1.1 Inter,sans-serif;
+  color:#18231E;
+  margin-bottom:5px;
+}
+.hex-current-sub{
+  color:#6A776F;
+  font-size:12px;
+  line-height:1.35;
+}
+.hex-capture-btn{ white-space:nowrap; }
+.chest-cutscene{
+  position:fixed;
+  inset:0;
+  z-index:260;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  background:
+    radial-gradient(circle at center,rgba(255,195,95,.18),transparent 18%),
+    radial-gradient(circle at center,rgba(255,130,220,.14),transparent 34%),
+    rgba(8,11,16,.72);
+  backdrop-filter:blur(10px);
+}
+.chest-cutscene.show{ display:flex; }
+.chest-cutscene-inner{
+  width:min(92vw,430px);
+  position:relative;
+  text-align:center;
+  pointer-events:none;
+}
+.chest-cutscene-rays,
+.chest-cutscene-stars{
+  position:absolute;
+  inset:50% auto auto 50%;
+  transform:translate(-50%,-50%);
+  pointer-events:none;
+}
+.chest-cutscene-rays{
+  width:480px; height:480px; border-radius:50%;
+  background:repeating-conic-gradient(from 0deg, rgba(255,224,146,.18) 0 8deg, transparent 8deg 18deg);
+  mask:radial-gradient(circle at center, transparent 0 20%, #000 22%, transparent 74%);
+  opacity:0;
+}
+.chest-cutscene.show .chest-cutscene-rays{ animation:chestRays 1.8s ease both; }
+@keyframes chestRays{
+  0%{ opacity:0; transform:translate(-50%,-50%) scale(.45) rotate(0deg); }
+  18%{ opacity:1; }
+  100%{ opacity:0; transform:translate(-50%,-50%) scale(1.2) rotate(70deg); }
+}
+.chest-cutscene-stars span{
+  position:absolute;
+  width:6px;height:6px;border-radius:50%;
+  background:#fff;
+  box-shadow:0 0 14px currentColor;
+}
+.chest-cutscene-box{
+  position:relative;
+  width:180px;
+  height:138px;
+  margin:0 auto 20px;
+  transform-origin:50% 70%;
+}
+.chest-cutscene-base{
+  position:absolute;
+  left:0; right:0; bottom:0;
+  height:78px;
+  border-radius:24px;
+  background:linear-gradient(180deg,#CE8A42,#814617);
+  border:3px solid rgba(75,44,14,.34);
+  box-shadow:0 26px 34px rgba(0,0,0,.26);
+}
+.chest-cutscene-lid{
+  position:absolute;
+  left:12px; right:12px; top:18px;
+  height:58px;
+  border-radius:24px 24px 18px 18px;
+  background:linear-gradient(180deg,#FFD27E,#DF8E33);
+  border:3px solid rgba(75,44,14,.28);
+  transform-origin:50% 90%;
+}
+.chest-cutscene-band{
+  position:absolute;
+  left:50%; top:18px;
+  width:18px; height:98px; transform:translateX(-50%);
+  border-radius:12px;
+  background:linear-gradient(180deg,#FFF4B5,#D5AA43);
+  box-shadow:0 0 0 2px rgba(104,69,18,.14) inset;
+}
+.chest-cutscene-glow{
+  position:absolute; inset:-50px;
+  border-radius:50%;
+  background:radial-gradient(circle at center,rgba(255,231,145,.52),transparent 58%);
+  filter:blur(10px);
+  opacity:0;
+}
+.chest-cutscene.show .chest-cutscene-box{ animation:chestFloat 1.55s cubic-bezier(.18,.9,.2,1) both; }
+@keyframes chestFloat{
+  0%{ transform:translateY(40px) scale(.62); opacity:0; }
+  18%{ transform:translateY(0) scale(1.06); opacity:1; }
+  58%{ transform:translateY(-8px) scale(1); }
+  100%{ transform:translateY(0) scale(1); opacity:1; }
+}
+.chest-cutscene.show .chest-cutscene-lid{ animation:chestLidOpen 1.45s ease both .45s; }
+@keyframes chestLidOpen{
+  0%{ transform:rotate(0deg); }
+  42%{ transform:rotate(-8deg); }
+  100%{ transform:rotate(-42deg) translateY(-8px); }
+}
+.chest-cutscene.show .chest-cutscene-glow{ animation:chestGlow 1.6s ease both .55s; }
+@keyframes chestGlow{
+  0%{ opacity:0; transform:scale(.4); }
+  26%{ opacity:1; }
+  100%{ opacity:0; transform:scale(1.35); }
+}
+.chest-cutscene-rewards{
+  display:flex;
+  justify-content:center;
+  gap:12px;
+  margin:12px 0 0;
+}
+.chest-pill{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  padding:11px 16px;
+  border-radius:999px;
+  background:rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.16);
+  color:#fff;
+  font:900 14px/1 Inter,sans-serif;
+  backdrop-filter:blur(10px);
+  opacity:0;
+}
+.chest-cutscene.show .chest-pill{ animation:chestRewardIn .7s cubic-bezier(.18,.88,.22,1) both .82s; }
+.chest-cutscene.show .chest-pill:nth-child(2){ animation-delay:.93s; }
+@keyframes chestRewardIn{
+  0%{ opacity:0; transform:translateY(22px) scale(.8); }
+  100%{ opacity:1; transform:translateY(0) scale(1); }
+}
+.chest-cutscene-title{
+  color:#fff;
+  font:1000 clamp(32px,7vw,48px)/.95 Inter,sans-serif;
+  letter-spacing:-.05em;
+  margin:8px 0 6px;
+  text-shadow:0 10px 26px rgba(0,0,0,.26);
+  opacity:0;
+}
+.chest-cutscene-sub{
+  color:#F7EED6;
+  font:700 14px/1.4 Inter,sans-serif;
+  opacity:0;
+}
+.chest-cutscene.show .chest-cutscene-title,
+.chest-cutscene.show .chest-cutscene-sub{
+  animation:chestTextIn .7s ease both .64s;
+}
+.chest-cutscene.show .chest-cutscene-sub{ animation-delay:.74s; }
+@keyframes chestTextIn{
+  0%{ opacity:0; transform:translateY(14px); }
+  100%{ opacity:1; transform:translateY(0); }
+}
+@media(max-width:420px){
+  .hex-cell{ width:74px; height:84px; }
+  .hex-board{ height:390px; }
+  .hex-thumb{ width:48px; height:48px; border-radius:15px; }
+  .hex-current-card{ flex-wrap:wrap; }
+  .hex-capture-btn{ width:100%; justify-content:center; }
+  .hex-board-wrap{ min-height:420px; }
+}
+
+
+/* =========================================================
+   APPLE-MAPS-INSPIRED HEX MAP OVERRIDE
+   ========================================================= */
+.hex-map-shell{
+  background:linear-gradient(180deg,#FFFFFF,#FAF7F0 56%,#F6F1E7);
+  border:1px solid rgba(112,123,118,.10);
+  border-radius:30px;
+  padding:14px;
+  box-shadow:0 22px 48px rgba(17,24,21,.08);
+}
+.hex-map-head{ margin-bottom:10px; }
+.hex-map-badge{
+  background:rgba(255,255,255,.86);
+  border:1px solid rgba(92,107,102,.10);
+  backdrop-filter:blur(14px);
+  box-shadow:0 10px 24px rgba(20,24,22,.06);
+}
+.hex-map-badge.live{
+  background:rgba(255,255,255,.90);
+  color:#2A4D74;
+}
+.hex-board-wrap{
+  min-height:498px;
+  padding:0;
+  border-radius:28px;
+  background:#EEF3F1;
+  border:1px solid rgba(97,110,106,.08);
+  overflow:hidden;
+}
+.hex-board-wrap::before{ display:none; }
+.apple-map-scene{
+  position:relative;
+  min-height:498px;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 84% 13%,rgba(182,226,255,.65),transparent 16%),
+    radial-gradient(circle at 18% 84%,rgba(184,227,192,.45),transparent 18%),
+    linear-gradient(180deg,#F4F6F3,#E9EFEC 52%,#DFE8E1);
+}
+.apple-map-scene::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    linear-gradient(120deg,transparent 0 46%,rgba(169,214,255,.28) 46% 52%,transparent 52% 100%);
+  opacity:.42;
+  pointer-events:none;
+}
+.apple-map-water{
+  position:absolute;
+  inset:auto 0 0 auto;
+  width:50%;
+  height:38%;
+  right:-3%;
+  bottom:-2%;
+  border-radius:42% 0 0 0;
+  background:
+    radial-gradient(circle at 40% 30%,rgba(255,255,255,.75),transparent 22%),
+    linear-gradient(180deg,#AFD9FF,#8FC6F2 58%,#7BBBEF);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.55);
+  opacity:.98;
+}
+.apple-map-park{
+  position:absolute;
+  border-radius:30px;
+  background:linear-gradient(180deg,#D9F2CF,#BEE8B1);
+  box-shadow:inset 0 0 0 1px rgba(128,172,119,.14);
+}
+.apple-map-park.p1{ left:5%; top:10%; width:34%; height:18%; transform:rotate(-8deg); }
+.apple-map-park.p2{ right:16%; top:18%; width:25%; height:14%; transform:rotate(9deg); }
+.apple-map-park.p3{ left:28%; bottom:16%; width:24%; height:13%; transform:rotate(-12deg); }
+.apple-map-road{
+  position:absolute;
+  left:-8%;
+  right:-8%;
+  height:14px;
+  border-radius:999px;
+  background:#FEFFFD;
+  box-shadow:
+    0 0 0 1px rgba(198,202,197,.58),
+    0 10px 20px rgba(100,108,103,.06);
+}
+.apple-map-road::after{
+  content:"";
+  position:absolute;
+  left:14px; right:14px; top:50%;
+  height:2px;
+  transform:translateY(-50%);
+  background:repeating-linear-gradient(90deg,#D5D9D6 0 12px,transparent 12px 23px);
+  opacity:.8;
+}
+.apple-map-road.r1{ top:16%; transform:rotate(14deg); }
+.apple-map-road.r2{ top:34%; transform:rotate(-12deg); }
+.apple-map-road.r3{ top:52%; transform:rotate(8deg); }
+.apple-map-road.r4{ top:70%; transform:rotate(-17deg); }
+.apple-map-road.r5{ top:48%; left:34%; right:-22%; transform:rotate(84deg); width:14px; height:120%; }
+.apple-map-road.r5::after{
+  left:50%; right:auto; top:14px; bottom:14px; width:2px; height:auto;
+  transform:translateX(-50%);
+  background:repeating-linear-gradient(180deg,#D5D9D6 0 12px,transparent 12px 23px);
+}
+.apple-map-road.minor{
+  height:9px;
+  background:#FBFCFB;
+  opacity:.95;
+}
+.apple-map-road.minor::after{ height:1.6px; opacity:.58; }
+.apple-map-road.m1{ top:26%; transform:rotate(44deg); left:40%; right:-18%; }
+.apple-map-road.m2{ top:64%; transform:rotate(32deg); left:-18%; right:26%; }
+
+.apple-map-label{
+  position:absolute;
+  color:#748179;
+  font:800 11px/1 Inter,sans-serif;
+  letter-spacing:.02em;
+  background:rgba(255,255,255,.58);
+  padding:4px 8px;
+  border-radius:999px;
+  backdrop-filter:blur(8px);
+}
+.apple-map-label.l1{ left:11%; top:13%; }
+.apple-map-label.l2{ left:39%; top:40%; }
+.apple-map-label.l3{ right:16%; top:23%; }
+.apple-map-label.l4{ right:14%; bottom:17%; }
+
+.hex-board{
+  position:absolute;
+  inset:0;
+  height:100%;
+}
+.hex-cell{
+  width:82px;
+  height:92px;
+  filter:none;
+  transition:transform .18s cubic-bezier(.2,.8,.2,1),opacity .18s ease;
+}
+.hex-cell .hex-shape{
+  background:rgba(255,255,255,.18);
+  border:2px solid rgba(87,103,98,.24);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.55),
+    0 10px 18px rgba(58,67,62,.05);
+  backdrop-filter:blur(4px);
+}
+.hex-cell:hover .hex-shape{
+  border-color:rgba(76,125,245,.42);
+  background:rgba(255,255,255,.26);
+}
+.hex-cell.current .hex-shape{
+  border-color:#42A8FF;
+  box-shadow:
+    0 0 0 4px rgba(66,168,255,.18),
+    inset 0 0 0 1px rgba(255,255,255,.8);
+}
+.hex-cell.selected{ transform:translateY(-3px) scale(1.02); z-index:5; }
+.hex-cell.selected .hex-shape{
+  border-color:#2674FF;
+  background:rgba(255,255,255,.30);
+  box-shadow:
+    0 0 0 6px rgba(38,116,255,.12),
+    0 14px 28px rgba(38,116,255,.14),
+    inset 0 0 0 1px rgba(255,255,255,.82);
+}
+.hex-cell.captured .hex-shape{
+  background:linear-gradient(180deg,rgba(255,143,125,.28),rgba(238,82,58,.48));
+  border-color:rgba(205,75,53,.78);
+  box-shadow:
+    0 0 0 4px rgba(219,102,82,.12),
+    inset 0 0 0 1px rgba(255,255,255,.18);
+}
+.hex-label{
+  top:9px;
+  font-size:10px;
+  color:#6E7B74;
+  background:rgba(255,255,255,.78);
+  padding:4px 7px;
+  border-radius:999px;
+  box-shadow:0 4px 10px rgba(0,0,0,.04);
+}
+.hex-cell.captured .hex-label{
+  color:#FFF;
+  background:rgba(188,67,48,.72);
+}
+.hex-thumb{
+  width:50px;
+  height:50px;
+  border-radius:50%;
+  transform:translate(-50%,-34%);
+  border:3px solid rgba(255,255,255,.95);
+  box-shadow:0 10px 22px rgba(0,0,0,.20);
+}
+.hex-cell.has-chest .hex-shape{
+  border-color:rgba(255,193,67,.58);
+  background:rgba(255,248,228,.28);
+}
+.hex-cell.has-chest.selected .hex-shape{
+  border-color:#F0B220;
+}
+.hex-spark{
+  right:9px;
+  top:13px;
+  font-size:14px;
+}
+.hex-chest{
+  top:50%;
+  transform:translate(-50%,-30%);
+}
+.map-me-pin{
+  position:absolute;
+  width:24px;
+  height:24px;
+  border-radius:50%;
+  background:#2A84FF;
+  border:4px solid rgba(255,255,255,.96);
+  box-shadow:0 10px 22px rgba(42,132,255,.28);
+  z-index:8;
+}
+.map-me-pin::after{
+  content:"";
+  position:absolute;
+  inset:-8px;
+  border-radius:50%;
+  border:2px solid rgba(42,132,255,.24);
+}
+.hex-current-card{
+  background:rgba(255,255,255,.88);
+  backdrop-filter:blur(18px);
+  border:1px solid rgba(97,110,106,.10);
+  box-shadow:0 16px 30px rgba(30,37,34,.07);
+}
+.hex-current-thumb{
+  background:linear-gradient(180deg,#EEF3F6,#E1E7EA);
+}
+.hex-current-thumb.empty{
+  background:linear-gradient(180deg,#E8EEF1,#DCE4E8);
+  color:#3E6B93;
+}
+@media(max-width:420px){
+  .apple-map-scene{ min-height:438px; }
+  .hex-board-wrap{ min-height:438px; }
+  .hex-cell{ width:72px; height:82px; }
+  .hex-thumb{ width:44px; height:44px; }
+}
+
+
+/* =========================================================
+   REAL OPENSTREETMAP + GEOGRAPHIC HEX OVERLAY
+   ========================================================= */
+.hex-map-shell{
+  background:linear-gradient(180deg,#FFFFFF,#FAF8F3);
+  border:1px solid rgba(95,108,101,.10);
+  border-radius:30px;
+  padding:14px;
+  box-shadow:0 20px 46px rgba(23,31,27,.08);
+}
+.hex-map-head{
+  display:flex;
+  gap:8px;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  margin-bottom:10px;
+}
+.hex-map-badge{
+  background:rgba(255,255,255,.92);
+  border:1px solid rgba(94,108,101,.10);
+  box-shadow:0 8px 22px rgba(25,31,28,.05);
+  backdrop-filter:blur(14px);
+}
+.hex-map-badge.live{
+  background:linear-gradient(135deg,rgba(237,248,255,.96),rgba(243,255,247,.96));
+  color:#244A70;
+}
+#realMap.hex-board-wrap{
+  display:block;
+  position:relative;
+  height:min(61dvh,560px);
+  min-height:440px;
+  padding:0;
+  border-radius:28px;
+  overflow:hidden;
+  background:#E9EFF0;
+  border:1px solid rgba(82,99,92,.09);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.66),
+    0 16px 34px rgba(34,44,39,.07);
+}
+#realMap.hex-board-wrap::before{ display:none; }
+#realMap .leaflet-container,
+#realMap.leaflet-container{
+  width:100%;
+  height:100%;
+  font-family:var(--font-body);
+  background:#E9EFF0;
+}
+#realMap .leaflet-tile-pane{
+  filter:saturate(.88) contrast(.98) brightness(1.035);
+}
+#realMap .leaflet-control-zoom{
+  border:none;
+  margin:14px;
+  box-shadow:0 10px 26px rgba(31,40,36,.12);
+}
+#realMap .leaflet-control-zoom a{
+  width:36px;
+  height:36px;
+  line-height:36px;
+  border:none;
+  color:#1E2A25;
+  background:rgba(255,255,255,.94);
+  backdrop-filter:blur(14px);
+}
+#realMap .leaflet-control-attribution{
+  margin:0 8px 8px 0;
+  padding:4px 8px;
+  border-radius:999px;
+  background:rgba(255,255,255,.82);
+  color:#66736C;
+  font-size:9px;
+  backdrop-filter:blur(12px);
+}
+#realMap .leaflet-control-attribution a{ color:#3B6D9E; }
+.hex-leaflet-tooltip{
+  border:0!important;
+  border-radius:999px!important;
+  padding:7px 10px!important;
+  background:rgba(255,255,255,.94)!important;
+  color:#25322C!important;
+  font:850 11px/1 var(--font-body)!important;
+  box-shadow:0 10px 24px rgba(28,37,32,.12)!important;
+}
+.hex-leaflet-tooltip::before{ display:none!important; }
+
+.hex-photo-marker{
+  width:54px;
+  height:54px;
+  border-radius:50%;
+  background-size:cover;
+  background-position:center;
+  border:4px solid rgba(255,255,255,.98);
+  box-shadow:
+    0 12px 26px rgba(24,34,29,.22),
+    0 0 0 3px rgba(199,72,55,.18);
+  transition:transform .2s cubic-bezier(.2,.8,.2,1);
+}
+.hex-photo-marker.just-landed{
+  animation:hexPhotoLand 1.15s cubic-bezier(.16,.86,.2,1);
+}
+@keyframes hexPhotoLand{
+  0%{transform:scale(.15) rotate(-12deg);opacity:0;}
+  42%{transform:scale(1.22) rotate(4deg);opacity:1;}
+  70%{transform:scale(.94) rotate(0);}
+  100%{transform:scale(1);}
+}
+.hex-chest-marker{
+  position:relative;
+  width:58px;
+  height:58px;
+  display:grid;
+  place-items:center;
+  filter:drop-shadow(0 14px 18px rgba(91,55,13,.24));
+  animation:hexChestBob 2.15s ease-in-out infinite;
+}
+@keyframes hexChestBob{
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(-7px);}
+}
+.hex-chest-marker::before{
+  content:"";
+  position:absolute;
+  inset:2px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(255,213,104,.34),transparent 65%);
+  animation:hexChestAura 1.65s ease-in-out infinite;
+}
+@keyframes hexChestAura{
+  0%,100%{transform:scale(.84);opacity:.52;}
+  50%{transform:scale(1.2);opacity:1;}
+}
+.hex-chest-mini{
+  position:relative;
+  width:44px;
+  height:35px;
+}
+.hex-chest-mini .lid{
+  position:absolute;
+  left:2px;right:2px;top:1px;
+  height:16px;
+  border-radius:10px 10px 5px 5px;
+  background:linear-gradient(180deg,#FFD486,#D68A32);
+  border:2px solid rgba(83,48,14,.22);
+}
+.hex-chest-mini .base{
+  position:absolute;
+  left:0;right:0;bottom:0;
+  height:22px;
+  border-radius:7px 7px 10px 10px;
+  background:linear-gradient(180deg,#BE7A3E,#774019);
+  border:2px solid rgba(83,48,14,.24);
+}
+.hex-chest-mini .band{
+  position:absolute;
+  left:50%;top:4px;
+  width:9px;height:27px;
+  transform:translateX(-50%);
+  border-radius:8px;
+  background:linear-gradient(180deg,#FFF2AF,#C89D34);
+}
+.hex-chest-marker.rare .hex-chest-mini .lid{
+  background:linear-gradient(180deg,#C9C2FF,#7D6BE4);
+}
+.hex-chest-marker.rare .hex-chest-mini .base{
+  background:linear-gradient(180deg,#8D7BE9,#4E3CA8);
+}
+.hex-chest-marker.epic .hex-chest-mini .lid{
+  background:linear-gradient(180deg,#FFC4EC,#F265C3);
+}
+.hex-chest-marker.epic .hex-chest-mini .base{
+  background:linear-gradient(180deg,#F174C6,#A82D85);
+}
+.hex-user-marker{
+  position:relative;
+  width:24px;
+  height:24px;
+  border-radius:50%;
+  background:#2583FF;
+  border:4px solid #fff;
+  box-shadow:
+    0 8px 22px rgba(37,131,255,.33),
+    0 0 0 8px rgba(37,131,255,.13);
+}
+.hex-user-marker::after{
+  content:"";
+  position:absolute;
+  inset:-11px;
+  border-radius:50%;
+  border:2px solid rgba(37,131,255,.22);
+  animation:hexUserPulse 1.8s ease-out infinite;
+}
+@keyframes hexUserPulse{
+  0%{transform:scale(.65);opacity:.8;}
+  100%{transform:scale(1.45);opacity:0;}
+}
+.hex-map-actions{
+  margin:12px 0 10px;
+}
+.hex-map-actions .map-btn{
+  background:rgba(255,255,255,.94);
+  backdrop-filter:blur(12px);
+}
+.hex-current-card{
+  background:rgba(255,255,255,.91);
+  border:1px solid rgba(94,108,101,.10);
+  box-shadow:0 14px 30px rgba(28,36,32,.07);
+  backdrop-filter:blur(18px);
+}
+.hex-current-thumb.empty{
+  background:linear-gradient(180deg,#E8F2FA,#D8E8F4);
+  color:#2F6F9E;
+}
+.hex-capture-btn[disabled]{
+  opacity:.46;
+  cursor:not-allowed;
+}
+.chest-cutscene{
+  z-index:1500;
+}
+@media(max-width:430px){
+  #realMap.hex-board-wrap{
+    height:55dvh;
+    min-height:410px;
+  }
+  .hex-photo-marker{width:48px;height:48px;}
+}
+
+
+/* Long-press test feedback on real Leaflet hexes */
+.leaflet-interactive.hex-long-press{
+  animation:hexLongPressCue .68s linear forwards;
+}
+@keyframes hexLongPressCue{
+  0%{
+    stroke-width:2;
+    filter:drop-shadow(0 0 0 rgba(38,116,255,0));
+  }
+  60%{
+    stroke-width:3;
+    filter:drop-shadow(0 0 6px rgba(38,116,255,.38));
+  }
+  100%{
+    stroke-width:4;
+    filter:drop-shadow(0 0 11px rgba(38,116,255,.7));
+  }
+}
+
+
+/* =========================================================
+   UPGRADED MULTI-STEP CHEST CUTSCENE
+   ========================================================= */
+.chest-cutscene{
+  cursor:pointer;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 50% 42%,rgba(255,207,100,.14),transparent 16%),
+    radial-gradient(circle at 50% 50%,rgba(255,133,224,.14),transparent 28%),
+    linear-gradient(180deg,rgba(6,10,17,.68),rgba(6,10,17,.82));
+}
+.chest-cutscene-inner{
+  width:min(92vw,440px);
+  pointer-events:auto;
+  padding:32px 0 26px;
+}
+.chest-cutscene-spotlight{
+  position:absolute;
+  left:50%;
+  top:-180px;
+  width:420px;
+  height:560px;
+  transform:translateX(-50%);
+  background:linear-gradient(180deg,rgba(255,249,217,.60),rgba(255,240,176,.16) 36%,rgba(255,255,255,0) 76%);
+  clip-path:polygon(46% 0,54% 0,100% 100%,0 100%);
+  filter:blur(4px);
+  opacity:0;
+  pointer-events:none;
+}
+.chest-cutscene-floor{
+  position:absolute;
+  left:50%;
+  bottom:88px;
+  width:280px;
+  height:52px;
+  transform:translateX(-50%);
+  border-radius:50%;
+  background:radial-gradient(circle at center,rgba(0,0,0,.42),rgba(0,0,0,0) 72%);
+  opacity:.6;
+  pointer-events:none;
+}
+.chest-cutscene.show .chest-cutscene-spotlight{
+  animation:chestSpotlightIn 1s cubic-bezier(.18,.88,.2,1) both;
+}
+@keyframes chestSpotlightIn{
+  0%{opacity:0;transform:translateX(-50%) scaleY(.55);}
+  18%{opacity:1;}
+  100%{opacity:.88;transform:translateX(-50%) scaleY(1);}
+}
+.chest-cutscene.show .chest-cutscene-rays{
+  animation:chestRays 2.2s ease both;
+}
+.chest-cutscene-stars span{
+  width:7px;height:7px;
+}
+.chest-cutscene-box{
+  width:194px;
+  height:148px;
+  margin:0 auto 22px;
+  z-index:2;
+}
+.chest-cutscene.show .chest-cutscene-box{
+  animation:chestDropIn .95s cubic-bezier(.15,.88,.22,1) both;
+}
+@keyframes chestDropIn{
+  0%{opacity:0;transform:translateY(-250px) scale(.72);}
+  42%{opacity:1;transform:translateY(8px) scale(1.03);}
+  62%{transform:translateY(-16px) scale(.99);}
+  82%{transform:translateY(4px) scale(1.01);}
+  100%{opacity:1;transform:translateY(0) scale(1);}
+}
+.chest-cutscene-base{
+  height:82px;
+  border-radius:24px;
+  box-shadow:0 30px 38px rgba(0,0,0,.30);
+}
+.chest-cutscene-lid{
+  left:12px; right:12px; top:16px;
+  height:60px;
+  transform:rotate(0deg);
+}
+.chest-cutscene-band{
+  top:16px;
+  height:104px;
+}
+.chest-cutscene-glow{
+  inset:-62px;
+  background:radial-gradient(circle at center,rgba(255,239,166,.74),rgba(255,217,96,.34) 38%,transparent 66%);
+  filter:blur(10px);
+}
+.chest-cutscene.show .chest-cutscene-lid{
+  animation:none !important;
+  transform:rotate(0deg);
+}
+.chest-cutscene.show .chest-cutscene-glow{
+  animation:none !important;
+  opacity:0;
+}
+.chest-cutscene.stage-opened .chest-cutscene-lid{
+  animation:chestLidManualOpen .72s cubic-bezier(.14,.88,.18,1) forwards !important;
+}
+@keyframes chestLidManualOpen{
+  0%{transform:rotate(0deg) translateY(0);}
+  44%{transform:rotate(-12deg) translateY(-3px);}
+  100%{transform:rotate(-45deg) translateY(-9px);}
+}
+.chest-cutscene.stage-opened .chest-cutscene-glow{
+  animation:chestManualGlow 1.25s ease-out both !important;
+}
+@keyframes chestManualGlow{
+  0%{opacity:0;transform:scale(.45);}
+  26%{opacity:1;}
+  100%{opacity:.22;transform:scale(1.22);}
+}
+.chest-cutscene-title{
+  opacity:1 !important;
+  min-height:46px;
+}
+.chest-cutscene-sub{
+  opacity:1 !important;
+  min-height:40px;
+  padding:0 22px;
+}
+.chest-cutscene.show .chest-cutscene-title,
+.chest-cutscene.show .chest-cutscene-sub{
+  animation:none !important;
+}
+.chest-cutscene-hint{
+  margin-top:14px;
+  color:#FFF4D6;
+  font:800 12px/1 Inter,sans-serif;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  opacity:.88;
+}
+.chest-cutscene-progress{
+  display:flex;
+  justify-content:center;
+  gap:8px;
+  margin-top:14px;
+}
+.chest-cutscene-progress span{
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  background:rgba(255,255,255,.18);
+  border:1px solid rgba(255,255,255,.20);
+  transition:transform .2s ease, background .2s ease, box-shadow .2s ease;
+}
+.chest-cutscene-progress span.on{
+  background:#FFF0A2;
+  box-shadow:0 0 16px rgba(255,224,107,.5);
+  transform:scale(1.1);
+}
+.chest-cutscene-rewards{
+  min-height:54px;
+  margin:16px 0 0;
+}
+.chest-pill{
+  opacity:0 !important;
+  transform:translateY(22px) scale(.82);
+  transition:transform .28s cubic-bezier(.18,.88,.22,1), opacity .28s ease;
+  background:rgba(255,255,255,.14);
+  border:1px solid rgba(255,255,255,.18);
+}
+.chest-cutscene.show .chest-pill{
+  animation:none !important;
+}
+.chest-cutscene.stage-coins #chestCutsceneCoins,
+.chest-cutscene.stage-xp #chestCutsceneCoins{
+  opacity:1 !important;
+  transform:translateY(0) scale(1);
+}
+.chest-cutscene.stage-xp #chestCutsceneXp{
+  opacity:1 !important;
+  transform:translateY(0) scale(1);
+}
+.chest-reward-burst{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:0;height:0;
+  pointer-events:none;
+}
+.chest-reward-burst i{
+  position:absolute;
+  left:0; top:0;
+  width:10px; height:10px;
+  border-radius:50%;
+  background:currentColor;
+  box-shadow:0 0 16px currentColor;
+  opacity:0;
+}
+.chest-cutscene.stage-coins .chest-reward-burst.coins i{
+  animation:burstOut .9s ease-out both;
+}
+.chest-cutscene.stage-xp .chest-reward-burst.xp i{
+  animation:burstOut .9s ease-out both;
+}
+.chest-reward-burst.coins{ color:#FFD86C; }
+.chest-reward-burst.xp{ color:#8FE7FF; }
+.chest-reward-burst i:nth-child(1){ --x:-16px; --y:-74px; animation-delay:0ms;}
+.chest-reward-burst i:nth-child(2){ --x:18px; --y:-92px; animation-delay:40ms;}
+.chest-reward-burst i:nth-child(3){ --x:-54px; --y:-46px; animation-delay:80ms;}
+.chest-reward-burst i:nth-child(4){ --x:52px; --y:-42px; animation-delay:120ms;}
+.chest-reward-burst i:nth-child(5){ --x:-24px; --y:-118px; animation-delay:160ms;}
+.chest-reward-burst i:nth-child(6){ --x:34px; --y:-124px; animation-delay:200ms;}
+@keyframes burstOut{
+  0%{opacity:0;transform:translate(-50%,-50%) scale(.2);}
+  18%{opacity:1;}
+  100%{opacity:0;transform:translate(calc(-50% + var(--x)), calc(-50% + var(--y))) scale(1);}
+}
+.chest-cutscene.closing .chest-cutscene-inner{
+  animation:chestOutro .46s cubic-bezier(.3,.8,.2,1) both;
+}
+@keyframes chestOutro{
+  0%{opacity:1;transform:translateY(0) scale(1);}
+  100%{opacity:0;transform:translateY(26px) scale(.92);}
+}
+
+
+/* =========================================================
+   MEGA CHEST CUTSCENE OVERRIDE
+   ========================================================= */
+.chest-cutscene{
+  cursor:pointer;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 50% 38%, rgba(255,215,124,.18), transparent 14%),
+    radial-gradient(circle at 50% 56%, rgba(184,104,255,.18), transparent 28%),
+    linear-gradient(180deg, rgba(4,7,14,.64), rgba(7,10,18,.90));
+}
+.chest-cutscene::before,
+.chest-cutscene::after{
+  content:"";
+  position:absolute; inset:-20%;
+  pointer-events:none;
+}
+.chest-cutscene::before{
+  background:
+    radial-gradient(circle, rgba(255,255,255,.22) 0 1px, transparent 1.5px) 0 0/34px 34px,
+    radial-gradient(circle, rgba(165,237,255,.16) 0 1px, transparent 1.5px) 12px 18px/42px 42px;
+  opacity:.55;
+  animation:chestSkyDrift 12s linear infinite;
+}
+.chest-cutscene::after{
+  background:
+    radial-gradient(circle at 50% 46%, rgba(255,255,255,.08), transparent 16%),
+    radial-gradient(circle at 50% 54%, rgba(255,221,120,.14), transparent 26%);
+  filter:blur(12px);
+}
+@keyframes chestSkyDrift{
+  0%{transform:translateY(0);}
+  100%{transform:translateY(34px);}
+}
+.chest-cutscene-inner{
+  width:min(94vw,460px);
+  padding:28px 0 34px;
+}
+.chest-cutscene-spotlight{
+  top:-170px;
+  width:480px;
+  height:610px;
+  background:
+    linear-gradient(180deg, rgba(255,252,232,.76), rgba(255,236,162,.28) 34%, rgba(255,255,255,0) 78%);
+  clip-path:polygon(47.5% 0,52.5% 0,100% 100%,0 100%);
+  filter:blur(5px);
+}
+.chest-cutscene-floor{
+  bottom:92px;
+  width:310px;
+  height:58px;
+  background:radial-gradient(circle at center, rgba(0,0,0,.50), rgba(0,0,0,0) 72%);
+}
+.chest-cutscene.show .chest-cutscene-spotlight{
+  animation:chestSpotlightMega 1.2s cubic-bezier(.16,.9,.2,1) both;
+}
+@keyframes chestSpotlightMega{
+  0%{opacity:0;transform:translateX(-50%) scaleY(.45);}
+  18%{opacity:1;}
+  100%{opacity:.98;transform:translateX(-50%) scaleY(1);}
+}
+.chest-cutscene-rays{
+  width:520px; height:520px;
+  background:repeating-conic-gradient(from 0deg, rgba(255,230,146,.20) 0 8deg, transparent 8deg 18deg);
+}
+.chest-cutscene.show .chest-cutscene-rays{
+  animation:chestRaysMega 2.6s ease both;
+}
+@keyframes chestRaysMega{
+  0%{opacity:0;transform:translate(-50%,-50%) scale(.34) rotate(0deg);}
+  22%{opacity:1;}
+  100%{opacity:0;transform:translate(-50%,-50%) scale(1.3) rotate(94deg);}
+}
+.chest-cutscene-stars span{ width:8px; height:8px; }
+
+.chest-cutscene-box{
+  width:228px;
+  height:180px;
+  margin:0 auto 18px;
+  transform-origin:50% 76%;
+  z-index:3;
+}
+.chest-cutscene.show .chest-cutscene-box{
+  animation:chestDropMega 1.1s cubic-bezier(.14,.92,.18,1) both;
+}
+@keyframes chestDropMega{
+  0%{opacity:0;transform:translateY(-300px) scale(.56) rotate(-8deg);}
+  36%{opacity:1;transform:translateY(12px) scale(1.05) rotate(2deg);}
+  56%{transform:translateY(-18px) scale(.98) rotate(-1deg);}
+  74%{transform:translateY(6px) scale(1.01);}
+  100%{opacity:1;transform:translateY(0) scale(1);}
+}
+.chest-cutscene-box::before{
+  content:"";
+  position:absolute;
+  inset:-18px;
+  border-radius:50%;
+  background:radial-gradient(circle at center, rgba(255,227,126,.24), transparent 62%);
+  opacity:.7;
+  filter:blur(10px);
+}
+.chest-cutscene-base{
+  left:8px; right:8px; bottom:10px;
+  height:92px;
+  border-radius:22px 22px 26px 26px;
+  background:
+    linear-gradient(180deg, #D99646, #9A5720 54%, #723A13);
+  border:3px solid rgba(82,48,16,.60);
+  box-shadow:
+    0 34px 44px rgba(0,0,0,.34),
+    inset 0 2px 0 rgba(255,226,167,.42),
+    inset 0 -10px 18px rgba(0,0,0,.14);
+}
+.chest-cutscene-lid{
+  left:18px; right:18px; top:12px;
+  height:74px;
+  border-radius:28px 28px 16px 16px;
+  background:
+    linear-gradient(180deg, #FFD587, #E59A41 46%, #B46625);
+  border:3px solid rgba(82,48,16,.56);
+  box-shadow:
+    inset 0 2px 0 rgba(255,247,208,.58),
+    inset 0 -10px 16px rgba(0,0,0,.12);
+  transform-origin:50% 90%;
+}
+.chest-cutscene-band{
+  left:50%;
+  top:18px;
+  width:24px;
+  height:118px;
+  transform:translateX(-50%);
+  border-radius:14px;
+  background:
+    linear-gradient(180deg, #FFF7C4, #E6B94E 46%, #B17B26);
+  box-shadow:
+    0 0 0 2px rgba(118,77,20,.18) inset,
+    0 0 14px rgba(255,219,117,.30);
+}
+.chest-cutscene-lock{
+  position:absolute;
+  left:50%;
+  top:72px;
+  width:40px; height:46px;
+  transform:translateX(-50%);
+  border-radius:16px 16px 14px 14px;
+  background:linear-gradient(180deg, #FFF4B6, #E0B249 52%, #B57A20);
+  box-shadow:
+    0 0 0 2px rgba(117,78,20,.22) inset,
+    0 8px 16px rgba(0,0,0,.18);
+}
+.chest-cutscene-lock::before{
+  content:"";
+  position:absolute;
+  left:50%;
+  top:-18px;
+  width:20px; height:22px;
+  transform:translateX(-50%);
+  border:5px solid #E8BB4D;
+  border-bottom:none;
+  border-radius:18px 18px 0 0;
+}
+.chest-cutscene-goldline{
+  position:absolute;
+  left:20px; right:20px;
+  height:4px;
+  border-radius:999px;
+  background:linear-gradient(90deg, rgba(255,235,171,0), rgba(255,235,171,.92), rgba(255,235,171,0));
+}
+.chest-cutscene-goldline.top{ top:86px; }
+.chest-cutscene-goldline.bottom{ top:114px; }
+.chest-cutscene-corner{
+  position:absolute;
+  width:16px; height:16px;
+  border-radius:6px;
+  background:linear-gradient(180deg,#FFEFB2,#D39B39);
+  box-shadow:0 0 0 1px rgba(101,65,16,.18) inset;
+}
+.chest-cutscene-corner.c1{ left:18px; top:18px; }
+.chest-cutscene-corner.c2{ right:18px; top:18px; }
+.chest-cutscene-corner.c3{ left:16px; bottom:24px; }
+.chest-cutscene-corner.c4{ right:16px; bottom:24px; }
+.chest-cutscene-glow{
+  inset:-82px;
+  background:radial-gradient(circle at center, rgba(255,244,177,.96), rgba(255,214,94,.44) 34%, transparent 66%);
+  filter:blur(14px);
+  opacity:0;
+}
+.chest-cutscene.show .chest-cutscene-lid{ animation:none !important; transform:rotate(0deg); }
+.chest-cutscene.stage-opened .chest-cutscene-lid{
+  animation:chestLidHeroOpen .78s cubic-bezier(.14,.9,.18,1) forwards !important;
+}
+@keyframes chestLidHeroOpen{
+  0%{transform:rotate(0deg) translateY(0);}
+  28%{transform:rotate(-12deg) translateY(-2px);}
+  100%{transform:rotate(-58deg) translateY(-13px);}
+}
+.chest-cutscene.stage-opened .chest-cutscene-glow{
+  animation:chestOpenBlast 1.4s ease-out both !important;
+}
+@keyframes chestOpenBlast{
+  0%{opacity:0;transform:scale(.24);}
+  20%{opacity:1;}
+  100%{opacity:.28;transform:scale(1.32);}
+}
+.chest-cutscene.stage-coins .chest-cutscene-box,
+.chest-cutscene.stage-xp .chest-cutscene-box{
+  animation:chestHideAway .48s cubic-bezier(.18,.9,.2,1) forwards;
+}
+@keyframes chestHideAway{
+  0%{opacity:1;transform:translateY(0) scale(1);}
+  100%{opacity:0;transform:translateY(38px) scale(.80);}
+}
+.chest-cutscene-title{
+  min-height:56px;
+  font-size:clamp(34px,7.4vw,54px);
+  letter-spacing:-.06em;
+  text-shadow:0 12px 26px rgba(0,0,0,.28);
+}
+.chest-cutscene-sub{
+  min-height:42px;
+  color:#F8EDC9;
+  font-size:14px;
+}
+.chest-cutscene-hint{
+  margin-top:14px;
+  color:#FFEAB3;
+  font:900 12px/1 Inter,sans-serif;
+  letter-spacing:.20em;
+}
+.chest-cutscene-progress{
+  margin-top:16px;
+}
+.chest-cutscene-progress span{
+  width:12px; height:12px;
+  background:rgba(255,255,255,.16);
+}
+.chest-cutscene-progress span.on{
+  background:#FFE88E;
+  box-shadow:0 0 18px rgba(255,227,120,.7);
+}
+.chest-cutscene-rewards{
+  min-height:68px;
+  margin-top:18px;
+}
+.chest-pill{ display:none !important; }
+
+.chest-reward-center{
+  position:relative;
+  width:min(82vw,320px);
+  min-height:140px;
+  margin:4px auto 0;
+  display:grid;
+  place-items:center;
+  pointer-events:none;
+  opacity:0;
+  transform:translateY(18px) scale(.86);
+}
+.chest-cutscene.stage-coins .chest-reward-center,
+.chest-cutscene.stage-xp .chest-reward-center{
+  opacity:1;
+  transform:translateY(0) scale(1);
+  transition:opacity .26s ease, transform .32s cubic-bezier(.18,.88,.22,1);
+}
+.chest-reward-core{
+  position:relative;
+  width:100%;
+  border-radius:32px;
+  padding:22px 16px 18px;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,.06));
+  border:1px solid rgba(255,255,255,.16);
+  backdrop-filter:blur(14px);
+  box-shadow:
+    0 24px 40px rgba(0,0,0,.16),
+    inset 0 1px 0 rgba(255,255,255,.18);
+}
+.chest-reward-ring,
+.chest-reward-ring::after{
+  content:"";
+  position:absolute;
+  left:50%; top:50%;
+  border-radius:50%;
+  transform:translate(-50%,-50%);
+}
+.chest-reward-ring{
+  width:112px; height:112px;
+  border:2px solid rgba(255,255,255,.18);
+}
+.chest-reward-ring::after{
+  width:152px; height:152px;
+  border:1px solid rgba(255,255,255,.10);
+}
+.chest-cutscene.stage-coins .chest-reward-ring{
+  box-shadow:0 0 30px rgba(255,209,89,.35);
+}
+.chest-cutscene.stage-xp .chest-reward-ring{
+  box-shadow:0 0 30px rgba(132,236,255,.35);
+}
+.chest-reward-icon{
+  position:relative;
+  z-index:2;
+  margin-bottom:8px;
+  font-size:50px;
+  line-height:1;
+}
+.chest-reward-value{
+  position:relative;
+  z-index:2;
+  color:#fff;
+  font:1000 clamp(38px,8vw,60px)/.9 Inter,sans-serif;
+  letter-spacing:-.05em;
+  text-shadow:0 10px 24px rgba(0,0,0,.24);
+}
+.chest-reward-word{
+  position:relative;
+  z-index:2;
+  margin-top:8px;
+  color:#F7EBC7;
+  font:900 14px/1 Inter,sans-serif;
+  letter-spacing:.22em;
+  text-transform:uppercase;
+}
+.chest-reward-pop{
+  position:absolute;
+  inset:0;
+  border-radius:32px;
+  pointer-events:none;
+}
+.chest-reward-pop i{
+  position:absolute;
+  left:50%; top:50%;
+  width:12px; height:12px;
+  margin:-6px 0 0 -6px;
+  border-radius:50%;
+  background:currentColor;
+  box-shadow:0 0 18px currentColor;
+  opacity:0;
+}
+.chest-reward-pop i:nth-child(1){ --x:-26px; --y:-100px; animation-delay:0ms;}
+.chest-reward-pop i:nth-child(2){ --x:34px; --y:-112px; animation-delay:50ms;}
+.chest-reward-pop i:nth-child(3){ --x:-74px; --y:-50px; animation-delay:90ms;}
+.chest-reward-pop i:nth-child(4){ --x:80px; --y:-46px; animation-delay:130ms;}
+.chest-reward-pop i:nth-child(5){ --x:-42px; --y:-138px; animation-delay:170ms;}
+.chest-reward-pop i:nth-child(6){ --x:46px; --y:-144px; animation-delay:210ms;}
+.chest-reward-pop i:nth-child(7){ --x:-102px; --y:-12px; animation-delay:250ms;}
+.chest-reward-pop i:nth-child(8){ --x:108px; --y:-10px; animation-delay:290ms;}
+.chest-reward-center.animate.coins .chest-reward-pop{ color:#FFD968; }
+.chest-reward-center.animate.xp .chest-reward-pop{ color:#8AE6FF; }
+.chest-reward-center.animate .chest-reward-pop i{
+  animation:rewardPop .95s ease-out both;
+}
+@keyframes rewardPop{
+  0%{opacity:0;transform:scale(.25);}
+  18%{opacity:1;}
+  100%{opacity:0;transform:translate(var(--x), var(--y)) scale(1);}
+}
+.chest-cutscene.closing .chest-cutscene-inner{
+  animation:chestMegaOutro .52s cubic-bezier(.3,.8,.2,1) both;
+}
+@keyframes chestMegaOutro{
+  0%{opacity:1;transform:translateY(0) scale(1);}
+  100%{opacity:0;transform:translateY(24px) scale(.92);}
+}
+
 </style>
 <!-- topbar removed + top content lowered -->
 </head>
@@ -5602,15 +7447,35 @@ body.photo-celebration-open{
     <!-- ============ MAP ============ -->
     <div class="tab-content" id="tab-map">
       <div class="brandrow">
-        <h2 style="font-size:21px;">Dine steder</h2>
-        <div class="date-pill" id="mapCount">0 steder</div>
+        <h2 style="font-size:21px;">Hex-kort</h2>
+        <div class="date-pill" id="mapCount">0 udforskede hexes</div>
       </div>
-      <div id="realMap"></div>
-      <div class="map-actions">
-        <button class="map-btn on" id="followBtn"><svg class="icn" width="14" height="14" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><path d="M12 21.5s-6.2-5.8-6.2-10.5A6.2 6.2 0 0 1 18.2 11c0 4.7-6.2 10.5-6.2 10.5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><circle cx="12" cy="10.7" r="2.1" stroke="currentColor" stroke-width="1.6"/></svg> Følg mig</button>
-        <button class="map-btn" id="fitBtn"><svg class="icn" width="14" height="14" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><path d="M9 4 4 6v14l5-2 6 2 5-2V4l-5 2-6-2Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M9 4v14M15 6v14" stroke="currentColor" stroke-width="1.3"/></svg> Vis alle</button>
+
+      <div class="hex-map-shell map-card">
+        <div class="hex-map-head">
+          <div class="hex-map-badge" id="hexDayInfo">Dagens kister loader…</div>
+          <div class="hex-map-badge live" id="hexSelectedInfo">Vælg en hex</div>
+        </div>
+
+        <div id="realMap" class="hex-board-wrap"></div>
+
+        <div class="map-actions hex-map-actions">
+          <button class="map-btn on" id="followBtn"></button>
+          <button class="map-btn" id="fitBtn"></button>
+        </div>
+
+        <div class="hex-current-card" id="hexCurrentCard">
+          <div class="hex-current-thumb empty" id="hexCurrentThumb">?</div>
+          <div class="hex-current-copy">
+            <div class="hex-current-label" id="hexCurrentLabel">Ingen hex valgt</div>
+            <div class="hex-current-sub" id="hexCurrentSub">Tryk på en hex for at markere, hvor du står.</div>
+          </div>
+          <button class="btn btn-primary hex-capture-btn" id="hexCaptureBtn">Tag billede</button>
+        </div>
+
+        <p class="hint" id="gpsStatus" style="display:block;">Testtilstand: Tryk direkte på en kiste for at åbne den og starte hele kiste-cutscenen. Du behøver ikke tage et testbillede først. Kister refresher tilfældigt hver dag.</p>
+        <input type="file" accept="image/*" capture="environment" id="hexCameraInput" style="display:none;">
       </div>
-      <p class="hint" id="gpsStatus" style="display:none;">GPS: starter…</p>
     </div>
 
     <!-- ============ CHALLENGES ============ -->
@@ -5787,9 +7652,22 @@ body.photo-celebration-open{
     <!-- ============ PROFILE ============ -->
     <div class="tab-content" id="tab-profile">
       <div class="p-head">
-        <div class="p-avatar">DIG</div>
-        <div class="p-name" id="pName">Dig</div>
+        <div class="p-avatar-wrap">
+          <div class="p-avatar" id="profileAvatar">DIG</div>
+          <button class="p-avatar-edit" id="profileImageBtn" type="button" aria-label="Vælg profilbillede">
+            <svg class="icn" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M4.5 8.2C4.5 7 5.5 6 6.7 6h1.6l1.1-1.8h5.2L15.7 6h1.6c1.2 0 2.2 1 2.2 2.2v8.6c0 1.2-1 2.2-2.2 2.2H6.7c-1.2 0-2.2-1-2.2-2.2V8.2Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+              <circle cx="12" cy="13" r="3.4" stroke="currentColor" stroke-width="1.8"/>
+            </svg>
+          </button>
+        </div>
+        <div class="p-name" id="pName">Vælg brugernavn</div>
         <div class="p-title" id="pTitle">Niveau 1 · Nybegynder</div>
+        <div class="p-avatar-actions">
+          <button class="p-avatar-action primary" id="profileImageTextBtn" type="button">Vælg profilbillede</button>
+          <button class="p-avatar-action remove" id="profileImageRemoveBtn" type="button" style="display:none;">Fjern</button>
+        </div>
+        <input type="file" accept="image/*" id="profileImageInput" style="display:none;">
       </div>
 
       <div class="stat-grid">
@@ -6227,7 +8105,7 @@ const KEY_WAS_SECURED = 'streg_v3_was_secured'; // has this browser ever had a r
 
 const DEFAULTS = {
   photos: [], streak: 0, best: 0, lastDay: null,
-  xp: 0, coins: 0, freezes: 3, username: null,
+  xp: 0, coins: 0, freezes: 3, username: null, profileImage: null,
   challenges: { day: null, items: [] },
   weekly: { key: null, items: [], challengesDone: 0 },
   monthly: { key: null, items: [] },
@@ -6237,6 +8115,12 @@ const DEFAULTS = {
     day: null,
     daily: [],
     claimedRewards: [],
+  },
+  hexMap: {
+    selectedHex: 'hx_2_2',
+    currentHex: 'hx_2_2',
+    photos: {},
+    chestOpened: {},
   },
   achievements: [],
   shop: {
@@ -7380,6 +9264,71 @@ function challengeImage(id, className){
   return '<img class="' + className + '" src="' + src + '" alt="" decoding="async">';
 }
 
+
+function applyProfileImage(el, fallbackText){
+  if(!el) return;
+  if(S.profileImage){
+    el.style.backgroundImage = 'url(' + S.profileImage + ')';
+    el.textContent = '';
+    el.setAttribute('data-has-profile-image','true');
+  }else{
+    el.style.backgroundImage = '';
+    el.textContent = fallbackText || 'ST';
+    el.removeAttribute('data-has-profile-image');
+  }
+}
+
+function profileInitials(){
+  const name = (S.username && String(S.username).trim())
+    ? String(S.username).trim()
+    : 'ST';
+  return name.slice(0,2).toUpperCase();
+}
+
+function compressProfileImage(file){
+  return new Promise(function(resolve,reject){
+    if(!file || !file.type || file.type.indexOf('image/') !== 0){
+      reject(new Error('Vælg en billedfil'));
+      return;
+    }
+
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+
+    img.onload = function(){
+      try{
+        const size = 420;
+        const canvas = document.createElement('canvas');
+        canvas.width = size;
+        canvas.height = size;
+        const ctx = canvas.getContext('2d');
+
+        const sourceSize = Math.min(img.naturalWidth,img.naturalHeight);
+        const sx = Math.max(0,(img.naturalWidth - sourceSize) / 2);
+        const sy = Math.max(0,(img.naturalHeight - sourceSize) / 2);
+
+        ctx.fillStyle = '#111827';
+        ctx.fillRect(0,0,size,size);
+        ctx.drawImage(img,sx,sy,sourceSize,sourceSize,0,0,size,size);
+
+        const data = canvas.toDataURL('image/jpeg',.84);
+        URL.revokeObjectURL(url);
+        resolve(data);
+      }catch(error){
+        URL.revokeObjectURL(url);
+        reject(error);
+      }
+    };
+
+    img.onerror = function(){
+      URL.revokeObjectURL(url);
+      reject(new Error('Billedet kunne ikke læses'));
+    };
+
+    img.src = url;
+  });
+}
+
 function greetingWord(){
   const h = new Date().getHours();
   if(h < 5) return 'Godnat';
@@ -7403,18 +9352,10 @@ function renderHomeGreeting(){
   countTo($('homeStatCoins'), S.coins, 600);
   countTo($('homeStatShields'), S.freezes, 500);
 
-  // Uses the newest photo as profile image and applies the equipped ring.
+  // Uses the profile image selected by the user and keeps the equipped ring.
   const avatar = $('homeAvatar');
   avatar.className = 'home-avatar ' + currentFrameClass();
-
-  const recent = S.photos.length ? S.photos.slice().sort(function(a,b){ return b.ts - a.ts; })[0] : null;
-  if(recent && recent.img){
-    avatar.style.backgroundImage = 'url(' + recent.img + ')';
-    avatar.textContent = '';
-  } else {
-    avatar.style.backgroundImage = '';
-    avatar.textContent = hasUsername ? displayName.slice(0,2).toUpperCase() : 'ST';
-  }
+  applyProfileImage(avatar,profileInitials());
 }
 
 // Surfaces one active weekly challenge on the home screen (the reference's
@@ -7471,13 +9412,18 @@ function renderAll(){
   const pName = $('pName');
   pName.className = 'p-name ' + currentNameClass();
   pName.textContent = displayName;
-  const pAvatar = document.querySelector('.p-avatar');
+  const pAvatar = $('profileAvatar');
   pAvatar.className = 'p-avatar ' + currentFrameClass();
+  applyProfileImage(pAvatar,profileInitials());
+
+  $('profileImageTextBtn').textContent = S.profileImage ? 'Skift profilbillede' : 'Vælg profilbillede';
+  $('profileImageRemoveBtn').style.display = S.profileImage ? 'inline-flex' : 'none';
 
   // persistent top bar -- mirrors the same identity info shown in Profile
   $('topName').className = 'topbar-name ' + currentNameClass();
   $('topName').textContent = displayName;
   $('topAvatar').className = 'topbar-avatar ' + currentFrameClass();
+  applyProfileImage($('topAvatar'),profileInitials());
   countTo($('topStreak'), S.streak, 500);
   $('topLevel').textContent = lv.lvl;
   countTo($('topCoins'), S.coins, 600);
@@ -7487,7 +9433,8 @@ function renderAll(){
   countTo($('pCoins'), S.coins, 500);
   countTo($('pXp'), S.xp, 700);
 
-  $('mapCount').textContent = S.photos.length + (S.photos.length === 1 ? ' sted' : ' steder');
+  const hexExploredCount = S.hexMap && S.hexMap.photos ? Object.keys(S.hexMap.photos).length : 0;
+  $('mapCount').textContent = hexExploredCount + (hexExploredCount === 1 ? ' udforsket hex' : ' udforskede hexes');
   $('galCount').textContent = S.photos.length + (S.photos.length === 1 ? ' billede' : ' billeder');
 
   const undone = S.challenges.items.filter(function(c){ return !c.done; }).length;
@@ -7498,6 +9445,7 @@ function renderAll(){
   renderGallery();
   renderHeat();
   renderMyPhotos();
+  if(typeof MapView !== 'undefined' && MapView.redraw) MapView.redraw();
   if(typeof MonthlyEvent !== 'undefined') MonthlyEvent.render();
   refreshCaptureCard();
   refreshGeoStatus();
@@ -7597,7 +9545,17 @@ function renderFriends(){
       friendId:f.id, username:f.username,
     };
   });
-  const me = { n:'Dig', s:'Niveau ' + lv.lvl + ' · ' + currentTitleName(), k:S.streak, c:'#E08A3C', i:'DIG', me:true, dist:0 };
+  const myDisplayName = (S.username && String(S.username).trim()) ? String(S.username).trim() : 'Vælg brugernavn';
+  const me = {
+    n:myDisplayName,
+    s:'Niveau ' + lv.lvl + ' · ' + currentTitleName(),
+    k:S.streak,
+    c:'#E08A3C',
+    i:profileInitials(),
+    img:S.profileImage || null,
+    me:true,
+    dist:0
+  };
   let all = demo.concat(real, [me]);
 
   if(leaderboardMode === 'local'){
@@ -7620,7 +9578,9 @@ function renderFriends(){
       : f.k;
     row.innerHTML =
       '<span class="rank">' + (i+1) + '</span>' +
-      '<div class="avatar ' + frameCls + '" style="background:' + f.c + '">' + f.i + '</div>' +
+      '<div class="avatar ' + frameCls + '" style="' +
+        (f.img ? 'background-image:url(' + f.img + ');' : 'background:' + f.c + ';') +
+      '">' + (f.img ? '' : f.i) + '</div>' +
       '<div style="min-width:0"><div class="f-name ' + nameCls + '">' + f.n + '</div><div class="f-sub">' + f.s + '</div></div>' +
       '<div class="f-streak">' + rightVal + '</div>' +
       (f.real ? '<button class="lb-btn" data-act="friend-gallery" style="width:auto;margin:0 0 0 8px;padding:6px 9px;background:var(--paper-2);color:var(--ink);"><svg class="icn" width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M4 8.5C4 7.4 4.9 6.5 6 6.5h2l1-2h6l1 2h2c1.1 0 2 .9 2 2V17c0 1.1-.9 2-2 2H6c-1.1 0-2-.9-2-2V8.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="12" cy="13" r="3.1" stroke="currentColor" stroke-width="1.5"/></svg></button>' : '');
@@ -7970,6 +9930,7 @@ const Cloud = (function(){
             S.shop.equippedFrame = S.shop.equippedFrame || remoteShop.equippedFrame || null;
             if(S.settings.style === 'nature' && c.style) S.settings.style = c.style;
             if(S.settings.font === 'default' && c.font) S.settings.font = c.font;
+            if(!S.profileImage && c.profileImage) S.profileImage = c.profileImage;
           }catch(e){ console.warn('Cloud: could not parse cosmetics', e); }
         }
         localStorage.setItem(KEY, JSON.stringify(S));
@@ -8029,7 +9990,12 @@ const Cloud = (function(){
           xp: S.xp, coins: S.coins, freezes: S.freezes,
           habit: S.settings.habit, min_dist: S.settings.minDist,
           cooldown_days: S.settings.cooldownDays, map_theme: S.settings.mapTheme,
-          cosmetics: JSON.stringify({ shop: S.shop, style: S.settings.style, font: S.settings.font }),
+          cosmetics: JSON.stringify({
+            shop:S.shop,
+            style:S.settings.style,
+            font:S.settings.font,
+            profileImage:S.profileImage || null
+          }),
         };
         const { error } = await client.from('profiles').upsert(row);
         if(error) throw error;
@@ -8491,123 +10457,1310 @@ $('acctSignOut').addEventListener('click', function(){
 /* ===================================================================
    MAP
    =================================================================== */
+
 const MapView = (function(){
-  let map, layer, meMarker, accCircle, tiles, ready = false, follow = true;
-  const markers = {};
+  let map = null;
+  let tiles = null;
+  let hexLayer = null;
+  let markerLayer = null;
+  let meMarker = null;
+  let accuracyCircle = null;
+  let ready = false;
+  let follow = true;
+  let redrawTimer = null;
+  const photoMarkers = {};
+  const HEX_SIZE_M = 90;
+  const DAILY_CHESTS = 8;
+  const EARTH_R = 6378137;
 
   const TILES = {
-    street: { url:'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', attr:'&copy; OpenStreetMap' },
-    topo:   { url:'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', attr:'&copy; OpenTopoMap' },
+    street:{
+      url:'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+      attr:'&copy; OpenStreetMap contributors'
+    },
+    topo:{
+      url:'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
+      attr:'Map data &copy; OpenStreetMap contributors, SRTM | Map style &copy; OpenTopoMap'
+    }
   };
 
-  function drawPhoto(p){
-    const age = (Date.now() - p.ts) / 86400000;
-    const fade = Math.max(0.1, 1 - age / S.settings.cooldownDays);
-    const cooling = age < S.settings.cooldownDays;
+  function ensureState(){
+    if(!S.hexMap || typeof S.hexMap !== 'object') S.hexMap = {};
+    if(!S.hexMap.photos || typeof S.hexMap.photos !== 'object') S.hexMap.photos = {};
+    if(!S.hexMap.chestOpened || typeof S.hexMap.chestOpened !== 'object') S.hexMap.chestOpened = {};
+    if(!S.hexMap.daily || typeof S.hexMap.daily !== 'object') S.hexMap.daily = null;
 
-    if(cooling){
-      L.circle([p.lat, p.lng], {
-        radius: S.settings.minDist, color:'#C1503F', weight:2, opacity:fade,
-        fillColor:'#C1503F', fillOpacity: fade * 0.18,
-      }).addTo(layer);
+    if(S.hexMap.currentHex && String(S.hexMap.currentHex).indexOf('h_') !== 0){
+      S.hexMap.currentHex = null;
+    }
+    if(S.hexMap.selectedHex && String(S.hexMap.selectedHex).indexOf('h_') !== 0){
+      S.hexMap.selectedHex = null;
+    }
+  }
+
+  function project(lat,lng){
+    const x = EARTH_R * lng * Math.PI / 180;
+    const clamped = Math.max(-85.05112878,Math.min(85.05112878,lat));
+    const y = EARTH_R * Math.log(Math.tan(Math.PI / 4 + clamped * Math.PI / 360));
+    return {x:x,y:y};
+  }
+
+  function unproject(x,y){
+    return {
+      lat:(2 * Math.atan(Math.exp(y / EARTH_R)) - Math.PI / 2) * 180 / Math.PI,
+      lng:x / EARTH_R * 180 / Math.PI
+    };
+  }
+
+  function cubeRound(q,r){
+    let x = q;
+    let z = r;
+    let y = -x-z;
+
+    let rx = Math.round(x);
+    let ry = Math.round(y);
+    let rz = Math.round(z);
+
+    const xDiff = Math.abs(rx-x);
+    const yDiff = Math.abs(ry-y);
+    const zDiff = Math.abs(rz-z);
+
+    if(xDiff > yDiff && xDiff > zDiff) rx = -ry-rz;
+    else if(yDiff > zDiff) ry = -rx-rz;
+    else rz = -rx-ry;
+
+    return {q:rx,r:rz};
+  }
+
+  function axialFromMeters(x,y){
+    const q = (Math.sqrt(3) / 3 * x - 1 / 3 * y) / HEX_SIZE_M;
+    const r = (2 / 3 * y) / HEX_SIZE_M;
+    return cubeRound(q,r);
+  }
+
+  function metersFromAxial(q,r){
+    return {
+      x:HEX_SIZE_M * Math.sqrt(3) * (q + r / 2),
+      y:HEX_SIZE_M * 1.5 * r
+    };
+  }
+
+  function idFromAxial(q,r){
+    return 'h_' + q + '_' + r;
+  }
+
+  function axialFromId(id){
+    const match = /^h_(-?\d+)_(-?\d+)$/.exec(String(id || ''));
+    if(!match) return null;
+    return {q:parseInt(match[1],10),r:parseInt(match[2],10)};
+  }
+
+  function hexForLatLng(lat,lng){
+    const p = project(lat,lng);
+    const a = axialFromMeters(p.x,p.y);
+    return idFromAxial(a.q,a.r);
+  }
+
+  function centerForId(id){
+    const a = axialFromId(id);
+    if(!a) return null;
+    const p = metersFromAxial(a.q,a.r);
+    return unproject(p.x,p.y);
+  }
+
+  function polygonForId(id){
+    const a = axialFromId(id);
+    if(!a) return [];
+    const center = metersFromAxial(a.q,a.r);
+    const points = [];
+    for(let i=0;i<6;i++){
+      const angle = (30 + i * 60) * Math.PI / 180;
+      const x = center.x + HEX_SIZE_M * Math.cos(angle);
+      const y = center.y + HEX_SIZE_M * Math.sin(angle);
+      const ll = unproject(x,y);
+      points.push([ll.lat,ll.lng]);
+    }
+    return points;
+  }
+
+  function labelForId(id){
+    const a = axialFromId(id);
+    if(!a) return 'Hex';
+    return 'Q' + a.q + ' · R' + a.r;
+  }
+
+  function disk(centerId,radius){
+    const center = axialFromId(centerId);
+    if(!center) return [];
+    const out = [];
+    for(let dq=-radius;dq<=radius;dq++){
+      const minDr = Math.max(-radius,-dq-radius);
+      const maxDr = Math.min(radius,-dq+radius);
+      for(let dr=minDr;dr<=maxDr;dr++){
+        out.push(idFromAxial(center.q+dq,center.r+dr));
+      }
+    }
+    return out;
+  }
+
+  function seedFrom(text){
+    let h = 2166136261 >>> 0;
+    for(let i=0;i<text.length;i++){
+      h ^= text.charCodeAt(i);
+      h = Math.imul(h,16777619);
+    }
+    return h >>> 0;
+  }
+
+  function randomFrom(seed){
+    return function(){
+      seed = (Math.imul(seed,1664525)+1013904223) >>> 0;
+      return seed / 4294967296;
+    };
+  }
+
+  function ensureDailyChests(anchorId){
+    ensureState();
+    const day = todayKey();
+    anchorId = anchorId || S.hexMap.currentHex || S.hexMap.selectedHex;
+
+    if(
+      S.hexMap.daily &&
+      S.hexMap.daily.day === day &&
+      S.hexMap.daily.anchorId &&
+      Array.isArray(S.hexMap.daily.chests)
+    ){
+      return S.hexMap.daily.chests;
     }
 
-    const markerIcon = p.img
-      ? L.divIcon({ className:'', iconSize:[40,40], iconAnchor:[20,20],
-          html:'<div class="photo-marker" data-photo-id="' + p.id + '" style="width:40px;height:40px;background-image:url(' + p.img + ')"></div>' })
-      : L.divIcon({ className:'', iconSize:[16,16], iconAnchor:[8,8],
-          html:'<div style="width:16px;height:16px;border-radius:50%;background:#4F6D52;border:2px solid #fff"></div>' });
+    if(!anchorId && map){
+      const center = map.getCenter();
+      anchorId = hexForLatLng(center.lat,center.lng);
+    }
+    if(!anchorId) return [];
 
-    const m = L.marker([p.lat, p.lng], { icon: markerIcon }).addTo(layer);
-    const imgHtml = p.img ? '<img class="popup-img" src="' + p.img + '">' : '';
-    const cool = cooling ? ('Optaget i ' + Math.ceil(S.settings.cooldownDays - age) + ' dage mere') : 'Åben igen';
-    m.bindPopup(imgHtml + '<b>' + agoLabel(p.ts) + '</b><br>' + new Date(p.ts).toLocaleString('da-DK') + '<br>' + cool);
-    markers[p.id] = m;
+    const rand = randomFrom(seedFrom(day + '|' + anchorId + '|streg'));
+    let candidates = disk(anchorId,6).filter(function(id){
+      return id !== anchorId && !S.hexMap.photos[id];
+    });
+
+    if(candidates.length < DAILY_CHESTS){
+      candidates = disk(anchorId,7).filter(function(id){ return id !== anchorId; });
+    }
+
+    const chests = [];
+    while(candidates.length && chests.length < DAILY_CHESTS){
+      const index = Math.floor(rand() * candidates.length);
+      const id = candidates.splice(index,1)[0];
+      const rarityRoll = rand();
+      let rarity = 'common';
+      let xp = 45;
+      let coins = 18;
+
+      if(rarityRoll > .90){
+        rarity = 'epic';
+        xp = 180;
+        coins = 75;
+      }else if(rarityRoll > .62){
+        rarity = 'rare';
+        xp = 95;
+        coins = 38;
+      }
+
+      chests.push({id:id,rarity:rarity,xp:xp,coins:coins});
+    }
+
+    S.hexMap.daily = {
+      day:day,
+      anchorId:anchorId,
+      chests:chests
+    };
+    save();
+    return chests;
+  }
+
+  function chestMap(){
+    const anchor = S.hexMap.currentHex || S.hexMap.selectedHex;
+    const mapById = {};
+    ensureDailyChests(anchor).forEach(function(chest){
+      mapById[chest.id] = chest;
+    });
+    return mapById;
+  }
+
+  function openedToday(){
+    ensureState();
+    const day = todayKey();
+    if(!S.hexMap.chestOpened[day]) S.hexMap.chestOpened[day] = {};
+    return S.hexMap.chestOpened[day];
+  }
+
+  function visibleRadius(){
+    if(!map) return 7;
+    const zoom = map.getZoom();
+    if(zoom >= 18) return 4;
+    if(zoom >= 17) return 5;
+    if(zoom >= 16) return 7;
+    if(zoom >= 15) return 10;
+    return 13;
+  }
+
+  function hexStyle(id,chests,opened){
+    const captured = !!S.hexMap.photos[id];
+    const selected = id === S.hexMap.selectedHex;
+    const current = id === S.hexMap.currentHex;
+    const hasChest = !!chests[id] && !opened[id];
+
+    if(captured){
+      return {
+        color:selected ? '#A62F22' : '#C94A38',
+        weight:selected ? 3.2 : 2.2,
+        opacity:.95,
+        fillColor:'#EF5C47',
+        fillOpacity:selected ? .50 : .37
+      };
+    }
+
+    if(current){
+      return {
+        color:'#1688FF',
+        weight:3.2,
+        opacity:1,
+        fillColor:'#4BA7FF',
+        fillOpacity:.18
+      };
+    }
+
+    if(selected){
+      return {
+        color:'#2D73FF',
+        weight:3,
+        opacity:1,
+        fillColor:'#5E91FF',
+        fillOpacity:.14
+      };
+    }
+
+    if(hasChest){
+      return {
+        color:'#E2A51E',
+        weight:2.6,
+        opacity:.92,
+        fillColor:'#FFD66D',
+        fillOpacity:.16
+      };
+    }
+
+    return {
+      color:'#536E61',
+      weight:1.45,
+      opacity:.43,
+      fillColor:'#FFFFFF',
+      fillOpacity:.055
+    };
+  }
+
+  function chestIcon(chest){
+    return L.divIcon({
+      className:'',
+      iconSize:[58,58],
+      iconAnchor:[29,35],
+      html:
+        '<div class="hex-chest-marker ' + chest.rarity + '">' +
+          '<div class="hex-chest-mini">' +
+            '<span class="lid"></span>' +
+            '<span class="base"></span>' +
+            '<span class="band"></span>' +
+          '</div>' +
+        '</div>'
+    });
+  }
+
+  function photoIcon(photo){
+    const src = photo.img || '';
+    return L.divIcon({
+      className:'',
+      iconSize:[58,58],
+      iconAnchor:[29,29],
+      html:
+        '<div class="hex-photo-marker" data-photo-id="' + (photo.photoId || photo.id || '') + '" ' +
+        'style="background-image:url(' + src + ')"></div>'
+    });
+  }
+
+  function userIcon(){
+    return L.divIcon({
+      className:'',
+      iconSize:[24,24],
+      iconAnchor:[12,12],
+      html:'<div class="hex-user-marker"></div>'
+    });
+  }
+
+  function clearMarkerReferences(){
+    for(const key in photoMarkers) delete photoMarkers[key];
+  }
+
+  function redraw(){
+    if(!ready || !map || !hexLayer || !markerLayer) return;
+    ensureState();
+
+    hexLayer.clearLayers();
+    markerLayer.clearLayers();
+    clearMarkerReferences();
+
+    const center = map.getCenter();
+    const centerId = hexForLatLng(center.lat,center.lng);
+    const ids = disk(centerId,visibleRadius());
+    const chests = chestMap();
+    const opened = openedToday();
+
+    ids.forEach(function(id){
+      const polygon = L.polygon(
+        polygonForId(id),
+        Object.assign({
+          pane:'hexPane',
+          interactive:true
+        },hexStyle(id,chests,opened))
+      ).addTo(hexLayer);
+
+      polygon.bindTooltip(labelForId(id),{
+        className:'hex-leaflet-tooltip',
+        direction:'top',
+        offset:[0,-8],
+        opacity:.96
+      });
+
+      let longPressTimer = null;
+      let longPressTriggered = false;
+      let pressStartX = 0;
+      let pressStartY = 0;
+
+      function setLongPressCue(active){
+        const element = polygon.getElement && polygon.getElement();
+        if(element) element.classList.toggle('hex-long-press',!!active);
+      }
+
+      function cancelLongPress(){
+        if(longPressTimer){
+          clearTimeout(longPressTimer);
+          longPressTimer = null;
+        }
+        setLongPressCue(false);
+      }
+
+      function pointerPoint(event){
+        const original = event && event.originalEvent;
+        const touch = original && original.touches && original.touches[0];
+        return {
+          x: touch ? touch.clientX : (original && typeof original.clientX === 'number' ? original.clientX : 0),
+          y: touch ? touch.clientY : (original && typeof original.clientY === 'number' ? original.clientY : 0)
+        };
+      }
+
+      function startLongPress(event){
+        cancelLongPress();
+        longPressTriggered = false;
+
+        const point = pointerPoint(event);
+        pressStartX = point.x;
+        pressStartY = point.y;
+
+        setLongPressCue(true);
+
+        longPressTimer = setTimeout(function(){
+          longPressTimer = null;
+          setLongPressCue(false);
+          longPressTriggered = true;
+          S.hexMap.selectedHex = id;
+          save();
+          vibrate([24,26,55]);
+          simulateHexCapture(id);
+        },680);
+      }
+
+      function moveLongPress(event){
+        if(!longPressTimer) return;
+        const point = pointerPoint(event);
+        const dx = point.x - pressStartX;
+        const dy = point.y - pressStartY;
+        if(Math.sqrt(dx * dx + dy * dy) > 12){
+          cancelLongPress();
+        }
+      }
+
+      polygon.on('mousedown touchstart',startLongPress);
+      polygon.on('mousemove touchmove',moveLongPress);
+      polygon.on('mouseup mouseout touchend touchcancel',cancelLongPress);
+
+      polygon.on('click',function(){
+        cancelLongPress();
+
+        if(longPressTriggered){
+          longPressTriggered = false;
+          return;
+        }
+
+        S.hexMap.selectedHex = id;
+        save();
+        redraw();
+        renderCurrentCard(chests);
+        SFX.pop();
+        vibrate(12);
+        toast(icon('pin',13) + ' ' + labelForId(id) + ' valgt · hold nede for testfoto');
+      });
+
+      const captured = S.hexMap.photos[id];
+      if(captured && captured.img){
+        const centerPoint = centerForId(id);
+        const marker = L.marker([centerPoint.lat,centerPoint.lng],{
+          icon:photoIcon(captured),
+          pane:'photoPane',
+          interactive:true
+        }).addTo(markerLayer);
+
+        const markerKey = captured.photoId || captured.id || id;
+        photoMarkers[markerKey] = marker;
+        marker.bindPopup(
+          '<img class="popup-img" src="' + captured.img + '">' +
+          '<b>' + labelForId(id) + '</b><br>' +
+          new Date(captured.ts).toLocaleString('da-DK')
+        );
+      }
+
+      const chest = chests[id];
+      if(chest && !opened[id]){
+        const centerPoint = centerForId(id);
+        const marker = L.marker([centerPoint.lat,centerPoint.lng],{
+          icon:chestIcon(chest),
+          pane:'chestPane',
+          interactive:true
+        }).addTo(markerLayer);
+
+        marker.on('click',function(event){
+          if(event && event.originalEvent){
+            L.DomEvent.stopPropagation(event.originalEvent);
+          }
+
+          const currentOpened = openedToday();
+          if(currentOpened[id]){
+            toast('Denne kiste er allerede åbnet i dag');
+            return;
+          }
+
+          S.hexMap.selectedHex = id;
+          currentOpened[id] = true;
+          addXp(chest.xp);
+          S.coins += chest.coins;
+          save();
+
+          renderAll();
+          redraw();
+
+          setTimeout(function(){
+            ChestCutscene.play({
+              hexId:id,
+              rarity:chest.rarity,
+              xp:chest.xp,
+              coins:chest.coins
+            });
+          },120);
+
+          toast(icon('bag',13) + ' Kisten åbnes');
+        });
+      }
+    });
+
+    const currentCenter = S.hexMap.currentHex && centerForId(S.hexMap.currentHex);
+    if(currentCenter && !meMarker){
+      meMarker = L.marker([currentCenter.lat,currentCenter.lng],{
+        icon:userIcon(),
+        pane:'userPane',
+        zIndexOffset:2000,
+        interactive:false
+      }).addTo(map);
+    }else if(currentCenter && meMarker){
+      meMarker.setLatLng([currentCenter.lat,currentCenter.lng]);
+    }
+
+    renderCurrentCard(chests);
+    updateMapCount();
+  }
+
+  function updateMapCount(){
+    const count = Object.keys(S.hexMap.photos || {}).length;
+    $('mapCount').textContent = count + (count === 1 ? ' udforsket hex' : ' udforskede hexes');
+  }
+
+  function selectedIsCurrent(){
+    if(!Geo.last) return true;
+    return !!S.hexMap.selectedHex && S.hexMap.selectedHex === S.hexMap.currentHex;
+  }
+
+  function renderCurrentCard(chests){
+    if(!$('hexCurrentCard')) return;
+    ensureState();
+    chests = chests || chestMap();
+
+    const id = S.hexMap.selectedHex || S.hexMap.currentHex;
+    const photo = id && S.hexMap.photos[id];
+    const chest = id && chests[id];
+    const opened = id && openedToday()[id];
+    const canCapture = !!id && selectedIsCurrent();
+
+    $('hexDayInfo').innerHTML =
+      icon('sparkle',13) + ' ' + ensureDailyChests(S.hexMap.currentHex || id).length + ' kister i dag';
+    $('hexSelectedInfo').innerHTML =
+      icon('pin',13) + ' ' + (id ? labelForId(id) : 'Ingen hex valgt');
+    $('followBtn').innerHTML = icon('pin',14) + ' Følg mig';
+    $('fitBtn').innerHTML = icon('bag',14) + ' Vis kister';
+
+    const thumb = $('hexCurrentThumb');
+    const label = $('hexCurrentLabel');
+    const sub = $('hexCurrentSub');
+    const button = $('hexCaptureBtn');
+
+    if(photo && photo.img){
+      thumb.className = 'hex-current-thumb';
+      thumb.innerHTML = '<img src="' + photo.img + '" alt="">';
+    }else{
+      thumb.className = 'hex-current-thumb empty';
+      thumb.textContent = id ? '⬡' : '?';
+    }
+
+    if(!id){
+      label.textContent = 'Ingen hex valgt';
+      sub.textContent = 'Tryk på en hex på kortet.';
+      button.disabled = true;
+      button.textContent = 'Tag billede';
+      return;
+    }
+
+    if(!canCapture){
+      label.textContent = labelForId(id);
+      sub.textContent = 'Du skal fysisk være inde i denne hex for at tage billedet.';
+      button.disabled = true;
+      button.textContent = 'Gå ind i hexen';
+      return;
+    }
+
+    button.disabled = false;
+    button.textContent = chest && !opened ? 'Tag billede & åbn kiste' : 'Tag billede';
+
+    if(chest && !opened){
+      label.textContent = 'Reward-kiste i ' + labelForId(id);
+      sub.textContent = 'Tag et billede her for at åbne kisten og få +' + chest.coins + ' coins og +' + chest.xp + ' XP.';
+    }else if(photo){
+      label.textContent = labelForId(id) + ' er udforsket';
+      sub.textContent = 'Hexen er rød, og dit billede vises på kortet.';
+    }else if(chest && opened){
+      label.textContent = labelForId(id) + ' er tømt';
+      sub.textContent = 'Kisten er allerede åbnet i dag. Nye kister kommer i morgen.';
+    }else{
+      label.textContent = labelForId(id) + ' er klar';
+      sub.textContent = 'Tag et billede for at gøre hexen rød og claim området.';
+    }
+  }
+
+  const ChestCutscene = (function(){
+    let overlay = null;
+    let step = 0;
+    let readyForTap = false;
+    let active = null;
+    let closeTimer = null;
+
+    function ensure(){
+      if(overlay) return;
+      overlay = document.createElement('div');
+      overlay.className = 'chest-cutscene';
+      overlay.innerHTML =
+        '<div class="chest-cutscene-inner">' +
+          '<div class="chest-cutscene-spotlight"></div>' +
+          '<div class="chest-cutscene-floor"></div>' +
+          '<div class="chest-cutscene-rays"></div>' +
+          '<div class="chest-cutscene-stars" id="chestCutsceneStars"></div>' +
+          '<div class="chest-cutscene-box">' +
+            '<div class="chest-cutscene-glow"></div>' +
+            '<div class="chest-cutscene-lid"></div>' +
+            '<div class="chest-cutscene-base"></div>' +
+            '<div class="chest-cutscene-band"></div>' +
+            '<div class="chest-cutscene-lock"></div>' +
+            '<div class="chest-cutscene-goldline top"></div>' +
+            '<div class="chest-cutscene-goldline bottom"></div>' +
+            '<div class="chest-cutscene-corner c1"></div>' +
+            '<div class="chest-cutscene-corner c2"></div>' +
+            '<div class="chest-cutscene-corner c3"></div>' +
+            '<div class="chest-cutscene-corner c4"></div>' +
+          '</div>' +
+          '<div class="chest-cutscene-title" id="chestCutsceneTitle">KISTE FUNDET</div>' +
+          '<div class="chest-cutscene-sub" id="chestCutsceneSub">Kisten falder ned — tryk for at åbne den.</div>' +
+          '<div class="chest-cutscene-rewards">' +
+            '<div class="chest-pill" id="chestCutsceneCoins"></div>' +
+            '<div class="chest-pill" id="chestCutsceneXp"></div>' +
+            '<div class="chest-reward-center" id="chestRewardCenter">' +
+              '<div class="chest-reward-core">' +
+                '<div class="chest-reward-ring"></div>' +
+                '<div class="chest-reward-icon" id="chestRewardIcon">🪙</div>' +
+                '<div class="chest-reward-value" id="chestRewardValue">+0</div>' +
+                '<div class="chest-reward-word" id="chestRewardWord">COINS</div>' +
+                '<div class="chest-reward-pop" id="chestRewardPop"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>' +
+              '</div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="chest-cutscene-hint" id="chestCutsceneHint">Tryk 1/4 · Åbn kiste</div>' +
+          '<div class="chest-cutscene-progress" id="chestCutsceneProgress"><span></span><span></span><span></span><span></span></div>' +
+        '</div>';
+      document.body.appendChild(overlay);
+      overlay.addEventListener('click', advance);
+    }
+
+    function stars(){
+      const root = $('chestCutsceneStars');
+      if(!root) return;
+      root.innerHTML = '';
+      for(let i=0;i<34;i++){
+        const dot = document.createElement('span');
+        const angle = Math.PI * 2 * i / 34;
+        const distance = 82 + Math.random() * 152;
+        dot.style.left = Math.cos(angle) * distance + 'px';
+        dot.style.top = Math.sin(angle) * distance + 'px';
+        dot.style.color = Math.random() > .45 ? '#FFE58B' : (Math.random() > .5 ? '#FFFFFF' : '#A9F0FF');
+        dot.animate([
+          {opacity:0,transform:'translate(-50%,-50%) scale(.1)'},
+          {opacity:1,transform:'translate(-50%,-50%) scale(1.35)',offset:.34},
+          {opacity:0,transform:'translate(-50%,-50%) scale(.5)'}
+        ],{
+          duration:1300 + Math.random() * 700,
+          easing:'ease-out',
+          delay:Math.random() * 260
+        });
+        root.appendChild(dot);
+      }
+    }
+
+    function updateProgress(){
+      const dots = $('chestCutsceneProgress') ? $('chestCutsceneProgress').children : [];
+      for(let i=0;i<dots.length;i++){
+        dots[i].classList.toggle('on', i < step);
+      }
+    }
+
+    function setTexts(title, sub, hint){
+      $('chestCutsceneTitle').textContent = title;
+      $('chestCutsceneSub').textContent = sub;
+      $('chestCutsceneHint').textContent = hint;
+    }
+
+    function syncStageClasses(){
+      overlay.classList.toggle('stage-opened', step >= 1);
+      overlay.classList.toggle('stage-coins', step >= 2);
+      overlay.classList.toggle('stage-xp', step >= 3);
+      updateProgress();
+    }
+
+    function wait(ms){
+      readyForTap = false;
+      setTimeout(function(){ readyForTap = true; }, ms);
+    }
+
+    function stageTitleFound(){
+      if(!active) return 'KISTE FUNDET';
+      return active.rarity === 'epic' ? 'EPIC KISTE!' : active.rarity === 'rare' ? 'SJÆLDEN KISTE!' : 'KISTE FUNDET';
+    }
+
+    function playReward(type){
+      const center = $('chestRewardCenter');
+      const icon = $('chestRewardIcon');
+      const value = $('chestRewardValue');
+      const word = $('chestRewardWord');
+
+      center.classList.remove('coins','xp','animate');
+      if(type === 'coins'){
+        icon.textContent = '🪙';
+        value.textContent = '+' + active.coins;
+        word.textContent = 'COINS';
+        center.classList.add('coins');
+      }else{
+        icon.textContent = '✦';
+        value.textContent = '+' + active.xp;
+        word.textContent = 'XP';
+        center.classList.add('xp');
+      }
+
+      void center.offsetWidth;
+      center.classList.add('animate');
+
+      setTimeout(function(){ center.classList.remove('animate'); }, 900);
+    }
+
+    function advance(){
+      if(!overlay || !overlay.classList.contains('show') || !readyForTap) return;
+
+      if(step === 0){
+        step = 1;
+        syncStageClasses();
+        setTexts('KISTE ÅBNET', labelForId(active.hexId) + ' gemte på rewards.', 'Tryk 2/4 · Vis coins');
+        try{
+          SFX.unlock();
+          setTimeout(function(){ try{ SFX.magic(); }catch(e){} }, 80);
+          setTimeout(function(){ try{ SFX.whoosh(.9); }catch(e){} }, 120);
+        }catch(e){}
+        vibrate([20,30,20,54]);
+        wait(480);
+        return;
+      }
+
+      if(step === 1){
+        step = 2;
+        syncStageClasses();
+        playReward('coins');
+        setTexts('COINS!', 'Kisten er væk — dine coins kommer frem i midten.', 'Tryk 3/4 · Vis XP');
+        try{
+          SFX.levelup();
+          setTimeout(function(){ try{ SFX.magic(); }catch(e){} }, 60);
+        }catch(e){}
+        vibrate([18,22,46]);
+        wait(520);
+        return;
+      }
+
+      if(step === 2){
+        step = 3;
+        syncStageClasses();
+        playReward('xp');
+        setTexts('XP!', 'Nu kommer din XP ind i midten.', 'Tryk 4/4 · Luk cutscene');
+        try{
+          SFX.challenge();
+          setTimeout(function(){ try{ SFX.levelup(); }catch(e){} }, 90);
+        }catch(e){}
+        vibrate([18,24,18,54]);
+        wait(520);
+        return;
+      }
+
+      if(step === 3){
+        closeAnimated();
+      }
+    }
+
+    function closeAnimated(){
+      if(!overlay) return;
+      readyForTap = false;
+      overlay.classList.add('closing');
+      clearTimeout(closeTimer);
+      closeTimer = setTimeout(close, 520);
+    }
+
+    function close(){
+      if(!overlay) return;
+      clearTimeout(closeTimer);
+      overlay.classList.remove('show','closing','stage-opened','stage-coins','stage-xp');
+      const center = $('chestRewardCenter');
+      if(center) center.classList.remove('coins','xp','animate');
+      step = 0;
+      readyForTap = false;
+      active = null;
+    }
+
+    function play(options){
+      ensure();
+      clearTimeout(closeTimer);
+      active = options;
+      step = 0;
+      readyForTap = false;
+      stars();
+
+      $('chestCutsceneCoins').innerHTML = icon('coin',15) + ' +' + options.coins;
+      $('chestCutsceneXp').innerHTML = icon('sparkle',15) + ' +' + options.xp + ' XP';
+
+      overlay.classList.remove('closing','stage-opened','stage-coins','stage-xp','show');
+      const center = $('chestRewardCenter');
+      if(center) center.classList.remove('coins','xp','animate');
+
+      void overlay.offsetWidth;
+      overlay.classList.add('show');
+
+      setTexts(stageTitleFound(), 'Kisten falder ned — tryk for at åbne den.', 'Tryk 1/4 · Åbn kiste');
+      syncStageClasses();
+
+      try{
+        SFX.whoosh(1);
+        setTimeout(function(){ try{ SFX.unlock(); }catch(e){} }, 170);
+      }catch(e){}
+      vibrate([24,16,42,22,70]);
+
+      wait(900);
+    }
+
+    return {play:play,close:close};
+  })();
+
+  function capturePosition(){
+    return Geo.current().catch(function(){
+      const selected = S.hexMap.selectedHex && centerForId(S.hexMap.selectedHex);
+      if(selected) return {lat:selected.lat,lng:selected.lng,acc:999,demo:true};
+      throw new Error('no-position');
+    });
+  }
+
+  function createTestHexImage(hexId){
+    const label = labelForId(hexId);
+    const canvas = document.createElement('canvas');
+    canvas.width = 720;
+    canvas.height = 720;
+    const ctx = canvas.getContext('2d');
+
+    const grad = ctx.createLinearGradient(0,0,720,720);
+    grad.addColorStop(0,'#F59A83');
+    grad.addColorStop(.45,'#E85D4D');
+    grad.addColorStop(1,'#8E2E25');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0,0,720,720);
+
+    const glow = ctx.createRadialGradient(180,160,20,180,160,300);
+    glow.addColorStop(0,'rgba(255,255,255,.46)');
+    glow.addColorStop(1,'rgba(255,255,255,0)');
+    ctx.fillStyle = glow;
+    ctx.fillRect(0,0,720,720);
+
+    ctx.fillStyle = 'rgba(255,255,255,.12)';
+    for(let i=0;i<7;i++){
+      ctx.beginPath();
+      ctx.arc(80 + i * 96, 620 - (i % 2) * 28, 44, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    ctx.fillStyle = 'rgba(255,255,255,.18)';
+    ctx.font = '900 46px Inter, Arial, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('TESTFOTO', 360, 132);
+
+    ctx.fillStyle = 'rgba(255,255,255,.95)';
+    ctx.font = '900 134px Inter, Arial, sans-serif';
+    ctx.fillText(label, 360, 356);
+
+    ctx.fillStyle = 'rgba(255,255,255,.92)';
+    ctx.font = '700 34px Inter, Arial, sans-serif';
+    ctx.fillText('Simuleret billede i hex', 360, 428);
+
+    ctx.fillStyle = 'rgba(255,255,255,.22)';
+    ctx.beginPath();
+    ctx.roundRect(154, 488, 412, 108, 28);
+    ctx.fill();
+
+    ctx.fillStyle = 'rgba(255,255,255,.95)';
+    ctx.font = '800 28px Inter, Arial, sans-serif';
+    ctx.fillText('STREG · ' + new Date().toLocaleDateString('da-DK'), 360, 552);
+
+    return canvas.toDataURL('image/jpeg', 0.9);
+  }
+
+  function simulateHexCapture(hexId){
+    ensureState();
+    const center = centerForId(hexId);
+    if(!center){
+      toast('Kunne ikke finde denne hex');
+      return;
+    }
+
+    const img = createTestHexImage(hexId);
+    S.hexMap.currentHex = hexId;
+    S.hexMap.selectedHex = hexId;
+
+    if(S.hexMap.photos[hexId]){
+      toast('Denne hex er allerede udforsket');
+      redraw();
+      return;
+    }
+
+    const chests = chestMap();
+    const opened = openedToday();
+    const chest = chests[hexId] && !opened[hexId] ? chests[hexId] : null;
+
+    const result = saveSpot(center.lat, center.lng, false, img);
+    if(!result) return;
+
+    result.photo.hexId = hexId;
+    S.hexMap.photos[hexId] = {
+      id: hexId,
+      photoId: result.photo.id,
+      img: img,
+      ts: result.photo.ts,
+      lat: center.lat,
+      lng: center.lng
+    };
+
+    if(chest){
+      opened[hexId] = true;
+      addXp(chest.xp);
+      S.coins += chest.coins;
+    }
+
+    save();
+    renderAll();
+    redraw();
+
+    if(chest){
+      setTimeout(function(){
+        ChestCutscene.play({
+          hexId: hexId,
+          rarity: chest.rarity,
+          xp: chest.xp,
+          coins: chest.coins
+        });
+      }, 180);
+      toast(icon('bag',13) + ' Testkiste åbnet i ' + labelForId(hexId));
+    }else{
+      toast(icon('camera',13) + ' Testfoto sat i ' + labelForId(hexId));
+    }
+
+    setTimeout(function(){
+      const marker = photoMarkers[result.photo.id];
+      const root = marker && marker.getElement && marker.getElement();
+      const element = root && root.querySelector('.hex-photo-marker');
+      if(element){
+        element.classList.remove('just-landed');
+        void element.offsetWidth;
+        element.classList.add('just-landed');
+      }
+    },260);
+  }
+
+  function handleCaptureImage(img){
+    capturePosition().then(function(pos){
+      const actualHex = hexForLatLng(pos.lat,pos.lng);
+      S.hexMap.currentHex = actualHex;
+      S.hexMap.selectedHex = actualHex;
+
+      if(S.hexMap.photos[actualHex]){
+        toast('Denne hex er allerede udforsket');
+        redraw();
+        return;
+      }
+
+      const chests = chestMap();
+      const opened = openedToday();
+      const chest = chests[actualHex] && !opened[actualHex] ? chests[actualHex] : null;
+
+      const result = saveSpot(pos.lat,pos.lng,false,img);
+      if(!result) return;
+
+      result.photo.hexId = actualHex;
+      S.hexMap.photos[actualHex] = {
+        id:actualHex,
+        photoId:result.photo.id,
+        img:img,
+        ts:result.photo.ts,
+        lat:pos.lat,
+        lng:pos.lng
+      };
+
+      if(chest){
+        opened[actualHex] = true;
+        addXp(chest.xp);
+        S.coins += chest.coins;
+      }
+
+      save();
+      renderAll();
+      redraw();
+
+      if(chest){
+        setTimeout(function(){
+          ChestCutscene.play({
+            hexId:actualHex,
+            rarity:chest.rarity,
+            xp:chest.xp,
+            coins:chest.coins
+          });
+        },180);
+        toast(icon('bag',13) + ' Reward-kiste fundet');
+      }else{
+        toast(icon('camera',13) + ' Hexen er nu udforsket');
+      }
+
+      setTimeout(function(){
+        const marker = photoMarkers[result.photo.id];
+        const root = marker && marker.getElement && marker.getElement();
+        const element = root && root.querySelector('.hex-photo-marker');
+        if(element){
+          element.classList.remove('just-landed');
+          void element.offsetWidth;
+          element.classList.add('just-landed');
+        }
+      },260);
+    }).catch(function(){
+      toast('Kunne ikke hente din placering');
+    });
+  }
+
+  function bindControls(){
+    const button = $('hexCaptureBtn');
+    const input = $('hexCameraInput');
+
+    if(button && !button.dataset.bound){
+      button.dataset.bound = '1';
+      button.addEventListener('click',function(){
+        if(button.disabled) return;
+        SFX.pop();
+        input.click();
+      });
+    }
+
+    if(input && !input.dataset.bound){
+      input.dataset.bound = '1';
+      input.addEventListener('change',function(){
+        const file = input.files[0];
+        if(!file) return;
+
+        SFX.shutter();
+        shutterFlash();
+        readFile(file)
+          .then(function(raw){ return shrink(raw); })
+          .then(handleCaptureImage)
+          .catch(function(){ toast('Kunne ikke læse billedet'); });
+
+        input.value = '';
+      });
+    }
+  }
+
+  function updateLocation(position){
+    ensureState();
+    const id = hexForLatLng(position.lat,position.lng);
+    const changed = S.hexMap.currentHex !== id;
+    S.hexMap.currentHex = id;
+    if(follow || !S.hexMap.selectedHex) S.hexMap.selectedHex = id;
+
+    ensureDailyChests(id);
+
+    if(meMarker){
+      meMarker.setLatLng([position.lat,position.lng]);
+    }else if(map){
+      meMarker = L.marker([position.lat,position.lng],{
+        icon:userIcon(),
+        pane:'userPane',
+        interactive:false,
+        zIndexOffset:2000
+      }).addTo(map);
+    }
+
+    if(map){
+      if(!accuracyCircle){
+        accuracyCircle = L.circle([position.lat,position.lng],{
+          radius:position.acc || 10,
+          color:'#2583FF',
+          weight:1.2,
+          opacity:.45,
+          fillColor:'#2583FF',
+          fillOpacity:.07,
+          pane:'accuracyPane',
+          interactive:false
+        }).addTo(map);
+      }else{
+        accuracyCircle
+          .setLatLng([position.lat,position.lng])
+          .setRadius(position.acc || 10);
+      }
+
+      if(follow){
+        map.setView([position.lat,position.lng],Math.max(map.getZoom(),16),{
+          animate:true
+        });
+      }
+    }
+
+    if(changed) save();
+    scheduleRedraw();
+  }
+
+  function scheduleRedraw(){
+    clearTimeout(redrawTimer);
+    redrawTimer = setTimeout(redraw,90);
+  }
+
+  function setTheme(name){
+    if(!map) return;
+    const config = TILES[name] || TILES.street;
+    if(tiles) map.removeLayer(tiles);
+    tiles = L.tileLayer(config.url,{
+      maxZoom:19,
+      attribution:config.attr,
+      subdomains:'abc',
+      crossOrigin:true
+    }).addTo(map);
+    tiles.bringToBack();
+  }
+
+  function init(){
+    if(ready){
+      invalidate();
+      return;
+    }
+    if(typeof L === 'undefined'){
+      $('realMap').innerHTML =
+        '<div style="padding:32px;text-align:center;color:#66736C">Kortet kunne ikke indlæses. Tjek internetforbindelsen.</div>';
+      return;
+    }
+
+    ensureState();
+    const lastPhoto = S.photos[S.photos.length-1];
+    const start = Geo.last
+      ? [Geo.last.lat,Geo.last.lng]
+      : lastPhoto
+        ? [lastPhoto.lat,lastPhoto.lng]
+        : [55.6761,12.5683];
+
+    map = L.map('realMap',{
+      zoomControl:true,
+      attributionControl:true,
+      minZoom:14,
+      maxZoom:19,
+      preferCanvas:true
+    }).setView(start,16);
+
+    map.createPane('hexPane');
+    map.getPane('hexPane').style.zIndex = 420;
+    map.createPane('accuracyPane');
+    map.getPane('accuracyPane').style.zIndex = 430;
+    map.createPane('photoPane');
+    map.getPane('photoPane').style.zIndex = 520;
+    map.createPane('chestPane');
+    map.getPane('chestPane').style.zIndex = 540;
+    map.createPane('userPane');
+    map.getPane('userPane').style.zIndex = 580;
+
+    setTheme(S.settings.mapTheme);
+    hexLayer = L.layerGroup().addTo(map);
+    markerLayer = L.layerGroup().addTo(map);
+
+    map.on('dragstart',function(){
+      follow = false;
+      $('followBtn').classList.remove('on');
+    });
+    map.on('moveend zoomend',scheduleRedraw);
+
+    ready = true;
+    bindControls();
+
+    const initialId = hexForLatLng(start[0],start[1]);
+    if(!S.hexMap.currentHex) S.hexMap.currentHex = initialId;
+    if(!S.hexMap.selectedHex) S.hexMap.selectedHex = S.hexMap.currentHex;
+    ensureDailyChests(S.hexMap.currentHex);
+    save();
+
+    Geo.onUpdate(updateLocation);
+    redraw();
+    setTimeout(invalidate,120);
+  }
+
+  function invalidate(){
+    if(map) setTimeout(function(){ map.invalidateSize(); },60);
+  }
+
+  function fitAll(){
+    if(!ready) init();
+    const points = [];
+
+    Object.keys(S.hexMap.photos || {}).forEach(function(id){
+      const center = centerForId(id);
+      if(center) points.push([center.lat,center.lng]);
+    });
+
+    ensureDailyChests(S.hexMap.currentHex).forEach(function(chest){
+      if(openedToday()[chest.id]) return;
+      const center = centerForId(chest.id);
+      if(center) points.push([center.lat,center.lng]);
+    });
+
+    if(Geo.last) points.push([Geo.last.lat,Geo.last.lng]);
+
+    if(points.length){
+      follow = false;
+      $('followBtn').classList.remove('on');
+      map.fitBounds(L.latLngBounds(points).pad(.18),{
+        maxZoom:17,
+        animate:true
+      });
+    }else{
+      toast('Ingen hexes eller kister at vise endnu');
+    }
+  }
+
+  function focus(photo){
+    if(!ready) init();
+    switchTab('tab-map');
+
+    const lat = photo && photo.lat;
+    const lng = photo && photo.lng;
+    if(typeof lat !== 'number' || typeof lng !== 'number') return;
+
+    follow = false;
+    $('followBtn').classList.remove('on');
+    S.hexMap.selectedHex = photo.hexId || hexForLatLng(lat,lng);
+    save();
+    map.setView([lat,lng],18,{animate:true});
+    scheduleRedraw();
+
+    setTimeout(function(){
+      const marker = photoMarkers[photo.id];
+      if(marker) marker.openPopup();
+    },320);
+  }
+
+  function focusAt(lat,lng,label){
+    if(!ready) init();
+    switchTab('tab-map');
+    follow = false;
+    $('followBtn').classList.remove('on');
+    S.hexMap.selectedHex = hexForLatLng(lat,lng);
+    save();
+    map.setView([lat,lng],17,{animate:true});
+    L.popup()
+      .setLatLng([lat,lng])
+      .setContent('<b>' + (label || 'Her') + '</b>')
+      .openOn(map);
+    scheduleRedraw();
+  }
+
+  function pulsePhoto(id){
+    const marker = photoMarkers[id];
+    const root = marker && marker.getElement && marker.getElement();
+    const element = root && root.querySelector('.hex-photo-marker');
+    if(!element) return;
+
+    element.classList.remove('just-landed');
+    void element.offsetWidth;
+    element.classList.add('just-landed');
   }
 
   return {
-    init: function(){
-      if(ready) return;
-      if(typeof L === 'undefined'){
-        $('gpsStatus').textContent = 'Kortet kunne ikke hentes — tjek internet.';
-        $('realMap').innerHTML = '<div style="padding:24px;text-align:center;color:#5C6B66;font-size:13px">Kortet kræver internet.<br>Resten af appen virker uden.</div>';
-        return;
-      }
-      ready = true;
-      const lastP = S.photos[S.photos.length - 1];
-      const start = Geo.last ? [Geo.last.lat, Geo.last.lng]
-                  : lastP ? [lastP.lat, lastP.lng] : [55.6761, 12.5683];
-      map = L.map('realMap', { zoomControl:true }).setView(start, 16);
-      this.setTheme(S.settings.mapTheme);
-      layer = L.layerGroup().addTo(map);
-      map.on('dragstart', function(){ MapView.setFollow(false); });
-      S.photos.forEach(drawPhoto);
-      Geo.onUpdate(function(p){
-        if(!ready) return;
-        const ll = [p.lat, p.lng];
-        if(!meMarker){
-          meMarker = L.marker(ll, { icon: L.divIcon({ className:'', html:'<div class="me-dot"></div>', iconSize:[18,18], iconAnchor:[9,9] }), zIndexOffset:1000 }).addTo(map);
-          accCircle = L.circle(ll, { radius:p.acc, color:'#2C7BE5', weight:1, fillColor:'#2C7BE5', fillOpacity:.1 }).addTo(map);
-        } else {
-          meMarker.setLatLng(ll);
-          accCircle.setLatLng(ll).setRadius(p.acc);
-        }
-        if(follow) map.setView(ll, Math.max(map.getZoom(), 16), { animate:true });
-      });
-    },
-    setTheme: function(name){
-      if(!ready && !map) return;
-      const t = TILES[name] || TILES.street;
-      if(tiles) map.removeLayer(tiles);
-      tiles = L.tileLayer(t.url, { maxZoom:19, attribution:t.attr }).addTo(map);
-    },
-    redraw: function(){
-      if(!ready) return;
-      layer.clearLayers();
-      for(const k in markers) delete markers[k];
-      S.photos.forEach(drawPhoto);
-    },
-    addPhoto:function(p){ if(ready) drawPhoto(p); },
-    pulsePhoto:function(id){
-      if(!ready || !markers[id]) return;
-      const root = markers[id].getElement && markers[id].getElement();
-      const el = root && root.querySelector ? root.querySelector('.photo-marker') : null;
-      if(!el) return;
-      el.classList.remove('just-landed');
-      void el.offsetWidth;
-      el.classList.add('just-landed');
-      setTimeout(function(){ el.classList.remove('just-landed'); },1300);
-    },
+    init:init,
+    redraw:redraw,
+    addPhoto:function(){ scheduleRedraw(); },
+    pulsePhoto:pulsePhoto,
     get follow(){ return follow; },
-    setFollow: function(v){
-      follow = v;
-      $('followBtn').classList.toggle('on', v);
-      if(v && Geo.last && ready) map.setView([Geo.last.lat, Geo.last.lng], Math.max(map.getZoom(), 16));
+    setFollow:function(value){
+      follow = !!value;
+      $('followBtn').classList.toggle('on',follow);
+      if(follow && Geo.last){
+        S.hexMap.currentHex = hexForLatLng(Geo.last.lat,Geo.last.lng);
+        S.hexMap.selectedHex = S.hexMap.currentHex;
+        save();
+        map.setView([Geo.last.lat,Geo.last.lng],Math.max(map.getZoom(),16),{
+          animate:true
+        });
+        scheduleRedraw();
+      }
     },
-    invalidate: function(){ if(ready) setTimeout(function(){ map.invalidateSize(); }, 60); },
-    focus: function(p){
-      if(!ready) return;
-      this.setFollow(false);
-      map.setView([p.lat, p.lng], 18);
-      if(markers[p.id]) markers[p.id].openPopup();
-    },
-    // used by the feed: a spot that isn't one of your own saved photos
-    focusAt: function(lat, lng, label){
-      if(!ready){ toast('Kortet er ikke klar endnu'); return; }
-      this.setFollow(false);
-      map.setView([lat, lng], 16);
-      L.popup().setLatLng([lat, lng])
-        .setContent('<b>' + (label || 'Her') + '</b><br>' + lat.toFixed(4) + ', ' + lng.toFixed(4))
-        .openOn(map);
-    },
-    fitAll: function(){
-      if(!ready || !S.photos.length){ toast('Ingen steder gemt endnu'); return; }
-      this.setFollow(false);
-      map.fitBounds(L.latLngBounds(S.photos.map(function(p){ return [p.lat, p.lng]; })).pad(0.25));
-    },
+    invalidate:invalidate,
+    focus:focus,
+    focusAt:focusAt,
+    fitAll:fitAll,
+    setTheme:setTheme,
+    hexForLatLng:hexForLatLng
   };
 })();
-
 
 /* ===================================================================
    SIGNATURE PHOTO + CHALLENGE CELEBRATIONS
@@ -10209,7 +13362,7 @@ const MonthlyEvent = (function(){
     return '<div class="cut-preview-theme sw-eventmidnight"><b>STREG</b><span></span></div>';
   }
 
-  function animateEventXp(amount, sourceEl){
+  window.animateEventXp = function animateEventXp(amount, sourceEl){
     const shell = document.querySelector('.event-progress-shell');
     if(!shell) return;
 
@@ -10267,12 +13420,64 @@ const MonthlyEvent = (function(){
     S.event.xp = Math.min(MAX_XP,S.event.xp + def.xp);
     save();
 
-    animateEventXp(def.xp,button);
-    const unlocked = autoUnlockReachedRewards({ silent:false });
-    SFX.challenge();
-    confetti(26);
-    toast(unlocked.length ? ('+' + def.xp + ' Event-XP · reward låst op') : ('+' + def.xp + ' Event-XP samlet'));
+    const unlocked = autoUnlockReachedRewards({ silent:true });
+    const pct = Math.min(100,S.event.xp / MAX_XP * 100);
+
     render();
+    confetti(26);
+
+    if(typeof window.eventChallengeCutscene === 'function'){
+      window.eventChallengeCutscene({
+        title:def.title,
+        icon:def.icon,
+        amount:def.xp,
+        sourceEl:button,
+        afterXp:S.event.xp,
+        maxXp:MAX_XP,
+        afterPct:pct,
+        rewardLine:rewardLineText(unlocked),
+        onDone:function(){
+          if(unlocked.length){
+            unlocked.forEach(function(reward,index){
+              setTimeout(function(){
+                purchaseCutscene({
+                  name:reward.name,
+                  type:'EVENT REWARD LÅST OP',
+                  icon:reward.icon,
+                  kind:reward.kind,
+                  variant:reward.itemId,
+                  preview:cutscenePreview(reward),
+                  cost:0,
+                  remaining:S.coins
+                });
+              }, index * 820);
+            });
+            toast('+' + def.xp + ' Event-XP · reward låst op');
+          }else{
+            toast('+' + def.xp + ' Event-XP samlet');
+          }
+        }
+      });
+    }else{
+      animateEventXp(def.xp,button);
+      if(unlocked.length){
+        unlocked.forEach(function(reward,index){
+          setTimeout(function(){
+            purchaseCutscene({
+              name:reward.name,
+              type:'EVENT REWARD LÅST OP',
+              icon:reward.icon,
+              kind:reward.kind,
+              variant:reward.itemId,
+              preview:cutscenePreview(reward),
+              cost:0,
+              remaining:S.coins
+            });
+          }, index * 820);
+        });
+      }
+      toast(unlocked.length ? ('+' + def.xp + ' Event-XP · reward låst op') : ('+' + def.xp + ' Event-XP samlet'));
+    }
   }
 
   function autoUnlockReachedRewards(options){
@@ -10357,6 +13562,19 @@ const MonthlyEvent = (function(){
 
   function nextReward(){
     return REWARDS.find(function(r){ return S.event.xp < r.milestone; }) || null;
+  }
+
+  function rewardLineText(unlocked){
+    if(unlocked && unlocked.length){
+      if(unlocked.length === 1){
+        return 'Reward låst op: <b>' + unlocked[0].name + '</b>';
+      }
+      return unlocked.length + ' rewards låst op automatisk';
+    }
+    const next = nextReward();
+    return next
+      ? 'Næste reward: <b>' + next.name + '</b> ved ' + next.milestone + ' XP'
+      : 'Alle event rewards er <b>låst op</b>';
   }
 
   function renderMarkers(){
@@ -10536,10 +13754,14 @@ const MonthlyEvent = (function(){
       switchTab('tab-challenges');
     }
 
-    const delay = reduceMotion ? 20 : 285;
+    const delay = reduceMotion ? 12 : 250;
     setTimeout(function(){
-      const button = document.querySelector('.ch-subtab[data-ch-pane="pane-ch-event"]');
-      if(button && !button.classList.contains('on')) button.click();
+      if(typeof window.activateChallengePane === 'function'){
+        window.activateChallengePane('pane-ch-event');
+      }else{
+        const button = document.querySelector('.ch-subtab[data-ch-pane="pane-ch-event"]');
+        if(button && !button.classList.contains('on')) button.click();
+      }
 
       const eventPane = $('pane-ch-event');
       if(eventPane){
@@ -10933,6 +14155,67 @@ const Settings = (function(){
   return { refresh: refresh, applyTheme: applyTheme };
 })();
 
+
+function openProfileImagePicker(){
+  const input = $('profileImageInput');
+  if(!input) return;
+  input.value = '';
+  input.click();
+}
+
+$('profileImageBtn').addEventListener('click',function(){
+  SFX.unlock();
+  openProfileImagePicker();
+});
+$('profileImageTextBtn').addEventListener('click',function(){
+  SFX.unlock();
+  openProfileImagePicker();
+});
+$('homeAvatar').addEventListener('click',function(){
+  SFX.pop();
+  switchTab('tab-profile');
+  setTimeout(function(){
+    try{
+      $('profileAvatar').scrollIntoView({ behavior:'smooth', block:'center' });
+    }catch(e){}
+  },260);
+});
+
+$('profileImageInput').addEventListener('change',async function(){
+  const file = this.files && this.files[0];
+  if(!file) return;
+
+  const avatars = [$('profileAvatar'),$('homeAvatar'),$('topAvatar')].filter(Boolean);
+  avatars.forEach(function(el){ el.classList.add('image-loading'); });
+
+  try{
+    const imageData = await compressProfileImage(file);
+    S.profileImage = imageData;
+    save();
+    renderAll();
+    SFX.chime();
+    vibrate([20,25,55]);
+    confetti(28);
+    toast('Profilbillede gemt');
+  }catch(error){
+    SFX.error();
+    toast((error && error.message) || 'Kunne ikke gemme profilbilledet');
+  }finally{
+    avatars.forEach(function(el){ el.classList.remove('image-loading'); });
+    this.value = '';
+  }
+});
+
+$('profileImageRemoveBtn').addEventListener('click',function(){
+  if(!S.profileImage) return;
+  S.profileImage = null;
+  save();
+  renderAll();
+  SFX.tick();
+  vibrate(15);
+  toast('Profilbillede fjernet');
+});
+
 $('usernameSaveBtn').addEventListener('click', function(){
   SFX.unlock(); SFX.pop();
   const val = $('usernameInput').value;
@@ -11066,16 +14349,25 @@ document.querySelectorAll('.see-all').forEach(function(b){
   b.addEventListener('click', function(){ SFX.unlock(); SFX.pop(); switchTab(b.dataset.goto); });
 });
 
+window.activateChallengePane = function(paneId){
+  const targetBtn = document.querySelector('.ch-subtab[data-ch-pane="' + paneId + '"]');
+  if(!targetBtn) return;
+
+  document.querySelectorAll('.ch-subtab').forEach(function(x){ x.classList.toggle('on', x === targetBtn); });
+  document.querySelectorAll('.ch-pane').forEach(function(p){ p.classList.toggle('on', p.id === paneId); });
+  targetBtn.scrollIntoView({ behavior:'smooth', inline:'center', block:'nearest' });
+
+  if(paneId === 'pane-ch-daily') Challenges.render();
+  else if(paneId === 'pane-ch-weekly') WeeklyChallenges.render();
+  else if(paneId === 'pane-ch-monthly') MonthlyChallenges.render();
+  else if(paneId === 'pane-ch-event' && typeof MonthlyEvent !== 'undefined') MonthlyEvent.render();
+};
+
 document.querySelectorAll('.ch-subtab').forEach(function(b){
   b.addEventListener('click', function(){
-    SFX.pop(); vibrate(15);
-    document.querySelectorAll('.ch-subtab').forEach(function(x){ x.classList.toggle('on', x === b); });
-    document.querySelectorAll('.ch-pane').forEach(function(p){ p.classList.toggle('on', p.id === b.dataset.chPane); });
-    b.scrollIntoView({ behavior:'smooth', inline:'center', block:'nearest' });
-    // rebuild the now-visible pane's cards fresh so they replay their stagger entrance
-    if(b.dataset.chPane === 'pane-ch-daily') Challenges.render();
-    else if(b.dataset.chPane === 'pane-ch-weekly') WeeklyChallenges.render();
-    else if(b.dataset.chPane === 'pane-ch-monthly') MonthlyChallenges.render();
+    SFX.pop();
+    vibrate(15);
+    window.activateChallengePane(b.dataset.chPane);
   });
 });
 
@@ -11114,6 +14406,38 @@ try{
 </script>
 
 
+
+
+<div class="event-claim-cutscene" id="eventClaimCutscene" aria-hidden="true">
+  <div class="event-claim-cutscene-backdrop"></div>
+  <div class="event-claim-cutscene-nebula"></div>
+  <div class="event-claim-cutscene-particles" id="eventClaimParticles"></div>
+  <div class="event-claim-cutscene-burst" id="eventClaimBurst"></div>
+  <div class="event-claim-cutscene-card">
+    <button class="event-claim-skip" id="eventClaimSkip" type="button">Spring over</button>
+    <div class="event-claim-kicker">Event challenge klaret</div>
+    <div class="event-claim-cutscene-ring"></div>
+    <div class="event-claim-icon-wrap" id="eventClaimIcon"></div>
+    <div class="event-claim-complete">Challenge complete</div>
+    <div class="event-claim-title" id="eventClaimTitle">Tag 2 billeder i dag</div>
+    <div class="event-claim-xp" id="eventClaimXp">+70 XP</div>
+    <div class="event-claim-xp-sub">Event-XP samlet</div>
+    <div class="event-claim-progress">
+      <div class="event-claim-progress-top">
+        <span id="eventClaimProgressLabel">Event progress</span>
+        <span id="eventClaimProgressText">0 / 3600 XP</span>
+      </div>
+      <div class="event-claim-progress-track">
+        <div class="event-claim-progress-fill" id="eventClaimProgressFill"></div>
+      </div>
+      <div class="event-claim-rewardline" id="eventClaimRewardLine">Næste reward: <b>Lunar</b> ved 400 XP</div>
+    </div>
+    <div class="event-claim-foot">
+      <button class="event-claim-continue" id="eventClaimContinue" type="button">Fortsæt</button>
+    </div>
+  </div>
+</div>
+
 <div class="purchase-cutscene" id="purchaseCutscene" aria-hidden="true">
   <div class="purchase-cutscene-bars"></div>
   <div class="purchase-cutscene-grid"></div>
@@ -11145,6 +14469,162 @@ try{
   <div class="purchase-cutscene-vignette"></div>
 </div>
 
+
+
+
+<script>
+(function(){
+  const overlay = document.getElementById('eventClaimCutscene');
+  if(!overlay) return;
+
+  const particles = document.getElementById('eventClaimParticles');
+  const burst = document.getElementById('eventClaimBurst');
+  const iconEl = document.getElementById('eventClaimIcon');
+  const titleEl = document.getElementById('eventClaimTitle');
+  const xpEl = document.getElementById('eventClaimXp');
+  const progressFill = document.getElementById('eventClaimProgressFill');
+  const progressText = document.getElementById('eventClaimProgressText');
+  const progressLabel = document.getElementById('eventClaimProgressLabel');
+  const rewardLine = document.getElementById('eventClaimRewardLine');
+  const skipBtn = document.getElementById('eventClaimSkip');
+  const continueBtn = document.getElementById('eventClaimContinue');
+
+  let closeTimer = null;
+  let resolveFn = null;
+  let open = false;
+  let launchSource = null;
+  let launchAmount = 0;
+
+  function clearTimers(){
+    if(closeTimer){
+      clearTimeout(closeTimer);
+      closeTimer = null;
+    }
+  }
+
+  function makeParticles(){
+    particles.innerHTML = '';
+    for(let i=0;i<22;i++){
+      const p = document.createElement('span');
+      p.style.position = 'absolute';
+      p.style.left = Math.random() * 100 + '%';
+      p.style.top = Math.random() * 100 + '%';
+      const s = 2 + Math.random() * 4;
+      p.style.width = s + 'px';
+      p.style.height = s + 'px';
+      p.style.borderRadius = '50%';
+      p.style.background = Math.random() > .48 ? 'rgba(255,255,255,.95)' : (Math.random() > .5 ? 'rgba(247,161,255,.9)' : 'rgba(133,227,255,.9)');
+      p.style.boxShadow = '0 0 16px rgba(255,255,255,.28)';
+      p.style.opacity = '.18';
+      p.animate([
+        { transform:'translate3d(0,0,0) scale(.55)', opacity:.08 },
+        { transform:'translate3d(' + ((Math.random() * 2 - 1) * 28) + 'px,' + ((Math.random() * 2 - 1) * 34) + 'px,0) scale(1.1)', opacity:.95, offset:.46 },
+        { transform:'translate3d(' + ((Math.random() * 2 - 1) * 55) + 'px,' + ((Math.random() * 2 - 1) * 58) + 'px,0) scale(.6)', opacity:0 }
+      ],{
+        duration:1500 + Math.random() * 1100,
+        easing:'ease-out',
+        iterations:Infinity,
+        delay:Math.random() * 600
+      });
+      particles.appendChild(p);
+    }
+  }
+
+  function makeBurst(){
+    burst.innerHTML = '';
+    for(let i=0;i<14;i++){
+      const ray = document.createElement('span');
+      ray.style.setProperty('--rot', (i * (360/14)) + 'deg');
+      ray.style.animationDelay = (i * 18) + 'ms';
+      burst.appendChild(ray);
+    }
+  }
+
+  function hide(afterAction){
+    if(!open) return;
+    open = false;
+    clearTimers();
+    overlay.classList.remove('show');
+    overlay.setAttribute('aria-hidden','true');
+
+    setTimeout(function(){
+      if(launchAmount && typeof window.animateEventXp === 'function'){
+        try{ window.animateEventXp(launchAmount, launchSource); }catch(e){}
+      }
+      if(typeof afterAction === 'function'){
+        setTimeout(afterAction, 240);
+      }
+      if(resolveFn){
+        const fn = resolveFn;
+        resolveFn = null;
+        fn();
+      }
+    }, 180);
+  }
+
+  skipBtn.addEventListener('click',function(){ hide(); });
+  continueBtn.addEventListener('click',function(){ hide(); });
+
+  overlay.addEventListener('click',function(e){
+    if(e.target === overlay || e.target.classList.contains('event-claim-cutscene-backdrop')){
+      hide();
+    }
+  });
+
+  document.addEventListener('keydown',function(e){
+    if(open && e.key === 'Escape') hide();
+  });
+
+  window.eventChallengeCutscene = function(options){
+    options = options || {};
+    clearTimers();
+    open = true;
+    resolveFn = typeof options.onDone === 'function' ? options.onDone : null;
+    launchSource = options.sourceEl || null;
+    launchAmount = options.amount || 0;
+
+    titleEl.textContent = options.title || 'Event challenge';
+    xpEl.textContent = '+' + (options.amount || 0) + ' XP';
+    iconEl.innerHTML = typeof icon === 'function' ? icon(options.icon || 'sparkles', 50) : '';
+    progressLabel.textContent = options.progressLabel || 'Event progress';
+    progressText.textContent = (options.afterXp || 0) + ' / ' + (options.maxXp || 3600) + ' XP';
+    rewardLine.innerHTML = options.rewardLine || 'Mere Event-XP samlet';
+    progressFill.style.width = '0%';
+
+    makeParticles();
+    makeBurst();
+
+    overlay.setAttribute('aria-hidden','false');
+    overlay.classList.add('show');
+
+    requestAnimationFrame(function(){
+      requestAnimationFrame(function(){
+        progressFill.style.width = Math.max(0, Math.min(100, options.afterPct || 0)) + '%';
+      });
+    });
+
+    try{
+      if(typeof SFX !== 'undefined'){
+        SFX.challenge();
+        setTimeout(function(){ try{ SFX.magic(); }catch(e){} }, 380);
+      }
+      if(typeof vibrate === 'function') vibrate([25,30,50,35,65]);
+    }catch(e){}
+
+    closeTimer = setTimeout(function(){
+      hide();
+    }, options.duration || 2600);
+
+    return new Promise(function(resolve){
+      const prev = resolveFn;
+      resolveFn = function(){
+        if(prev) prev();
+        resolve();
+      };
+    });
+  };
+})();
+</script>
 
 <script>
 (function(){
