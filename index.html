@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="da" data-theme="light">
 <head>
@@ -12,7 +11,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
-<title>STREG — Alpha 3.53</title>
+<title>STREG — Alpha 3.a53</title>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500;1,9..144,600&family=Inter:wght@400;500;600;700;800&family=Rajdhani:wght@600;700&family=Kalam:wght@400;700&family=Playfair+Display:wght@400;500;600;700&family=Baloo+2:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Permanent+Marker&family=Orbitron:wght@400;500;600;700&family=Cinzel:wght@400;500;600;700&family=Michroma&family=Anton&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <style>
@@ -1180,7 +1179,7 @@ html[data-tabcolors="on"] .tabbtn.active[data-color="moss"]::before{background:v
 .shop-freeze-body{flex:1;min-width:0;}
 .shop-freeze-title{font-family:var(--font-display);font-size:15px;font-weight:600;}
 .shop-freeze-sub{font-size:11px;color:var(--ink-soft);line-height:1.5;margin-top:2px;}
-.shop-freeze-count{font-family:var(--font-display);font-size:20px;font-weight:700;color:var(--sky);white-space:nowrap;}
+.shop-freeze-count{font-family:var(--font-display);font-size:20px;font-weight:700;color:#5A86C8;white-space:nowrap;}
 
 /* name-color gradient swatches (also applied live to your name/avatar) */
 .name-sunset{background:linear-gradient(90deg,#E08A3C,#C1503F);-webkit-background-clip:text;background-clip:text;color:transparent;}
@@ -1996,9 +1995,147 @@ capture-ring-progress,
 }
 
 
-/* ===== Level icon ===== */
+/* level icon */
 #topLevelWrap .icn{
   filter:drop-shadow(0 2px 5px rgba(88,151,211,.18));
+}
+
+
+/* =========================================================
+   REBUILT SHOP NAVIGATION
+   Four tabs: Frysere, Profil, Temaer, Skrifttyper.
+   ========================================================= */
+#tab-shop .shop-subtabs-four{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:5px;
+  padding:5px;
+  margin:0 0 18px;
+  overflow:visible;
+  border:0;
+  border-radius:18px;
+  background:var(--paper-2);
+}
+#tab-shop .shop-subtabs-four .shop-subtab{
+  width:100%;
+  min-width:0;
+  padding:10px 4px;
+  gap:5px;
+  justify-content:center;
+  border:0;
+  border-radius:13px;
+  background:transparent;
+  color:var(--ink-soft);
+  box-shadow:none;
+}
+#tab-shop .shop-subtabs-four .shop-subtab span{
+  min-width:0;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  font-size:10.5px;
+  font-weight:750;
+}
+#tab-shop .shop-subtabs-four .shop-subtab.on{
+  background:var(--card);
+  color:var(--ink);
+  box-shadow:0 3px 10px rgba(22,36,43,.10);
+}
+#tab-shop .shop-subtabs-four .shop-subtab.on svg{
+  transform:translateY(-1px) scale(1.06);
+}
+#tab-shop .shop-pane-scroll{
+  padding-bottom:34px;
+}
+#tab-shop .shop-profile-section{
+  padding:0 0 22px;
+  margin:0 0 22px;
+  border-bottom:1px solid var(--line);
+}
+#tab-shop .shop-profile-section:last-child{
+  margin-bottom:0;
+  border-bottom:0;
+}
+#tab-shop .shop-profile-heading{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:12px;
+  margin:0 2px 11px;
+}
+#tab-shop .shop-profile-heading > div{
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+}
+#tab-shop .shop-profile-heading .shop-section-title{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  font-family:var(--font-body);
+  font-size:16px;
+  font-weight:800;
+  letter-spacing:-.015em;
+}
+#tab-shop .shop-profile-heading .shop-section-sub{
+  padding-left:23px;
+  font-size:10.5px;
+  line-height:1.35;
+}
+#tab-shop .shop-freeze-actions{
+  text-align:right;
+  flex-shrink:0;
+}
+#tab-shop .shop-freeze-actions .shop-btn{
+  width:auto;
+  min-width:94px;
+  margin-top:6px;
+  padding:8px 13px;
+}
+#tab-shop .shop-freeze-sub{
+  max-width:240px;
+}
+@media(max-width:390px){
+  #tab-shop .shop-subtabs-four{
+    gap:3px;
+    padding:4px;
+  }
+  #tab-shop .shop-subtabs-four .shop-subtab{
+    padding:9px 2px;
+    gap:3px;
+  }
+  #tab-shop .shop-subtabs-four .shop-subtab span{
+    font-size:9.6px;
+  }
+  #tab-shop .shop-freeze-card{
+    align-items:flex-start;
+  }
+  #tab-shop .shop-freeze-icon{
+    display:none;
+  }
+  #tab-shop .shop-freeze-actions .shop-btn{
+    min-width:83px;
+    padding:8px 9px;
+  }
+}
+
+
+/* Shop affordability states */
+.shop-btn.poor{
+  background:var(--brick-soft);
+  color:var(--brick);
+  border:1px solid rgba(185,76,59,.18);
+}
+.shop-btn.poor:hover{
+  background:color-mix(in srgb,var(--brick-soft) 82%, white);
+}
+
+
+.shop-btn.poor{
+  font-size:10.5px;
+  line-height:1.15;
+  padding-left:7px;
+  padding-right:7px;
 }
 
 </style>
@@ -2172,83 +2309,104 @@ capture-ring-progress,
     <!-- ============ SHOP ============ -->
     <div class="tab-content" id="tab-shop">
       <div class="brandrow">
-        <h2 style="font-size:21px;">Butik <button class="info-btn" data-info="Alt her er kosmetisk — intet giver dig fordele udover streg-fryseren."><svg viewBox="0 0 24 24" fill="none" width="16" height="16"><circle cx="12" cy="12" r="9.5" stroke="currentColor" stroke-width="1.5"/><path d="M12 11v6M12 7.5v.01" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button></h2>
+        <h2 style="font-size:21px;">Butik <button class="info-btn" data-info="Profilting, temaer og skrifttyper er kosmetiske. Frysere beskytter din streg."><svg viewBox="0 0 24 24" fill="none" width="16" height="16"><circle cx="12" cy="12" r="9.5" stroke="currentColor" stroke-width="1.5"/><path d="M12 11v6M12 7.5v.01" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button></h2>
       </div>
 
-      <div class="shop-subtabs" id="shopSubtabs">
-        <button class="shop-subtab on" data-shop-pane="pane-freeze"><svg class="icn" width="13" height="13" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><circle cx="12" cy="12" r="2.1" fill="#B9ECFF"/><path d="M12 3.3v17.4M4.5 7.5l15 9M19.5 7.5l-15 9M12 7.5l-2.3-1.4M12 7.5l2.3-1.4M12 16.5l-2.3 1.4M12 16.5l2.3 1.4" stroke="#67B7DA" stroke-width="1.45" stroke-linecap="round"/><circle cx="12" cy="12" r="7.4" stroke="#A8DAEF" stroke-width="1" opacity=".55"/></svg> Fryser</button>
-        <button class="shop-subtab" data-shop-pane="pane-titles"><svg class="icn" width="13" height="13" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><path d="M11.3 4.3h6.5v6.5L9.4 19.2 2.9 12.8 11.3 4.3Z" fill="#FFE7C8" stroke="#D28A3D" stroke-width="1.25" stroke-linejoin="round"/><circle cx="14.9" cy="7.5" r="1.45" fill="#FFB35A" stroke="#C97328" stroke-width=".9"/></svg> Titler</button>
-        <button class="shop-subtab" data-shop-pane="pane-colors"><svg class="icn" width="13" height="13" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><path d="M12 3.7a8.4 8.1 0 1 0 0 16.2c1.1 0 1.7-.6 1.7-1.5 0-.5-.2-.9-.2-1.2 0-.8.7-1.3 1.5-1.3H17c2 0 3.4-1.5 3.4-3.6 0-4.7-3.8-8.6-8.4-8.6Z" fill="#FDF3E3" stroke="#D6A46A" stroke-width="1.2" stroke-linejoin="round"/><circle cx="8.2" cy="10" r="1.25" fill="#FF7E66"/><circle cx="11.5" cy="7.2" r="1.25" fill="#4FA8FF"/><circle cx="15.2" cy="8.4" r="1.25" fill="#F7C948"/><circle cx="8.7" cy="14.1" r="1.25" fill="#65C18C"/></svg> Farver</button>
-        <button class="shop-subtab" data-shop-pane="pane-frames"><svg class="icn" width="13" height="13" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><circle cx="12" cy="12" r="7.4" fill="none" stroke="#D7B57B" stroke-width="2.4"/><circle cx="12" cy="12" r="5.4" fill="none" stroke="#F3DFC0" stroke-width="1.3"/><circle cx="17.2" cy="8" r="1.25" fill="#FFF3DB"/></svg> Rammer</button>
-        <button class="shop-subtab" data-shop-pane="pane-themes"><svg class="icn" width="13" height="13" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><path d="M6.5 8.2 9.2 4.5h5.6l2.7 3.7-5.5 7.5L6.5 8.2Z" fill="#CFF2FF" stroke="#4DA7C8" stroke-width="1.25" stroke-linejoin="round"/><path d="M6.5 8.2h11M9.2 4.5 12 8.2l2.8-3.7M12 8.2l-1.8 7.5M12 8.2l1.8 7.5" stroke="#63B9D5" stroke-width="1.05" stroke-linejoin="round"/><circle cx="12" cy="6.6" r="1.2" fill="#FFFFFF" opacity=".95"/></svg> Temaer</button>
-        <button class="shop-subtab" data-shop-pane="pane-fonts"><svg class="icn" width="13" height="13" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><path d="M6.2 18 10.2 6h1.7l4 12M7.8 13.6h6.7" stroke="#5E6473" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M16.8 11c1.1-.3 2.1-.2 2.7.3.8.7.6 2.1.6 4.2v1.8" stroke="#9B6CDA" stroke-width="1.45" stroke-linecap="round"/><circle cx="10.9" cy="6" r="1.2" fill="#FFB35A"/></svg> Skrift</button>
-        <button class="shop-subtab" data-shop-pane="pane-fonts-exclusive"><svg class="icn" width="13" height="13" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><path d="M12 3.2c.7 3.7 2.8 5.8 6.5 6.5-3.7.7-5.8 2.8-6.5 6.5-.7-3.7-2.8-5.8-6.5-6.5 3.7-.7 5.8-2.8 6.5-6.5Z" fill="#FFE08C" stroke="#D29A1B" stroke-width="1.15" stroke-linejoin="round"/><circle cx="17.8" cy="6.1" r="1.1" fill="#FFF4C7"/><circle cx="7.3" cy="17.4" r=".9" fill="#FFF4C7"/></svg> Eksklusiv</button>
+      <div class="shop-subtabs shop-subtabs-four" id="shopSubtabs">
+        <button class="shop-subtab on" data-shop-pane="pane-freeze"><svg class="icn" width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3.2 5.8 5.6v5.1c0 4.4 2.8 7.8 6.2 9.1 3.4-1.3 6.2-4.7 6.2-9.1V5.6L12 3.2Z" fill="#DDEAFB" stroke="#5A86C8" stroke-width="1.25" stroke-linejoin="round"/><path d="M12 5.9v11.7" stroke="#B5D0F4" stroke-width="1" opacity=".75"/><path d="M9.2 12l1.9 1.9 4-4.4" stroke="#2F6AB5" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="8.2" r="1.1" fill="#fff" opacity=".9"/></svg><span>Frysere</span></button>
+        <button class="shop-subtab" data-shop-pane="pane-profile"><svg class="icn" width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="8.2" r="3.1" fill="#F5DFC8" stroke="#B88759" stroke-width="1.2"/><path d="M5.7 19.2c.5-4 2.8-6.2 6.3-6.2s5.8 2.2 6.3 6.2" fill="#DDEAFB" stroke="#5A86C8" stroke-width="1.25" stroke-linecap="round"/><circle cx="12" cy="12" r="9" stroke="#D7B57B" stroke-width="1.1" opacity=".65"/></svg><span>Profil</span></button>
+        <button class="shop-subtab" data-shop-pane="pane-themes"><svg class="icn" width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6.5 8.2 9.2 4.5h5.6l2.7 3.7-5.5 7.5L6.5 8.2Z" fill="#CFF2FF" stroke="#4DA7C8" stroke-width="1.25" stroke-linejoin="round"/><path d="M6.5 8.2h11M9.2 4.5 12 8.2l2.8-3.7M12 8.2l-1.8 7.5M12 8.2l1.8 7.5" stroke="#63B9D5" stroke-width="1.05" stroke-linejoin="round"/><circle cx="12" cy="6.6" r="1.2" fill="#fff" opacity=".95"/></svg><span>Temaer</span></button>
+        <button class="shop-subtab" data-shop-pane="pane-fonts-all"><svg class="icn" width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6.2 18 10.2 6h1.7l4 12M7.8 13.6h6.7" stroke="#5E6473" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M16.8 11c1.1-.3 2.1-.2 2.7.3.8.7.6 2.1.6 4.2v1.8" stroke="#9B6CDA" stroke-width="1.45" stroke-linecap="round"/><circle cx="10.9" cy="6" r="1.2" fill="#FFB35A"/></svg><span>Skrifttyper</span></button>
       </div>
 
       <div class="shop-pane on" id="pane-freeze">
         <div class="shop-section-head">
-          <span class="shop-section-title"><svg class="icn" width="16" height="16" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><circle cx="12" cy="12" r="2.1" fill="#B9ECFF"/><path d="M12 3.3v17.4M4.5 7.5l15 9M19.5 7.5l-15 9M12 7.5l-2.3-1.4M12 7.5l2.3-1.4M12 16.5l-2.3 1.4M12 16.5l2.3 1.4" stroke="#67B7DA" stroke-width="1.45" stroke-linecap="round"/><circle cx="12" cy="12" r="7.4" stroke="#A8DAEF" stroke-width="1" opacity=".55"/></svg> Streg-fryser</span>
+          <span class="shop-section-title"><svg class="icn" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3.2 5.8 5.6v5.1c0 4.4 2.8 7.8 6.2 9.1 3.4-1.3 6.2-4.7 6.2-9.1V5.6L12 3.2Z" fill="#DDEAFB" stroke="#5A86C8" stroke-width="1.25" stroke-linejoin="round"/><path d="M12 5.9v11.7" stroke="#B5D0F4" stroke-width="1" opacity=".75"/><path d="M9.2 12l1.9 1.9 4-4.4" stroke="#2F6AB5" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="8.2" r="1.1" fill="#fff" opacity=".9"/></svg> Streg-frysere</span>
           <span class="shop-section-sub" id="shopFreezeMax">maks. 5</span>
         </div>
         <div class="shop-freeze-card">
-          <div class="shop-freeze-icon"><svg class="icn" width="30" height="30" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><circle cx="12" cy="12" r="2.1" fill="#B9ECFF"/><path d="M12 3.3v17.4M4.5 7.5l15 9M19.5 7.5l-15 9M12 7.5l-2.3-1.4M12 7.5l2.3-1.4M12 16.5l-2.3 1.4M12 16.5l2.3 1.4" stroke="#67B7DA" stroke-width="1.45" stroke-linecap="round"/><circle cx="12" cy="12" r="7.4" stroke="#A8DAEF" stroke-width="1" opacity=".55"/></svg></div>
+          <div class="shop-freeze-icon"><svg class="icn" width="30" height="30" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3.2 5.8 5.6v5.1c0 4.4 2.8 7.8 6.2 9.1 3.4-1.3 6.2-4.7 6.2-9.1V5.6L12 3.2Z" fill="#DDEAFB" stroke="#5A86C8" stroke-width="1.25" stroke-linejoin="round"/><path d="M12 5.9v11.7" stroke="#B5D0F4" stroke-width="1" opacity=".75"/><path d="M9.2 12l1.9 1.9 4-4.4" stroke="#2F6AB5" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="8.2" r="1.1" fill="#fff" opacity=".9"/></svg></div>
           <div class="shop-freeze-body">
-            <div class="shop-freeze-title">Beskyt din streg <button class="info-btn" data-info="Misser du en dag, bruges en fryser automatisk, så din streg ikke nulstilles."><svg viewBox="0 0 24 24" fill="none" width="16" height="16"><circle cx="12" cy="12" r="9.5" stroke="currentColor" stroke-width="1.5"/><path d="M12 11v6M12 7.5v.01" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button></div>
+            <div class="shop-freeze-title">Beskyt din streg
+              <button class="info-btn" data-info="Misser du en dag, bruges et skjold automatisk, så din streg ikke nulstilles.">
+                <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><circle cx="12" cy="12" r="9.5" stroke="currentColor" stroke-width="1.5"/><path d="M12 11v6M12 7.5v.01" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+              </button>
+            </div>
+            <div class="shop-freeze-sub">Et skjold bliver brugt automatisk, hvis du misser en dag.</div>
           </div>
-          <div style="text-align:right;">
+          <div class="shop-freeze-actions">
             <div class="shop-freeze-count" id="shopFreezeCount">3</div>
-            <button class="shop-btn buy" id="shopBuyFreeze" style="margin-top:6px;width:auto;padding:8px 14px;">Køb · 150 <svg class="icn" width="13" height="13" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><circle cx="12" cy="12" r="8.8" fill="#F6CF64" stroke="#B97A16" stroke-width="1.35"/><circle cx="12" cy="12" r="6.7" fill="#FFD972" opacity=".72"/><ellipse cx="9.1" cy="8.2" rx="3.5" ry="1.8" fill="#FFF5C8" opacity=".9"/><path d="M12 7.2v9.5M9.5 9.5c0-1.1 1-1.9 2.5-1.9s2.5.7 2.5 1.7c0 2.4-5 1.1-5 3.3 0 1.1 1 1.9 2.5 1.9s2.5-.8 2.5-1.9" stroke="#8B5D10" stroke-width="1.45" stroke-linecap="round"/></svg></button>
+            <button class="shop-btn buy" id="shopBuyFreeze">Køb · 150</button>
           </div>
         </div>
       </div>
 
-      <div class="shop-pane" id="pane-titles">
-        <div class="shop-section-head">
-          <span class="shop-section-title"><svg class="icn" width="16" height="16" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><path d="M11.3 4.3h6.5v6.5L9.4 19.2 2.9 12.8 11.3 4.3Z" fill="#FFE7C8" stroke="#D28A3D" stroke-width="1.25" stroke-linejoin="round"/><circle cx="14.9" cy="7.5" r="1.45" fill="#FFB35A" stroke="#C97328" stroke-width=".9"/></svg> Titler</span>
-          <span class="shop-section-sub">Vises i stedet for din niveau-titel</span>
-        </div>
-        <div class="shop-grid stagger" id="shopTitles"></div>
+      <div class="shop-pane shop-pane-scroll" id="pane-profile">
+        <section class="shop-profile-section">
+          <div class="shop-profile-heading">
+            <div>
+              <span class="shop-section-title"><svg class="icn" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="7.4" stroke="#D7B57B" stroke-width="2.4"/><circle cx="12" cy="12" r="5.4" stroke="#F3DFC0" stroke-width="1.3"/><circle cx="17.2" cy="8" r="1.25" fill="#FFF3DB"/></svg> Ringe</span>
+              <span class="shop-section-sub">Ring rundt om dit profilbillede</span>
+            </div>
+          </div>
+          <div class="shop-grid stagger" id="shopFrames"></div>
+        </section>
+
+        <section class="shop-profile-section">
+          <div class="shop-profile-heading">
+            <div>
+              <span class="shop-section-title"><svg class="icn" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3.7a8.4 8.1 0 1 0 0 16.2c1.1 0 1.7-.6 1.7-1.5 0-.5-.2-.9-.2-1.2 0-.8.7-1.3 1.5-1.3H17c2 0 3.4-1.5 3.4-3.6 0-4.7-3.8-8.6-8.4-8.6Z" fill="#FDF3E3" stroke="#D6A46A" stroke-width="1.2" stroke-linejoin="round"/><circle cx="8.2" cy="10" r="1.25" fill="#FF7E66"/><circle cx="11.5" cy="7.2" r="1.25" fill="#4FA8FF"/><circle cx="15.2" cy="8.4" r="1.25" fill="#F7C948"/><circle cx="8.7" cy="14.1" r="1.25" fill="#65C18C"/></svg> Farver</span>
+              <span class="shop-section-sub">Farve på dit navn og din profil</span>
+            </div>
+          </div>
+          <div class="shop-grid stagger" id="shopColors"></div>
+        </section>
+
+        <section class="shop-profile-section">
+          <div class="shop-profile-heading">
+            <div>
+              <span class="shop-section-title"><svg class="icn" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M11.3 4.3h6.5v6.5L9.4 19.2 2.9 12.8 11.3 4.3Z" fill="#FFE7C8" stroke="#D28A3D" stroke-width="1.25" stroke-linejoin="round"/><circle cx="14.9" cy="7.5" r="1.45" fill="#FFB35A" stroke="#C97328" stroke-width=".9"/></svg> Titler</span>
+              <span class="shop-section-sub">Vises under dit navn</span>
+            </div>
+          </div>
+          <div class="shop-grid stagger" id="shopTitles"></div>
+        </section>
       </div>
 
-      <div class="shop-pane" id="pane-colors">
-        <div class="shop-section-head">
-          <span class="shop-section-title"><svg class="icn" width="16" height="16" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><path d="M12 3.7a8.4 8.1 0 1 0 0 16.2c1.1 0 1.7-.6 1.7-1.5 0-.5-.2-.9-.2-1.2 0-.8.7-1.3 1.5-1.3H17c2 0 3.4-1.5 3.4-3.6 0-4.7-3.8-8.6-8.4-8.6Z" fill="#FDF3E3" stroke="#D6A46A" stroke-width="1.2" stroke-linejoin="round"/><circle cx="8.2" cy="10" r="1.25" fill="#FF7E66"/><circle cx="11.5" cy="7.2" r="1.25" fill="#4FA8FF"/><circle cx="15.2" cy="8.4" r="1.25" fill="#F7C948"/><circle cx="8.7" cy="14.1" r="1.25" fill="#65C18C"/></svg> Navnefarve</span>
-          <span class="shop-section-sub">Ses på venne-listen</span>
-        </div>
-        <div class="shop-grid stagger" id="shopColors"></div>
+      <div class="shop-pane shop-pane-scroll" id="pane-themes">
+        <section class="shop-profile-section">
+          <div class="shop-profile-heading">
+            <div>
+              <span class="shop-section-title"><svg class="icn" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6.5 8.2 9.2 4.5h5.6l2.7 3.7-5.5 7.5L6.5 8.2Z" fill="#CFF2FF" stroke="#4DA7C8" stroke-width="1.25" stroke-linejoin="round"/><path d="M6.5 8.2h11M9.2 4.5 12 8.2l2.8-3.7M12 8.2l-1.8 7.5M12 8.2l1.8 7.5" stroke="#63B9D5" stroke-width="1.05" stroke-linejoin="round"/><circle cx="12" cy="6.6" r="1.2" fill="#fff" opacity=".95"/></svg> Temaer</span>
+              <span class="shop-section-sub">Skifter hele appens udseende</span>
+            </div>
+          </div>
+          <div class="shop-grid stagger" id="shopThemes"></div>
+        </section>
       </div>
 
-      <div class="shop-pane" id="pane-frames">
-        <div class="shop-section-head">
-          <span class="shop-section-title"><svg class="icn" width="16" height="16" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><circle cx="12" cy="12" r="7.4" fill="none" stroke="#D7B57B" stroke-width="2.4"/><circle cx="12" cy="12" r="5.4" fill="none" stroke="#F3DFC0" stroke-width="1.3"/><circle cx="17.2" cy="8" r="1.25" fill="#FFF3DB"/></svg> Avatar-ramme</span>
-          <span class="shop-section-sub">Ring rundt om dit ikon</span>
-        </div>
-        <div class="shop-grid stagger" id="shopFrames"></div>
+      <div class="shop-pane shop-pane-scroll" id="pane-fonts-all">
+        <section class="shop-profile-section">
+          <div class="shop-profile-heading">
+            <div>
+              <span class="shop-section-title"><svg class="icn" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6.2 18 10.2 6h1.7l4 12M7.8 13.6h6.7" stroke="#5E6473" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M16.8 11c1.1-.3 2.1-.2 2.7.3.8.7.6 2.1.6 4.2v1.8" stroke="#9B6CDA" stroke-width="1.45" stroke-linecap="round"/><circle cx="10.9" cy="6" r="1.2" fill="#FFB35A"/></svg> Skrifttyper</span>
+              <span class="shop-section-sub">Alle almindelige skrifttyper</span>
+            </div>
+          </div>
+          <div class="shop-grid stagger" id="shopFonts"></div>
+        </section>
+
+        <section class="shop-profile-section">
+          <div class="shop-profile-heading">
+            <div>
+              <span class="shop-section-title"><svg class="icn" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3.2c.7 3.7 2.8 5.8 6.5 6.5-3.7.7-5.8 2.8-6.5 6.5-.7-3.7-2.8-5.8-6.5-6.5 3.7-.7 5.8-2.8 6.5-6.5Z" fill="#FFE08C" stroke="#D29A1B" stroke-width="1.15" stroke-linejoin="round"/><circle cx="17.8" cy="6.1" r="1.1" fill="#FFF4C7"/><circle cx="7.3" cy="17.4" r=".9" fill="#FFF4C7"/></svg> Eksklusive skrifttyper</span>
+              <span class="shop-section-sub">Kræver det matchende tema</span>
+            </div>
+          </div>
+          <div class="shop-grid stagger" id="shopFontsExclusive"></div>
+        </section>
       </div>
 
-      <div class="shop-pane" id="pane-themes">
-        <div class="shop-section-head">
-          <span class="shop-section-title"><svg class="icn" width="16" height="16" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><path d="M6.5 8.2 9.2 4.5h5.6l2.7 3.7-5.5 7.5L6.5 8.2Z" fill="#CFF2FF" stroke="#4DA7C8" stroke-width="1.25" stroke-linejoin="round"/><path d="M6.5 8.2h11M9.2 4.5 12 8.2l2.8-3.7M12 8.2l-1.8 7.5M12 8.2l1.8 7.5" stroke="#63B9D5" stroke-width="1.05" stroke-linejoin="round"/><circle cx="12" cy="6.6" r="1.2" fill="#FFFFFF" opacity=".95"/></svg> Premium-temaer</span>
-          <span class="shop-section-sub">Skifter hele appens udseende</span>
-        </div>
-        <div class="shop-grid stagger" id="shopThemes"></div>
-      </div>
-
-      <div class="shop-pane" id="pane-fonts">
-        <div class="shop-section-head">
-          <span class="shop-section-title"><svg class="icn" width="16" height="16" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><path d="M6.2 18 10.2 6h1.7l4 12M7.8 13.6h6.7" stroke="#5E6473" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M16.8 11c1.1-.3 2.1-.2 2.7.3.8.7.6 2.1.6 4.2v1.8" stroke="#9B6CDA" stroke-width="1.45" stroke-linecap="round"/><circle cx="10.9" cy="6" r="1.2" fill="#FFB35A"/></svg> Skrifttype</span>
-          <span class="shop-section-sub">Vises på dit navn</span>
-        </div>
-        <div class="shop-grid stagger" id="shopFonts"></div>
-      </div>
-
-      <div class="shop-pane" id="pane-fonts-exclusive">
-        <div class="shop-section-head">
-          <span class="shop-section-title"><svg class="icn" width="16" height="16" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><path d="M12 3.2c.7 3.7 2.8 5.8 6.5 6.5-3.7.7-5.8 2.8-6.5 6.5-.7-3.7-2.8-5.8-6.5-6.5 3.7-.7 5.8-2.8 6.5-6.5Z" fill="#FFE08C" stroke="#D29A1B" stroke-width="1.15" stroke-linejoin="round"/><circle cx="17.8" cy="6.1" r="1.1" fill="#FFF4C7"/><circle cx="7.3" cy="17.4" r=".9" fill="#FFF4C7"/></svg> Eksklusive skrifttyper</span>
-          <span class="shop-section-sub">Kræver det matchende tema</span>
-        </div>
-        <div class="shop-grid stagger" id="shopFontsExclusive"></div>
-      </div>
     </div>
 
     <!-- ============ MAP ============ -->
@@ -2593,7 +2751,7 @@ capture-ring-progress,
     <button class="lb-close" id="lbClose"><svg class="icn" width="15" height="15" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
     <span class="lb-count" id="lbCount">1 / 1</span>
   </div>
-  <img class="lb-img" id="lbImg" alt="" onerror="if(this.dataset.fallback && this.src!==this.dataset.fallback){this.src=this.dataset.fallback;this.dataset.fallback='';}">
+  <img class="lb-img" id="lbImg" alt="">
   <div class="lb-meta">
     <div class="lb-date" id="lbDate">—</div>
     <div class="lb-sub" id="lbSub">—</div>
@@ -2693,7 +2851,6 @@ capture-ring-progress,
    =================================================================== */
 const ICON = {
   flame:'<path d="M12 2.8c-.6 3.5-3.8 4.9-3.8 8.5 0 1.8 1.4 3.2 3.1 3.2 1.8 0 3.1-1.4 3.1-3.1 0-.9-.4-1.8-1.1-2.6 2.5 1 4.1 3.2 4.1 5.9 0 3.6-2.8 6.4-6.4 6.4s-6.4-2.8-6.4-6.4c0-4.6 3.1-6.8 4.6-10.3.7.4 1.7 1.6 2.8 3.2Z" fill="#FFB24D" stroke="#D56E23" stroke-width="1.15" stroke-linejoin="round"/><path d="M12.4 8.5c.9 1 1.5 1.9 1.5 3 0 1.6-1.2 2.8-2.8 2.8" stroke="#FFF2CE" stroke-width="1.35" stroke-linecap="round" opacity=".8"/>',
-  level:'<path d="M12 3.6 14 8l4.8.7-3.5 3.4.8 4.8-4.1-2.3-4.1 2.3.8-4.8L5.2 8.7 10 8l2-4.4Z" fill="#C5E8FF" stroke="#5897D3" stroke-width="1.2" stroke-linejoin="round"/><circle cx="12" cy="11" r="2.1" fill="#FFF8DC" stroke="#D3A83A" stroke-width="1"/>',
   coin:'<circle cx="12" cy="12" r="8.8" fill="#F6CF64" stroke="#B97A16" stroke-width="1.35"/><circle cx="12" cy="12" r="6.7" fill="#FFD972" opacity=".72"/><ellipse cx="9.1" cy="8.2" rx="3.5" ry="1.8" fill="#FFF5C8" opacity=".9"/><path d="M12 7.2v9.5M9.5 9.5c0-1.1 1-1.9 2.5-1.9s2.5.7 2.5 1.7c0 2.4-5 1.1-5 3.3 0 1.1 1 1.9 2.5 1.9s2.5-.8 2.5-1.9" stroke="#8B5D10" stroke-width="1.45" stroke-linecap="round"/>',
   bolt:'<path d="M12.5 2.5 5 14h5.5L11 21.5 19 10h-5.5L12.5 2.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>',
   gear:'<circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.6"/><path d="M12 3.5v2.4M12 18.1v2.4M20.5 12h-2.4M5.9 12H3.5M17.8 6.2l-1.7 1.7M7.9 16.1l-1.7 1.7M17.8 17.8l-1.7-1.7M7.9 7.9 6.2 6.2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>',
@@ -3238,7 +3395,7 @@ function renderMyPhotos(){
     const d = document.createElement('div');
     d.className = 'gal-item';
     d.style.animationDelay = Math.min(i * 28, 480) + 'ms';
-    const src = photoDisplaySrc(p); if(src) d.style.backgroundImage = 'url(' + src + ')';
+    if(p.img) d.style.backgroundImage = 'url(' + p.img + ')';
     d.innerHTML = '<div class="d">' + new Date(p.ts).toLocaleDateString('da-DK', { day:'numeric', month:'short' }) + '</div>';
     d.addEventListener('click', function(){ SFX.pop(); Lightbox.open(p.id); });
     g.appendChild(d);
@@ -3555,7 +3712,7 @@ const Shop = (function(){
     S.coins -= FREEZE_COST; S.freezes += 1;
     save(); renderAll(); render();
     SFX.coin(); confetti(20); vibrate(30);
-    toast('Streg-fryser købt! Du har nu ' + S.freezes);
+    toast('Skjold købt! Du har nu ' + S.freezes);
   }
 
   function buyItem(catalog, key, item){
@@ -3600,12 +3757,15 @@ const Shop = (function(){
       previewHtml = '<div class="shop-preview is-frame"><div class="shop-frame-stage avatar ' + item.cls + '">DIG</div></div>';
     }
 
+    const canAfford = S.coins >= item.cost;
+    const btnCls = equipped ? 'equipped' : owned ? 'equip' : canAfford ? 'buy' : 'poor';
+
     el.innerHTML =
       previewHtml +
       '<div class="shop-item-name">' + item.name + '</div>' +
       '<div class="shop-item-price">' + (owned ? (equipped ? 'I brug' : 'Ejet') : item.cost + ' ' + icon('coin',11)) + '</div>' +
-      '<button class="shop-btn ' + (equipped ? 'equipped' : owned ? 'equip' : 'buy') + '">' +
-        (equipped ? icon('check',11) + ' I brug' : owned ? 'Brug' : 'Køb') +
+      '<button class="shop-btn ' + btnCls + '">' +
+        (equipped ? icon('check',11) + ' I brug' : owned ? 'Brug' : canAfford ? 'Køb' : 'Ikke nok mønter') +
       '</button>';
     el.querySelector('.shop-btn').addEventListener('click', function(){ buyItem(catalog, key, item); });
     return el;
@@ -3623,12 +3783,15 @@ const Shop = (function(){
     const equipped = S.settings.style === item.id;
     const el = document.createElement('div');
     el.className = 'shop-item' + (equipped ? ' equipped' : '');
+    const canAfford = S.coins >= item.cost;
+    const btnCls = equipped ? 'equipped' : owned ? 'equip' : canAfford ? 'buy' : 'poor';
+
     el.innerHTML =
       '<div class="shop-preview sw-' + item.sw + '"></div>' +
       '<div class="shop-item-name">' + item.name + '</div>' +
       '<div class="shop-item-price">' + (owned ? (equipped ? 'I brug' : 'Ejet') : item.cost + ' ' + icon('coin',11)) + '</div>' +
-      '<button class="shop-btn ' + (equipped ? 'equipped' : owned ? 'equip' : 'buy') + '">' +
-        (equipped ? icon('check',11) + ' I brug' : owned ? 'Brug' : 'Køb') +
+      '<button class="shop-btn ' + btnCls + '">' +
+        (equipped ? icon('check',11) + ' I brug' : owned ? 'Brug' : canAfford ? 'Køb' : 'Ikke nok mønter') +
       '</button>';
     el.querySelector('.shop-btn').addEventListener('click', function(){ buyOrEquipTheme(item); });
     return el;
@@ -3674,8 +3837,17 @@ const Shop = (function(){
     else if(owned) priceRow = equipped ? 'I brug' : 'Ejet';
     else priceRow = item.cost + ' ' + icon('coin',11);
 
-    const btnLabel = !gateOk ? 'Låst' : equipped ? icon('check',11) + ' I brug' : owned ? 'Brug' : 'Køb';
-    const btnCls = !gateOk ? 'locked' : equipped ? 'equipped' : owned ? 'equip' : 'buy';
+    const canAfford = S.coins >= item.cost;
+    const btnLabel = !gateOk
+      ? 'Låst'
+      : equipped
+        ? icon('check',11) + ' I brug'
+        : owned
+          ? 'Brug'
+          : canAfford
+            ? 'Køb'
+            : 'Ikke nok mønter';
+    const btnCls = !gateOk ? 'locked' : equipped ? 'equipped' : owned ? 'equip' : canAfford ? 'buy' : 'poor';
 
     el.innerHTML =
       '<div class="shop-preview is-font' + (item.requiresTheme ? ' exclusive' : '') + ' ' + item.cls + '">' + item.name + '</div>' +
@@ -3723,9 +3895,13 @@ const Shop = (function(){
     $('shopFreezeCount').textContent = S.freezes;
     $('shopFreezeMax').textContent = 'maks. ' + FREEZE_MAX;
     const buyBtn = $('shopBuyFreeze');
-    buyBtn.innerHTML = 'Køb · ' + FREEZE_COST + ' ' + icon('coin',13);
+    buyBtn.innerHTML = S.freezes >= FREEZE_MAX
+      ? 'Maksimum nået'
+      : S.coins >= FREEZE_COST
+        ? 'Køb · ' + FREEZE_COST + ' ' + icon('coin',13)
+        : 'Ikke nok mønter';
     buyBtn.disabled = S.freezes >= FREEZE_MAX;
-    buyBtn.className = 'shop-btn ' + (S.freezes >= FREEZE_MAX ? 'locked' : 'buy');
+    buyBtn.className = 'shop-btn ' + (S.freezes >= FREEZE_MAX ? 'locked' : S.coins >= FREEZE_COST ? 'buy' : 'poor');
     fillSection('shopTitles', TITLE_CATALOG, 'titles');
     fillSection('shopColors', COLOR_CATALOG, 'colors');
     fillSection('shopFrames', FRAME_CATALOG, 'frames');
@@ -3912,7 +4088,7 @@ function renderThumbs(){
     const d = document.createElement('div');
     if(p){
       d.className = 'thumb';
-      const src = photoDisplaySrc(p); if(src) d.style.backgroundImage = 'url(' + src + ')';
+      if(p.img) d.style.backgroundImage = 'url(' + p.img + ')';
       d.innerHTML = '<span class="tag">' + agoLabel(p.ts) + '</span>';
       d.addEventListener('click', function(){ SFX.pop(); Lightbox.open(p.id); });
     } else { d.className = 'thumb empty'; }
@@ -3930,7 +4106,7 @@ function renderGallery(){
     const d = document.createElement('div');
     d.className = 'gal-item';
     d.style.animationDelay = Math.min(i * 30, 500) + 'ms';
-    const src = photoDisplaySrc(p); if(src) d.style.backgroundImage = 'url(' + src + ')';
+    if(p.img) d.style.backgroundImage = 'url(' + p.img + ')';
     d.innerHTML = '<div class="d">' + new Date(p.ts).toLocaleDateString('da-DK', { day:'numeric', month:'short' }) + '</div>';
     d.addEventListener('click', function(){ SFX.pop(); Lightbox.open(p.id); });
     g.appendChild(d);
@@ -4086,13 +4262,6 @@ function readFile(file){
     r.onerror = rej;
     r.readAsDataURL(file);
   });
-}
-
-function photoDisplaySrc(p){
-  return (p && (p.thumb || p.img || p.cloudUrl)) || '';
-}
-function photoFullSrc(p){
-  return (p && (p.cloudUrl || p.img || p.thumb)) || '';
 }
 
 /* ===================================================================
@@ -4404,16 +4573,12 @@ const Cloud = (function(){
               id: row.id, lat: row.lat, lng: row.lng,
               ts: new Date(row.taken_at).getTime(),
               img: row.image_url,
-              thumb: row.image_url,
-              cloudUrl: row.image_url,
             });
             changed = true;
-          } else {
-            // keep a cloud backup on every pulled photo; if the local image was
-            // lost, heal it instead of leaving a blank tile
-            if(!existing.cloudUrl) existing.cloudUrl = row.image_url;
-            if(!existing.img) existing.img = row.image_url;
-            if(!existing.thumb) existing.thumb = existing.img || row.image_url;
+          } else if(!existing.img){
+            // this photo lost its image locally (quota eviction) but the cloud
+            // still has it -- heal it instead of leaving a permanently blank tile
+            existing.img = row.image_url;
             changed = true;
           }
         });
@@ -4450,10 +4615,9 @@ const Cloud = (function(){
   }
 
   async function uploadPhoto(photo){
-    const uploadSrc = photo && (photo.img || photo.thumb || photo.cloudUrl);
-    if(!ready || !uploadSrc) return null;
+    if(!ready || !photo.img) return null;
     try{
-      const blob = await (await fetch(uploadSrc)).blob();
+      const blob = await (await fetch(photo.img)).blob();
       const path = userId + '/' + photo.id + '.jpg';
       const { error: upErr } = await client.storage.from('photos')
         .upload(path, blob, { contentType: 'image/jpeg', upsert: true });
@@ -4921,17 +5085,14 @@ const MapView = (function(){
       }).addTo(layer);
     }
 
-    const markerSrc = photoDisplaySrc(p);
-    const markerIcon = markerSrc
+    const markerIcon = p.img
       ? L.divIcon({ className:'', iconSize:[40,40], iconAnchor:[20,20],
-          html:'<div class="photo-marker" style="width:40px;height:40px;background-image:url(' + markerSrc + ')"></div>' })
+          html:'<div class="photo-marker" style="width:40px;height:40px;background-image:url(' + p.img + ')"></div>' })
       : L.divIcon({ className:'', iconSize:[16,16], iconAnchor:[8,8],
           html:'<div style="width:16px;height:16px;border-radius:50%;background:#4F6D52;border:2px solid #fff"></div>' });
 
     const m = L.marker([p.lat, p.lng], { icon: markerIcon }).addTo(layer);
-    const popupSrc = photoFullSrc(p);
-    const popupFallback = photoDisplaySrc(p);
-    const imgHtml = popupSrc ? '<img class="popup-img" src="' + popupSrc + '" data-fallback="' + popupFallback + '" onerror="if(this.dataset.fallback && this.src!==this.dataset.fallback){this.src=this.dataset.fallback;this.dataset.fallback=\'\';}">' : '';
+    const imgHtml = p.img ? '<img class="popup-img" src="' + p.img + '">' : '';
     const cool = cooling ? ('Optaget i ' + Math.ceil(S.settings.cooldownDays - age) + ' dage mere') : 'Åben igen';
     m.bindPopup(imgHtml + '<b>' + agoLabel(p.ts) + '</b><br>' + new Date(p.ts).toLocaleString('da-DK') + '<br>' + cool);
     markers[p.id] = m;
@@ -5030,13 +5191,10 @@ function saveSpot(lat, lng, manual, img){
     return false;
   }
 
-  const localImg = img || fakePhoto(manual ? 'KORT-TEST' : 'TEST');
   const photo = {
     id: String(Date.now()) + Math.random().toString(16).slice(2,7),
     lat: lat, lng: lng, ts: Date.now(),
-    img: localImg,
-    thumb: localImg,
-    cloudUrl: '',
+    img: img || fakePhoto(manual ? 'KORT-TEST' : 'TEST'),
   };
   S.photos.push(photo);
 
@@ -5050,7 +5208,7 @@ function saveSpot(lat, lng, manual, img){
       // you missed (at least) one day, but a streak saver covers exactly one gap
       S.freezes -= 1;
       S.streak += 1;
-      setTimeout(function(){ toast(icon('snowflake',13) + ' Streg-fryser brugt — din streg er reddet! ' + S.freezes + ' tilbage'); }, 2400);
+      setTimeout(function(){ toast(icon('snowflake',13) + ' Skjold brugt — din streg er reddet! ' + S.freezes + ' tilbage'); }, 2400);
     } else {
       S.streak = 1;
     }
@@ -5077,13 +5235,13 @@ function saveSpot(lat, lng, manual, img){
   if(typeof MonthlyChallenges !== 'undefined') MonthlyChallenges.checkProgress();
   if(typeof Cloud !== 'undefined' && Cloud.ready){
     Cloud.uploadPhoto(photo).then(function(publicUrl){
-      // Keep a local thumbnail for reliable rendering on phones/offline.
-      // The cloud URL is stored separately as a backup/full source.
+      // Once the image is safely in cloud Storage, the local base64 copy is
+      // pure waste -- swap it for the URL. Turns a ~25KB localStorage entry
+      // into ~100 bytes, which is what actually keeps the quota from filling.
       if(publicUrl){
         const p = S.photos.find(function(x){ return x.id === photo.id; });
-        if(p){
-          p.cloudUrl = publicUrl;
-          if(!p.thumb && p.img) p.thumb = p.img;
+        if(p && p.img && p.img.indexOf('data:') === 0){
+          p.img = publicUrl;
           save();
         }
       }
@@ -5182,9 +5340,8 @@ const Lightbox = (function(){
   function paint(){
     const p = order[idx];
     if(!p) return close();
-    $('lbImg').src = photoFullSrc(p) || '';
-    $('lbImg').dataset.fallback = photoDisplaySrc(p) || '';
-    $('lbImg').style.display = (photoFullSrc(p) || photoDisplaySrc(p)) ? 'block' : 'none';
+    $('lbImg').src = p.img || '';
+    $('lbImg').style.display = p.img ? 'block' : 'none';
     $('lbCount').textContent = (idx + 1) + ' / ' + order.length;
     $('lbDate').textContent = new Date(p.ts).toLocaleDateString('da-DK', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
     let sub = new Date(p.ts).toLocaleTimeString('da-DK', { hour:'2-digit', minute:'2-digit' }) + ' · ' + agoLabel(p.ts);
