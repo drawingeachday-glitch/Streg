@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="da" data-theme="light">
 <head>
@@ -1671,6 +1672,335 @@ html[data-tabcolors="on"] .tabbtn.active[data-color="moss"]::before{background:v
   #tab-challenges .prog-reward{display:none;}
 }
 
+
+/* ===================================================================
+   PREMIUM SYSTEM ICONS
+   =================================================================== */
+.icn{
+  overflow:visible;
+  shape-rendering:geometricPrecision;
+}
+.topbar-stat .icn,
+.date-pill .icn,
+.badge-pill .icn,
+.map-btn .icn,
+.shop-section-title .icn,
+.shop-subtab .icn,
+.ch-subtab .icn,
+.tabbtn .icn,
+.set-row .icn,
+.brandrow .icn{
+  filter:drop-shadow(0 2px 4px rgba(22,36,43,.10));
+}
+.shop-subtab .icn,.ch-subtab .icn{margin-right:1px}
+.topbar-stat .icn{filter:drop-shadow(0 1px 2px rgba(22,36,43,.10))}
+.shop-freeze-icon .icn{filter:drop-shadow(0 4px 8px rgba(22,36,43,.14))}
+
+
+/* ===== Premium streak treatment ===== */
+#topStreakWrap .icn{
+  filter:drop-shadow(0 2px 5px rgba(224,138,60,.22));
+}
+.home-streak-badge-top svg{
+  filter:drop-shadow(0 2px 4px rgba(224,138,60,.18));
+}
+.hero-flame-outline{
+  width:104px;
+  height:112px;
+  color:transparent;
+}
+.hero-flame-outline::before{
+  content:"";
+  position:absolute;
+  inset:18px 18px 24px;
+  border-radius:50%;
+  background:radial-gradient(circle, rgba(255,178,77,.16) 0%, rgba(255,178,77,.06) 45%, rgba(255,178,77,0) 78%);
+  filter:blur(6px);
+}
+.hero-flame-outline svg{
+  filter:drop-shadow(0 10px 20px rgba(224,138,60,.18));
+}
+.hero-flame-num{
+  font-size:35px;
+  font-weight:800;
+  color:#FFF8EE;
+  text-shadow:0 2px 8px rgba(133,66,17,.22);
+  padding-top:14px;
+}
+
+
+/* =========================================================
+   PREMIUM MOTION SYSTEM
+   ========================================================= */
+:root{
+  --ease-premium:cubic-bezier(.22,.8,.2,1);
+}
+
+html{scroll-behavior:smooth;}
+
+.topbar-stat,
+.home-streak-badge,
+.hero,
+.capture,
+.challenge-card,
+.ch-card,
+.prog-card,
+.shop-item,
+.set-row,
+.friend-card,
+.btn,
+.shop-btn,
+.ch-btn,
+.tabbtn{
+  transition:
+    transform .28s var(--ease-premium),
+    box-shadow .28s var(--ease-premium),
+    background-color .28s var(--ease-premium),
+    border-color .28s var(--ease-premium),
+    opacity .28s var(--ease-premium);
+}
+
+/* Subtle card hover / tap feel */
+.hero:hover,
+.capture:hover,
+.ch-card:hover,
+.prog-card:hover,
+.shop-item:hover,
+.set-row:hover{
+  transform:translateY(-2px);
+}
+.hero:active,
+.capture:active,
+.ch-card:active,
+.prog-card:active,
+.shop-item:active,
+.set-row:active{
+  transform:translateY(0) scale(.992);
+}
+
+/* Topbar icons feel more alive */
+#topStreakWrap .icn,
+#topCoinsWrap .icn,
+#topShieldWrap .icn{
+  transform-origin:50% 50%;
+}
+#topStreakWrap .icn{
+  animation:streakFlicker 3.2s ease-in-out infinite;
+}
+#topCoinsWrap .icn{
+  animation:coinTwinkle 5.6s ease-in-out infinite;
+}
+#topShieldWrap .icn{
+  animation:shieldFloat 4.8s ease-in-out infinite;
+}
+
+@keyframes streakFlicker{
+  0%,100%{transform:translateY(0) scale(1) rotate(0deg); filter:drop-shadow(0 2px 5px rgba(224,138,60,.22));}
+  20%{transform:translateY(-.5px) scale(1.02) rotate(-1deg);}
+  40%{transform:translateY(.5px) scale(.995) rotate(1deg);}
+  60%{transform:translateY(-1px) scale(1.03) rotate(-.6deg); filter:drop-shadow(0 3px 8px rgba(224,138,60,.30));}
+  80%{transform:translateY(0) scale(1.01) rotate(.4deg);}
+}
+@keyframes coinTwinkle{
+  0%,100%{transform:translateY(0) scale(1);}
+  15%{transform:translateY(-1px) scale(1.03);}
+  18%{transform:translateY(0) scale(1);}
+  21%{transform:translateY(-1px) scale(1.03);}
+  50%{transform:translateY(0) scale(1);}
+}
+@keyframes shieldFloat{
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(-1.2px);}
+}
+
+/* Greeting streak badge */
+.home-streak-badge{
+  animation:softPulse 4.4s ease-in-out infinite;
+}
+.home-streak-badge-top svg{
+  transform-origin:50% 50%;
+  animation:badgeFlame 3s ease-in-out infinite;
+}
+@keyframes softPulse{
+  0%,100%{transform:translateY(0); box-shadow:none;}
+  50%{transform:translateY(-1.5px);}
+}
+@keyframes badgeFlame{
+  0%,100%{transform:scale(1) rotate(0deg);}
+  35%{transform:scale(1.06) rotate(-2deg);}
+  60%{transform:scale(.99) rotate(1.5deg);}
+}
+
+/* Main streak hero */
+.hero{
+  overflow:hidden;
+}
+.hero-glow{
+  animation:heroGlowDrift 8s ease-in-out infinite;
+}
+.hero-glow.two{
+  animation-duration:10s;
+  animation-direction:alternate-reverse;
+}
+.hero-flame-outline{
+  animation:heroFlameFloat 4.2s ease-in-out infinite;
+  transform-origin:50% 60%;
+}
+.hero-flame-outline::before{
+  animation:heroFlameAura 4.2s ease-in-out infinite;
+}
+.hero-flame-outline svg{
+  transform-origin:50% 55%;
+  animation:heroFlameBreath 4.2s ease-in-out infinite;
+}
+.hero-flame-num{
+  animation:numberBreath 4.2s ease-in-out infinite;
+}
+@keyframes heroGlowDrift{
+  0%,100%{transform:translate3d(0,0,0) scale(1);}
+  50%{transform:translate3d(6px,-5px,0) scale(1.04);}
+}
+@keyframes heroFlameFloat{
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(-3px);}
+}
+@keyframes heroFlameAura{
+  0%,100%{opacity:.78; transform:scale(1);}
+  50%{opacity:1; transform:scale(1.07);}
+}
+@keyframes heroFlameBreath{
+  0%,100%{transform:scale(1);}
+  50%{transform:scale(1.025);}
+}
+@keyframes numberBreath{
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(-1px);}
+}
+
+/* Buttons */
+.btn,
+.shop-btn,
+.ch-btn,
+.btn-chip{
+  position:relative;
+  overflow:hidden;
+}
+.btn:hover,
+.shop-btn:hover,
+.ch-btn:hover{
+  transform:translateY(-1px);
+}
+.btn:active,
+.shop-btn:active,
+.ch-btn:active{
+  transform:translateY(0) scale(.97);
+}
+.btn::after,
+.shop-btn::after,
+.ch-btn::after{
+  content:"";
+  position:absolute;
+  inset:-30% auto -30% -120%;
+  width:40%;
+  transform:skewX(-18deg);
+  background:linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,.22), rgba(255,255,255,0));
+  opacity:0;
+  pointer-events:none;
+}
+.btn:hover::after,
+.shop-btn:hover::after,
+.ch-btn:hover::after{
+  opacity:1;
+  animation:buttonShine .9s var(--ease-premium);
+}
+@keyframes buttonShine{
+  from{left:-120%;}
+  to{left:140%;}
+}
+
+/* Challenge + shop icon motion */
+.ch-icon img,
+.featured-challenge-icon img,
+.prog-title-icon,
+.shop-preview svg,
+.shop-preview .avatar,
+.shop-freeze-icon .icn{
+  transform-origin:50% 50%;
+}
+.ch-card:hover .ch-icon img,
+.prog-card:hover .prog-title-icon{
+  transform:translateY(-2px) scale(1.03);
+}
+.shop-item:hover .shop-preview .avatar,
+.shop-item:hover .shop-preview svg,
+.shop-freeze-card:hover .shop-freeze-icon .icn{
+  transform:translateY(-2px) scale(1.03);
+}
+
+/* Progress bars feel smoother */
+.prog-fill,
+.level-fill,
+capture-ring-progress,
+.next-ring-progress{
+  transition:width .7s cubic-bezier(.2,.9,.2,1);
+}
+.prog-track,
+.level-track{
+  overflow:hidden;
+}
+.prog-fill{
+  position:relative;
+}
+.prog-fill::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,.28), rgba(255,255,255,0));
+  transform:translateX(-100%);
+  animation:progressSweep 2.8s ease-in-out infinite;
+}
+@keyframes progressSweep{
+  0%,70%,100%{transform:translateX(-100%);}
+  35%{transform:translateX(130%);}
+}
+
+/* Tabs */
+.tabbtn.active .icn{
+  animation:tabPop .45s var(--ease-premium);
+}
+@keyframes tabPop{
+  0%{transform:scale(.82) translateY(3px); opacity:.6;}
+  60%{transform:scale(1.12) translateY(-1px); opacity:1;}
+  100%{transform:scale(1);}
+}
+
+/* Reveal animation helpers */
+.motion-reveal{
+  opacity:0;
+  transform:translateY(14px) scale(.985);
+  animation:revealUp .5s var(--ease-premium) forwards;
+}
+@keyframes revealUp{
+  to{opacity:1; transform:translateY(0) scale(1);}
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce){
+  *,
+  *::before,
+  *::after{
+    animation:none !important;
+    transition:none !important;
+    scroll-behavior:auto !important;
+  }
+}
+
+
+/* ===== Level icon ===== */
+#topLevelWrap .icn{
+  filter:drop-shadow(0 2px 5px rgba(88,151,211,.18));
+}
+
 </style>
 </head>
 <body>
@@ -1687,7 +2017,7 @@ html[data-tabcolors="on"] .tabbtn.active[data-color="moss"]::before{background:v
     <p>Ét billede hver dag — men aldrig samme sted to gange.<br>Appen tvinger dig udenfor. Det er hele pointen.</p>
   </div>
   <div class="onb-step" data-step="1">
-    <div class="onb-art"><svg class="icn" width="62" height="62" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><path d="M12 3.5a8.5 8 0 1 0 0 16c1.2 0 1.8-.6 1.8-1.5 0-.5-.3-.8-.3-1.3 0-.7.6-1.2 1.4-1.2H17c2 0 3.5-1.6 3.5-3.7 0-4.6-3.9-8.3-8.5-8.3Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="8.2" cy="10" r=".9" fill="currentColor"/><circle cx="11.5" cy="7.3" r=".9" fill="currentColor"/><circle cx="15.2" cy="8.5" r=".9" fill="currentColor"/><circle cx="8.7" cy="14" r=".9" fill="currentColor"/></svg></div>
+    <div class="onb-art"><svg class="icn" width="62" height="62" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><path d="M12 3.7a8.4 8.1 0 1 0 0 16.2c1.1 0 1.7-.6 1.7-1.5 0-.5-.2-.9-.2-1.2 0-.8.7-1.3 1.5-1.3H17c2 0 3.4-1.5 3.4-3.6 0-4.7-3.8-8.6-8.4-8.6Z" fill="#FDF3E3" stroke="#D6A46A" stroke-width="1.2" stroke-linejoin="round"/><circle cx="8.2" cy="10" r="1.25" fill="#FF7E66"/><circle cx="11.5" cy="7.2" r="1.25" fill="#4FA8FF"/><circle cx="15.2" cy="8.4" r="1.25" fill="#F7C948"/><circle cx="8.7" cy="14.1" r="1.25" fill="#65C18C"/></svg></div>
     <h1>Vælg dit udseende</h1>
     <p>Du kan altid skifte senere i Indstillinger. Tryk for at se det live.</p>
     <div class="theme-grid" id="onbThemeGrid" style="margin-top:6px;">
@@ -1733,10 +2063,10 @@ html[data-tabcolors="on"] .tabbtn.active[data-color="moss"]::before{background:v
     <div class="topbar-info">
       <div class="topbar-name" id="topName">Dig</div>
       <div class="topbar-stats">
-        <span class="topbar-stat" id="topStreakWrap"><svg class="icn" width="13" height="13" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><path d="M12 2.5c-.6 3.3-3.4 4.6-3.4 8.7a3.4 3.4 0 0 0 6.8 0c0-1 -.3-1.8-.7-2.5 1.6 1.3 2.3 3 2.3 5a5 5 0 0 1-10 0c0-4.6 3.4-5.7 3.4-10.3.6.6 1.1 1.4 1.6 2.1" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg> <b id="topStreak">0</b></span>
-        <span class="topbar-stat">Lv <b id="topLevel">1</b></span>
-        <span class="topbar-stat" id="topCoinsWrap"><svg class="icn" width="12" height="12" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.6"/><path d="M12 7.2v9.6M9.3 9.6c0-1.1 1.1-1.8 2.7-1.8s2.7.7 2.7 1.7c0 2.4-5.4 1-5.4 3.4 0 1 1.1 1.8 2.7 1.8s2.7-.7 2.7-1.8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg> <b id="topCoins">0</b></span>
-        <span class="topbar-stat" id="topShieldWrap"><svg class="icn" width="12" height="12" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><path d="M12 3 5 5.5v5.3c0 4.7 3 8.2 7 9.7 4-1.5 7-5 7-9.7V5.5L12 3Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 12l2 2 4-4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> <b id="topShields">3</b></span>
+        <span class="topbar-stat" id="topStreakWrap"><svg class="icn" width="14" height="14" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><path d="M12 2.8c-.6 3.5-3.8 4.9-3.8 8.5 0 1.8 1.4 3.2 3.1 3.2 1.8 0 3.1-1.4 3.1-3.1 0-.9-.4-1.8-1.1-2.6 2.5 1 4.1 3.2 4.1 5.9 0 3.6-2.8 6.4-6.4 6.4s-6.4-2.8-6.4-6.4c0-4.6 3.1-6.8 4.6-10.3.7.4 1.7 1.6 2.8 3.2Z" fill="#FFB24D" stroke="#D56E23" stroke-width="1.15" stroke-linejoin="round"/><path d="M12.4 8.5c.9 1 1.5 1.9 1.5 3 0 1.6-1.2 2.8-2.8 2.8" stroke="#FFF2CE" stroke-width="1.35" stroke-linecap="round" opacity=".8"/></svg> <b id="topStreak">0</b></span>
+        <span class="topbar-stat" id="topLevelWrap"><svg class="icn" width="13" height="13" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><path d="M12 3.6 14 8l4.8.7-3.5 3.4.8 4.8-4.1-2.3-4.1 2.3.8-4.8L5.2 8.7 10 8l2-4.4Z" fill="#C5E8FF" stroke="#5897D3" stroke-width="1.2" stroke-linejoin="round"/><circle cx="12" cy="11" r="2.1" fill="#FFF8DC" stroke="#D3A83A" stroke-width="1"/></svg> <b id="topLevel">1</b></span>
+        <span class="topbar-stat" id="topCoinsWrap"><svg class="icn" width="12" height="12" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><circle cx="12" cy="12" r="8.8" fill="#F6CF64" stroke="#B97A16" stroke-width="1.35"/><circle cx="12" cy="12" r="6.7" fill="#FFD972" opacity=".72"/><ellipse cx="9.1" cy="8.2" rx="3.5" ry="1.8" fill="#FFF5C8" opacity=".9"/><path d="M12 7.2v9.5M9.5 9.5c0-1.1 1-1.9 2.5-1.9s2.5.7 2.5 1.7c0 2.4-5 1.1-5 3.3 0 1.1 1 1.9 2.5 1.9s2.5-.8 2.5-1.9" stroke="#8B5D10" stroke-width="1.45" stroke-linecap="round"/></svg> <b id="topCoins">0</b></span>
+        <span class="topbar-stat" id="topShieldWrap"><svg class="icn" width="12" height="12" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><path d="M12 3.2 5.8 5.6v5.1c0 4.4 2.8 7.8 6.2 9.1 3.4-1.3 6.2-4.7 6.2-9.1V5.6L12 3.2Z" fill="#DDEAFB" stroke="#5A86C8" stroke-width="1.25" stroke-linejoin="round"/><path d="M12 5.9v11.7" stroke="#B5D0F4" stroke-width="1" opacity=".75"/><path d="M9.2 12l1.9 1.9 4-4.4" stroke="#2F6AB5" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="8.2" r="1.1" fill="#FFFFFF" opacity=".9"/></svg> <b id="topShields">3</b></span>
       </div>
     </div>
   </div>
@@ -1755,7 +2085,7 @@ html[data-tabcolors="on"] .tabbtn.active[data-color="moss"]::before{background:v
         <div class="home-streak-badge-wrap">
           <div class="home-streak-badge">
             <div class="home-streak-badge-top">
-              <svg width="16" height="16" viewBox="0 0 24 24"><path d="M12 2.5c-.6 3.3-3.4 4.6-3.4 8.7a3.4 3.4 0 0 0 6.8 0c0-1 -.3-1.8-.7-2.5 1.6 1.3 2.3 3 2.3 5a5 5 0 0 1-10 0c0-4.6 3.4-5.7 3.4-10.3.6.6 1.1 1.4 1.6 2.1" fill="var(--amber)"/></svg>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2.8c-.6 3.5-3.8 4.9-3.8 8.5 0 1.8 1.4 3.2 3.1 3.2 1.8 0 3.1-1.4 3.1-3.1 0-.9-.4-1.8-1.1-2.6 2.5 1 4.1 3.2 4.1 5.9 0 3.6-2.8 6.4-6.4 6.4s-6.4-2.8-6.4-6.4c0-4.6 3.1-6.8 4.6-10.3.7.4 1.7 1.6 2.8 3.2Z" fill="#FFB24D" stroke="#D56E23" stroke-width="1.15" stroke-linejoin="round"/><path d="M12.4 8.5c.9 1 1.5 1.9 1.5 3 0 1.6-1.2 2.8-2.8 2.8" stroke="#FFF2CE" stroke-width="1.35" stroke-linecap="round" opacity=".8"/></svg>
               <span id="homeStreakNum">0</span>
             </div>
             <div class="home-streak-badge-label">DAGE I TRÆK</div>
@@ -1770,9 +2100,27 @@ html[data-tabcolors="on"] .tabbtn.active[data-color="moss"]::before{background:v
         <div class="hero-glow"></div>
         <div class="hero-glow two"></div>
         <div class="hero-flame-outline">
-          <svg viewBox="0 0 24 24" fill="none"><path d="M12 2.5c-.6 3.3-3.4 4.6-3.4 8.7a3.4 3.4 0 0 0 6.8 0c0-1 -.3-1.8-.7-2.5 1.6 1.3 2.3 3 2.3 5a5 5 0 0 1-10 0c0-4.6 3.4-5.7 3.4-10.3.6.6 1.1 1.4 1.6 2.1" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
-          <span class="hero-flame-num" id="streakNum">0</span>
-        </div>
+<svg viewBox="0 0 120 140" aria-hidden="true">
+  <defs>
+    <radialGradient id="streakGlow" cx="50%" cy="42%" r="62%">
+      <stop offset="0%" stop-color="#FFD685" stop-opacity=".45"/>
+      <stop offset="62%" stop-color="#FFB24D" stop-opacity=".18"/>
+      <stop offset="100%" stop-color="#FFB24D" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="streakFill" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFBF62"/>
+      <stop offset="100%" stop-color="#E67E2E"/>
+    </linearGradient>
+    <linearGradient id="streakStroke" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFC86E"/>
+      <stop offset="100%" stop-color="#C96522"/>
+    </linearGradient>
+  </defs>
+  <ellipse cx="60" cy="72" rx="44" ry="50" fill="url(#streakGlow)"/>
+  <path d="M60 14c-3 15-18 22-18 39 0 8 6.3 14.2 14.1 14.2 8 0 14-6.2 14-13.8 0-4-1.8-8.1-5.2-11.8 11.5 4.5 19 14.8 19 27.1 0 16.6-12.9 29.5-29.4 29.5S25 85.3 25 68.7C25 47.2 39.2 37 46 20.8c3.1 1.8 7.9 7.2 14 14.6Z" fill="url(#streakFill)" stroke="url(#streakStroke)" stroke-width="5.2" stroke-linejoin="round"/>
+  <path d="M61.5 40.7c4.3 4.9 7 9 7 13.9 0 7.4-5.8 12.9-12.9 12.9" stroke="#FFF1CA" stroke-width="5.4" stroke-linecap="round" opacity=".92"/>
+</svg>
+<span class="hero-flame-num" id="streakNum">0</span></div>
         <div class="hero-lr-text">
           <div class="hero-lr-title">Streak</div>
           <div class="hero-lr-sub">dage i træk</div>
@@ -1828,35 +2176,35 @@ html[data-tabcolors="on"] .tabbtn.active[data-color="moss"]::before{background:v
       </div>
 
       <div class="shop-subtabs" id="shopSubtabs">
-        <button class="shop-subtab on" data-shop-pane="pane-freeze"><svg class="icn" width="13" height="13" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><path d="M12 2.5v19M4 7l16 10M20 7 4 17M12 8.5l-2.2-1.3M12 8.5l2.2-1.3M12 15.5l-2.2 1.3M12 15.5l2.2 1.3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg> Fryser</button>
-        <button class="shop-subtab" data-shop-pane="pane-titles"><svg class="icn" width="13" height="13" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><path d="M11.5 4h6.5v6.5L9.5 19 3 12.5 11.5 4Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="15" cy="7.5" r="1.3" stroke="currentColor" stroke-width="1.3"/></svg> Titler</button>
-        <button class="shop-subtab" data-shop-pane="pane-colors"><svg class="icn" width="13" height="13" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><path d="M12 3.5a8.5 8 0 1 0 0 16c1.2 0 1.8-.6 1.8-1.5 0-.5-.3-.8-.3-1.3 0-.7.6-1.2 1.4-1.2H17c2 0 3.5-1.6 3.5-3.7 0-4.6-3.9-8.3-8.5-8.3Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="8.2" cy="10" r=".9" fill="currentColor"/><circle cx="11.5" cy="7.3" r=".9" fill="currentColor"/><circle cx="15.2" cy="8.5" r=".9" fill="currentColor"/><circle cx="8.7" cy="14" r=".9" fill="currentColor"/></svg> Farver</button>
-        <button class="shop-subtab" data-shop-pane="pane-frames"><svg class="icn" width="13" height="13" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><circle cx="12" cy="12" r="7.5" stroke="currentColor" stroke-width="1.8"/></svg> Rammer</button>
-        <button class="shop-subtab" data-shop-pane="pane-themes"><svg class="icn" width="13" height="13" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><path d="M5 9 8 3.5h8L19 9l-7 11.5L5 9Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M5 9h14M9.5 3.5 12 9l-2.5 0M14.5 3.5 12 9" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg> Temaer</button>
-        <button class="shop-subtab" data-shop-pane="pane-fonts"><svg class="icn" width="13" height="13" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><path d="M5.5 17 10 6h1.4l4.6 11M7 13h6.8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M16.5 10.5c1 -.3 2-.2 2.5.3.7.7.5 2 .5 4v2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg> Skrift</button>
-        <button class="shop-subtab" data-shop-pane="pane-fonts-exclusive"><svg class="icn" width="13" height="13" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><path d="M12 3c.6 4 2.9 6.3 6.9 6.9-4 .6-6.3 2.9-6.9 6.9-.6-4-2.9-6.3-6.9-6.9C9.1 9.3 11.4 7 12 3Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg> Eksklusiv</button>
+        <button class="shop-subtab on" data-shop-pane="pane-freeze"><svg class="icn" width="13" height="13" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><circle cx="12" cy="12" r="2.1" fill="#B9ECFF"/><path d="M12 3.3v17.4M4.5 7.5l15 9M19.5 7.5l-15 9M12 7.5l-2.3-1.4M12 7.5l2.3-1.4M12 16.5l-2.3 1.4M12 16.5l2.3 1.4" stroke="#67B7DA" stroke-width="1.45" stroke-linecap="round"/><circle cx="12" cy="12" r="7.4" stroke="#A8DAEF" stroke-width="1" opacity=".55"/></svg> Fryser</button>
+        <button class="shop-subtab" data-shop-pane="pane-titles"><svg class="icn" width="13" height="13" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><path d="M11.3 4.3h6.5v6.5L9.4 19.2 2.9 12.8 11.3 4.3Z" fill="#FFE7C8" stroke="#D28A3D" stroke-width="1.25" stroke-linejoin="round"/><circle cx="14.9" cy="7.5" r="1.45" fill="#FFB35A" stroke="#C97328" stroke-width=".9"/></svg> Titler</button>
+        <button class="shop-subtab" data-shop-pane="pane-colors"><svg class="icn" width="13" height="13" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><path d="M12 3.7a8.4 8.1 0 1 0 0 16.2c1.1 0 1.7-.6 1.7-1.5 0-.5-.2-.9-.2-1.2 0-.8.7-1.3 1.5-1.3H17c2 0 3.4-1.5 3.4-3.6 0-4.7-3.8-8.6-8.4-8.6Z" fill="#FDF3E3" stroke="#D6A46A" stroke-width="1.2" stroke-linejoin="round"/><circle cx="8.2" cy="10" r="1.25" fill="#FF7E66"/><circle cx="11.5" cy="7.2" r="1.25" fill="#4FA8FF"/><circle cx="15.2" cy="8.4" r="1.25" fill="#F7C948"/><circle cx="8.7" cy="14.1" r="1.25" fill="#65C18C"/></svg> Farver</button>
+        <button class="shop-subtab" data-shop-pane="pane-frames"><svg class="icn" width="13" height="13" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><circle cx="12" cy="12" r="7.4" fill="none" stroke="#D7B57B" stroke-width="2.4"/><circle cx="12" cy="12" r="5.4" fill="none" stroke="#F3DFC0" stroke-width="1.3"/><circle cx="17.2" cy="8" r="1.25" fill="#FFF3DB"/></svg> Rammer</button>
+        <button class="shop-subtab" data-shop-pane="pane-themes"><svg class="icn" width="13" height="13" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><path d="M6.5 8.2 9.2 4.5h5.6l2.7 3.7-5.5 7.5L6.5 8.2Z" fill="#CFF2FF" stroke="#4DA7C8" stroke-width="1.25" stroke-linejoin="round"/><path d="M6.5 8.2h11M9.2 4.5 12 8.2l2.8-3.7M12 8.2l-1.8 7.5M12 8.2l1.8 7.5" stroke="#63B9D5" stroke-width="1.05" stroke-linejoin="round"/><circle cx="12" cy="6.6" r="1.2" fill="#FFFFFF" opacity=".95"/></svg> Temaer</button>
+        <button class="shop-subtab" data-shop-pane="pane-fonts"><svg class="icn" width="13" height="13" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><path d="M6.2 18 10.2 6h1.7l4 12M7.8 13.6h6.7" stroke="#5E6473" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M16.8 11c1.1-.3 2.1-.2 2.7.3.8.7.6 2.1.6 4.2v1.8" stroke="#9B6CDA" stroke-width="1.45" stroke-linecap="round"/><circle cx="10.9" cy="6" r="1.2" fill="#FFB35A"/></svg> Skrift</button>
+        <button class="shop-subtab" data-shop-pane="pane-fonts-exclusive"><svg class="icn" width="13" height="13" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><path d="M12 3.2c.7 3.7 2.8 5.8 6.5 6.5-3.7.7-5.8 2.8-6.5 6.5-.7-3.7-2.8-5.8-6.5-6.5 3.7-.7 5.8-2.8 6.5-6.5Z" fill="#FFE08C" stroke="#D29A1B" stroke-width="1.15" stroke-linejoin="round"/><circle cx="17.8" cy="6.1" r="1.1" fill="#FFF4C7"/><circle cx="7.3" cy="17.4" r=".9" fill="#FFF4C7"/></svg> Eksklusiv</button>
       </div>
 
       <div class="shop-pane on" id="pane-freeze">
         <div class="shop-section-head">
-          <span class="shop-section-title"><svg class="icn" width="16" height="16" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><path d="M12 2.5v19M4 7l16 10M20 7 4 17M12 8.5l-2.2-1.3M12 8.5l2.2-1.3M12 15.5l-2.2 1.3M12 15.5l2.2 1.3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg> Streg-fryser</span>
+          <span class="shop-section-title"><svg class="icn" width="16" height="16" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><circle cx="12" cy="12" r="2.1" fill="#B9ECFF"/><path d="M12 3.3v17.4M4.5 7.5l15 9M19.5 7.5l-15 9M12 7.5l-2.3-1.4M12 7.5l2.3-1.4M12 16.5l-2.3 1.4M12 16.5l2.3 1.4" stroke="#67B7DA" stroke-width="1.45" stroke-linecap="round"/><circle cx="12" cy="12" r="7.4" stroke="#A8DAEF" stroke-width="1" opacity=".55"/></svg> Streg-fryser</span>
           <span class="shop-section-sub" id="shopFreezeMax">maks. 5</span>
         </div>
         <div class="shop-freeze-card">
-          <div class="shop-freeze-icon"><svg class="icn" width="30" height="30" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><path d="M12 2.5v19M4 7l16 10M20 7 4 17M12 8.5l-2.2-1.3M12 8.5l2.2-1.3M12 15.5l-2.2 1.3M12 15.5l2.2 1.3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></div>
+          <div class="shop-freeze-icon"><svg class="icn" width="30" height="30" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><circle cx="12" cy="12" r="2.1" fill="#B9ECFF"/><path d="M12 3.3v17.4M4.5 7.5l15 9M19.5 7.5l-15 9M12 7.5l-2.3-1.4M12 7.5l2.3-1.4M12 16.5l-2.3 1.4M12 16.5l2.3 1.4" stroke="#67B7DA" stroke-width="1.45" stroke-linecap="round"/><circle cx="12" cy="12" r="7.4" stroke="#A8DAEF" stroke-width="1" opacity=".55"/></svg></div>
           <div class="shop-freeze-body">
             <div class="shop-freeze-title">Beskyt din streg <button class="info-btn" data-info="Misser du en dag, bruges en fryser automatisk, så din streg ikke nulstilles."><svg viewBox="0 0 24 24" fill="none" width="16" height="16"><circle cx="12" cy="12" r="9.5" stroke="currentColor" stroke-width="1.5"/><path d="M12 11v6M12 7.5v.01" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button></div>
           </div>
           <div style="text-align:right;">
             <div class="shop-freeze-count" id="shopFreezeCount">3</div>
-            <button class="shop-btn buy" id="shopBuyFreeze" style="margin-top:6px;width:auto;padding:8px 14px;">Køb · 150 <svg class="icn" width="13" height="13" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.6"/><path d="M12 7.2v9.6M9.3 9.6c0-1.1 1.1-1.8 2.7-1.8s2.7.7 2.7 1.7c0 2.4-5.4 1-5.4 3.4 0 1 1.1 1.8 2.7 1.8s2.7-.7 2.7-1.8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></button>
+            <button class="shop-btn buy" id="shopBuyFreeze" style="margin-top:6px;width:auto;padding:8px 14px;">Køb · 150 <svg class="icn" width="13" height="13" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><circle cx="12" cy="12" r="8.8" fill="#F6CF64" stroke="#B97A16" stroke-width="1.35"/><circle cx="12" cy="12" r="6.7" fill="#FFD972" opacity=".72"/><ellipse cx="9.1" cy="8.2" rx="3.5" ry="1.8" fill="#FFF5C8" opacity=".9"/><path d="M12 7.2v9.5M9.5 9.5c0-1.1 1-1.9 2.5-1.9s2.5.7 2.5 1.7c0 2.4-5 1.1-5 3.3 0 1.1 1 1.9 2.5 1.9s2.5-.8 2.5-1.9" stroke="#8B5D10" stroke-width="1.45" stroke-linecap="round"/></svg></button>
           </div>
         </div>
       </div>
 
       <div class="shop-pane" id="pane-titles">
         <div class="shop-section-head">
-          <span class="shop-section-title"><svg class="icn" width="16" height="16" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><path d="M11.5 4h6.5v6.5L9.5 19 3 12.5 11.5 4Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="15" cy="7.5" r="1.3" stroke="currentColor" stroke-width="1.3"/></svg> Titler</span>
+          <span class="shop-section-title"><svg class="icn" width="16" height="16" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><path d="M11.3 4.3h6.5v6.5L9.4 19.2 2.9 12.8 11.3 4.3Z" fill="#FFE7C8" stroke="#D28A3D" stroke-width="1.25" stroke-linejoin="round"/><circle cx="14.9" cy="7.5" r="1.45" fill="#FFB35A" stroke="#C97328" stroke-width=".9"/></svg> Titler</span>
           <span class="shop-section-sub">Vises i stedet for din niveau-titel</span>
         </div>
         <div class="shop-grid stagger" id="shopTitles"></div>
@@ -1864,7 +2212,7 @@ html[data-tabcolors="on"] .tabbtn.active[data-color="moss"]::before{background:v
 
       <div class="shop-pane" id="pane-colors">
         <div class="shop-section-head">
-          <span class="shop-section-title"><svg class="icn" width="16" height="16" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><path d="M12 3.5a8.5 8 0 1 0 0 16c1.2 0 1.8-.6 1.8-1.5 0-.5-.3-.8-.3-1.3 0-.7.6-1.2 1.4-1.2H17c2 0 3.5-1.6 3.5-3.7 0-4.6-3.9-8.3-8.5-8.3Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="8.2" cy="10" r=".9" fill="currentColor"/><circle cx="11.5" cy="7.3" r=".9" fill="currentColor"/><circle cx="15.2" cy="8.5" r=".9" fill="currentColor"/><circle cx="8.7" cy="14" r=".9" fill="currentColor"/></svg> Navnefarve</span>
+          <span class="shop-section-title"><svg class="icn" width="16" height="16" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><path d="M12 3.7a8.4 8.1 0 1 0 0 16.2c1.1 0 1.7-.6 1.7-1.5 0-.5-.2-.9-.2-1.2 0-.8.7-1.3 1.5-1.3H17c2 0 3.4-1.5 3.4-3.6 0-4.7-3.8-8.6-8.4-8.6Z" fill="#FDF3E3" stroke="#D6A46A" stroke-width="1.2" stroke-linejoin="round"/><circle cx="8.2" cy="10" r="1.25" fill="#FF7E66"/><circle cx="11.5" cy="7.2" r="1.25" fill="#4FA8FF"/><circle cx="15.2" cy="8.4" r="1.25" fill="#F7C948"/><circle cx="8.7" cy="14.1" r="1.25" fill="#65C18C"/></svg> Navnefarve</span>
           <span class="shop-section-sub">Ses på venne-listen</span>
         </div>
         <div class="shop-grid stagger" id="shopColors"></div>
@@ -1872,7 +2220,7 @@ html[data-tabcolors="on"] .tabbtn.active[data-color="moss"]::before{background:v
 
       <div class="shop-pane" id="pane-frames">
         <div class="shop-section-head">
-          <span class="shop-section-title"><svg class="icn" width="16" height="16" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><circle cx="12" cy="12" r="7.5" stroke="currentColor" stroke-width="1.8"/></svg> Avatar-ramme</span>
+          <span class="shop-section-title"><svg class="icn" width="16" height="16" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><circle cx="12" cy="12" r="7.4" fill="none" stroke="#D7B57B" stroke-width="2.4"/><circle cx="12" cy="12" r="5.4" fill="none" stroke="#F3DFC0" stroke-width="1.3"/><circle cx="17.2" cy="8" r="1.25" fill="#FFF3DB"/></svg> Avatar-ramme</span>
           <span class="shop-section-sub">Ring rundt om dit ikon</span>
         </div>
         <div class="shop-grid stagger" id="shopFrames"></div>
@@ -1880,7 +2228,7 @@ html[data-tabcolors="on"] .tabbtn.active[data-color="moss"]::before{background:v
 
       <div class="shop-pane" id="pane-themes">
         <div class="shop-section-head">
-          <span class="shop-section-title"><svg class="icn" width="16" height="16" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><path d="M5 9 8 3.5h8L19 9l-7 11.5L5 9Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M5 9h14M9.5 3.5 12 9l-2.5 0M14.5 3.5 12 9" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg> Premium-temaer</span>
+          <span class="shop-section-title"><svg class="icn" width="16" height="16" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><path d="M6.5 8.2 9.2 4.5h5.6l2.7 3.7-5.5 7.5L6.5 8.2Z" fill="#CFF2FF" stroke="#4DA7C8" stroke-width="1.25" stroke-linejoin="round"/><path d="M6.5 8.2h11M9.2 4.5 12 8.2l2.8-3.7M12 8.2l-1.8 7.5M12 8.2l1.8 7.5" stroke="#63B9D5" stroke-width="1.05" stroke-linejoin="round"/><circle cx="12" cy="6.6" r="1.2" fill="#FFFFFF" opacity=".95"/></svg> Premium-temaer</span>
           <span class="shop-section-sub">Skifter hele appens udseende</span>
         </div>
         <div class="shop-grid stagger" id="shopThemes"></div>
@@ -1888,7 +2236,7 @@ html[data-tabcolors="on"] .tabbtn.active[data-color="moss"]::before{background:v
 
       <div class="shop-pane" id="pane-fonts">
         <div class="shop-section-head">
-          <span class="shop-section-title"><svg class="icn" width="16" height="16" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><path d="M5.5 17 10 6h1.4l4.6 11M7 13h6.8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M16.5 10.5c1 -.3 2-.2 2.5.3.7.7.5 2 .5 4v2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg> Skrifttype</span>
+          <span class="shop-section-title"><svg class="icn" width="16" height="16" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><path d="M6.2 18 10.2 6h1.7l4 12M7.8 13.6h6.7" stroke="#5E6473" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M16.8 11c1.1-.3 2.1-.2 2.7.3.8.7.6 2.1.6 4.2v1.8" stroke="#9B6CDA" stroke-width="1.45" stroke-linecap="round"/><circle cx="10.9" cy="6" r="1.2" fill="#FFB35A"/></svg> Skrifttype</span>
           <span class="shop-section-sub">Vises på dit navn</span>
         </div>
         <div class="shop-grid stagger" id="shopFonts"></div>
@@ -1896,7 +2244,7 @@ html[data-tabcolors="on"] .tabbtn.active[data-color="moss"]::before{background:v
 
       <div class="shop-pane" id="pane-fonts-exclusive">
         <div class="shop-section-head">
-          <span class="shop-section-title"><svg class="icn" width="16" height="16" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><path d="M12 3c.6 4 2.9 6.3 6.9 6.9-4 .6-6.3 2.9-6.9 6.9-.6-4-2.9-6.3-6.9-6.9C9.1 9.3 11.4 7 12 3Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg> Eksklusive skrifttyper</span>
+          <span class="shop-section-title"><svg class="icn" width="16" height="16" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><path d="M12 3.2c.7 3.7 2.8 5.8 6.5 6.5-3.7.7-5.8 2.8-6.5 6.5-.7-3.7-2.8-5.8-6.5-6.5 3.7-.7 5.8-2.8 6.5-6.5Z" fill="#FFE08C" stroke="#D29A1B" stroke-width="1.15" stroke-linejoin="round"/><circle cx="17.8" cy="6.1" r="1.1" fill="#FFF4C7"/><circle cx="7.3" cy="17.4" r=".9" fill="#FFF4C7"/></svg> Eksklusive skrifttyper</span>
           <span class="shop-section-sub">Kræver det matchende tema</span>
         </div>
         <div class="shop-grid stagger" id="shopFontsExclusive"></div>
@@ -2011,7 +2359,7 @@ html[data-tabcolors="on"] .tabbtn.active[data-color="moss"]::before{background:v
         <div class="heat-labels"><span id="heatFrom">—</span><span>i dag</span></div>
       </div>
 
-      <button class="btn-outline gold" id="shareBtn" style="margin-bottom:16px;"><svg class="icn" width="14" height="14" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><path d="M12 3c.6 4 2.9 6.3 6.9 6.9-4 .6-6.3 2.9-6.9 6.9-.6-4-2.9-6.3-6.9-6.9C9.1 9.3 11.4 7 12 3Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg> Lav delbart kort til TikTok</button>
+      <button class="btn-outline gold" id="shareBtn" style="margin-bottom:16px;"><svg class="icn" width="14" height="14" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><path d="M12 3.2c.7 3.7 2.8 5.8 6.5 6.5-3.7.7-5.8 2.8-6.5 6.5-.7-3.7-2.8-5.8-6.5-6.5 3.7-.7 5.8-2.8 6.5-6.5Z" fill="#FFE08C" stroke="#D29A1B" stroke-width="1.15" stroke-linejoin="round"/><circle cx="17.8" cy="6.1" r="1.1" fill="#FFF4C7"/><circle cx="7.3" cy="17.4" r=".9" fill="#FFF4C7"/></svg> Lav delbart kort til TikTok</button>
 
       <p class="eyebrow" style="margin-bottom:9px;">Bedrifter</p>
       <div class="ach-grid" id="achGrid" style="margin-bottom:20px;"></div>
@@ -2065,7 +2413,7 @@ html[data-tabcolors="on"] .tabbtn.active[data-color="moss"]::before{background:v
               <span id="acctEmailLabel">—</span>
               <span class="set-sub">Din konto er sikret — data følger dig selv hvis du skifter telefon</span>
             </div>
-            <span style="color:var(--moss);flex-shrink:0;"><svg class="icn" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 3 5 5.5v5.3c0 4.7 3 8.2 7 9.7 4-1.5 7-5 7-9.7V5.5L12 3Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 12l2 2 4-4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span style="color:var(--moss);flex-shrink:0;"><svg class="icn" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 3.2 5.8 5.6v5.1c0 4.4 2.8 7.8 6.2 9.1 3.4-1.3 6.2-4.7 6.2-9.1V5.6L12 3.2Z" fill="#DDEAFB" stroke="#5A86C8" stroke-width="1.25" stroke-linejoin="round"/><path d="M12 5.9v11.7" stroke="#B5D0F4" stroke-width="1" opacity=".75"/><path d="M9.2 12l1.9 1.9 4-4.4" stroke="#2F6AB5" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="8.2" r="1.1" fill="#FFFFFF" opacity=".9"/></svg></span>
           </div>
         </div>
         <button class="btn-outline danger" id="acctSignOut" style="display:none;margin-top:0;margin-bottom:18px;" disabled>Log ud</button>
@@ -2191,7 +2539,7 @@ html[data-tabcolors="on"] .tabbtn.active[data-color="moss"]::before{background:v
           <button class="btn-outline" id="devUnlock"><svg class="icn" width="13" height="13" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><rect x="5.5" y="10.5" width="13" height="9" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M8 10.5V7.5a4 4 0 0 1 7.5-2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg> Lås dagens billede op igen</button>
           <button class="btn-outline" id="devTestPhoto"><svg class="icn" width="13" height="13" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><path d="M10 3.5h4M10.5 3.5v5.8L5.8 18a1.6 1.6 0 0 0 1.4 2.4h9.6a1.6 1.6 0 0 0 1.4-2.4L13.5 9.3V3.5" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M8.3 14.5h7.4" stroke="currentColor" stroke-width="1.3"/></svg> Tag dagens billede uden kamera</button>
           <button class="btn-outline" id="devFake"><svg class="icn" width="13" height="13" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg> Tilføj 5 test-billeder</button>
-          <button class="btn-outline" id="devAch"><svg class="icn" width="13" height="13" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><path d="M11.5 4h6.5v6.5L9.5 19 3 12.5 11.5 4Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="15" cy="7.5" r="1.3" stroke="currentColor" stroke-width="1.3"/></svg> Lås alle bedrifter op</button>
+          <button class="btn-outline" id="devAch"><svg class="icn" width="13" height="13" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><path d="M11.3 4.3h6.5v6.5L9.4 19.2 2.9 12.8 11.3 4.3Z" fill="#FFE7C8" stroke="#D28A3D" stroke-width="1.25" stroke-linejoin="round"/><circle cx="14.9" cy="7.5" r="1.45" fill="#FFB35A" stroke="#C97328" stroke-width=".9"/></svg> Lås alle bedrifter op</button>
           <button class="btn-outline danger" id="devClearPhotos"><svg class="icn" width="13" height="13" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><path d="M5 7h14M9.5 7V5a1.5 1.5 0 0 1 1.5-1.5h2A1.5 1.5 0 0 1 14.5 5v2M7 7l1 12.5a1.5 1.5 0 0 0 1.5 1.4h5a1.5 1.5 0 0 0 1.5-1.4L18 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Slet alle billeder</button>
         </div>
 
@@ -2245,7 +2593,7 @@ html[data-tabcolors="on"] .tabbtn.active[data-color="moss"]::before{background:v
     <button class="lb-close" id="lbClose"><svg class="icn" width="15" height="15" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
     <span class="lb-count" id="lbCount">1 / 1</span>
   </div>
-  <img class="lb-img" id="lbImg" alt="">
+  <img class="lb-img" id="lbImg" alt="" onerror="if(this.dataset.fallback && this.src!==this.dataset.fallback){this.src=this.dataset.fallback;this.dataset.fallback='';}">
   <div class="lb-meta">
     <div class="lb-date" id="lbDate">—</div>
     <div class="lb-sub" id="lbSub">—</div>
@@ -2344,8 +2692,9 @@ html[data-tabcolors="on"] .tabbtn.active[data-color="moss"]::before{background:v
    small solid fill where a filled shape reads better (dot, badge).
    =================================================================== */
 const ICON = {
-  flame:'<path d="M12 2.5c-.6 3.3-3.4 4.6-3.4 8.7a3.4 3.4 0 0 0 6.8 0c0-1 -.3-1.8-.7-2.5 1.6 1.3 2.3 3 2.3 5a5 5 0 0 1-10 0c0-4.6 3.4-5.7 3.4-10.3.6.6 1.1 1.4 1.6 2.1" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>',
-  coin:'<circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.6"/><path d="M12 7.2v9.6M9.3 9.6c0-1.1 1.1-1.8 2.7-1.8s2.7.7 2.7 1.7c0 2.4-5.4 1-5.4 3.4 0 1 1.1 1.8 2.7 1.8s2.7-.7 2.7-1.8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>',
+  flame:'<path d="M12 2.8c-.6 3.5-3.8 4.9-3.8 8.5 0 1.8 1.4 3.2 3.1 3.2 1.8 0 3.1-1.4 3.1-3.1 0-.9-.4-1.8-1.1-2.6 2.5 1 4.1 3.2 4.1 5.9 0 3.6-2.8 6.4-6.4 6.4s-6.4-2.8-6.4-6.4c0-4.6 3.1-6.8 4.6-10.3.7.4 1.7 1.6 2.8 3.2Z" fill="#FFB24D" stroke="#D56E23" stroke-width="1.15" stroke-linejoin="round"/><path d="M12.4 8.5c.9 1 1.5 1.9 1.5 3 0 1.6-1.2 2.8-2.8 2.8" stroke="#FFF2CE" stroke-width="1.35" stroke-linecap="round" opacity=".8"/>',
+  level:'<path d="M12 3.6 14 8l4.8.7-3.5 3.4.8 4.8-4.1-2.3-4.1 2.3.8-4.8L5.2 8.7 10 8l2-4.4Z" fill="#C5E8FF" stroke="#5897D3" stroke-width="1.2" stroke-linejoin="round"/><circle cx="12" cy="11" r="2.1" fill="#FFF8DC" stroke="#D3A83A" stroke-width="1"/>',
+  coin:'<circle cx="12" cy="12" r="8.8" fill="#F6CF64" stroke="#B97A16" stroke-width="1.35"/><circle cx="12" cy="12" r="6.7" fill="#FFD972" opacity=".72"/><ellipse cx="9.1" cy="8.2" rx="3.5" ry="1.8" fill="#FFF5C8" opacity=".9"/><path d="M12 7.2v9.5M9.5 9.5c0-1.1 1-1.9 2.5-1.9s2.5.7 2.5 1.7c0 2.4-5 1.1-5 3.3 0 1.1 1 1.9 2.5 1.9s2.5-.8 2.5-1.9" stroke="#8B5D10" stroke-width="1.45" stroke-linecap="round"/>',
   bolt:'<path d="M12.5 2.5 5 14h5.5L11 21.5 19 10h-5.5L12.5 2.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>',
   gear:'<circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.6"/><path d="M12 3.5v2.4M12 18.1v2.4M20.5 12h-2.4M5.9 12H3.5M17.8 6.2l-1.7 1.7M7.9 16.1l-1.7 1.7M17.8 17.8l-1.7-1.7M7.9 7.9 6.2 6.2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>',
   check:'<path d="M4.5 12.5 9 17l10.5-11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
@@ -2353,14 +2702,14 @@ const ICON = {
   lock:'<rect x="5.5" y="10.5" width="13" height="9" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>',
   unlock:'<rect x="5.5" y="10.5" width="13" height="9" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M8 10.5V7.5a4 4 0 0 1 7.5-2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>',
   pin:'<path d="M12 21.5s-6.2-5.8-6.2-10.5A6.2 6.2 0 0 1 18.2 11c0 4.7-6.2 10.5-6.2 10.5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><circle cx="12" cy="10.7" r="2.1" stroke="currentColor" stroke-width="1.6"/>',
-  gem:'<path d="M5 9 8 3.5h8L19 9l-7 11.5L5 9Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M5 9h14M9.5 3.5 12 9l-2.5 0M14.5 3.5 12 9" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>',
-  snowflake:'<path d="M12 2.5v19M4 7l16 10M20 7 4 17M12 8.5l-2.2-1.3M12 8.5l2.2-1.3M12 15.5l-2.2 1.3M12 15.5l2.2 1.3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>',
-  sparkle:'<path d="M12 3c.6 4 2.9 6.3 6.9 6.9-4 .6-6.3 2.9-6.9 6.9-.6-4-2.9-6.3-6.9-6.9C9.1 9.3 11.4 7 12 3Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>',
-  palette:'<path d="M12 3.5a8.5 8 0 1 0 0 16c1.2 0 1.8-.6 1.8-1.5 0-.5-.3-.8-.3-1.3 0-.7.6-1.2 1.4-1.2H17c2 0 3.5-1.6 3.5-3.7 0-4.6-3.9-8.3-8.5-8.3Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="8.2" cy="10" r=".9" fill="currentColor"/><circle cx="11.5" cy="7.3" r=".9" fill="currentColor"/><circle cx="15.2" cy="8.5" r=".9" fill="currentColor"/><circle cx="8.7" cy="14" r=".9" fill="currentColor"/>',
-  font:'<path d="M5.5 17 10 6h1.4l4.6 11M7 13h6.8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M16.5 10.5c1 -.3 2-.2 2.5.3.7.7.5 2 .5 4v2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>',
-  tag:'<path d="M11.5 4h6.5v6.5L9.5 19 3 12.5 11.5 4Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="15" cy="7.5" r="1.3" stroke="currentColor" stroke-width="1.3"/>',
-  ring:'<circle cx="12" cy="12" r="7.5" stroke="currentColor" stroke-width="1.8"/>',
-  map:'<path d="M9 4 4 6v14l5-2 6 2 5-2V4l-5 2-6-2Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M9 4v14M15 6v14" stroke="currentColor" stroke-width="1.3"/>',
+  gem:'<path d="M6.5 8.2 9.2 4.5h5.6l2.7 3.7-5.5 7.5L6.5 8.2Z" fill="#CFF2FF" stroke="#4DA7C8" stroke-width="1.25" stroke-linejoin="round"/><path d="M6.5 8.2h11M9.2 4.5 12 8.2l2.8-3.7M12 8.2l-1.8 7.5M12 8.2l1.8 7.5" stroke="#63B9D5" stroke-width="1.05" stroke-linejoin="round"/><circle cx="12" cy="6.6" r="1.2" fill="#FFFFFF" opacity=".95"/>',
+  snowflake:'<circle cx="12" cy="12" r="2.1" fill="#B9ECFF"/><path d="M12 3.3v17.4M4.5 7.5l15 9M19.5 7.5l-15 9M12 7.5l-2.3-1.4M12 7.5l2.3-1.4M12 16.5l-2.3 1.4M12 16.5l2.3 1.4" stroke="#67B7DA" stroke-width="1.45" stroke-linecap="round"/><circle cx="12" cy="12" r="7.4" stroke="#A8DAEF" stroke-width="1" opacity=".55"/>',
+  sparkle:'<path d="M12 3.2c.7 3.7 2.8 5.8 6.5 6.5-3.7.7-5.8 2.8-6.5 6.5-.7-3.7-2.8-5.8-6.5-6.5 3.7-.7 5.8-2.8 6.5-6.5Z" fill="#FFE08C" stroke="#D29A1B" stroke-width="1.15" stroke-linejoin="round"/><circle cx="17.8" cy="6.1" r="1.1" fill="#FFF4C7"/><circle cx="7.3" cy="17.4" r=".9" fill="#FFF4C7"/>',
+  palette:'<path d="M12 3.7a8.4 8.1 0 1 0 0 16.2c1.1 0 1.7-.6 1.7-1.5 0-.5-.2-.9-.2-1.2 0-.8.7-1.3 1.5-1.3H17c2 0 3.4-1.5 3.4-3.6 0-4.7-3.8-8.6-8.4-8.6Z" fill="#FDF3E3" stroke="#D6A46A" stroke-width="1.2" stroke-linejoin="round"/><circle cx="8.2" cy="10" r="1.25" fill="#FF7E66"/><circle cx="11.5" cy="7.2" r="1.25" fill="#4FA8FF"/><circle cx="15.2" cy="8.4" r="1.25" fill="#F7C948"/><circle cx="8.7" cy="14.1" r="1.25" fill="#65C18C"/>',
+  font:'<path d="M6.2 18 10.2 6h1.7l4 12M7.8 13.6h6.7" stroke="#5E6473" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M16.8 11c1.1-.3 2.1-.2 2.7.3.8.7.6 2.1.6 4.2v1.8" stroke="#9B6CDA" stroke-width="1.45" stroke-linecap="round"/><circle cx="10.9" cy="6" r="1.2" fill="#FFB35A"/>',
+  tag:'<path d="M11.3 4.3h6.5v6.5L9.4 19.2 2.9 12.8 11.3 4.3Z" fill="#FFE7C8" stroke="#D28A3D" stroke-width="1.25" stroke-linejoin="round"/><circle cx="14.9" cy="7.5" r="1.45" fill="#FFB35A" stroke="#C97328" stroke-width=".9"/>',
+  ring:'<circle cx="12" cy="12" r="7.4" fill="none" stroke="#D7B57B" stroke-width="2.4"/><circle cx="12" cy="12" r="5.4" fill="none" stroke="#F3DFC0" stroke-width="1.3"/><circle cx="17.2" cy="8" r="1.25" fill="#FFF3DB"/>',
+  map:'<path d="M9 4.3 4.5 6v13.6L9 18l6 1.7 4.5-1.7V4.4L15 6.1 9 4.3Z" fill="#F8F4E8" stroke="#7A9486" stroke-width="1.2" stroke-linejoin="round"/><path d="M9 4.3V18M15 6.1v13.6" stroke="#7A9486" stroke-width="1.1"/><path d="M7 11.8c0-2.7 3.2-3.9 4.9-6.2 1.3 1.9 3.3 2.8 3.3 5 0 1.7-1.5 3.1-3.3 3.1-1.8 0-4.9-.3-4.9-1.9Z" fill="#B8E0B2" opacity=".75"/>',
   shuffle:'<path d="M3.5 7h3.3L15 17h5.5M17 6.5h3.5V10M3.5 17h3.3L11 11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="m17.5 4 3 2.5-3 2.5M17.5 20l3-2.5-3-2.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>',
   calWeek:'<rect x="4" y="5.5" width="16" height="15" rx="2.2" stroke="currentColor" stroke-width="1.6"/><path d="M4 10h16M8 3.5v3.5M16 3.5v3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M7.5 14h9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>',
   calMonth:'<rect x="4" y="5.5" width="16" height="15" rx="2.2" stroke="currentColor" stroke-width="1.6"/><path d="M4 10h16M8 3.5v3.5M16 3.5v3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="8.2" cy="14.2" r="1" fill="currentColor"/><circle cx="12" cy="14.2" r="1" fill="currentColor"/><circle cx="15.8" cy="14.2" r="1" fill="currentColor"/><circle cx="8.2" cy="17.4" r="1" fill="currentColor"/><circle cx="12" cy="17.4" r="1" fill="currentColor"/>',
@@ -2381,12 +2730,12 @@ const ICON = {
   target:'<circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="4.3" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="1" fill="currentColor"/>',
   flask:'<path d="M10 3.5h4M10.5 3.5v5.8L5.8 18a1.6 1.6 0 0 0 1.4 2.4h9.6a1.6 1.6 0 0 0 1.4-2.4L13.5 9.3V3.5" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M8.3 14.5h7.4" stroke="currentColor" stroke-width="1.3"/>',
   seedling:'<path d="M12 21v-8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M12 13C12 8 8 6.5 5 6.5 5 10.5 7.5 13 12 13ZM12 13c0-4 3.5-5 6.5-5 0 4-2 6.5-6.5 6.5Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>',
-  crown:'<path d="M4 9.5 8 12l4-6.5L16 12l4-2.5-1.4 8.5H5.4L4 9.5Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M5.6 18h12.8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>',
+  crown:'<path d="M4.5 9.5 8.2 12l3.8-5.9 3.8 5.9 3.7-2.5-1.3 8.2H5.8L4.5 9.5Z" fill="#F5D36A" stroke="#B8861E" stroke-width="1.2" stroke-linejoin="round"/><path d="M6.1 17.7h11.8" stroke="#B8861E" stroke-width="1.15" stroke-linecap="round"/><circle cx="12" cy="9.3" r="1.15" fill="#FFF2C1"/>',
   owl:'<circle cx="8.7" cy="11" r="2.6" stroke="currentColor" stroke-width="1.3"/><circle cx="15.3" cy="11" r="2.6" stroke="currentColor" stroke-width="1.3"/><circle cx="8.7" cy="11" r=".6" fill="currentColor"/><circle cx="15.3" cy="11" r=".6" fill="currentColor"/><path d="M12 12.3 10.7 15h2.6L12 12.3ZM6.3 6.8 8.7 9M17.7 6.8 15.3 9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><path d="M12 15.5c-2.5 0-4.5 1.7-4.5 4.5h9c0-2.8-2-4.5-4.5-4.5Z" stroke="currentColor" stroke-width="1.2"/>',
   sunrise:'<path d="M4 17h16M6 17a6 6 0 0 1 12 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M12 6v2.5M6.5 9l1.6 1.6M17.5 9l-1.6 1.6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path d="M2.5 20.5h19" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>',
   walk:'<circle cx="13.5" cy="4.5" r="1.7" stroke="currentColor" stroke-width="1.3"/><path d="M11 8l2 2.5-1 4M13 10.5l3 1.5-1 4.5M10 14.5l-2 5M13.5 14.5l2.2 5.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>',
-  bag:'<path d="M6.5 8h11l1 12.5H5.5L6.5 8Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M9 8V6a3 3 0 0 1 6 0v2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>',
-  droplet:'<path d="M12 3.5S6 11 6 15a6 6 0 0 0 12 0c0-4-6-11.5-6-11.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>',
+  bag:'<path d="M6.3 8.6h11.4l1 11.8H5.3L6.3 8.6Z" fill="#F6E7C8" stroke="#AF7B3D" stroke-width="1.25" stroke-linejoin="round"/><path d="M9 8.6V6.7A3 3 0 0 1 12 3.8a3 3 0 0 1 3 2.9v1.9" stroke="#AF7B3D" stroke-width="1.35" stroke-linecap="round"/><path d="M8.4 12.2h7.2" stroke="#E0B163" stroke-width="1.15" stroke-linecap="round" opacity=".9"/>',
+  droplet:'<path d="M12 3.4S6.4 10.3 6.4 14.4A5.6 5.6 0 0 0 12 20a5.6 5.6 0 0 0 5.6-5.6C17.6 10.3 12 3.4 12 3.4Z" fill="#7EC8FF" stroke="#3B89C8" stroke-width="1.2" stroke-linejoin="round"/><path d="M9.4 14.5c0 1.3 1 2.4 2.4 2.4" stroke="#EAF8FF" stroke-width="1.35" stroke-linecap="round" opacity=".95"/>',
   dot:'<circle cx="12" cy="12" r="6" fill="currentColor"/>',
   people:'<circle cx="8.7" cy="8.2" r="2.7" stroke="currentColor" stroke-width="1.5"/><path d="M3.5 19.5v-1.2A4.9 4.9 0 0 1 8.4 13.4h.6a4.9 4.9 0 0 1 4.9 4.9v1.2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="16.5" cy="7.5" r="2.1" stroke="currentColor" stroke-width="1.4"/><path d="M15.2 12.3a4.3 4.3 0 0 1 5 4.2v1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>',
   ladder:'<path d="M7.5 3.5v17M16.5 3.5v17M7.5 7h9M7.5 11h9M7.5 15h9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>',
@@ -2400,7 +2749,7 @@ const ICON = {
   moon:'<path d="M19.5 14.5A8 8 0 1 1 9.5 4.5a6.5 6.5 0 0 0 10 10Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>',
   sun:'<circle cx="12" cy="12" r="4.3" stroke="currentColor" stroke-width="1.6"/><path d="M12 3v2.2M12 18.8V21M21 12h-2.2M5.2 12H3M18.4 5.6l-1.6 1.6M7.2 16.8l-1.6 1.6M18.4 18.4l-1.6-1.6M7.2 7.2 5.6 5.6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>',
   photo:'<rect x="3.5" y="5" width="17" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/><circle cx="8.5" cy="10" r="1.6" stroke="currentColor" stroke-width="1.3"/><path d="m5 17 4.5-5 3.5 3.5 2.5-3L20 17" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>',
-  shield:'<path d="M12 3 5 5.5v5.3c0 4.7 3 8.2 7 9.7 4-1.5 7-5 7-9.7V5.5L12 3Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 12l2 2 4-4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>',
+  shield:'<path d="M12 3.2 5.8 5.6v5.1c0 4.4 2.8 7.8 6.2 9.1 3.4-1.3 6.2-4.7 6.2-9.1V5.6L12 3.2Z" fill="#DDEAFB" stroke="#5A86C8" stroke-width="1.25" stroke-linejoin="round"/><path d="M12 5.9v11.7" stroke="#B5D0F4" stroke-width="1" opacity=".75"/><path d="M9.2 12l1.9 1.9 4-4.4" stroke="#2F6AB5" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="8.2" r="1.1" fill="#FFFFFF" opacity=".9"/>',
 };
 function icon(name, size, cls){
   const inner = ICON[name] || '';
@@ -2889,7 +3238,7 @@ function renderMyPhotos(){
     const d = document.createElement('div');
     d.className = 'gal-item';
     d.style.animationDelay = Math.min(i * 28, 480) + 'ms';
-    if(p.img) d.style.backgroundImage = 'url(' + p.img + ')';
+    const src = photoDisplaySrc(p); if(src) d.style.backgroundImage = 'url(' + src + ')';
     d.innerHTML = '<div class="d">' + new Date(p.ts).toLocaleDateString('da-DK', { day:'numeric', month:'short' }) + '</div>';
     d.addEventListener('click', function(){ SFX.pop(); Lightbox.open(p.id); });
     g.appendChild(d);
@@ -3563,7 +3912,7 @@ function renderThumbs(){
     const d = document.createElement('div');
     if(p){
       d.className = 'thumb';
-      if(p.img) d.style.backgroundImage = 'url(' + p.img + ')';
+      const src = photoDisplaySrc(p); if(src) d.style.backgroundImage = 'url(' + src + ')';
       d.innerHTML = '<span class="tag">' + agoLabel(p.ts) + '</span>';
       d.addEventListener('click', function(){ SFX.pop(); Lightbox.open(p.id); });
     } else { d.className = 'thumb empty'; }
@@ -3581,7 +3930,7 @@ function renderGallery(){
     const d = document.createElement('div');
     d.className = 'gal-item';
     d.style.animationDelay = Math.min(i * 30, 500) + 'ms';
-    if(p.img) d.style.backgroundImage = 'url(' + p.img + ')';
+    const src = photoDisplaySrc(p); if(src) d.style.backgroundImage = 'url(' + src + ')';
     d.innerHTML = '<div class="d">' + new Date(p.ts).toLocaleDateString('da-DK', { day:'numeric', month:'short' }) + '</div>';
     d.addEventListener('click', function(){ SFX.pop(); Lightbox.open(p.id); });
     g.appendChild(d);
@@ -3737,6 +4086,13 @@ function readFile(file){
     r.onerror = rej;
     r.readAsDataURL(file);
   });
+}
+
+function photoDisplaySrc(p){
+  return (p && (p.thumb || p.img || p.cloudUrl)) || '';
+}
+function photoFullSrc(p){
+  return (p && (p.cloudUrl || p.img || p.thumb)) || '';
 }
 
 /* ===================================================================
@@ -4048,12 +4404,16 @@ const Cloud = (function(){
               id: row.id, lat: row.lat, lng: row.lng,
               ts: new Date(row.taken_at).getTime(),
               img: row.image_url,
+              thumb: row.image_url,
+              cloudUrl: row.image_url,
             });
             changed = true;
-          } else if(!existing.img){
-            // this photo lost its image locally (quota eviction) but the cloud
-            // still has it -- heal it instead of leaving a permanently blank tile
-            existing.img = row.image_url;
+          } else {
+            // keep a cloud backup on every pulled photo; if the local image was
+            // lost, heal it instead of leaving a blank tile
+            if(!existing.cloudUrl) existing.cloudUrl = row.image_url;
+            if(!existing.img) existing.img = row.image_url;
+            if(!existing.thumb) existing.thumb = existing.img || row.image_url;
             changed = true;
           }
         });
@@ -4090,9 +4450,10 @@ const Cloud = (function(){
   }
 
   async function uploadPhoto(photo){
-    if(!ready || !photo.img) return null;
+    const uploadSrc = photo && (photo.img || photo.thumb || photo.cloudUrl);
+    if(!ready || !uploadSrc) return null;
     try{
-      const blob = await (await fetch(photo.img)).blob();
+      const blob = await (await fetch(uploadSrc)).blob();
       const path = userId + '/' + photo.id + '.jpg';
       const { error: upErr } = await client.storage.from('photos')
         .upload(path, blob, { contentType: 'image/jpeg', upsert: true });
@@ -4560,14 +4921,17 @@ const MapView = (function(){
       }).addTo(layer);
     }
 
-    const markerIcon = p.img
+    const markerSrc = photoDisplaySrc(p);
+    const markerIcon = markerSrc
       ? L.divIcon({ className:'', iconSize:[40,40], iconAnchor:[20,20],
-          html:'<div class="photo-marker" style="width:40px;height:40px;background-image:url(' + p.img + ')"></div>' })
+          html:'<div class="photo-marker" style="width:40px;height:40px;background-image:url(' + markerSrc + ')"></div>' })
       : L.divIcon({ className:'', iconSize:[16,16], iconAnchor:[8,8],
           html:'<div style="width:16px;height:16px;border-radius:50%;background:#4F6D52;border:2px solid #fff"></div>' });
 
     const m = L.marker([p.lat, p.lng], { icon: markerIcon }).addTo(layer);
-    const imgHtml = p.img ? '<img class="popup-img" src="' + p.img + '">' : '';
+    const popupSrc = photoFullSrc(p);
+    const popupFallback = photoDisplaySrc(p);
+    const imgHtml = popupSrc ? '<img class="popup-img" src="' + popupSrc + '" data-fallback="' + popupFallback + '" onerror="if(this.dataset.fallback && this.src!==this.dataset.fallback){this.src=this.dataset.fallback;this.dataset.fallback=\'\';}">' : '';
     const cool = cooling ? ('Optaget i ' + Math.ceil(S.settings.cooldownDays - age) + ' dage mere') : 'Åben igen';
     m.bindPopup(imgHtml + '<b>' + agoLabel(p.ts) + '</b><br>' + new Date(p.ts).toLocaleString('da-DK') + '<br>' + cool);
     markers[p.id] = m;
@@ -4666,10 +5030,13 @@ function saveSpot(lat, lng, manual, img){
     return false;
   }
 
+  const localImg = img || fakePhoto(manual ? 'KORT-TEST' : 'TEST');
   const photo = {
     id: String(Date.now()) + Math.random().toString(16).slice(2,7),
     lat: lat, lng: lng, ts: Date.now(),
-    img: img || fakePhoto(manual ? 'KORT-TEST' : 'TEST'),
+    img: localImg,
+    thumb: localImg,
+    cloudUrl: '',
   };
   S.photos.push(photo);
 
@@ -4710,13 +5077,13 @@ function saveSpot(lat, lng, manual, img){
   if(typeof MonthlyChallenges !== 'undefined') MonthlyChallenges.checkProgress();
   if(typeof Cloud !== 'undefined' && Cloud.ready){
     Cloud.uploadPhoto(photo).then(function(publicUrl){
-      // Once the image is safely in cloud Storage, the local base64 copy is
-      // pure waste -- swap it for the URL. Turns a ~25KB localStorage entry
-      // into ~100 bytes, which is what actually keeps the quota from filling.
+      // Keep a local thumbnail for reliable rendering on phones/offline.
+      // The cloud URL is stored separately as a backup/full source.
       if(publicUrl){
         const p = S.photos.find(function(x){ return x.id === photo.id; });
-        if(p && p.img && p.img.indexOf('data:') === 0){
-          p.img = publicUrl;
+        if(p){
+          p.cloudUrl = publicUrl;
+          if(!p.thumb && p.img) p.thumb = p.img;
           save();
         }
       }
@@ -4815,8 +5182,9 @@ const Lightbox = (function(){
   function paint(){
     const p = order[idx];
     if(!p) return close();
-    $('lbImg').src = p.img || '';
-    $('lbImg').style.display = p.img ? 'block' : 'none';
+    $('lbImg').src = photoFullSrc(p) || '';
+    $('lbImg').dataset.fallback = photoDisplaySrc(p) || '';
+    $('lbImg').style.display = (photoFullSrc(p) || photoDisplaySrc(p)) ? 'block' : 'none';
     $('lbCount').textContent = (idx + 1) + ' / ' + order.length;
     $('lbDate').textContent = new Date(p.ts).toLocaleDateString('da-DK', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
     let sub = new Date(p.ts).toLocaleTimeString('da-DK', { hour:'2-digit', minute:'2-digit' }) + ' · ' + agoLabel(p.ts);
