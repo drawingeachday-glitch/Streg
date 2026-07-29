@@ -2192,25 +2192,6 @@ body.purchase-cutscene-open{
   to{opacity:0;transform:scale(1.035);filter:blur(10px);}
 }
 
-.purchase-cutscene-flash{
-  position:absolute;
-  inset:-10%;
-  z-index:-1;
-  background:#fff;
-  opacity:0;
-  pointer-events:none;
-}
-.purchase-cutscene.active .purchase-cutscene-flash{
-  animation:cutFlash 2.7s ease-out both;
-}
-@keyframes cutFlash{
-  0%{opacity:0;}
-  3%{opacity:.96;}
-  8%{opacity:.08;}
-  15%{opacity:.42;}
-  24%,100%{opacity:0;}
-}
-
 .purchase-cutscene-vignette{
   position:absolute;
   inset:0;
@@ -2482,17 +2463,13 @@ body.purchase-cutscene-open{
   overflow:hidden;
 }
 .purchase-cutscene-item::before{
-  content:"";
-  position:absolute;
-  inset:-80% -20%;
-  background:linear-gradient(115deg,transparent 42%,rgba(255,255,255,.9) 49%,transparent 56%);
-  transform:translateX(-80%) rotate(12deg);
+  content:none;
 }
 .purchase-cutscene.active .purchase-cutscene-item{
   animation:cutItemReveal 1.1s .18s cubic-bezier(.12,.92,.2,1.15) both;
 }
 .purchase-cutscene.active .purchase-cutscene-item::before{
-  animation:cutItemShine 1.2s .62s ease-out both;
+  animation:none;
 }
 @keyframes cutItemReveal{
   0%{opacity:0;transform:translateY(70px) scale(.15) rotate(-18deg);filter:blur(18px);}
@@ -2869,6 +2846,2261 @@ body.purchase-cutscene-open{
   }
 }
 
+
+/* =========================================================
+   SHOP + PURCHASE CUTSCENE — FULL FINE-TUNE
+   ========================================================= */
+
+/* ---------- clearer, larger shop cards ---------- */
+#tab-shop .shop-grid{
+  gap:12px;
+}
+#tab-shop .shop-item{
+  position:relative;
+  min-height:178px;
+  padding:13px;
+  gap:8px;
+  overflow:hidden;
+  transition:
+    transform .22s var(--spring),
+    border-color .24s,
+    box-shadow .24s,
+    opacity .24s;
+}
+#tab-shop .shop-item::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  opacity:0;
+  background:linear-gradient(135deg,rgba(255,255,255,.24),transparent 42%);
+  transition:opacity .24s;
+}
+#tab-shop .shop-item:hover::after{opacity:.55;}
+#tab-shop .shop-item.affordable{
+  border-color:rgba(224,138,60,.28);
+}
+#tab-shop .shop-item.unaffordable{
+  border-color:rgba(193,80,63,.18);
+}
+#tab-shop .shop-item.owned{
+  border-color:rgba(110,147,166,.28);
+}
+#tab-shop .shop-item.equipped{
+  border-color:var(--moss);
+  box-shadow:0 0 0 1px var(--moss),0 12px 30px rgba(79,109,82,.14);
+}
+#tab-shop .shop-item.locked-card{
+  opacity:.58;
+  filter:saturate(.55);
+}
+#tab-shop .shop-preview{
+  height:72px;
+  border-radius:14px;
+  font-size:15px;
+}
+#tab-shop .shop-preview.is-color{
+  font-size:20px;
+}
+#tab-shop .shop-preview.is-frame{
+  height:76px;
+}
+#tab-shop .shop-frame-stage{
+  width:54px;
+  height:54px;
+  font-size:13px;
+}
+#tab-shop .shop-preview.is-font{
+  font-size:22px;
+}
+#tab-shop .shop-item-name{
+  font-size:13px;
+  line-height:1.2;
+}
+#tab-shop .shop-state-chip{
+  position:absolute;
+  right:9px;
+  top:9px;
+  z-index:3;
+  max-width:calc(100% - 18px);
+  padding:5px 7px;
+  border-radius:999px;
+  background:rgba(255,255,255,.82);
+  border:1px solid rgba(22,36,43,.09);
+  box-shadow:0 3px 10px rgba(22,36,43,.08);
+  color:var(--ink-soft);
+  font:800 8.5px/1 Inter,sans-serif;
+  letter-spacing:.035em;
+  text-transform:uppercase;
+  backdrop-filter:blur(10px);
+}
+#tab-shop .shop-state-chip.affordable{
+  background:rgba(255,239,218,.92);
+  color:#A65C1F;
+}
+#tab-shop .shop-state-chip.unaffordable{
+  background:rgba(255,232,228,.94);
+  color:var(--brick);
+}
+#tab-shop .shop-state-chip.owned{
+  background:rgba(231,241,248,.94);
+  color:#4C748A;
+}
+#tab-shop .shop-state-chip.equipped{
+  background:rgba(225,240,226,.95);
+  color:var(--moss-dark);
+}
+#tab-shop .shop-state-chip.locked{
+  background:rgba(238,238,238,.94);
+  color:var(--ink-soft);
+}
+#tab-shop .shop-btn.buy{
+  background:linear-gradient(145deg,#F6A653,var(--amber-2));
+  box-shadow:0 7px 16px rgba(224,138,60,.20);
+}
+#tab-shop .shop-btn.poor{
+  background:var(--brick-soft);
+  color:var(--brick);
+  border:1px solid rgba(193,80,63,.18);
+}
+#tab-shop .shop-btn.equip{
+  background:linear-gradient(180deg,var(--card),var(--paper-2));
+}
+#tab-shop .shop-btn.equipped{
+  box-shadow:0 7px 16px rgba(79,109,82,.18);
+}
+
+/* ---------- coin-spend feedback ---------- */
+#topCoinsWrap.coin-spending{
+  animation:coinWalletHit .72s cubic-bezier(.18,.88,.24,1);
+}
+#topCoinsWrap.coin-spending .icn{
+  animation:coinWalletSpin .72s cubic-bezier(.18,.88,.24,1);
+}
+@keyframes coinWalletHit{
+  0%{transform:none;}
+  22%{transform:translateX(-3px) scale(1.12);}
+  42%{transform:translateX(3px) scale(.94);}
+  65%{transform:translateX(-1px) scale(1.04);}
+  100%{transform:none;}
+}
+@keyframes coinWalletSpin{
+  0%{transform:none;}
+  55%{transform:rotateY(360deg) scale(1.18);}
+  100%{transform:none;}
+}
+.coin-spend-float{
+  position:fixed;
+  z-index:1000002;
+  pointer-events:none;
+  display:flex;
+  align-items:center;
+  gap:4px;
+  padding:6px 9px;
+  border-radius:999px;
+  background:rgba(27,31,38,.92);
+  color:#FFD972;
+  border:1px solid rgba(255,217,114,.24);
+  box-shadow:0 12px 30px rgba(0,0,0,.25);
+  font:850 11px/1 Inter,sans-serif;
+  transform:translate(-50%,-50%);
+  animation:coinSpendFloat 1.05s cubic-bezier(.16,.84,.24,1) both;
+}
+.coin-spend-float .icn{width:13px;height:13px;}
+@keyframes coinSpendFloat{
+  0%{opacity:0;transform:translate(-50%,-25%) scale(.72);filter:blur(6px);}
+  18%{opacity:1;filter:none;}
+  70%{opacity:1;transform:translate(-50%,-130%) scale(1);}
+  100%{opacity:0;transform:translate(-50%,-190%) scale(.92);filter:blur(4px);}
+}
+
+/* ---------- real purchased-item previews ---------- */
+.purchase-cutscene-item{
+  overflow:visible;
+}
+.purchase-cutscene-item.preview-frame,
+.purchase-cutscene-item.preview-color,
+.purchase-cutscene-item.preview-title,
+.purchase-cutscene-item.preview-font,
+.purchase-cutscene-item.preview-theme{
+  background:
+    linear-gradient(145deg,rgba(255,255,255,.18),rgba(255,255,255,.045)),
+    rgba(15,22,32,.82);
+}
+.cut-preview-frame{
+  width:78px;
+  height:78px;
+  display:grid;
+  place-items:center;
+  font-family:var(--font-display);
+  font-size:17px;
+  font-weight:800;
+  color:#fff;
+  background:linear-gradient(135deg,var(--moss),var(--sky));
+}
+.cut-preview-color{
+  font-family:var(--font-display);
+  font-size:24px;
+  font-weight:850;
+  letter-spacing:-.04em;
+  white-space:nowrap;
+  filter:drop-shadow(0 4px 12px rgba(0,0,0,.25));
+}
+.cut-preview-title{
+  width:94px;
+  min-height:62px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:8px;
+  border-radius:18px;
+  color:#fff;
+  font-family:var(--font-display);
+  font-size:13px;
+  font-weight:800;
+  line-height:1.05;
+  text-align:center;
+  text-shadow:0 2px 6px rgba(0,0,0,.35);
+}
+.cut-preview-font{
+  font-size:50px;
+  font-weight:700;
+  line-height:1;
+  color:#fff;
+  text-shadow:0 0 18px var(--cut-accent);
+}
+.cut-preview-theme{
+  width:138px;
+  height:88px;
+  padding:10px;
+  border-radius:22px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  overflow:hidden;
+  color:#fff;
+  box-shadow:inset 0 1px rgba(255,255,255,.25);
+}
+.cut-preview-theme b{
+  font:900 15px/1 Inter,sans-serif;
+  letter-spacing:.14em;
+}
+.cut-preview-theme span{
+  width:76%;
+  height:7px;
+  border-radius:999px;
+  background:rgba(255,255,255,.75);
+  box-shadow:0 14px 0 rgba(255,255,255,.24),0 28px 0 rgba(255,255,255,.13);
+}
+.kind-theme .purchase-cutscene-item-wrap{
+  width:190px !important;
+  height:150px !important;
+}
+.kind-theme .purchase-cutscene-item{
+  width:164px;
+  height:112px;
+  border-radius:28px;
+}
+
+/* ---------- unique special-effect layers ---------- */
+.purchase-cutscene-special{
+  position:absolute;
+  inset:0;
+  z-index:7;
+  pointer-events:none;
+  overflow:hidden;
+}
+.cut-special{
+  position:absolute;
+  left:50%;
+  top:50%;
+  opacity:0;
+}
+
+/* Shield: defensive hex pulse */
+.kind-shield .cut-shield{
+  width:54px;
+  height:62px;
+  margin:-31px 0 0 -27px;
+  color:var(--cut-accent-2);
+  filter:drop-shadow(0 0 14px var(--cut-accent));
+}
+.kind-shield.active .cut-shield{
+  animation:shieldBurst 1.8s var(--sd) cubic-bezier(.16,.84,.24,1) both;
+}
+@keyframes shieldBurst{
+  0%{opacity:0;transform:rotate(var(--rot)) translateY(0) scale(.15);}
+  22%{opacity:.9;}
+  100%{opacity:0;transform:rotate(var(--rot)) translateY(-310px) scale(.75);}
+}
+.kind-shield.active .purchase-cutscene-shockwave{
+  border-radius:38%;
+  transform:rotate(45deg);
+}
+
+/* Ring: multiple orbiting halos */
+.cut-orbit{
+  width:var(--orbit-size);
+  height:var(--orbit-size);
+  margin:calc(var(--orbit-size) / -2) 0 0 calc(var(--orbit-size) / -2);
+  border-radius:50%;
+  border:2px solid color-mix(in srgb,var(--cut-accent) 70%,transparent);
+  border-left-color:transparent;
+  border-right-color:var(--cut-accent-2);
+  box-shadow:0 0 22px color-mix(in srgb,var(--cut-accent) 45%,transparent);
+}
+.kind-frame.active .cut-orbit{
+  animation:ringOrbit 2.4s var(--sd) cubic-bezier(.16,.84,.24,1) both;
+}
+@keyframes ringOrbit{
+  0%{opacity:0;transform:scale(.2) rotate(0deg);}
+  28%{opacity:.92;}
+  100%{opacity:0;transform:scale(1.85) rotate(var(--spin));}
+}
+
+/* Color: paint-like blobs */
+.cut-paint{
+  width:var(--blob-size);
+  height:var(--blob-size);
+  margin:calc(var(--blob-size) / -2);
+  border-radius:58% 42% 67% 33% / 38% 60% 40% 62%;
+  background:var(--blob-color);
+  box-shadow:0 0 20px var(--blob-color);
+  mix-blend-mode:screen;
+}
+.kind-color.active .cut-paint{
+  animation:paintBurst 1.75s var(--sd) cubic-bezier(.12,.78,.22,1) both;
+}
+@keyframes paintBurst{
+  0%{opacity:0;transform:translate(0,0) scale(.08) rotate(0);}
+  20%{opacity:.88;}
+  100%{opacity:0;transform:translate(var(--px),var(--py)) scale(1.5) rotate(var(--spin));}
+}
+.kind-color .purchase-cutscene-rays{
+  filter:hue-rotate(38deg) saturate(1.7);
+}
+
+/* Title: tags/words fire outward */
+.cut-word{
+  padding:7px 10px;
+  border-radius:10px;
+  background:rgba(255,255,255,.1);
+  border:1px solid color-mix(in srgb,var(--cut-accent) 60%,transparent);
+  color:var(--cut-accent-2);
+  box-shadow:0 0 16px color-mix(in srgb,var(--cut-accent) 34%,transparent);
+  font:900 9px/1 Inter,sans-serif;
+  letter-spacing:.16em;
+  white-space:nowrap;
+}
+.kind-title.active .cut-word{
+  animation:titleWordBurst 2s var(--sd) cubic-bezier(.16,.84,.24,1) both;
+}
+@keyframes titleWordBurst{
+  0%{opacity:0;transform:translate(-50%,-50%) scale(.2) rotate(0);}
+  25%{opacity:.95;}
+  100%{opacity:0;transform:translate(calc(-50% + var(--wx)),calc(-50% + var(--wy))) scale(.88) rotate(var(--spin));}
+}
+
+/* Font: letters form and scatter */
+.cut-letter{
+  color:var(--cut-accent-2);
+  font:900 var(--letter-size)/1 var(--letter-font,Inter),sans-serif;
+  text-shadow:0 0 18px var(--cut-accent);
+}
+.kind-font.active .cut-letter{
+  animation:fontLetterBurst 2.15s var(--sd) cubic-bezier(.16,.84,.24,1) both;
+}
+@keyframes fontLetterBurst{
+  0%{opacity:0;transform:translate(-50%,-50%) scale(.15) rotate(-20deg);filter:blur(8px);}
+  24%{opacity:.9;filter:none;}
+  100%{opacity:0;transform:translate(calc(-50% + var(--lx)),calc(-50% + var(--ly))) scale(1.1) rotate(var(--spin));}
+}
+
+/* Theme: cinematic panels that recolor the entire scene */
+.cut-theme-panel{
+  width:34vw;
+  height:120vh;
+  top:-10vh;
+  margin:0;
+  transform-origin:center;
+  background:linear-gradient(180deg,var(--panel-a),var(--panel-b));
+  filter:blur(2px);
+  mix-blend-mode:screen;
+}
+.kind-theme.active .cut-theme-panel{
+  animation:themePanelSlash 1.65s var(--sd) cubic-bezier(.14,.82,.2,1) both;
+}
+@keyframes themePanelSlash{
+  0%{opacity:0;transform:translateX(var(--start-x)) skewX(-13deg) scaleX(.2);}
+  28%{opacity:.58;}
+  100%{opacity:0;transform:translateX(var(--end-x)) skewX(-13deg) scaleX(1.1);}
+}
+.variant-silver{--cut-accent:#BFD0E5;--cut-accent-2:#FFFFFF;}
+.variant-gold{--cut-accent:#E8B842;--cut-accent-2:#FFF0A8;}
+.variant-diamond{--cut-accent:#67E6FF;--cut-accent-2:#E8FCFF;}
+.variant-blackred{--cut-accent:#F0203B;--cut-accent-2:#FFBCC6;}
+.variant-silver .purchase-cutscene{background:#111;}
+.variant-blackred .purchase-cutscene-rays{filter:saturate(2);}
+
+/* Keep the complete stack genuinely centered on phones and landscape. */
+.purchase-cutscene-content{
+  padding:
+    env(safe-area-inset-top)
+    max(18px,env(safe-area-inset-right))
+    env(safe-area-inset-bottom)
+    max(18px,env(safe-area-inset-left)) !important;
+  box-sizing:border-box;
+}
+@media(max-height:620px){
+  .purchase-cutscene-item-wrap{
+    transform:scale(.84) !important;
+    margin-bottom:-8px !important;
+  }
+  .purchase-cutscene-title{
+    margin-top:4px !important;
+    font-size:clamp(25px,8vw,34px) !important;
+  }
+  .purchase-cutscene-type{
+    margin-top:6px !important;
+  }
+}
+@media(orientation:landscape) and (max-height:520px){
+  .purchase-cutscene-content{
+    grid-template-columns:auto auto !important;
+    grid-template-rows:auto auto !important;
+    column-gap:32px !important;
+  }
+  .purchase-cutscene-item-wrap{
+    grid-row:1 / 3;
+    grid-column:1;
+    transform:scale(.78) !important;
+  }
+  .purchase-cutscene-title{
+    grid-column:2;
+    align-self:end;
+    margin:0 0 5px !important;
+    width:min(48vw,430px) !important;
+  }
+  .purchase-cutscene-type{
+    grid-column:2;
+    align-self:start;
+    margin:5px 0 0 !important;
+    width:min(48vw,430px) !important;
+  }
+}
+
+
+/* =========================================================
+   SIGNATURE PHOTO FLOW
+   Camera → GPS scan → streak → rewards → photo lands in app
+   ========================================================= */
+body.photo-celebration-open{
+  overflow:hidden;
+}
+
+.photo-success-cutscene{
+  --ps-accent:#F19A47;
+  --ps-accent-2:#FFD37D;
+  position:fixed;
+  inset:0;
+  z-index:1000005;
+  display:none;
+  overflow:hidden;
+  isolation:isolate;
+  color:#fff;
+  background:
+    radial-gradient(circle at 50% 42%,rgba(241,154,71,.22),transparent 30%),
+    linear-gradient(180deg,#071017 0%,#0D1921 55%,#05090D 100%);
+}
+.photo-success-cutscene.active{
+  display:block;
+  animation:psSceneIn .25s ease-out both;
+}
+.photo-success-cutscene.closing{
+  animation:psSceneOut .32s ease-in both;
+}
+@keyframes psSceneIn{
+  from{opacity:0;}
+  to{opacity:1;}
+}
+@keyframes psSceneOut{
+  to{opacity:0;transform:scale(1.035);filter:blur(10px);}
+}
+
+.ps-grid{
+  position:absolute;
+  inset:-30%;
+  z-index:-4;
+  opacity:.18;
+  background-image:
+    linear-gradient(rgba(102,203,255,.15) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(102,203,255,.15) 1px,transparent 1px);
+  background-size:42px 42px;
+  transform:perspective(650px) rotateX(68deg) translateY(23%);
+  transform-origin:center;
+}
+.photo-success-cutscene.active .ps-grid{
+  animation:psGrid 4.2s linear both;
+}
+@keyframes psGrid{
+  from{background-position:0 0;opacity:0;}
+  15%{opacity:.2;}
+  to{background-position:0 210px;opacity:.06;}
+}
+
+.ps-radar{
+  position:absolute;
+  left:50%;
+  top:43%;
+  width:min(720px,120vw);
+  aspect-ratio:1;
+  transform:translate(-50%,-50%);
+  border-radius:50%;
+  opacity:0;
+  background:
+    repeating-radial-gradient(circle,transparent 0 54px,rgba(95,204,255,.16) 55px 56px),
+    conic-gradient(from 0deg,transparent 0 79%,rgba(89,214,255,.2) 85%,transparent 92%);
+  -webkit-mask-image:radial-gradient(circle,#000 0 66%,transparent 74%);
+  mask-image:radial-gradient(circle,#000 0 66%,transparent 74%);
+}
+.photo-success-cutscene.active .ps-radar{
+  animation:psRadar 4s .08s linear both;
+}
+@keyframes psRadar{
+  0%{opacity:0;transform:translate(-50%,-50%) scale(.45) rotate(-60deg);}
+  18%{opacity:.8;}
+  100%{opacity:.08;transform:translate(-50%,-50%) scale(1.25) rotate(180deg);}
+}
+
+.ps-ember-field{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+}
+.ps-ember{
+  position:absolute;
+  left:50%;
+  top:52%;
+  width:var(--s);
+  height:var(--s);
+  border-radius:50%;
+  background:var(--c);
+  box-shadow:0 0 13px var(--c);
+  opacity:0;
+}
+.photo-success-cutscene.active .ps-ember{
+  animation:psEmber var(--d) var(--delay) cubic-bezier(.12,.72,.22,1) both;
+}
+@keyframes psEmber{
+  0%{opacity:0;transform:translate(-50%,-50%) scale(.1);}
+  15%{opacity:1;}
+  100%{opacity:0;transform:translate(calc(-50% + var(--x)),calc(-50% + var(--y))) scale(.55);}
+}
+
+.ps-content{
+  position:fixed;
+  inset:0;
+  display:grid;
+  place-content:center;
+  justify-items:center;
+  box-sizing:border-box;
+  padding:
+    max(18px,env(safe-area-inset-top))
+    max(18px,env(safe-area-inset-right))
+    max(18px,env(safe-area-inset-bottom))
+    max(18px,env(safe-area-inset-left));
+  text-align:center;
+}
+
+.ps-gps-label{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-bottom:14px;
+  color:#AEEAFF;
+  font:900 9px/1 Inter,sans-serif;
+  letter-spacing:.3em;
+  text-transform:uppercase;
+  opacity:0;
+  text-shadow:0 0 16px rgba(89,214,255,.45);
+}
+.ps-gps-label::before{
+  content:"";
+  width:7px;height:7px;border-radius:50%;
+  background:#63E1B0;
+  box-shadow:0 0 14px #63E1B0;
+}
+.photo-success-cutscene.active .ps-gps-label{
+  animation:psDrop .48s .18s cubic-bezier(.18,.88,.24,1) both;
+}
+
+.ps-stage{
+  position:relative;
+  width:min(70vw,250px);
+  aspect-ratio:.82;
+  perspective:1200px;
+}
+.ps-photo-card{
+  position:absolute;
+  inset:0;
+  padding:10px 10px 32px;
+  border-radius:24px;
+  background:#F9F5ED;
+  box-shadow:
+    0 32px 80px rgba(0,0,0,.55),
+    0 0 0 1px rgba(255,255,255,.35),
+    0 0 55px rgba(241,154,71,.22);
+  opacity:0;
+  transform-style:preserve-3d;
+}
+.photo-success-cutscene.active .ps-photo-card{
+  animation:psPhotoReveal 1.08s .12s cubic-bezier(.12,.92,.2,1.08) both;
+}
+@keyframes psPhotoReveal{
+  0%{opacity:0;transform:translateY(90px) rotateX(24deg) rotateZ(-11deg) scale(.28);filter:blur(18px);}
+  50%{opacity:1;transform:translateY(-10px) rotateX(-4deg) rotateZ(3deg) scale(1.08);filter:none;}
+  73%{transform:translateY(4px) rotateX(1deg) rotateZ(-1deg) scale(.98);}
+  100%{opacity:1;transform:none;}
+}
+
+.ps-photo-frame{
+  position:relative;
+  width:100%;
+  height:100%;
+  border-radius:16px;
+  overflow:hidden;
+  background:#18252D;
+}
+.ps-photo-frame img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+.ps-photo-frame::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.16);
+}
+
+.ps-scan-line{
+  position:absolute;
+  left:0;right:0;
+  height:3px;
+  top:-6%;
+  background:linear-gradient(90deg,transparent,#65E1B0 16%,#A7F5D8 50%,#65E1B0 84%,transparent);
+  box-shadow:0 0 12px #65E1B0,0 0 30px rgba(101,225,176,.8);
+  opacity:0;
+}
+.photo-success-cutscene.active .ps-scan-line{
+  animation:psScan 1.25s .58s cubic-bezier(.2,.8,.25,1) both;
+}
+@keyframes psScan{
+  0%{top:-6%;opacity:0;}
+  10%{opacity:1;}
+  88%{opacity:1;}
+  100%{top:104%;opacity:0;}
+}
+
+.ps-corner{
+  position:absolute;
+  width:24px;height:24px;
+  border-color:#89EBFF;
+  opacity:0;
+  filter:drop-shadow(0 0 6px rgba(137,235,255,.65));
+}
+.ps-corner.tl{left:8px;top:8px;border-left:2px solid;border-top:2px solid;}
+.ps-corner.tr{right:8px;top:8px;border-right:2px solid;border-top:2px solid;}
+.ps-corner.bl{left:8px;bottom:8px;border-left:2px solid;border-bottom:2px solid;}
+.ps-corner.br{right:8px;bottom:8px;border-right:2px solid;border-bottom:2px solid;}
+.photo-success-cutscene.active .ps-corner{
+  animation:psCorner .4s .7s ease-out both;
+}
+@keyframes psCorner{
+  from{opacity:0;transform:scale(1.45);}
+  to{opacity:1;transform:none;}
+}
+
+.ps-coordinate{
+  position:absolute;
+  left:13px;
+  bottom:13px;
+  max-width:calc(100% - 26px);
+  padding:6px 8px;
+  border-radius:9px;
+  background:rgba(4,11,16,.68);
+  border:1px solid rgba(137,235,255,.26);
+  color:#C9F6FF;
+  backdrop-filter:blur(8px);
+  font:750 8px/1.25 Inter,sans-serif;
+  letter-spacing:.05em;
+  opacity:0;
+}
+.photo-success-cutscene.active .ps-coordinate{
+  animation:psCoordinate .42s 1.15s ease-out both;
+}
+@keyframes psCoordinate{
+  from{opacity:0;transform:translateY(8px);}
+  to{opacity:1;transform:none;}
+}
+
+.ps-stamp{
+  position:absolute;
+  right:-24px;
+  bottom:12px;
+  z-index:3;
+  width:78px;
+  height:78px;
+  display:grid;
+  place-items:center;
+  border-radius:50%;
+  border:3px solid var(--ps-accent);
+  color:var(--ps-accent);
+  background:rgba(8,15,20,.85);
+  box-shadow:0 0 30px rgba(241,154,71,.55),inset 0 0 18px rgba(241,154,71,.16);
+  opacity:0;
+}
+.ps-stamp .icn{width:44px!important;height:44px!important;}
+.photo-success-cutscene.active .ps-stamp{
+  animation:psStamp .72s 1.18s cubic-bezier(.18,.88,.24,1.2) both;
+}
+@keyframes psStamp{
+  0%{opacity:0;transform:scale(2.2) rotate(-25deg);filter:blur(8px);}
+  65%{opacity:1;transform:scale(.9) rotate(5deg);filter:none;}
+  100%{opacity:1;transform:none;}
+}
+
+.ps-title{
+  width:min(92vw,580px);
+  margin-top:22px;
+  font-family:var(--font-display),Inter,sans-serif;
+  font-size:clamp(29px,9vw,48px);
+  font-weight:850;
+  line-height:.98;
+  letter-spacing:-.045em;
+  text-wrap:balance;
+  text-shadow:0 8px 30px rgba(0,0,0,.6),0 0 24px rgba(241,154,71,.25);
+  opacity:0;
+}
+.photo-success-cutscene.active .ps-title{
+  animation:psTitle .72s 1.15s cubic-bezier(.18,.88,.24,1) both;
+}
+@keyframes psTitle{
+  0%{opacity:0;transform:translateY(30px) scale(.78);filter:blur(12px);}
+  65%{opacity:1;transform:translateY(-3px) scale(1.03);filter:none;}
+  100%{opacity:1;transform:none;}
+}
+
+.ps-streak-row{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:9px;
+  margin-top:10px;
+  opacity:0;
+}
+.ps-streak-flame{
+  display:grid;
+  place-items:center;
+  color:var(--ps-accent);
+}
+.ps-streak-flame .icn{
+  width:30px!important;
+  height:30px!important;
+  filter:drop-shadow(0 0 14px rgba(241,154,71,.75));
+}
+.ps-streak-count{
+  font-family:var(--font-display),Inter,sans-serif;
+  font-size:34px;
+  font-weight:850;
+  color:var(--ps-accent-2);
+}
+.ps-streak-label{
+  color:rgba(255,255,255,.58);
+  font:850 10px/1 Inter,sans-serif;
+  letter-spacing:.16em;
+}
+.photo-success-cutscene.active .ps-streak-row{
+  animation:psRise .52s 1.38s cubic-bezier(.18,.88,.24,1) both;
+}
+
+.ps-rewards{
+  display:flex;
+  justify-content:center;
+  gap:9px;
+  margin-top:15px;
+  opacity:0;
+}
+.ps-reward{
+  min-width:108px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  padding:10px 13px;
+  border-radius:999px;
+  background:rgba(255,255,255,.075);
+  border:1px solid rgba(255,255,255,.14);
+  color:#fff;
+  font:850 11px/1 Inter,sans-serif;
+  backdrop-filter:blur(14px);
+  box-shadow:inset 0 1px rgba(255,255,255,.08);
+}
+.ps-reward.xp{color:#CBE7FF;}
+.ps-reward.coins{color:#FFE38B;}
+.ps-reward .icn{width:15px!important;height:15px!important;}
+.photo-success-cutscene.active .ps-rewards{
+  animation:psRise .5s 1.62s cubic-bezier(.18,.88,.24,1) both;
+}
+@keyframes psRise{
+  from{opacity:0;transform:translateY(18px) scale(.9);}
+  to{opacity:1;transform:none;}
+}
+
+.ps-distance{
+  margin-top:11px;
+  color:rgba(255,255,255,.5);
+  font:700 9.5px/1.35 Inter,sans-serif;
+  letter-spacing:.06em;
+  opacity:0;
+}
+.photo-success-cutscene.active .ps-distance{
+  animation:psRise .42s 1.8s ease-out both;
+}
+
+.ps-skip{
+  position:absolute;
+  right:max(16px,env(safe-area-inset-right));
+  top:max(16px,env(safe-area-inset-top));
+  z-index:10;
+  border:1px solid rgba(255,255,255,.15);
+  background:rgba(0,0,0,.26);
+  color:rgba(255,255,255,.68);
+  border-radius:999px;
+  padding:8px 11px;
+  font:800 9px/1 Inter,sans-serif;
+  letter-spacing:.08em;
+  backdrop-filter:blur(12px);
+  opacity:0;
+}
+.photo-success-cutscene.active .ps-skip{
+  animation:psSkip .4s 1.4s ease-out both;
+}
+@keyframes psSkip{to{opacity:1;}}
+
+/* Reward particles flying to top counters */
+.reward-fly{
+  position:fixed;
+  left:0;top:0;
+  z-index:1000012;
+  pointer-events:none;
+  display:grid;
+  place-items:center;
+  width:34px;height:34px;
+  border-radius:50%;
+  background:rgba(8,14,20,.92);
+  border:1px solid rgba(255,255,255,.18);
+  box-shadow:0 0 18px var(--fly-color),0 12px 25px rgba(0,0,0,.32);
+  color:#fff;
+}
+.reward-fly .icn{width:19px!important;height:19px!important;}
+.reward-target-hit{
+  animation:rewardTargetHit .58s cubic-bezier(.18,.88,.24,1);
+}
+@keyframes rewardTargetHit{
+  0%{transform:none;}
+  38%{transform:translateY(-3px) scale(1.3);filter:drop-shadow(0 0 12px var(--hit-color,#fff));}
+  100%{transform:none;filter:none;}
+}
+
+/* New photo physically lands in recent photos and on the map */
+.thumb.photo-land{
+  animation:photoLandThumb .9s cubic-bezier(.14,.9,.22,1.15) both!important;
+  z-index:4;
+}
+@keyframes photoLandThumb{
+  0%{opacity:0;transform:translateY(-90px) rotate(-9deg) scale(1.55);filter:blur(10px);box-shadow:0 35px 65px rgba(0,0,0,.38);}
+  58%{opacity:1;transform:translateY(5px) rotate(2deg) scale(.95);filter:none;}
+  78%{transform:translateY(-2px) rotate(-.5deg) scale(1.025);}
+  100%{opacity:1;transform:none;}
+}
+.photo-marker.just-landed{
+  animation:mapMarkerLand 1.2s cubic-bezier(.16,.84,.24,1) both;
+}
+@keyframes mapMarkerLand{
+  0%{transform:scale(.1);opacity:0;box-shadow:0 0 0 0 rgba(241,154,71,.85);}
+  40%{transform:scale(1.45);opacity:1;box-shadow:0 0 0 20px rgba(241,154,71,.15);}
+  100%{transform:scale(1);opacity:1;box-shadow:0 0 0 38px rgba(241,154,71,0);}
+}
+
+/* Streak card impact after the cutscene */
+.hero.streak-impact{
+  animation:heroStreakImpact .95s cubic-bezier(.14,.9,.22,1.08);
+}
+@keyframes heroStreakImpact{
+  0%{transform:none;box-shadow:var(--shadow-m);}
+  30%{transform:scale(1.025);box-shadow:0 18px 55px rgba(241,154,71,.38);}
+  100%{transform:none;box-shadow:var(--shadow-m);}
+}
+.hero.streak-impact .hero-flame-bg,
+.hero.streak-impact .hero-flame-outline{
+  animation:heroFlameImpact 1s cubic-bezier(.18,.88,.24,1);
+}
+@keyframes heroFlameImpact{
+  0%{filter:none;}
+  42%{transform:scale(1.25) rotate(5deg);filter:drop-shadow(0 0 30px rgba(241,154,71,.85));}
+  100%{filter:none;}
+}
+
+/* =========================================================
+   CHALLENGE COMPLETION MINI-CUTSCENE
+   ========================================================= */
+.challenge-reward-cutscene{
+  position:fixed;
+  inset:0;
+  z-index:1000006;
+  display:none;
+  place-items:center;
+  overflow:hidden;
+  background:rgba(4,8,12,.91);
+  backdrop-filter:blur(14px);
+  color:#fff;
+}
+.challenge-reward-cutscene.active{
+  display:grid;
+  animation:challengeSceneIn .2s ease-out both;
+}
+.challenge-reward-cutscene.closing{
+  animation:challengeSceneOut .25s ease-in both;
+}
+@keyframes challengeSceneIn{from{opacity:0;}to{opacity:1;}}
+@keyframes challengeSceneOut{to{opacity:0;transform:scale(1.04);filter:blur(8px);}}
+.cr-burst{
+  position:absolute;
+  width:min(760px,150vw);
+  aspect-ratio:1;
+  border-radius:50%;
+  opacity:0;
+  background:repeating-conic-gradient(from 0deg,rgba(241,154,71,.42) 0 4deg,transparent 4deg 13deg);
+  -webkit-mask-image:radial-gradient(circle,transparent 0 20%,#000 38%,transparent 72%);
+  mask-image:radial-gradient(circle,transparent 0 20%,#000 38%,transparent 72%);
+}
+.challenge-reward-cutscene.active .cr-burst{
+  animation:crBurst 2.1s ease-out both;
+}
+@keyframes crBurst{
+  0%{opacity:0;transform:scale(.15) rotate(-40deg);}
+  22%{opacity:.85;}
+  100%{opacity:0;transform:scale(1.75) rotate(30deg);}
+}
+.cr-content{
+  position:relative;
+  z-index:2;
+  width:min(88vw,420px);
+  text-align:center;
+}
+.cr-badge{
+  width:150px;height:150px;
+  margin:0 auto;
+  display:grid;
+  place-items:center;
+  opacity:0;
+  filter:drop-shadow(0 20px 40px rgba(0,0,0,.5));
+}
+.cr-badge img,.cr-badge .challenge-art{
+  width:150px;height:150px;object-fit:contain;
+}
+.challenge-reward-cutscene.active .cr-badge{
+  animation:crBadge .9s .08s cubic-bezier(.12,.92,.2,1.13) both;
+}
+@keyframes crBadge{
+  0%{opacity:0;transform:translateY(80px) scale(.1) rotate(-25deg);filter:blur(14px);}
+  55%{opacity:1;transform:translateY(-10px) scale(1.15) rotate(5deg);filter:none;}
+  78%{transform:translateY(3px) scale(.96) rotate(-1deg);}
+  100%{opacity:1;transform:none;}
+}
+.cr-kicker{
+  margin-top:6px;
+  color:#FFD37D;
+  font:900 10px/1 Inter,sans-serif;
+  letter-spacing:.28em;
+  opacity:0;
+}
+.challenge-reward-cutscene.active .cr-kicker{
+  animation:psRise .45s .48s ease-out both;
+}
+.cr-title{
+  margin-top:10px;
+  font-family:var(--font-display),Inter,sans-serif;
+  font-size:clamp(25px,8vw,38px);
+  font-weight:850;
+  line-height:1.04;
+  letter-spacing:-.035em;
+  text-wrap:balance;
+  opacity:0;
+}
+.challenge-reward-cutscene.active .cr-title{
+  animation:psTitle .6s .58s cubic-bezier(.18,.88,.24,1) both;
+}
+.cr-rewards{
+  display:flex;
+  justify-content:center;
+  gap:8px;
+  margin-top:15px;
+  opacity:0;
+}
+.challenge-reward-cutscene.active .cr-rewards{
+  animation:psRise .48s .78s ease-out both;
+}
+.cr-reward{
+  min-width:100px;
+  padding:10px 12px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.15);
+  background:rgba(255,255,255,.08);
+  font:850 11px/1 Inter,sans-serif;
+}
+.cr-reward.xp{color:#CBE7FF;}
+.cr-reward.coins{color:#FFE38B;}
+
+@media(max-height:670px){
+  .ps-content{transform:scale(.83);}
+}
+@media(orientation:landscape) and (max-height:540px){
+  .ps-content{
+    grid-template-columns:auto minmax(250px,420px);
+    grid-template-rows:auto auto auto auto;
+    column-gap:34px;
+  }
+  .ps-gps-label{grid-column:1;margin-bottom:8px;}
+  .ps-stage{grid-column:1;grid-row:2 / 5;width:170px;}
+  .ps-title{grid-column:2;grid-row:1;margin-top:0;align-self:end;}
+  .ps-streak-row{grid-column:2;grid-row:2;}
+  .ps-rewards{grid-column:2;grid-row:3;}
+  .ps-distance{grid-column:2;grid-row:4;align-self:start;}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .photo-success-cutscene.active *,
+  .challenge-reward-cutscene.active *,
+  .thumb.photo-land,
+  .photo-marker.just-landed,
+  .hero.streak-impact{
+    animation-duration:.01ms!important;
+    animation-delay:0ms!important;
+  }
+  .ps-ember-field,.ps-radar,.ps-grid,.cr-burst{display:none!important;}
+}
+
+
+/* =========================================================
+   MANUAL WEEKLY / MONTHLY REWARD CLAIMING
+   ========================================================= */
+#tab-challenges .prog-card.ready{
+  background:color-mix(in srgb,var(--card) 82%,var(--amber-soft));
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb,var(--amber) 38%,transparent),
+    0 8px 22px -10px rgba(224,138,60,.34);
+}
+#tab-challenges .prog-card.ready .prog-fill{
+  background:linear-gradient(90deg,var(--amber),var(--amber-2));
+}
+#tab-challenges .prog-bottom{
+  margin-left:66px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+#tab-challenges .prog-bottom .prog-count{
+  margin:0;
+  padding:0;
+  text-align:left;
+}
+.reward-claim-btn{
+  flex-shrink:0;
+  min-width:80px;
+  border:0;
+  border-radius:11px;
+  padding:9px 12px;
+  font:800 10.5px/1 Inter,sans-serif;
+  cursor:pointer;
+  transition:transform .16s var(--spring),opacity .2s,background .2s;
+}
+.reward-claim-btn:active{transform:scale(.94);}
+.reward-claim-btn.ready{
+  color:#17242B;
+  background:linear-gradient(145deg,#F8AE5D,var(--amber-2));
+  box-shadow:0 7px 16px rgba(224,138,60,.24);
+  animation:rewardClaimPulse 2.1s ease-in-out infinite;
+}
+.reward-claim-btn.waiting{
+  color:var(--ink-soft);
+  background:var(--paper-2);
+  cursor:not-allowed;
+}
+.reward-claim-btn.claimed{
+  color:var(--moss-dark);
+  background:var(--moss-soft);
+  cursor:default;
+}
+@keyframes rewardClaimPulse{
+  0%,100%{transform:none;box-shadow:0 7px 16px rgba(224,138,60,.20);}
+  50%{transform:translateY(-1px);box-shadow:0 9px 22px rgba(224,138,60,.36);}
+}
+@media(max-width:380px){
+  #tab-challenges .prog-bottom{margin-left:0;margin-top:8px;}
+  .reward-claim-btn{min-width:76px;}
+}
+
+
+/* =========================================================
+   MONTHLY EVENT — MIDNIGHT BLOOM
+   ========================================================= */
+.event-tab-button{
+  position:relative;
+  overflow:hidden;
+}
+.event-tab-button .event-tab-spark{
+  display:inline-block;
+  margin-right:3px;
+  color:#8EEBFF;
+  text-shadow:0 0 10px #57D6FF;
+}
+.event-tab-button.on{
+  background:linear-gradient(135deg,#6355D9,#2DB9D1)!important;
+  border-color:transparent!important;
+  color:#fff!important;
+  box-shadow:0 8px 24px rgba(79,92,210,.24)!important;
+}
+
+.event-hero{
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;
+  border-radius:26px;
+  padding:20px 17px 16px;
+  margin-bottom:22px;
+  color:#fff;
+  background:
+    radial-gradient(circle at 84% 10%,rgba(232,138,255,.34),transparent 24%),
+    radial-gradient(circle at 12% 88%,rgba(255,114,231,.24),transparent 30%),
+    radial-gradient(circle at 48% 44%,rgba(138,97,255,.3),transparent 34%),
+    linear-gradient(145deg,#0A0618 0%,#231042 44%,#4A1666 100%);
+  box-shadow:
+    0 24px 50px -30px rgba(33,67,150,.75),
+    inset 0 0 0 1px rgba(175,222,255,.15);
+}
+.event-hero::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  pointer-events:none;
+  background:linear-gradient(125deg,transparent 30%,rgba(255,255,255,.05) 50%,transparent 70%);
+  opacity:.5;
+}
+.event-aurora{
+  position:absolute;
+  z-index:-2;
+  width:115%;
+  height:115px;
+  left:-8%;
+  border-radius:50%;
+  filter:blur(28px);
+  opacity:.42;
+  transform:rotate(-10deg);
+}
+.event-aurora.a1{
+  top:14%;
+  background:linear-gradient(90deg,transparent,#6B65FF,#51F3DB,transparent);
+  animation:eventAuroraOne 7s ease-in-out infinite alternate;
+}
+.event-aurora.a2{
+  top:44%;
+  background:linear-gradient(90deg,transparent,#C556FF,#48CFFF,transparent);
+  animation:eventAuroraTwo 8.5s ease-in-out infinite alternate;
+}
+@keyframes eventAuroraOne{
+  from{transform:translateX(-7%) rotate(-10deg) scaleX(.9);}
+  to{transform:translateX(7%) rotate(-4deg) scaleX(1.12);}
+}
+@keyframes eventAuroraTwo{
+  from{transform:translateX(9%) rotate(8deg) scaleX(1.05);}
+  to{transform:translateX(-8%) rotate(3deg) scaleX(.9);}
+}
+.event-stars{
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  opacity:.48;
+  background-image:
+    radial-gradient(circle at 8% 16%,#fff 0 1px,transparent 1.7px),
+    radial-gradient(circle at 19% 72%,#fff 0 1px,transparent 1.8px),
+    radial-gradient(circle at 42% 14%,#CFFAFF 0 1px,transparent 1.8px),
+    radial-gradient(circle at 68% 74%,#fff 0 1px,transparent 1.7px),
+    radial-gradient(circle at 91% 32%,#fff 0 1.2px,transparent 2px),
+    radial-gradient(circle at 78% 12%,#B7AFFF 0 1px,transparent 1.8px);
+}
+.event-topline{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:12px;
+}
+.event-label{
+  font:900 9px/1 Inter,sans-serif;
+  letter-spacing:.23em;
+  color:#99ECFF;
+  margin-bottom:7px;
+}
+.event-topline h2{
+  margin:0;
+  font:900 clamp(24px,7vw,34px)/.95 Inter,sans-serif;
+  letter-spacing:-.045em;
+  text-shadow:0 0 26px rgba(116,223,255,.28);
+}
+.event-days{
+  flex:0 0 auto;
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:999px;
+  padding:7px 10px;
+  background:rgba(6,11,28,.38);
+  backdrop-filter:blur(12px);
+  color:#DFF9FF;
+  font:800 9.5px/1 Inter,sans-serif;
+}
+.event-intro{
+  max-width:510px;
+  margin:13px 0 18px;
+  color:rgba(255,255,255,.69);
+  font:650 11.5px/1.5 Inter,sans-serif;
+}
+.event-level-line{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:9px;
+  color:rgba(255,255,255,.64);
+  font:750 10px/1 Inter,sans-serif;
+}
+.event-level-line strong{
+  color:#C9F8FF;
+  font-weight:850;
+  text-align:right;
+}
+.event-progress-shell{
+  position:relative;
+  padding:38px 0 42px;
+  margin-top:2px;
+}
+.event-progress-track{
+  position:relative;
+  height:14px;
+  overflow:visible;
+  border-radius:999px;
+  background:rgba(5,2,18,.58);
+  border:1px solid rgba(255,255,255,.13);
+  box-shadow:inset 0 2px 7px rgba(0,0,0,.42);
+}
+.event-progress-fill{
+  position:absolute;
+  inset:0 auto 0 0;
+  width:0%;
+  border-radius:inherit;
+  background:linear-gradient(90deg,#8B64FF,#C76BFF 52%,#FF89D9);
+  box-shadow:0 0 22px rgba(213,108,255,.55);
+  transition:width .75s cubic-bezier(.16,.84,.24,1);
+}
+.event-progress-glow{
+  position:absolute;
+  top:50%;
+  left:0%;
+  width:22px;
+  height:22px;
+  border-radius:50%;
+  transform:translate(-50%,-50%);
+  background:#FFE8FF;
+  box-shadow:0 0 12px #fff,0 0 24px rgba(231,122,255,.85),0 0 42px rgba(125,95,255,.95);
+  transition:left .75s cubic-bezier(.16,.84,.24,1);
+}
+.event-progress-markers{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+}
+.event-progress-marker{
+  position:absolute;
+  top:0;
+  transform:translateX(-50%);
+  width:86px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:7px;
+  pointer-events:auto;
+}
+.event-progress-node{
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  border:1px solid rgba(255,255,255,.14);
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,0)),
+    rgba(18,11,41,.96);
+  color:rgba(255,255,255,.58);
+  display:grid;
+  place-items:center;
+  box-shadow:
+    0 10px 22px rgba(0,0,0,.24),
+    inset 0 0 0 1px rgba(255,255,255,.02);
+  transition:transform .2s var(--spring), box-shadow .2s ease, background .2s ease, color .2s ease, border-color .2s ease;
+}
+.event-progress-node svg{
+  width:18px;
+  height:18px;
+}
+.event-progress-node.locked{
+  opacity:.82;
+}
+.event-progress-node.unlocked{
+  color:#fff;
+  border-color:rgba(242,184,255,.32);
+  background:
+    radial-gradient(circle at 32% 28%,rgba(255,255,255,.18),transparent 30%),
+    linear-gradient(145deg,#5A3CFF,#B95BFF 58%,#FF84DD);
+  box-shadow:
+    0 12px 28px rgba(157,78,255,.42),
+    0 0 22px rgba(229,126,255,.34);
+}
+.event-progress-node.active{
+  color:#fff;
+  border-color:rgba(255,255,255,.38);
+  background:
+    radial-gradient(circle at 32% 28%,rgba(255,255,255,.25),transparent 30%),
+    linear-gradient(145deg,#673EFF,#E06BFF 60%,#FF93DE);
+  box-shadow:
+    0 14px 32px rgba(171,88,255,.48),
+    0 0 30px rgba(241,143,255,.48);
+  animation:eventRewardNodePulse 2.2s ease-in-out infinite;
+}
+.event-progress-node:active{
+  transform:scale(.95);
+}
+@keyframes eventRewardNodePulse{
+  50%{transform:translateY(-2px) scale(1.06);filter:brightness(1.08);}
+}
+.event-progress-xp{
+  color:rgba(255,255,255,.62);
+  font:850 8px/1 Inter,sans-serif;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  text-shadow:0 0 12px rgba(214,114,255,.16);
+}
+.event-progress-name{
+  color:rgba(255,255,255,.38);
+  font:800 7px/1 Inter,sans-serif;
+  letter-spacing:.11em;
+  text-transform:uppercase;
+}
+.event-progress-marker.reached .event-progress-xp,
+.event-progress-marker.reached .event-progress-name{
+  color:#F7DFFF;
+}
+.event-progress-marker.ready .event-progress-node{
+  animation:eventRewardNodePulse 2.2s ease-in-out infinite;
+}
+.event-test-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-top:5px;
+  padding-top:12px;
+  border-top:1px solid rgba(255,255,255,.1);
+  color:rgba(255,255,255,.4);
+  font:750 9px/1 Inter,sans-serif;
+}
+.event-test-row button{
+  border:1px solid rgba(125,226,255,.25);
+  border-radius:999px;
+  background:rgba(48,157,197,.16);
+  color:#CFF9FF;
+  padding:7px 10px;
+  font:850 9px/1 Inter,sans-serif;
+}
+
+.event-section-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-end;
+  gap:12px;
+  margin-bottom:11px;
+}
+.event-section-head.daily{
+  margin-top:22px;
+}
+.event-section-kicker{
+  display:block;
+  margin-bottom:4px;
+  color:#616E9B;
+  font:900 8.5px/1 Inter,sans-serif;
+  letter-spacing:.18em;
+}
+.event-section-head h3{
+  margin:0;
+  font:900 16px/1.1 Inter,sans-serif;
+  letter-spacing:-.02em;
+}
+.event-section-head strong{
+  color:var(--ink-soft);
+  font:800 10px/1 Inter,sans-serif;
+}
+
+.event-reward-track{
+  display:flex;
+  gap:12px;
+  overflow-x:auto;
+  padding:2px 1px 12px;
+  scroll-snap-type:x mandatory;
+  scrollbar-width:none;
+}
+.event-reward-track::-webkit-scrollbar{display:none;}
+.event-reward-card{
+  position:relative;
+  flex:0 0 178px;
+  min-height:242px;
+  scroll-snap-align:start;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  border-radius:22px;
+  padding:13px;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,0)),
+    var(--card);
+  box-shadow:var(--shadow);
+  border:1px solid transparent;
+}
+.event-reward-card.ready{
+  border-color:rgba(72,204,235,.35);
+  box-shadow:
+    0 15px 34px -25px rgba(70,191,241,.55),
+    inset 0 0 0 1px rgba(117,226,255,.1);
+}
+.event-reward-card.claimed{
+  border-color:rgba(90,190,146,.26);
+}
+.event-reward-card.locked{
+  opacity:.67;
+}
+.event-reward-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:8px;
+  margin-bottom:9px;
+}
+.event-reward-step{
+  color:var(--ink-soft);
+  font:900 8px/1 Inter,sans-serif;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+}
+.event-reward-xp{
+  border-radius:999px;
+  padding:5px 7px;
+  background:var(--paper-2);
+  color:#5577A1;
+  font:900 8.5px/1 Inter,sans-serif;
+}
+.event-reward-preview{
+  min-height:82px;
+  display:grid;
+  place-items:center;
+  margin-bottom:9px;
+  border-radius:17px;
+  background:
+    radial-gradient(circle at 75% 20%,rgba(82,214,255,.2),transparent 35%),
+    linear-gradient(145deg,#121735,#101F2E);
+  box-shadow:inset 0 0 0 1px rgba(165,226,255,.09);
+}
+.event-reward-preview .avatar{
+  width:56px;
+  height:56px;
+  border-radius:17px;
+  font-size:13px;
+}
+.event-reward-preview.text-preview span{
+  font-size:20px;
+  font-weight:900;
+}
+.event-reward-preview.font-preview span{
+  font-size:28px;
+}
+.event-reward-preview.theme-preview{
+  padding:8px;
+}
+.event-theme-mini{
+  width:100%;
+  height:66px;
+  border-radius:15px;
+  position:relative;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 84% 18%,rgba(214,136,255,.58),transparent 24%),
+    radial-gradient(circle at 22% 78%,rgba(255,108,219,.42),transparent 29%),
+    radial-gradient(circle at 56% 42%,rgba(138,97,255,.55),transparent 34%),
+    radial-gradient(circle at 45% 68%,rgba(112,59,255,.28),transparent 38%),
+    linear-gradient(145deg,#09051A 0%,#1D0E42 35%,#3B1578 68%,#190C36 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(241,217,255,.12),
+    inset 0 -18px 28px rgba(0,0,0,.22),
+    0 0 20px rgba(181,104,255,.18);
+}
+.event-theme-mini::before{
+  content:"MIDNIGHT BLOOM";
+  position:absolute;
+  left:9px;
+  top:9px;
+  color:#fff;
+  font:900 8px/1 Inter,sans-serif;
+  letter-spacing:.16em;
+  text-shadow:0 0 16px rgba(205,131,255,.48);
+}
+.event-theme-mini::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background-image:
+    radial-gradient(circle at 11% 18%,rgba(255,255,255,.95) 0 1px,transparent 1.7px),
+    radial-gradient(circle at 24% 72%,rgba(255,255,255,.85) 0 1px,transparent 1.8px),
+    radial-gradient(circle at 48% 28%,rgba(245,225,255,.95) 0 1.1px,transparent 1.9px),
+    radial-gradient(circle at 66% 68%,rgba(255,255,255,.9) 0 1px,transparent 1.7px),
+    radial-gradient(circle at 83% 31%,rgba(255,255,255,.95) 0 1.1px,transparent 1.9px),
+    radial-gradient(circle at 58% 16%,rgba(255,255,255,.88) 0 1px,transparent 1.8px);
+  opacity:.9;
+}
+.event-reward-name{
+  margin-bottom:5px;
+  font:900 14px/1.08 Inter,sans-serif;
+}
+.event-reward-type{
+  color:var(--ink-soft);
+  font:750 10px/1.3 Inter,sans-serif;
+}
+.event-reward-btn{
+  margin-top:auto;
+  border:0;
+  border-radius:13px;
+  padding:10px;
+  font:900 10px/1 Inter,sans-serif;
+}
+.event-reward-btn.locked{
+  background:var(--paper-2);
+  color:var(--ink-soft);
+}
+.event-reward-btn.claim{
+  color:#07191F;
+  background:linear-gradient(135deg,#6DE8FF,#70F1C8);
+  box-shadow:0 8px 18px rgba(75,210,225,.2);
+  animation:eventClaimPulse 2s ease-in-out infinite;
+}
+.event-reward-btn.use{
+  background:linear-gradient(135deg,#705DFF,#42C4D9);
+  color:#fff;
+}
+.event-reward-btn.active{
+  background:var(--moss-soft);
+  color:var(--moss-dark);
+}
+@keyframes eventClaimPulse{
+  50%{transform:translateY(-1px);box-shadow:0 11px 23px rgba(75,210,225,.35);}
+}
+
+.event-daily-list{
+  display:grid;
+  gap:10px;
+}
+.event-daily-card{
+  display:grid;
+  grid-template-columns:54px minmax(0,1fr) auto;
+  align-items:center;
+  gap:11px;
+  border-radius:20px;
+  padding:11px;
+  background:var(--card);
+  box-shadow:var(--shadow);
+  border:1px solid transparent;
+}
+.event-daily-card.ready{
+  border-color:rgba(79,206,231,.28);
+  background:
+    linear-gradient(90deg,rgba(88,224,255,.08),transparent 65%),
+    var(--card);
+}
+.event-daily-card.claimed{
+  opacity:.62;
+}
+.event-daily-icon{
+  width:54px;
+  height:54px;
+  border-radius:16px;
+  display:grid;
+  place-items:center;
+  background:
+    radial-gradient(circle at 70% 20%,rgba(123,244,255,.28),transparent 35%),
+    linear-gradient(145deg,#1B2154,#0B3C48);
+  color:#BFFAFF;
+  box-shadow:inset 0 0 0 1px rgba(164,235,255,.13);
+}
+.event-daily-icon .icn{
+  width:26px!important;
+  height:26px!important;
+}
+.event-daily-title{
+  margin-bottom:5px;
+  font:900 12.5px/1.18 Inter,sans-serif;
+}
+.event-daily-progress{
+  color:var(--ink-soft);
+  font:750 9.5px/1 Inter,sans-serif;
+}
+.event-daily-progressbar{
+  height:5px;
+  margin-top:7px;
+  overflow:hidden;
+  border-radius:999px;
+  background:var(--paper-2);
+}
+.event-daily-progressbar span{
+  display:block;
+  height:100%;
+  border-radius:inherit;
+  background:linear-gradient(90deg,#7162FF,#54DDF2);
+}
+.event-daily-action{
+  min-width:75px;
+  border:0;
+  border-radius:12px;
+  padding:9px 9px;
+  font:900 9px/1.05 Inter,sans-serif;
+}
+.event-daily-action.waiting{
+  background:var(--paper-2);
+  color:var(--ink-soft);
+}
+.event-daily-action.ready{
+  background:linear-gradient(135deg,#6658DB,#31BCD1);
+  color:#fff;
+}
+.event-daily-action.claimed{
+  background:var(--moss-soft);
+  color:var(--moss-dark);
+}
+.event-info-card{
+  display:flex;
+  gap:11px;
+  margin-top:15px;
+  padding:13px;
+  border-radius:19px;
+  background:var(--paper-2);
+}
+.event-info-icon{
+  width:38px;
+  height:38px;
+  flex:0 0 38px;
+  display:grid;
+  place-items:center;
+  border-radius:13px;
+  color:#2BBBD3;
+  background:rgba(69,201,225,.12);
+  font-size:20px;
+}
+.event-info-card strong{
+  display:block;
+  margin-bottom:4px;
+  font:900 11.5px/1.15 Inter,sans-serif;
+}
+.event-info-card p{
+  margin:0;
+  color:var(--ink-soft);
+  font:700 10px/1.45 Inter,sans-serif;
+}
+
+/* Event-XP collecting feedback */
+.event-xp-fly{
+  position:fixed;
+  z-index:1000004;
+  pointer-events:none;
+  padding:8px 11px;
+  border-radius:999px;
+  color:#E5FFFF;
+  background:linear-gradient(135deg,#5B4DD0,#219FB8);
+  border:1px solid rgba(255,255,255,.2);
+  box-shadow:0 13px 30px rgba(20,53,110,.35),0 0 24px rgba(72,215,244,.4);
+  font:900 11px/1 Inter,sans-serif;
+}
+.event-progress-shell.event-hit{
+  animation:eventProgressHit .72s cubic-bezier(.18,.88,.24,1);
+}
+@keyframes eventProgressHit{
+  35%{transform:scale(1.025);filter:drop-shadow(0 0 13px rgba(76,216,244,.65));}
+  100%{transform:none;filter:none;}
+}
+
+/* Event-exclusive cosmetics */
+.name-event-aurora{
+  background:linear-gradient(90deg,#796CFF,#5DE4FF 48%,#6FF0B8);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent!important;
+  text-shadow:none!important;
+}
+.frame-event-moon{
+  position:relative;
+  box-shadow:
+    0 0 0 3px #6C64F8,
+    0 0 0 6px #73E6F4,
+    0 0 20px rgba(100,216,255,.65)!important;
+}
+.frame-event-moon::after{
+  content:"✦";
+  position:absolute;
+  right:-8px;
+  top:-8px;
+  width:21px;
+  height:21px;
+  display:grid;
+  place-items:center;
+  border-radius:50%;
+  color:#E9FFFF;
+  background:linear-gradient(135deg,#7765FF,#4BD9E6);
+  box-shadow:0 0 15px rgba(86,219,246,.7);
+  font-size:11px;
+  animation:eventRingSpark 2.6s ease-in-out infinite;
+}
+@keyframes eventRingSpark{
+  50%{transform:rotate(20deg) scale(1.14);filter:brightness(1.25);}
+}
+.font-event-lunar{
+  font-family:"Trebuchet MS","Avenir Next",Avenir,sans-serif!important;
+  letter-spacing:.055em!important;
+  font-style:italic;
+}
+[data-font="event_lunar"] body,
+[data-font="event_lunar"] button,
+[data-font="event_lunar"] input,
+[data-font="event_lunar"] select{
+  font-family:"Trebuchet MS","Avenir Next",Avenir,sans-serif!important;
+  letter-spacing:.018em;
+}
+.sw-eventaurora{
+  color:#fff!important;
+  background:linear-gradient(135deg,#685BDF,#38C4D9 56%,#49D99C)!important;
+}
+[data-style="event_midnight"]{
+  --paper:#070313;
+  --paper-2:#150C28;
+  --panel:#110920;
+  --card:#180E2D;
+  --ink:#F9F5FF;
+  --ink-soft:#B39CCB;
+  --line:#392152;
+  --moss:#89F1E1;
+  --moss-dark:#143538;
+  --moss-soft:#18353F;
+  --amber:#C66CFF;
+  --amber-2:#7B61FF;
+  --amber-soft:#2C1747;
+  --brick:#F37BFF;
+  --brick-soft:#4A1B4F;
+  --sky:#D58FFF;
+  --sky-soft:#3A2155;
+  --accent:#D06DFF;
+  --accent-2:#7C63FF;
+  --shadow:0 18px 36px rgba(0,0,0,.42);
+  --shadow-m:0 24px 58px rgba(0,0,0,.55);
+}
+[data-style="event_midnight"] body{
+  background:
+    radial-gradient(circle at 82% -10%,rgba(226,131,255,.2),transparent 24%),
+    radial-gradient(circle at 18% 82%,rgba(255,102,232,.16),transparent 28%),
+    radial-gradient(circle at 52% 38%,rgba(141,96,255,.18),transparent 32%),
+    radial-gradient(circle at 38% 68%,rgba(90,49,198,.14),transparent 36%),
+    linear-gradient(180deg,#090315 0%,#120625 36%,#1D093A 72%,#0C0518 100%);
+}
+[data-style="event_midnight"] .app{
+  background:
+    radial-gradient(circle at 92% 2%,rgba(234,140,255,.1),transparent 21%),
+    radial-gradient(circle at 8% 72%,rgba(255,104,223,.08),transparent 26%),
+    radial-gradient(circle at 54% 46%,rgba(125,92,255,.08),transparent 28%);
+}
+[data-style="event_midnight"] .screen{
+  position:relative;
+  background:
+    radial-gradient(circle at 86% 8%,rgba(236,131,255,.06),transparent 24%),
+    radial-gradient(circle at 13% 86%,rgba(255,92,225,.05),transparent 25%),
+    radial-gradient(circle at 52% 38%,rgba(120,79,255,.06),transparent 28%),
+    linear-gradient(180deg,rgba(255,255,255,.012),rgba(255,255,255,0));
+}
+[data-style="event_midnight"] .screen::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:0;
+  opacity:.62;
+  background-image:
+    radial-gradient(circle at 8% 14%,rgba(255,255,255,.92) 0 1px,transparent 1.8px),
+    radial-gradient(circle at 19% 62%,rgba(255,255,255,.84) 0 1px,transparent 1.7px),
+    radial-gradient(circle at 31% 26%,rgba(255,240,255,.94) 0 1px,transparent 1.9px),
+    radial-gradient(circle at 43% 71%,rgba(255,255,255,.82) 0 1px,transparent 1.8px),
+    radial-gradient(circle at 58% 18%,rgba(255,255,255,.95) 0 1px,transparent 1.8px),
+    radial-gradient(circle at 71% 57%,rgba(246,223,255,.9) 0 1px,transparent 1.8px),
+    radial-gradient(circle at 84% 24%,rgba(255,255,255,.95) 0 1.1px,transparent 2px),
+    radial-gradient(circle at 78% 82%,rgba(249,231,255,.92) 0 1px,transparent 1.9px),
+    radial-gradient(circle at 93% 46%,rgba(255,255,255,.9) 0 1px,transparent 1.8px);
+}
+[data-style="event_midnight"] .hero{
+  background:
+    radial-gradient(circle at 82% 12%,rgba(228,133,255,.28),transparent 26%),
+    radial-gradient(circle at 14% 82%,rgba(255,108,232,.22),transparent 28%),
+    radial-gradient(circle at 50% 44%,rgba(133,95,255,.28),transparent 34%),
+    linear-gradient(145deg,#120722,#2B0F4F 56%,#5C1D7B 100%);
+  box-shadow:
+    0 0 0 1px rgba(233,161,255,.14),
+    0 24px 58px rgba(0,0,0,.45);
+}
+[data-style="event_midnight"] .card,
+[data-style="event_midnight"] .capture,
+[data-style="event_midnight"] .ch-card,
+[data-style="event_midnight"] .prog-card,
+[data-style="event_midnight"] .shop-item,
+[data-style="event_midnight"] .friend,
+[data-style="event_midnight"] .map-card{
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,0)),
+    var(--card);
+  border:1px solid rgba(224,142,255,.12);
+  box-shadow:
+    0 14px 32px rgba(0,0,0,.28),
+    inset 0 0 0 1px rgba(255,255,255,.012);
+}
+[data-style="event_midnight"] .card::after,
+[data-style="event_midnight"] .capture::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  border-radius:inherit;
+  background:
+    radial-gradient(circle at 88% 0%,rgba(231,140,255,.1),transparent 21%),
+    radial-gradient(circle at 0% 100%,rgba(124,98,255,.08),transparent 23%);
+}
+[data-style="event_midnight"] .tabbar{
+  background:
+    linear-gradient(180deg,rgba(15,8,27,.95),rgba(12,6,22,.97));
+  border-top-color:rgba(223,140,255,.1);
+}
+[data-style="event_midnight"] .tabbtn-fab .fab-circle{
+  background:linear-gradient(145deg,#C96EFF,#825FFF 56%,#FF8EEA);
+  box-shadow:
+    0 12px 28px rgba(169,94,255,.38),
+    0 0 22px rgba(226,132,255,.26);
+}
+[data-style="event_midnight"] .pill,
+[data-style="event_midnight"] .date-pill,
+[data-style="event_midnight"] .profile-stat,
+[data-style="event_midnight"] .counter{
+  background:rgba(255,255,255,.045);
+  border-color:rgba(223,146,255,.1);
+}
+.sw-eventmidnight{
+  color:#fff!important;
+  background:
+    radial-gradient(circle at 84% 18%,rgba(214,136,255,.58),transparent 24%),
+    radial-gradient(circle at 22% 78%,rgba(255,108,219,.42),transparent 29%),
+    radial-gradient(circle at 56% 42%,rgba(138,97,255,.55),transparent 34%),
+    radial-gradient(circle at 45% 68%,rgba(112,59,255,.28),transparent 38%),
+    linear-gradient(145deg,#09051A 0%,#1D0E42 35%,#3B1578 68%,#190C36 100%)!important;
+}
+@media(max-width:380px){
+  .event-daily-card{grid-template-columns:48px minmax(0,1fr);gap:9px;}
+  .event-daily-icon{width:48px;height:48px;}
+  .event-daily-action{grid-column:1 / -1;width:100%;}
+}
+@media(prefers-reduced-motion:reduce){
+  .event-aurora,
+  .frame-event-moon::after,
+  .event-reward-btn.claim{
+    animation:none!important;
+  }
+}
+
+
+/* =========================================================
+   HOME EVENT SHORTCUT — PROMINENT MONTHLY EVENT ENTRY
+   ========================================================= */
+.home-event-card{
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;
+  min-height:272px;
+  margin:18px 0 22px;
+  padding:17px;
+  border-radius:27px;
+  color:#fff;
+  cursor:pointer;
+  background:
+    radial-gradient(circle at 85% 13%,rgba(231,139,255,.38),transparent 25%),
+    radial-gradient(circle at 13% 86%,rgba(255,100,222,.3),transparent 30%),
+    radial-gradient(circle at 53% 43%,rgba(139,92,255,.36),transparent 37%),
+    linear-gradient(145deg,#090317 0%,#221043 42%,#4B1870 72%,#1A0A32 100%);
+  border:1px solid rgba(238,187,255,.17);
+  box-shadow:
+    0 25px 52px -29px rgba(119,47,193,.76),
+    0 12px 30px -22px rgba(255,104,219,.55),
+    inset 0 1px 0 rgba(255,255,255,.1);
+  transform:translateZ(0);
+  transition:
+    transform .22s var(--spring),
+    box-shadow .22s ease,
+    filter .22s ease;
+}
+.home-event-card:active{
+  transform:scale(.985);
+}
+.home-event-card:focus-visible{
+  outline:3px solid rgba(224,145,255,.55);
+  outline-offset:3px;
+}
+.home-event-card::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:-2;
+  pointer-events:none;
+  background:
+    linear-gradient(120deg,transparent 18%,rgba(255,255,255,.045) 42%,transparent 65%);
+}
+.home-event-card::after{
+  content:"";
+  position:absolute;
+  inset:-30%;
+  z-index:-4;
+  pointer-events:none;
+  opacity:.28;
+  background:
+    conic-gradient(from 210deg,
+      transparent 0 18%,
+      rgba(205,106,255,.32) 26%,
+      rgba(255,106,219,.2) 34%,
+      transparent 46% 62%,
+      rgba(120,93,255,.22) 72%,
+      transparent 83%);
+  filter:blur(32px);
+  animation:homeEventGalaxySpin 18s linear infinite;
+}
+@keyframes homeEventGalaxySpin{
+  to{transform:rotate(360deg) scale(1.06);}
+}
+
+.home-event-nebula{
+  position:absolute;
+  z-index:-3;
+  width:120%;
+  height:115px;
+  left:-10%;
+  border-radius:50%;
+  filter:blur(28px);
+  opacity:.58;
+  pointer-events:none;
+}
+.home-event-nebula.nebula-one{
+  top:19%;
+  background:linear-gradient(90deg,transparent,#8E54FF 24%,#EF6DFF 55%,#FF75C8 76%,transparent);
+  transform:rotate(-12deg);
+  animation:homeNebulaOne 8s ease-in-out infinite alternate;
+}
+.home-event-nebula.nebula-two{
+  top:53%;
+  background:linear-gradient(90deg,transparent,#5B3DD2 15%,#B64CFF 51%,#FF65D2 82%,transparent);
+  transform:rotate(8deg);
+  animation:homeNebulaTwo 10s ease-in-out infinite alternate;
+}
+@keyframes homeNebulaOne{
+  from{transform:translateX(-8%) rotate(-12deg) scaleX(.92);}
+  to{transform:translateX(8%) rotate(-5deg) scaleX(1.12);}
+}
+@keyframes homeNebulaTwo{
+  from{transform:translateX(9%) rotate(8deg) scaleX(1.08);}
+  to{transform:translateX(-9%) rotate(3deg) scaleX(.9);}
+}
+
+.home-event-stars{
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  pointer-events:none;
+  opacity:.82;
+  background-image:
+    radial-gradient(circle at 7% 17%,rgba(255,255,255,.95) 0 1px,transparent 1.8px),
+    radial-gradient(circle at 18% 68%,rgba(255,255,255,.8) 0 1px,transparent 1.7px),
+    radial-gradient(circle at 31% 28%,rgba(250,229,255,.95) 0 1.1px,transparent 1.9px),
+    radial-gradient(circle at 46% 76%,rgba(255,255,255,.82) 0 1px,transparent 1.8px),
+    radial-gradient(circle at 58% 16%,rgba(255,255,255,.95) 0 1px,transparent 1.8px),
+    radial-gradient(circle at 72% 58%,rgba(249,226,255,.92) 0 1px,transparent 1.8px),
+    radial-gradient(circle at 86% 26%,rgba(255,255,255,.98) 0 1.2px,transparent 2px),
+    radial-gradient(circle at 79% 84%,rgba(255,255,255,.9) 0 1px,transparent 1.8px),
+    radial-gradient(circle at 93% 48%,rgba(255,255,255,.9) 0 1px,transparent 1.8px);
+}
+.home-event-orbit{
+  position:absolute;
+  right:-68px;
+  top:42px;
+  z-index:-1;
+  width:190px;
+  height:190px;
+  border-radius:50%;
+  border:1px solid rgba(244,211,255,.12);
+  box-shadow:
+    0 0 0 22px rgba(219,136,255,.035),
+    0 0 0 50px rgba(154,91,255,.025);
+  transform:rotate(-18deg);
+}
+
+.home-event-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:15px;
+}
+.home-event-live{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  color:#F5DFFF;
+  font:900 9px/1 Inter,sans-serif;
+  letter-spacing:.2em;
+}
+.home-event-live-dot{
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:#FF88DF;
+  box-shadow:0 0 0 4px rgba(255,136,223,.12),0 0 15px rgba(255,116,220,.85);
+  animation:homeEventLivePulse 1.8s ease-in-out infinite;
+}
+@keyframes homeEventLivePulse{
+  50%{transform:scale(1.25);box-shadow:0 0 0 7px rgba(255,136,223,0),0 0 18px rgba(255,116,220,.95);}
+}
+.home-event-days{
+  flex:0 0 auto;
+  padding:7px 10px;
+  border-radius:999px;
+  color:#F6E9FF;
+  background:rgba(12,4,25,.35);
+  border:1px solid rgba(255,255,255,.13);
+  backdrop-filter:blur(12px);
+  font:850 9.5px/1 Inter,sans-serif;
+}
+
+.home-event-main{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+}
+.home-event-copy{
+  min-width:0;
+  max-width:70%;
+}
+.home-event-title{
+  margin-bottom:7px;
+  font:950 clamp(25px,7vw,34px)/.92 Inter,sans-serif;
+  letter-spacing:-.055em;
+  text-shadow:
+    0 0 18px rgba(222,138,255,.34),
+    0 7px 24px rgba(0,0,0,.3);
+}
+.home-event-sub{
+  color:rgba(255,255,255,.69);
+  font:680 11px/1.45 Inter,sans-serif;
+  max-width:280px;
+}
+
+.home-event-reward-orb{
+  position:relative;
+  flex:0 0 76px;
+  width:76px;
+  height:76px;
+  display:grid;
+  place-items:center;
+}
+.home-event-orb-core{
+  position:relative;
+  z-index:2;
+  width:54px;
+  height:54px;
+  display:grid;
+  place-items:center;
+  border-radius:50%;
+  color:#fff;
+  background:
+    radial-gradient(circle at 35% 28%,#FFD7FF 0 5%,#D988FF 25%,#8A5EFF 62%,#49277D 100%);
+  box-shadow:
+    inset -9px -9px 18px rgba(38,9,76,.34),
+    0 0 17px rgba(225,128,255,.75),
+    0 0 38px rgba(146,84,255,.58);
+  font-size:23px;
+  animation:homeEventOrbFloat 3.2s ease-in-out infinite;
+}
+.home-event-orb-ring{
+  position:absolute;
+  inset:7px;
+  border-radius:50%;
+  border:1px solid rgba(244,210,255,.34);
+}
+.home-event-orb-ring.ring-a{
+  transform:rotateX(65deg) rotateZ(18deg);
+  animation:homeEventRingA 5s linear infinite;
+}
+.home-event-orb-ring.ring-b{
+  inset:2px;
+  border-color:rgba(195,145,255,.18);
+  transform:rotateY(68deg) rotateZ(-21deg);
+  animation:homeEventRingB 6.5s linear infinite reverse;
+}
+@keyframes homeEventOrbFloat{
+  50%{transform:translateY(-5px) scale(1.04);filter:brightness(1.12);}
+}
+@keyframes homeEventRingA{
+  to{transform:rotateX(65deg) rotateZ(378deg);}
+}
+@keyframes homeEventRingB{
+  to{transform:rotateY(68deg) rotateZ(339deg);}
+}
+
+.home-event-next{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin:17px 0 9px;
+  color:rgba(255,255,255,.53);
+  font:760 9.5px/1 Inter,sans-serif;
+}
+.home-event-next strong{
+  min-width:0;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  color:#F5DFFF;
+  font-weight:900;
+}
+
+.home-event-progress-track{
+  position:relative;
+  height:11px;
+  border-radius:999px;
+  background:rgba(9,3,20,.48);
+  border:1px solid rgba(255,255,255,.12);
+  box-shadow:inset 0 2px 7px rgba(0,0,0,.35);
+}
+.home-event-progress-fill{
+  position:absolute;
+  inset:0 auto 0 0;
+  width:0%;
+  border-radius:inherit;
+  background:linear-gradient(90deg,#805CFF,#D46EFF 54%,#FF8CD8);
+  box-shadow:0 0 20px rgba(212,105,255,.55);
+  transition:width .75s cubic-bezier(.16,.84,.24,1);
+}
+.home-event-progress-star{
+  position:absolute;
+  left:0%;
+  top:50%;
+  width:24px;
+  height:24px;
+  display:grid;
+  place-items:center;
+  transform:translate(-50%,-50%);
+  color:#fff;
+  text-shadow:0 0 7px #fff,0 0 16px #E175FF;
+  font-size:15px;
+  transition:left .75s cubic-bezier(.16,.84,.24,1);
+}
+.home-event-progress-meta{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-top:8px;
+  color:rgba(255,255,255,.45);
+  font:760 9px/1 Inter,sans-serif;
+}
+.home-event-progress-meta strong{
+  color:#F2DEFF;
+  font-weight:900;
+}
+
+.home-event-open{
+  width:100%;
+  margin-top:14px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  border:1px solid rgba(255,255,255,.16);
+  border-radius:15px;
+  padding:11px 13px;
+  color:#fff;
+  background:linear-gradient(135deg,rgba(190,91,255,.9),rgba(119,81,235,.92));
+  box-shadow:
+    0 10px 24px rgba(82,31,145,.32),
+    inset 0 1px rgba(255,255,255,.15);
+  font:900 11px/1 Inter,sans-serif;
+  cursor:pointer;
+}
+.home-event-open svg{
+  width:15px;
+  height:15px;
+  transition:transform .18s ease;
+}
+.home-event-card:hover .home-event-open svg{
+  transform:translateX(3px);
+}
+
+@media(max-width:370px){
+  .home-event-card{
+    min-height:260px;
+    padding:15px;
+  }
+  .home-event-reward-orb{
+    flex-basis:66px;
+    width:66px;
+    height:66px;
+  }
+  .home-event-orb-core{
+    width:48px;
+    height:48px;
+  }
+  .home-event-copy{max-width:74%;}
+}
+@media(prefers-reduced-motion:reduce){
+  .home-event-card::after,
+  .home-event-nebula,
+  .home-event-live-dot,
+  .home-event-orb-core,
+  .home-event-orb-ring{
+    animation:none!important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -3024,6 +5256,59 @@ body.purchase-cutscene-open{
         <input type="file" accept="image/*" capture="environment" id="cameraInput" style="display:none;">
       </div>
 
+
+      <section class="home-event-card" id="homeEventCard" role="button" tabindex="0" aria-label="Åbn Midnight Bloom-eventet">
+        <div class="home-event-nebula nebula-one"></div>
+        <div class="home-event-nebula nebula-two"></div>
+        <div class="home-event-stars"></div>
+        <div class="home-event-orbit"></div>
+
+        <div class="home-event-top">
+          <div class="home-event-live">
+            <span class="home-event-live-dot"></span>
+            MÅNEDENS EVENT
+          </div>
+          <div class="home-event-days" id="homeEventDays">— dage</div>
+        </div>
+
+        <div class="home-event-main">
+          <div class="home-event-copy">
+            <div class="home-event-title">MIDNIGHT BLOOM</div>
+            <div class="home-event-sub">Saml Event-XP og lås et komplet nebula-look op.</div>
+          </div>
+
+          <div class="home-event-reward-orb" id="homeEventRewardOrb">
+            <div class="home-event-orb-core">✦</div>
+            <div class="home-event-orb-ring ring-a"></div>
+            <div class="home-event-orb-ring ring-b"></div>
+          </div>
+        </div>
+
+        <div class="home-event-next">
+          <span>Næste reward</span>
+          <strong id="homeEventNextReward">Lunar-font</strong>
+        </div>
+
+        <div class="home-event-progress">
+          <div class="home-event-progress-track">
+            <div class="home-event-progress-fill" id="homeEventProgressFill"></div>
+            <div class="home-event-progress-star" id="homeEventProgressStar">✦</div>
+          </div>
+          <div class="home-event-progress-meta">
+            <strong id="homeEventXp">0 / 3600 Event-XP</strong>
+            <span id="homeEventRewardProgress">0 / 5 rewards</span>
+          </div>
+        </div>
+
+        <button class="home-event-open" id="homeEventOpenBtn" type="button">
+          Åbn event
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="m9 5 7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </section>
+
+
       <div class="section-head">
         <p class="eyebrow">Challenges</p>
         <button class="see-all" data-goto="tab-challenges">Se alle</button>
@@ -3165,6 +5450,7 @@ body.purchase-cutscene-open{
         <button class="ch-subtab on" data-ch-pane="pane-ch-daily">Daglige</button>
         <button class="ch-subtab" data-ch-pane="pane-ch-weekly">Ugentlige</button>
         <button class="ch-subtab" data-ch-pane="pane-ch-monthly">Månedlige</button>
+        <button class="ch-subtab event-tab-button" data-ch-pane="pane-ch-event"><span class="event-tab-spark">✦</span> Event</button>
       </div>
 
       <div class="ch-pane on" id="pane-ch-daily">
@@ -3180,6 +5466,69 @@ body.purchase-cutscene-open{
       <div class="ch-pane" id="pane-ch-monthly">
         <div class="challenge-pane-meta"><span>Nulstilles den 1. i hver måned</span><strong id="monthlyProgressText">0 / 5 klaret</strong></div>
         <div id="monthlyList" class="stagger"></div>
+      </div>
+
+
+      <div class="ch-pane" id="pane-ch-event">
+        <section class="event-hero">
+          <div class="event-aurora a1"></div>
+          <div class="event-aurora a2"></div>
+          <div class="event-stars"></div>
+
+          <div class="event-topline">
+            <div>
+              <div class="event-label">MÅNEDLIGT TESTEVENT</div>
+              <h2>MIDNIGHT BLOOM</h2>
+            </div>
+            <div class="event-days" id="eventDaysLeft">— dage</div>
+          </div>
+
+          <p class="event-intro">Klar daglige event-challenges, saml Event-XP og lås rewards op automatisk direkte på baren, så snart du rammer deres XP-krav.</p>
+
+          <div class="event-level-line">
+            <span id="eventXpText">0 / 3600 Event-XP</span>
+            <strong id="eventNextRewardText">Næste reward ved 400 XP</strong>
+          </div>
+
+          <div class="event-progress-shell">
+            <div class="event-progress-track">
+              <div class="event-progress-fill" id="eventProgressFill"></div>
+              <div class="event-progress-glow" id="eventProgressGlow"></div>
+            </div>
+            <div class="event-progress-markers" id="eventProgressMarkers"></div>
+          </div>
+
+          <div class="event-test-row">
+            <span>Prototype-test</span>
+            <button id="eventTestXpBtn">+250 Event-XP</button>
+          </div>
+        </section>
+
+        <div class="event-section-head">
+          <div>
+            <span class="event-section-kicker">REWARD PATH</span>
+            <h3>Eksklusive event-rewards</h3>
+          </div>
+          <strong id="eventRewardCount">0 / 5 hentet</strong>
+        </div>
+        <div class="event-reward-track" id="eventRewardTrack"></div>
+
+        <div class="event-section-head daily">
+          <div>
+            <span class="event-section-kicker">NULSTILLES HVER DAG</span>
+            <h3>Dagens event-challenges</h3>
+          </div>
+          <strong id="eventDailyStatus">0 / 4 hentet</strong>
+        </div>
+        <div class="event-daily-list stagger" id="eventDailyList"></div>
+
+        <div class="event-info-card">
+          <div class="event-info-icon">✦</div>
+          <div>
+            <strong>Sådan virker eventet</strong>
+            <p>Challenges giver kun Event-XP. Rewards sidder direkte på XP-baren og låses automatisk op, så snart du rammer deres milestone. Eventet nulstilles automatisk ved en ny måned.</p>
+          </div>
+        </div>
       </div>
 
       <input type="file" accept="image/*" capture="environment" id="chCameraInput" style="display:none;">
@@ -3546,6 +5895,60 @@ body.purchase-cutscene-open{
 <canvas id="shareCanvas" width="1080" height="1350"></canvas>
 <div id="fatal" style="display:none;position:fixed;top:0;left:0;right:0;z-index:99999;background:#C1503F;color:#fff;font:12px/1.45 -apple-system,monospace;padding:10px 12px;white-space:pre-wrap;word-break:break-word;max-height:45vh;overflow:auto;"></div>
 
+<div class="photo-success-cutscene" id="photoSuccessCutscene" aria-hidden="true">
+  <div class="ps-grid"></div>
+  <div class="ps-radar"></div>
+  <div class="ps-ember-field" id="psEmberField"></div>
+  <button class="ps-skip" id="psSkip" type="button">SPRING OVER</button>
+
+  <div class="ps-content">
+    <div class="ps-gps-label">GPS VERIFICERET</div>
+
+    <div class="ps-stage">
+      <div class="ps-photo-card">
+        <div class="ps-photo-frame">
+          <img id="psPhoto" alt="">
+          <div class="ps-scan-line"></div>
+          <span class="ps-corner tl"></span>
+          <span class="ps-corner tr"></span>
+          <span class="ps-corner bl"></span>
+          <span class="ps-corner br"></span>
+          <div class="ps-coordinate" id="psCoordinate"></div>
+        </div>
+      </div>
+      <div class="ps-stamp" id="psStamp"></div>
+    </div>
+
+    <div class="ps-title" id="psTitle">STREG FORLÆNGET</div>
+
+    <div class="ps-streak-row" id="psStreakRow">
+      <span class="ps-streak-flame" id="psStreakFlame"></span>
+      <span class="ps-streak-count" id="psStreakCount">1</span>
+      <span class="ps-streak-label">DAGE</span>
+    </div>
+
+    <div class="ps-rewards">
+      <div class="ps-reward xp" id="psXpReward"></div>
+      <div class="ps-reward coins" id="psCoinReward"></div>
+    </div>
+
+    <div class="ps-distance" id="psDistance"></div>
+  </div>
+</div>
+
+<div class="challenge-reward-cutscene" id="challengeRewardCutscene" aria-hidden="true">
+  <div class="cr-burst"></div>
+  <div class="cr-content">
+    <div class="cr-badge" id="crBadge"></div>
+    <div class="cr-kicker">CHALLENGE KLARET</div>
+    <div class="cr-title" id="crTitle">Udfordring fuldført</div>
+    <div class="cr-rewards">
+      <div class="cr-reward xp" id="crXp"></div>
+      <div class="cr-reward coins" id="crCoins"></div>
+    </div>
+  </div>
+</div>
+
 <script>
 // show runtime errors on screen -- there's no console on a phone
 (function(){
@@ -3654,6 +6057,13 @@ const DEFAULTS = {
   challenges: { day: null, items: [] },
   weekly: { key: null, items: [], challengesDone: 0 },
   monthly: { key: null, items: [] },
+  event: {
+    key: null,
+    xp: 0,
+    day: null,
+    daily: [],
+    claimedRewards: [],
+  },
   achievements: [],
   shop: {
     titles: [], equippedTitle: null,
@@ -3682,6 +6092,7 @@ function load(){
       challenges: Object.assign({}, DEFAULTS.challenges, p.challenges || {}),
       weekly: Object.assign({}, DEFAULTS.weekly, p.weekly || {}),
       monthly: Object.assign({}, DEFAULTS.monthly, p.monthly || {}),
+      event: Object.assign({}, DEFAULTS.event, p.event || {}),
       achievements: p.achievements || [],
       shop: Object.assign({}, DEFAULTS.shop, p.shop || {}),
     });
@@ -4153,9 +6564,10 @@ function renderMyPhotos(){
     toast('Behandler billede…');
     readFile(f).then(function(raw){ return shrink(raw); }).then(function(img){
       return Geo.current().then(function(pos){
-        if(saveSpot(pos.lat, pos.lng, false, img)){
+        const result = saveSpot(pos.lat,pos.lng,false,img);
+        if(result){
           renderMyPhotos();
-          toast('Billede uploadet ' + icon('camera',13));
+          setTimeout(function(){ PhotoCelebration.play(result); },120);
         }
       }).catch(function(){
         toast('Kunne ikke hente GPS — upload kræver placering');
@@ -4378,6 +6790,7 @@ const TITLE_CATALOG = [
   { id:'regnkriger', name:'Regnvejrskriger',  cost:250, sw:'ocean'  },
   { id:'kmkonge',    name:'Kilometerkonge',   cost:300, sw:'neonclr'},
   { id:'stilegende', name:'Sti-legende',      cost:400, sw:'berry'  },
+  { id:'event_nattegloed', name:'Natteglød', cost:0, sw:'eventaurora', eventOnly:true },
 ];
 
 const COLOR_CATALOG = [
@@ -4386,6 +6799,7 @@ const COLOR_CATALOG = [
   { id:'neon',   name:'Neon',       cost:200, cls:'name-neon',   sw:'neonclr'},
   { id:'gold',   name:'Guld',       cost:250, cls:'name-gold',   sw:'gold'   },
   { id:'berry',  name:'Bær',        cost:200, cls:'name-berry',  sw:'berry'  },
+  { id:'event_nordlys', name:'Nordlys', cost:0, cls:'name-event-aurora', sw:'eventaurora', eventOnly:true },
 ];
 
 const FRAME_CATALOG = [
@@ -4393,6 +6807,7 @@ const FRAME_CATALOG = [
   { id:'fire',    name:'Ildring',     cost:200, cls:'frame-fire',    sw:'frame-fire'    },
   { id:'leaf',    name:'Løvkrans',    cost:150, cls:'frame-leaf',    sw:'frame-leaf'    },
   { id:'sparkle', name:'Stjerneglimt',cost:250, cls:'frame-sparkle', sw:'frame-sparkle' },
+  { id:'event_moonring', name:'Månering', cost:0, cls:'frame-event-moon', sw:'frame-event-moon', eventOnly:true },
 ];
 
 const THEME_CATALOG = [
@@ -4400,6 +6815,7 @@ const THEME_CATALOG = [
   { id:'gold',     name:'Guld',                cost:500,  sw:'gold'     },
   { id:'diamond',  name:'Diamant',             cost:800,  sw:'diamond'  },
   { id:'blackred', name:'Sort & Rød Diamant',  cost:1000, sw:'blackred' },
+  { id:'event_midnight', name:'Midnight Bloom', cost:0, sw:'eventmidnight', eventOnly:true },
 ];
 
 const FONT_CATALOG = [
@@ -4407,6 +6823,7 @@ const FONT_CATALOG = [
   { id:'baloo',    name:'Rund',        cost:150, cls:'font-baloo'    },
   { id:'grotesk',  name:'Skarp',       cost:200, cls:'font-grotesk'  },
   { id:'marker',   name:'Håndskrift',  cost:150, cls:'font-marker'   },
+  { id:'event_lunar', name:'Lunar', cost:0, cls:'font-event-lunar', eventOnly:true },
 ];
 // each exclusive font is locked behind owning its paired premium theme --
 // it's meant to feel like a matching set, not just another item on a list
@@ -4436,12 +6853,38 @@ function currentFrameClass(){
   return f ? f.cls : '';
 }
 
+
+function animateCoinSpend(amount){
+  try{
+    const wrap = $('topCoinsWrap');
+    if(!wrap) return;
+
+    wrap.classList.remove('coin-spending');
+    void wrap.offsetWidth;
+    wrap.classList.add('coin-spending');
+
+    const r = wrap.getBoundingClientRect();
+    const f = document.createElement('div');
+    f.className = 'coin-spend-float';
+    f.style.left = (r.left + r.width / 2) + 'px';
+    f.style.top = (r.top + r.height / 2 + 8) + 'px';
+    f.innerHTML = '−' + Math.max(0, Number(amount) || 0) + ' ' + icon('coin',13);
+    document.body.appendChild(f);
+
+    setTimeout(function(){
+      wrap.classList.remove('coin-spending');
+      f.remove();
+    }, 1100);
+  }catch(e){}
+}
+
 const Shop = (function(){
   function buyFreeze(){
     if(S.freezes >= FREEZE_MAX){ toast('Du har allerede maks (' + FREEZE_MAX + ')'); SFX.tick(); return; }
     if(S.coins < FREEZE_COST){ toast('Ikke nok mønter — mangler ' + (FREEZE_COST - S.coins) + ' ' + icon('coin',13)); SFX.error(); return; }
     S.coins -= FREEZE_COST; S.freezes += 1;
     save(); renderAll(); render();
+    animateCoinSpend(FREEZE_COST);
     SFX.coin(); confetti(20); vibrate(30);
     toast('Skjold købt! Du har nu ' + S.freezes);
     purchaseCutscene({
@@ -4449,6 +6892,7 @@ const Shop = (function(){
       type:'FRYSER LÅST OP',
       icon:'shield',
       kind:'shield',
+      preview:'<div class="cut-preview-shield">' + icon('shield',72) + '</div>',
       cost:FREEZE_COST,
       remaining:S.coins
     });
@@ -4461,15 +6905,24 @@ const Shop = (function(){
     S.coins -= item.cost;
     S.shop[key].push(item.id);
     save(); renderAll(); render();
+    animateCoinSpend(item.cost);
     SFX.magic(); confetti(26); vibrate(30);
     toast(item.name + ' købt! ' + icon('bag',13));
     const purchaseType = key === 'frames' ? 'RING LÅST OP' : key === 'colors' ? 'FARVE LÅST OP' : 'TITEL LÅST OP';
     const purchaseIcon = key === 'frames' ? 'ring' : key === 'colors' ? 'palette' : 'tag';
+    const purchaseKind = key === 'frames' ? 'frame' : key === 'colors' ? 'color' : 'title';
+    const purchasePreview = key === 'frames'
+      ? '<div class="cut-preview-frame avatar ' + item.cls + '">DIG</div>'
+      : key === 'colors'
+        ? '<div class="cut-preview-color ' + item.cls + '">STREG</div>'
+        : '<div class="cut-preview-title sw-' + item.sw + '">' + item.name + '</div>';
     purchaseCutscene({
       name:item.name,
       type:purchaseType,
       icon:purchaseIcon,
-      kind:'profile',
+      kind:purchaseKind,
+      variant:item.id,
+      preview:purchasePreview,
       cost:item.cost,
       remaining:S.coins
     });
@@ -4489,7 +6942,8 @@ const Shop = (function(){
     const eqKey = 'equipped' + key.charAt(0).toUpperCase() + key.slice(1, -1);
     const equipped = S.shop[eqKey] === item.id;
     const el = document.createElement('div');
-    el.className = 'shop-item' + (equipped ? ' equipped' : '');
+    const stateClass = equipped ? ' equipped' : owned ? ' owned' : (S.coins >= item.cost ? ' affordable' : ' unaffordable');
+    el.className = 'shop-item' + stateClass;
 
     let previewHtml;
     if(key === 'titles'){
@@ -4508,8 +6962,11 @@ const Shop = (function(){
 
     const canAfford = S.coins >= item.cost;
     const btnCls = equipped ? 'equipped' : owned ? 'equip' : canAfford ? 'buy' : 'poor';
+    const statusCls = equipped ? 'equipped' : owned ? 'owned' : canAfford ? 'affordable' : 'unaffordable';
+    const statusText = equipped ? 'I brug' : owned ? 'Ejet' : canAfford ? 'Klar til køb' : 'Mangler ' + (item.cost - S.coins);
 
     el.innerHTML =
+      '<span class="shop-state-chip ' + statusCls + '">' + statusText + '</span>' +
       previewHtml +
       '<div class="shop-item-name">' + item.name + '</div>' +
       '<div class="shop-item-price">' + (owned ? (equipped ? 'I brug' : 'Ejet') : item.cost + ' ' + icon('coin',11)) + '</div>' +
@@ -4524,18 +6981,22 @@ const Shop = (function(){
     const g = $(id);
     if(!g) return;
     g.innerHTML = '';
-    catalog.forEach(function(item){ g.appendChild(card(catalog, key, item)); });
+    catalog.filter(function(item){ return !item.eventOnly; }).forEach(function(item){ g.appendChild(card(catalog, key, item)); });
   }
 
   function themeCard(item){
     const owned = S.shop.themes.indexOf(item.id) !== -1;
     const equipped = S.settings.style === item.id;
     const el = document.createElement('div');
-    el.className = 'shop-item' + (equipped ? ' equipped' : '');
     const canAfford = S.coins >= item.cost;
+    const stateClass = equipped ? ' equipped' : owned ? ' owned' : canAfford ? ' affordable' : ' unaffordable';
+    el.className = 'shop-item' + stateClass;
     const btnCls = equipped ? 'equipped' : owned ? 'equip' : canAfford ? 'buy' : 'poor';
+    const statusCls = equipped ? 'equipped' : owned ? 'owned' : canAfford ? 'affordable' : 'unaffordable';
+    const statusText = equipped ? 'I brug' : owned ? 'Ejet' : canAfford ? 'Klar til køb' : 'Mangler ' + (item.cost - S.coins);
 
     el.innerHTML =
+      '<span class="shop-state-chip ' + statusCls + '">' + statusText + '</span>' +
       '<div class="shop-preview sw-' + item.sw + '"></div>' +
       '<div class="shop-item-name">' + item.name + '</div>' +
       '<div class="shop-item-price">' + (owned ? (equipped ? 'I brug' : 'Ejet') : item.cost + ' ' + icon('coin',11)) + '</div>' +
@@ -4563,6 +7024,7 @@ const Shop = (function(){
     S.shop.themes.push(item.id);
     S.settings.style = item.id;
     save(); Settings.applyTheme(); Settings.refresh(); renderAll(); render();
+    animateCoinSpend(item.cost);
     SFX.magic(); confetti(50); vibrate([30,50,30]);
     toast(item.name + ' købt og taget i brug! ' + icon('gem',13));
     purchaseCutscene({
@@ -4570,6 +7032,8 @@ const Shop = (function(){
       type:'TEMA LÅST OP',
       icon:'gem',
       kind:'theme',
+      variant:item.id,
+      preview:'<div class="cut-preview-theme sw-' + item.sw + '"><b>STREG</b><span></span></div>',
       cost:item.cost,
       remaining:S.coins
     });
@@ -4579,7 +7043,7 @@ const Shop = (function(){
     const g = $('shopThemes');
     if(!g) return;
     g.innerHTML = '';
-    THEME_CATALOG.forEach(function(item){ g.appendChild(themeCard(item)); });
+    THEME_CATALOG.filter(function(item){ return !item.eventOnly; }).forEach(function(item){ g.appendChild(themeCard(item)); });
   }
 
   function fontCard(item){
@@ -4587,7 +7051,6 @@ const Shop = (function(){
     const equipped = S.settings.font === item.id;
     const gateOk = !item.requiresTheme || S.shop.themes.indexOf(item.requiresTheme) !== -1;
     const el = document.createElement('div');
-    el.className = 'shop-item' + (equipped ? ' equipped' : '') + (!gateOk ? ' requires-theme' : '');
 
     let priceRow;
     if(!gateOk) priceRow = icon('lock',11) + ' Kræver ' + item.themeName;
@@ -4605,8 +7068,13 @@ const Shop = (function(){
             ? 'Køb'
             : 'Ikke nok mønter';
     const btnCls = !gateOk ? 'locked' : equipped ? 'equipped' : owned ? 'equip' : canAfford ? 'buy' : 'poor';
+    const stateClass = !gateOk ? ' requires-theme locked-card' : equipped ? ' equipped' : owned ? ' owned' : canAfford ? ' affordable' : ' unaffordable';
+    const statusCls = !gateOk ? 'locked' : equipped ? 'equipped' : owned ? 'owned' : canAfford ? 'affordable' : 'unaffordable';
+    const statusText = !gateOk ? 'Kræver ' + item.themeName : equipped ? 'I brug' : owned ? 'Ejet' : canAfford ? 'Klar til køb' : 'Mangler ' + (item.cost - S.coins);
+    el.className = 'shop-item' + stateClass;
 
     el.innerHTML =
+      '<span class="shop-state-chip ' + statusCls + '">' + statusText + '</span>' +
       '<div class="shop-preview is-font' + (item.requiresTheme ? ' exclusive' : '') + ' ' + item.cls + '">' + item.name + '</div>' +
       '<div class="shop-item-name">' + item.name + '</div>' +
       '<div class="shop-item-price">' + priceRow + '</div>' +
@@ -4638,6 +7106,7 @@ const Shop = (function(){
     S.shop.fonts.push(item.id);
     S.settings.font = item.id;
     save(); Settings.applyTheme(); renderAll(); render();
+    animateCoinSpend(item.cost);
     SFX.magic(); confetti(40); vibrate([30,50,30]);
     toast(item.name + ' købt og taget i brug! ' + icon('font',13));
     purchaseCutscene({
@@ -4645,6 +7114,8 @@ const Shop = (function(){
       type:'SKRIFTTYPE LÅST OP',
       icon:'font',
       kind:'font',
+      variant:item.id,
+      preview:'<div class="cut-preview-font ' + item.cls + '">Aa</div>',
       cost:item.cost,
       remaining:S.coins
     });
@@ -4652,7 +7123,7 @@ const Shop = (function(){
 
   function fillFonts(){
     const g1 = $('shopFonts'), g2 = $('shopFontsExclusive');
-    if(g1){ g1.innerHTML = ''; FONT_CATALOG.forEach(function(item){ g1.appendChild(fontCard(item)); }); }
+    if(g1){ g1.innerHTML = ''; FONT_CATALOG.filter(function(item){ return !item.eventOnly; }).forEach(function(item){ g1.appendChild(fontCard(item)); }); }
     if(g2){ g2.innerHTML = ''; FONT_CATALOG_EXCLUSIVE.forEach(function(item){ g2.appendChild(fontCard(item)); }); }
   }
 
@@ -4838,6 +7309,7 @@ function renderAll(){
   renderGallery();
   renderHeat();
   renderMyPhotos();
+  if(typeof MonthlyEvent !== 'undefined') MonthlyEvent.render();
   refreshCaptureCard();
   refreshGeoStatus();
 }
@@ -4853,6 +7325,7 @@ function renderThumbs(){
     const d = document.createElement('div');
     if(p){
       d.className = 'thumb';
+      d.dataset.photoId = p.id;
       if(p.img) d.style.backgroundImage = 'url(' + p.img + ')';
       d.innerHTML = '<span class="tag">' + agoLabel(p.ts) + '</span>';
       d.addEventListener('click', function(){ SFX.pop(); Lightbox.open(p.id); });
@@ -5852,7 +8325,7 @@ const MapView = (function(){
 
     const markerIcon = p.img
       ? L.divIcon({ className:'', iconSize:[40,40], iconAnchor:[20,20],
-          html:'<div class="photo-marker" style="width:40px;height:40px;background-image:url(' + p.img + ')"></div>' })
+          html:'<div class="photo-marker" data-photo-id="' + p.id + '" style="width:40px;height:40px;background-image:url(' + p.img + ')"></div>' })
       : L.divIcon({ className:'', iconSize:[16,16], iconAnchor:[8,8],
           html:'<div style="width:16px;height:16px;border-radius:50%;background:#4F6D52;border:2px solid #fff"></div>' });
 
@@ -5905,7 +8378,17 @@ const MapView = (function(){
       for(const k in markers) delete markers[k];
       S.photos.forEach(drawPhoto);
     },
-    addPhoto: function(p){ if(ready) drawPhoto(p); },
+    addPhoto:function(p){ if(ready) drawPhoto(p); },
+    pulsePhoto:function(id){
+      if(!ready || !markers[id]) return;
+      const root = markers[id].getElement && markers[id].getElement();
+      const el = root && root.querySelector ? root.querySelector('.photo-marker') : null;
+      if(!el) return;
+      el.classList.remove('just-landed');
+      void el.offsetWidth;
+      el.classList.add('just-landed');
+      setTimeout(function(){ el.classList.remove('just-landed'); },1300);
+    },
     get follow(){ return follow; },
     setFollow: function(v){
       follow = v;
@@ -5936,6 +8419,373 @@ const MapView = (function(){
   };
 })();
 
+
+/* ===================================================================
+   SIGNATURE PHOTO + CHALLENGE CELEBRATIONS
+   =================================================================== */
+const RewardFlight = (function(){
+  function hit(target, color){
+    if(!target) return;
+    target.style.setProperty('--hit-color', color || '#fff');
+    target.classList.remove('reward-target-hit');
+    void target.offsetWidth;
+    target.classList.add('reward-target-hit');
+    setTimeout(function(){ target.classList.remove('reward-target-hit'); }, 620);
+  }
+
+  function fly(opts){
+    opts = opts || {};
+    const target = document.querySelector(opts.target);
+    if(!target) return;
+
+    const startX = opts.startX == null ? window.innerWidth / 2 : opts.startX;
+    const startY = opts.startY == null ? window.innerHeight * .68 : opts.startY;
+    const tr = target.getBoundingClientRect();
+    const endX = tr.left + tr.width / 2;
+    const endY = tr.top + tr.height / 2;
+    const count = opts.count || 5;
+    const color = opts.color || '#fff';
+
+    for(let i = 0; i < count; i++){
+      const el = document.createElement('div');
+      el.className = 'reward-fly';
+      el.style.setProperty('--fly-color', color);
+      el.innerHTML = icon(opts.icon || 'sparkle',18);
+      document.body.appendChild(el);
+
+      const jitterX = (Math.random() - .5) * 70;
+      const jitterY = (Math.random() - .5) * 36;
+      const sx = startX + jitterX;
+      const sy = startY + jitterY;
+      el.style.transform = 'translate(' + (sx - 17) + 'px,' + (sy - 17) + 'px) scale(.4)';
+      el.style.opacity = '0';
+
+      const midX = sx + (endX - sx) * .45 + (Math.random() - .5) * 120;
+      const midY = Math.min(sy,endY) - 80 - Math.random() * 75;
+      const delay = (opts.delay || 0) + i * 55;
+
+      setTimeout(function(){
+        const anim = el.animate([
+          { transform:'translate(' + (sx - 17) + 'px,' + (sy - 17) + 'px) scale(.35)', opacity:0 },
+          { transform:'translate(' + (sx - 17) + 'px,' + (sy - 17) + 'px) scale(1)', opacity:1, offset:.15 },
+          { transform:'translate(' + (midX - 17) + 'px,' + (midY - 17) + 'px) scale(.88)', opacity:1, offset:.62 },
+          { transform:'translate(' + (endX - 17) + 'px,' + (endY - 17) + 'px) scale(.25)', opacity:.1 }
+        ],{
+          duration:820 + i * 18,
+          easing:'cubic-bezier(.16,.72,.2,1)',
+          fill:'forwards'
+        });
+        anim.onfinish = function(){
+          el.remove();
+          if(i === count - 1){
+            hit(target,color);
+            if(typeof opts.onArrive === 'function') opts.onArrive();
+          }
+        };
+      },delay);
+    }
+  }
+
+  return { fly:fly, hit:hit };
+})();
+
+const PhotoCelebration = (function(){
+  const overlay = $('photoSuccessCutscene');
+  const photoEl = $('psPhoto');
+  const titleEl = $('psTitle');
+  const countEl = $('psStreakCount');
+  const rowEl = $('psStreakRow');
+  const coordEl = $('psCoordinate');
+  const distanceEl = $('psDistance');
+  const xpEl = $('psXpReward');
+  const coinEl = $('psCoinReward');
+  const stampEl = $('psStamp');
+  const emberField = $('psEmberField');
+  const skip = $('psSkip');
+
+  let closeTimer = null;
+  let unlockTimer = null;
+  let canClose = false;
+  let current = null;
+
+  function makeEmbers(){
+    emberField.innerHTML = '';
+    const colors = ['#F19A47','#FFD37D','#FF6E49','#78DDB0','#A7E9FF'];
+    const total = window.innerWidth < 520 ? 44 : 64;
+    for(let i = 0; i < total; i++){
+      const e = document.createElement('span');
+      e.className = 'ps-ember';
+      const angle = Math.PI * 2 * i / total + Math.random() * .22;
+      const dist = 140 + Math.random() * Math.max(window.innerWidth,window.innerHeight) * .56;
+      e.style.setProperty('--x',(Math.cos(angle) * dist).toFixed(1) + 'px');
+      e.style.setProperty('--y',(Math.sin(angle) * dist).toFixed(1) + 'px');
+      e.style.setProperty('--s',(3 + Math.random() * 7).toFixed(1) + 'px');
+      e.style.setProperty('--d',(1.4 + Math.random() * 1.5).toFixed(2) + 's');
+      e.style.setProperty('--delay',(.14 + Math.random() * .55).toFixed(2) + 's');
+      e.style.setProperty('--c',colors[i % colors.length]);
+      emberField.appendChild(e);
+    }
+  }
+
+  function countInside(from,to){
+    countEl.textContent = from;
+    const start = performance.now();
+    const duration = 720;
+    (function step(now){
+      const t = Math.min(1,(now - start) / duration);
+      const eased = 1 - Math.pow(1 - t,3);
+      countEl.textContent = Math.round(from + (to - from) * eased);
+      if(t < 1) requestAnimationFrame(step);
+      else countEl.textContent = to;
+    })(start);
+  }
+
+  function restoreTopCounters(data){
+    if(!data) return;
+    if($('topStreak')) $('topStreak').textContent = data.newStreak;
+    if($('topCoins')) $('topCoins').textContent = data.newCoins;
+    if($('topLevel')) $('topLevel').textContent = levelFor(data.newXp).lvl;
+  }
+
+  function flyRewards(data){
+    const startY = window.innerHeight * .72;
+
+    if(data.isDaily){
+      RewardFlight.fly({
+        target:'#topStreakWrap',
+        icon:'flame',
+        color:'#F19A47',
+        count:4,
+        startY:startY,
+        delay:0,
+        onArrive:function(){
+          countTo($('topStreak'),data.newStreak,480);
+        }
+      });
+    }
+
+    RewardFlight.fly({
+      target:'#topLevelWrap',
+      icon:'sparkle',
+      color:'#9ED7FF',
+      count:5,
+      startX:window.innerWidth * .43,
+      startY:startY,
+      delay:120,
+      onArrive:function(){
+        $('topLevel').textContent = levelFor(data.newXp).lvl;
+      }
+    });
+
+    if(data.rewardCoins > 0){
+      RewardFlight.fly({
+        target:'#topCoinsWrap',
+        icon:'coin',
+        color:'#FFD972',
+        count:6,
+        startX:window.innerWidth * .58,
+        startY:startY,
+        delay:200,
+        onArrive:function(){
+          countTo($('topCoins'),data.newCoins,520);
+          try{ SFX.coin(); }catch(e){}
+        }
+      });
+    }
+  }
+
+  function landPhoto(photoId){
+    renderAll();
+
+    const thumb = document.querySelector('.thumb[data-photo-id="' + photoId + '"]');
+    if(thumb){
+      thumb.classList.remove('photo-land');
+      void thumb.offsetWidth;
+      thumb.classList.add('photo-land');
+      try{ thumb.scrollIntoView({ behavior:'smooth', block:'nearest', inline:'center' }); }catch(e){}
+      setTimeout(function(){ thumb.classList.remove('photo-land'); },1100);
+    }
+
+    try{ MapView.pulsePhoto(photoId); }catch(e){}
+
+    const hero = document.querySelector('.hero');
+    if(hero){
+      hero.classList.remove('streak-impact');
+      void hero.offsetWidth;
+      hero.classList.add('streak-impact');
+      setTimeout(function(){ hero.classList.remove('streak-impact'); },1100);
+    }
+  }
+
+  function close(force){
+    if(!overlay.classList.contains('active')) return;
+    if(!force && !canClose) return;
+
+    clearTimeout(closeTimer);
+    clearTimeout(unlockTimer);
+    restoreTopCounters(current);
+
+    overlay.classList.add('closing');
+    const photoId = current && current.photo ? current.photo.id : null;
+    canClose = false;
+
+    setTimeout(function(){
+      overlay.classList.remove('active','closing','extra');
+      overlay.setAttribute('aria-hidden','true');
+      document.body.classList.remove('photo-celebration-open');
+      emberField.innerHTML = '';
+      if(photoId) landPhoto(photoId);
+      current = null;
+    },320);
+  }
+
+  function play(data){
+    if(!data || !data.photo) return;
+    current = data;
+
+    clearTimeout(closeTimer);
+    clearTimeout(unlockTimer);
+    overlay.classList.remove('active','closing','extra');
+    void overlay.offsetWidth;
+    overlay.classList.add('active');
+    if(!data.isDaily) overlay.classList.add('extra');
+    overlay.setAttribute('aria-hidden','false');
+    document.body.classList.add('photo-celebration-open');
+
+    photoEl.src = data.photo.img || '';
+    titleEl.textContent = data.shieldUsed ? 'STREG REDDET' : data.isDaily ? 'STREG FORLÆNGET' : 'NYT STED GEMT';
+    coordEl.textContent = Number(data.photo.lat).toFixed(5) + ', ' + Number(data.photo.lng).toFixed(5);
+    distanceEl.textContent = data.distanceText || 'Nyt sted verificeret';
+    stampEl.innerHTML = icon(data.shieldUsed ? 'shield' : data.isDaily ? 'flame' : 'pin',44);
+    xpEl.innerHTML = '+' + data.rewardXp + ' XP';
+    coinEl.innerHTML = data.rewardCoins > 0 ? '+' + data.rewardCoins + ' ' + icon('coin',14) : icon('pin',14) + ' GEMT';
+
+    rowEl.style.display = data.isDaily ? 'flex' : 'none';
+    countEl.textContent = data.oldStreak;
+
+    if($('topStreak')) $('topStreak').textContent = data.oldStreak;
+    if($('topCoins')) $('topCoins').textContent = data.oldCoins;
+    if($('topLevel')) $('topLevel').textContent = levelFor(data.oldXp).lvl;
+
+    makeEmbers();
+    try{
+      SFX.unlock();
+      SFX.open();
+      setTimeout(function(){ SFX.streakFire(); },380);
+      setTimeout(function(){ SFX.success(); },760);
+      vibrate([30,25,55,30,105]);
+    }catch(e){}
+
+    if(data.isDaily){
+      setTimeout(function(){
+        countInside(data.oldStreak,data.newStreak);
+        try{ vibrate([25,20,70]); }catch(e){}
+      },1420);
+    }
+
+    setTimeout(function(){
+      flyRewards(data);
+      confetti(data.isDaily ? 90 : 45,window.innerWidth / 2,window.innerHeight * .48);
+    },1850);
+
+    canClose = false;
+    unlockTimer = setTimeout(function(){ canClose = true; },1550);
+    closeTimer = setTimeout(function(){ canClose = true; close(true); },4300);
+  }
+
+  if(overlay){
+    overlay.addEventListener('click',function(e){
+      if(e.target === skip) return;
+      close(false);
+    });
+  }
+  if(skip){
+    skip.addEventListener('click',function(e){
+      e.stopPropagation();
+      close(true);
+    });
+  }
+
+  return { play:play, close:close };
+})();
+
+const ChallengeCelebration = (function(){
+  const overlay = $('challengeRewardCutscene');
+  const badge = $('crBadge');
+  const title = $('crTitle');
+  const xp = $('crXp');
+  const coins = $('crCoins');
+  let timer = null;
+  let current = null;
+
+  function close(){
+    if(!overlay.classList.contains('active')) return;
+    clearTimeout(timer);
+    overlay.classList.add('closing');
+    setTimeout(function(){
+      overlay.classList.remove('active','closing');
+      overlay.setAttribute('aria-hidden','true');
+      current = null;
+    },250);
+  }
+
+  function play(data){
+    if(!data) return;
+    current = data;
+    clearTimeout(timer);
+    overlay.classList.remove('active','closing');
+    void overlay.offsetWidth;
+    overlay.classList.add('active');
+    overlay.setAttribute('aria-hidden','false');
+
+    badge.innerHTML = challengeImage(data.id);
+    title.textContent = data.title;
+    xp.textContent = '+' + data.xp + ' XP';
+    coins.innerHTML = data.coins > 0 ? '+' + data.coins + ' ' + icon('coin',13) : icon('check',13) + ' HENTET';
+
+    if($('topCoins')) $('topCoins').textContent = data.oldCoins;
+    if($('topLevel')) $('topLevel').textContent = levelFor(data.oldXp).lvl;
+
+    try{
+      SFX.unlock();
+      SFX.challenge();
+      setTimeout(function(){ SFX.achievement(); },300);
+      vibrate([28,22,55,22,90]);
+    }catch(e){}
+
+    setTimeout(function(){
+      confetti(70,window.innerWidth / 2,window.innerHeight * .43);
+      RewardFlight.fly({
+        target:'#topLevelWrap',
+        icon:'sparkle',
+        color:'#9ED7FF',
+        count:5,
+        startY:window.innerHeight * .66,
+        onArrive:function(){ $('topLevel').textContent = levelFor(data.newXp).lvl; }
+      });
+      if(data.coins > 0){
+        RewardFlight.fly({
+          target:'#topCoinsWrap',
+          icon:'coin',
+          color:'#FFD972',
+          count:6,
+          startY:window.innerHeight * .66,
+          delay:100,
+          onArrive:function(){ countTo($('topCoins'),data.newCoins,500); }
+        });
+      }else if($('topCoins')){
+        $('topCoins').textContent = data.newCoins;
+      }
+    },900);
+
+    timer = setTimeout(close,2800);
+  }
+
+  if(overlay) overlay.addEventListener('click',close);
+  return { play:play, close:close };
+})();
+
+
 /* ===================================================================
    CORE: save a spot
    =================================================================== */
@@ -5943,7 +8793,7 @@ function saveSpot(lat, lng, manual, img){
   const dist = nearestDist(lat, lng);
   if(dist < S.settings.minDist){
     SFX.reject();
-    setTimeout(function(){ SFX.error(); }, 90);
+    setTimeout(function(){ SFX.error(); },90);
     vibrate([60,40,60]);
     toast('For tæt på — kun ' + Math.round(dist) + ' m væk (kræver ' + S.settings.minDist + ' m)');
     if(!manual){
@@ -5956,39 +8806,53 @@ function saveSpot(lat, lng, manual, img){
     return false;
   }
 
+  const before = {
+    streak:S.streak,
+    xp:S.xp,
+    coins:S.coins,
+    freezes:S.freezes
+  };
+
   const photo = {
-    id: String(Date.now()) + Math.random().toString(16).slice(2,7),
-    lat: lat, lng: lng, ts: Date.now(),
-    img: img || fakePhoto(manual ? 'KORT-TEST' : 'TEST'),
+    id:String(Date.now()) + Math.random().toString(16).slice(2,7),
+    lat:lat,
+    lng:lng,
+    ts:Date.now(),
+    img:img || fakePhoto(manual ? 'KORT-TEST' : 'TEST')
   };
   S.photos.push(photo);
 
+  let isDaily = false;
+  let shieldUsed = false;
+  let rewardXp = 10;
+  let rewardCoins = 0;
+
   const t = todayKey();
   if(S.lastDay !== t){
+    isDaily = true;
+    rewardXp = 50;
+    rewardCoins = 10;
+
     const y = new Date(Date.now() - 86400000).toISOString().slice(0,10);
     if(S.lastDay === y){
-      // consecutive day, nothing to protect
       S.streak += 1;
-    } else if(S.lastDay && S.freezes > 0){
-      // you missed (at least) one day, but a streak saver covers exactly one gap
+    }else if(S.lastDay && S.freezes > 0){
       S.freezes -= 1;
       S.streak += 1;
-      setTimeout(function(){ toast(icon('snowflake',13) + ' Skjold brugt — din streg er reddet! ' + S.freezes + ' tilbage'); }, 2400);
-    } else {
+      shieldUsed = true;
+      setTimeout(function(){
+        toast(icon('shield',13) + ' Skjold brugt — din streg er reddet! ' + S.freezes + ' tilbage');
+      },4400);
+    }else{
       S.streak = 1;
     }
+
     S.lastDay = t;
     if(S.streak > S.best) S.best = S.streak;
-    addXp(50); S.coins += 10;
-    confetti(60);
-    SFX.streakFire();
-    setTimeout(function(){ SFX.coin(); }, 260);
-    toast('Streg forlænget! ' + icon('flame',13) + ' ' + S.streak + (S.streak === 1 ? ' dag' : ' dage') + ' · +50 XP');
-  } else {
-    addXp(10);
-    confetti(20);
-    SFX.success();
-    toast('Ekstra sted gemt · +10 XP');
+    addXp(rewardXp);
+    S.coins += rewardCoins;
+  }else{
+    addXp(rewardXp);
   }
 
   vibrate(40);
@@ -5996,13 +8860,13 @@ function saveSpot(lat, lng, manual, img){
   MapView.addPhoto(photo);
   renderAll();
   checkAchievements();
+
   if(typeof WeeklyChallenges !== 'undefined') WeeklyChallenges.checkProgress();
   if(typeof MonthlyChallenges !== 'undefined') MonthlyChallenges.checkProgress();
+  if(typeof MonthlyEvent !== 'undefined') MonthlyEvent.checkProgress();
+
   if(typeof Cloud !== 'undefined' && Cloud.ready){
     Cloud.uploadPhoto(photo).then(function(publicUrl){
-      // Once the image is safely in cloud Storage, the local base64 copy is
-      // pure waste -- swap it for the URL. Turns a ~25KB localStorage entry
-      // into ~100 bytes, which is what actually keeps the quota from filling.
       if(publicUrl){
         const p = S.photos.find(function(x){ return x.id === photo.id; });
         if(p && p.img && p.img.indexOf('data:') === 0){
@@ -6012,7 +8876,27 @@ function saveSpot(lat, lng, manual, img){
       }
     });
   }
-  return true;
+
+  let distanceText = 'Dit første verificerede sted';
+  if(dist !== Infinity){
+    distanceText = Math.round(dist) + ' m fra dit nærmeste tidligere sted';
+  }
+
+  return {
+    ok:true,
+    photo:photo,
+    isDaily:isDaily,
+    shieldUsed:shieldUsed,
+    rewardXp:rewardXp,
+    rewardCoins:rewardCoins,
+    oldStreak:before.streak,
+    newStreak:S.streak,
+    oldXp:before.xp,
+    newXp:S.xp,
+    oldCoins:before.coins,
+    newCoins:S.coins,
+    distanceText:distanceText
+  };
 }
 
 /* ---------- capture ---------- */
@@ -6024,7 +8908,7 @@ function saveSpot(lat, lng, manual, img){
     capIconEl.classList.add('big');
     capIconEl.innerHTML = '<img src="' + img + '" alt="">';
   }
-  function accepted(pos){
+  function accepted(pos,result){
     card.classList.remove('rejected');
     card.classList.add('captured');
     title.textContent = 'Billede gemt!';
@@ -6037,6 +8921,9 @@ function saveSpot(lat, lng, manual, img){
     }
     hint.innerHTML = '<span class="badge-pill">' + icon('pin',11) + ' ' + txt + '</span>';
     $('captureBtn').textContent = 'Tag et ekstra';
+    if(result){
+      setTimeout(function(){ PhotoCelebration.play(result); },120);
+    }
   }
 
   $('captureBtn').addEventListener('click', function(){
@@ -6059,7 +8946,8 @@ function saveSpot(lat, lng, manual, img){
       title.textContent = 'Henter placering…';
       hint.innerHTML = '<span class="badge-pill pending">Finder GPS…</span>';
       return Geo.current().then(function(pos){
-        if(saveSpot(pos.lat, pos.lng, false, img)) accepted(pos);
+        const result = saveSpot(pos.lat,pos.lng,false,img);
+        if(result) accepted(pos,result);
       }).catch(function(){
         title.textContent = 'Ingen placering';
         hint.innerHTML = '<span class="badge-pill err">Kunne ikke hente GPS — tjek tilladelser</span>';
@@ -6090,7 +8978,8 @@ function saveSpot(lat, lng, manual, img){
       lat = 55.6761 + (Math.random() - 0.5) * 0.004;
       lng = 12.5683 + (Math.random() - 0.5) * 0.004;
     }
-    if(saveSpot(lat, lng, false, img)) accepted({ lat: lat, lng: lng });
+    const result = saveSpot(lat,lng,false,img);
+    if(result) accepted({ lat:lat, lng:lng },result);
   });
 })();
 
@@ -6414,6 +9303,8 @@ const Challenges = (function(){
 
   function complete(ch){
     if(ch.done) return;
+    const oldXp = S.xp;
+    const oldCoins = S.coins;
     ch.done = true;
     addXp(ch.xp);
     S.coins += ch.coins;
@@ -6429,11 +9320,24 @@ const Challenges = (function(){
       confetti(28, r.left + r.width / 2, r.top + r.height / 2);
     }
     toast('Fuldført! +' + ch.xp + ' XP · +' + ch.coins + ' ' + icon('coin',13));
+    setTimeout(function(){
+      ChallengeCelebration.play({
+        id:ch.id,
+        title:ch.title,
+        xp:ch.xp,
+        coins:ch.coins,
+        oldXp:oldXp,
+        newXp:S.xp,
+        oldCoins:oldCoins,
+        newCoins:S.coins
+      });
+    },120);
     checkAchievements();
     WeeklyChallenges.ensureCurrent();
     S.weekly.challengesDone = (S.weekly.challengesDone || 0) + 1;
     save();
     WeeklyChallenges.checkProgress();
+    if(typeof MonthlyEvent !== 'undefined') MonthlyEvent.checkProgress();
   }
 
   function render(){
@@ -6522,53 +9426,110 @@ const WeeklyChallenges = (function(){
   const POOL = [
     { id:'w_photos5', icon:'camera', title:'Tag 5 billeder denne uge', target:5, get(){ return photosInRange(7); }, xp:150, coins:60 },
     { id:'w_photos7', icon:'calWeek', title:'Tag mindst ét billede alle 7 dage', target:7, get(){ return Math.min(7, photosInRange(7)); }, xp:220, coins:90 },
-    { id:'w_chall3',  icon:'target', title:'Fuldfør 3 daglige challenges', target:3, get(){ return S.weekly.challengesDone || 0; }, xp:170, coins:70 },
+    { id:'w_chall3', icon:'target', title:'Fuldfør 3 daglige challenges', target:3, get(){ return S.weekly.challengesDone || 0; }, xp:170, coins:70 },
     { id:'w_streak5', icon:'flame', title:'Nå en streg på 5 dage', target:5, get(){ return Math.min(5, S.streak); }, xp:200, coins:80 },
-    { id:'w_equip',   icon:'bag', title:'Tag noget fra butikken i brug', target:1, get(){ return (S.shop.equippedTitle || S.shop.equippedColor || S.shop.equippedFrame) ? 1 : 0; }, xp:100, coins:50 },
+    { id:'w_equip', icon:'bag', title:'Tag noget fra butikken i brug', target:1, get(){ return (S.shop.equippedTitle || S.shop.equippedColor || S.shop.equippedFrame) ? 1 : 0; }, xp:100, coins:50 },
     { id:'w_morning', icon:'sunrise', title:'Tag et billede før kl. 9', target:1, get(){ return photosThisWeekWithHour(function(h){ return h < 9; }) > 0 ? 1 : 0; }, xp:120, coins:50 },
     { id:'w_evening', icon:'moon', title:'Tag et billede efter kl. 20', target:1, get(){ return photosThisWeekWithHour(function(h){ return h >= 20; }) > 0 ? 1 : 0; }, xp:120, coins:50 },
-    { id:'w_far',     icon:'walk', title:'Kom 1 km fra et af dine steder', target:1, get(){ return anyPairDistThisWeek(1000) ? 1 : 0; }, xp:180, coins:70 },
-    { id:'w_coins200',icon:'coin', title:'Hav mindst 200 mønter', target:200, get(){ return Math.min(200, S.coins); }, xp:130, coins:0 },
+    { id:'w_far', icon:'walk', title:'Kom 1 km fra et af dine steder', target:1, get(){ return anyPairDistThisWeek(1000) ? 1 : 0; }, xp:180, coins:70 },
+    { id:'w_coins200', icon:'coin', title:'Hav mindst 200 mønter', target:200, get(){ return Math.min(200, S.coins); }, xp:130, coins:0 },
   ];
 
   function pick(n){
     const pool = POOL.slice();
     const out = [];
     for(let i = 0; i < n && pool.length; i++){
-      const j = Math.floor(Math.random() * pool.length);
-      const p = pool.splice(j, 1)[0];
-      out.push({ id:p.id, icon:p.icon, title:p.title, target:p.target, xp:p.xp, coins:p.coins, done:false });
+      const p = pool.splice(Math.floor(Math.random() * pool.length),1)[0];
+      out.push({ id:p.id, icon:p.icon, title:p.title, target:p.target, xp:p.xp, coins:p.coins, ready:false, claimed:false, done:false });
     }
     return out;
   }
 
   function findDef(id){ return POOL.find(function(p){ return p.id === id; }); }
 
+  function migrateItems(){
+    let changed = false;
+    (S.weekly.items || []).forEach(function(it){
+      if(typeof it.claimed !== 'boolean'){
+        it.claimed = !!it.done;
+        changed = true;
+      }
+      if(typeof it.ready !== 'boolean'){
+        it.ready = !!it.claimed;
+        changed = true;
+      }
+      it.done = !!it.claimed;
+    });
+    return changed;
+  }
+
   function ensureCurrent(){
     const k = weekKey();
     if(S.weekly.key !== k){
-      S.weekly = { key: k, items: pick(5), challengesDone: 0 };
+      S.weekly = { key:k, items:pick(5), challengesDone:0 };
       save();
+      return;
     }
+    if(migrateItems()) save();
   }
 
   function checkProgress(){
     ensureCurrent();
     let changed = false;
+    let newlyReady = 0;
+
     S.weekly.items.forEach(function(it){
-      if(it.done) return;
+      if(it.ready || it.claimed) return;
       const def = findDef(it.id);
-      if(!def) return;
-      if(def.get() >= it.target){
-        it.done = true;
+      if(def && def.get() >= it.target){
+        it.ready = true;
         changed = true;
-        addXp(it.xp); S.coins += it.coins;
-        SFX.achievement(); confetti(40); vibrate([30,50,30]);
-        showModal('calWeek', 'Ugentlig udfordring klaret!', it.title + ' — +' + it.xp + ' XP · +' + it.coins + ' mønter', 'Fedt!', true);
+        newlyReady += 1;
       }
     });
-    if(changed){ save(); renderAll(); }
+
+    if(changed){
+      save();
+      if(newlyReady){
+        SFX.chime();
+        vibrate([25,25,55]);
+        toast(icon('gift',13) + ' Ugentlig belønning klar — tryk Hent');
+      }
+    }
     render();
+  }
+
+  function claim(id){
+    ensureCurrent();
+    const it = S.weekly.items.find(function(item){ return item.id === id; });
+    if(!it || !it.ready || it.claimed) return;
+
+    const oldXp = S.xp;
+    const oldCoins = S.coins;
+
+    it.claimed = true;
+    it.done = true;
+    addXp(it.xp);
+    S.coins += it.coins;
+
+    save();
+    renderAll();
+    render();
+
+    ChallengeCelebration.play({
+      id:it.id,
+      title:it.title,
+      xp:it.xp,
+      coins:it.coins,
+      oldXp:oldXp,
+      newXp:S.xp,
+      oldCoins:oldCoins,
+      newCoins:S.coins
+    });
+
+    setTimeout(function(){
+      if(typeof MonthlyChallenges !== 'undefined') MonthlyChallenges.checkProgress();
+    },150);
   }
 
   function render(){
@@ -6576,29 +9537,47 @@ const WeeklyChallenges = (function(){
     const wrap = $('weeklyList');
     if(!wrap) return;
     wrap.innerHTML = '';
+
     S.weekly.items.forEach(function(it){
       const def = findDef(it.id);
-      const cur = it.done ? it.target : Math.min(it.target, def ? def.get() : 0);
-      const pct = Math.min(100, (cur / it.target) * 100);
+      const cur = Math.min(it.target,def ? def.get() : 0);
+      const pct = Math.min(100,(cur / it.target) * 100);
+      const state = it.claimed ? 'claimed' : it.ready ? 'ready' : 'waiting';
+
       const card = document.createElement('div');
-      card.className = 'prog-card' + (it.done ? ' done' : '');
+      card.className = 'prog-card' + (it.claimed ? ' done' : it.ready ? ' ready' : '');
       card.innerHTML =
         '<div class="prog-top">' +
-          '<span class="prog-title">' + challengeImage(it.id, 'prog-title-icon') + '<span>' + it.title + '</span></span>' +
+          '<span class="prog-title">' + challengeImage(it.id,'prog-title-icon') + '<span>' + it.title + '</span></span>' +
           '<span class="prog-reward">+' + it.xp + ' XP · +' + it.coins + ' ' + icon('coin',10) + '</span>' +
         '</div>' +
         '<div class="prog-track"><div class="prog-fill" style="width:' + pct + '%"></div></div>' +
-        '<div class="prog-count">' + cur + ' / ' + it.target + (it.done ? ' ' + icon('check',10) : '') + '</div>';
+        '<div class="prog-bottom">' +
+          '<div class="prog-count">' + cur + ' / ' + it.target + (it.claimed ? ' ' + icon('check',10) : it.ready ? ' · Klar!' : '') + '</div>' +
+          '<button class="reward-claim-btn ' + state + '"' + (it.ready && !it.claimed ? '' : ' disabled') + '>' +
+            (it.claimed ? icon('check',10) + ' Hentet' : it.ready ? icon('gift',10) + ' Hent' : 'Ikke klar') +
+          '</button>' +
+        '</div>';
+
+      const btn = card.querySelector('.reward-claim-btn');
+      if(it.ready && !it.claimed){
+        btn.addEventListener('click',function(){
+          SFX.unlock();
+          claim(it.id);
+        });
+      }
       wrap.appendChild(card);
     });
-    const weeklyProgress = $('weeklyProgressText');
-    if(weeklyProgress){
-      const doneCount = S.weekly.items.filter(function(item){ return item.done; }).length;
-      weeklyProgress.textContent = doneCount + ' / ' + S.weekly.items.length + ' klaret';
+
+    const status = $('weeklyProgressText');
+    if(status){
+      const claimed = S.weekly.items.filter(function(item){ return item.claimed; }).length;
+      const ready = S.weekly.items.filter(function(item){ return item.ready && !item.claimed; }).length;
+      status.textContent = claimed + ' / ' + S.weekly.items.length + ' hentet' + (ready ? ' · ' + ready + ' klar' : '');
     }
   }
 
-  return { ensureCurrent: ensureCurrent, checkProgress: checkProgress, render: render, _findDef: findDef };
+  return { ensureCurrent:ensureCurrent, checkProgress:checkProgress, claim:claim, render:render, _findDef:findDef };
 })();
 
 const MonthlyChallenges = (function(){
@@ -6607,50 +9586,107 @@ const MonthlyChallenges = (function(){
     { id:'m_photos25', icon:'camera', title:'Tag 25 billeder denne måned', target:25, get(){ return photosInRange(30); }, xp:550, coins:220 },
     { id:'m_streak15', icon:'flame', title:'Nå en streg på 15 dage', target:15, get(){ return Math.min(15, S.streak); }, xp:500, coins:200 },
     { id:'m_streak25', icon:'flame', title:'Nå en streg på 25 dage', target:25, get(){ return Math.min(25, S.streak); }, xp:650, coins:260 },
-    { id:'m_ach3',     icon:'tag',   title:'Lås 3 bedrifter op', target:3, get(){ return Math.min(3, S.achievements.length); }, xp:450, coins:180 },
-    { id:'m_ach5',     icon:'tag',   title:'Lås 5 bedrifter op', target:5, get(){ return Math.min(5, S.achievements.length); }, xp:600, coins:240 },
-    { id:'m_level5',   icon:'gear',  title:'Nå niveau 5', target:5, get(){ return Math.min(5, levelFor(S.xp).lvl); }, xp:400, coins:150 },
-    { id:'m_coins300', icon:'coin',  title:'Hav mindst 300 mønter', target:300, get(){ return Math.min(300, S.coins); }, xp:350, coins:0 },
+    { id:'m_ach3', icon:'tag', title:'Lås 3 bedrifter op', target:3, get(){ return Math.min(3, S.achievements.length); }, xp:450, coins:180 },
+    { id:'m_ach5', icon:'tag', title:'Lås 5 bedrifter op', target:5, get(){ return Math.min(5, S.achievements.length); }, xp:600, coins:240 },
+    { id:'m_level5', icon:'gear', title:'Nå niveau 5', target:5, get(){ return Math.min(5, levelFor(S.xp).lvl); }, xp:400, coins:150 },
+    { id:'m_coins300', icon:'coin', title:'Hav mindst 300 mønter', target:300, get(){ return Math.min(300, S.coins); }, xp:350, coins:0 },
   ];
 
   function pick(n){
     const pool = POOL.slice();
     const out = [];
     for(let i = 0; i < n && pool.length; i++){
-      const j = Math.floor(Math.random() * pool.length);
-      const p = pool.splice(j, 1)[0];
-      out.push({ id:p.id, icon:p.icon, title:p.title, target:p.target, xp:p.xp, coins:p.coins, done:false });
+      const p = pool.splice(Math.floor(Math.random() * pool.length),1)[0];
+      out.push({ id:p.id, icon:p.icon, title:p.title, target:p.target, xp:p.xp, coins:p.coins, ready:false, claimed:false, done:false });
     }
     return out;
   }
 
   function findDef(id){ return POOL.find(function(p){ return p.id === id; }); }
 
+  function migrateItems(){
+    let changed = false;
+    (S.monthly.items || []).forEach(function(it){
+      if(typeof it.claimed !== 'boolean'){
+        it.claimed = !!it.done;
+        changed = true;
+      }
+      if(typeof it.ready !== 'boolean'){
+        it.ready = !!it.claimed;
+        changed = true;
+      }
+      it.done = !!it.claimed;
+    });
+    return changed;
+  }
+
   function ensureCurrent(){
     const k = monthKey();
     if(S.monthly.key !== k){
-      S.monthly = { key: k, items: pick(5) };
+      S.monthly = { key:k, items:pick(5) };
       save();
+      return;
     }
+    if(migrateItems()) save();
   }
 
   function checkProgress(){
     ensureCurrent();
     let changed = false;
+    let newlyReady = 0;
+
     S.monthly.items.forEach(function(it){
-      if(it.done) return;
+      if(it.ready || it.claimed) return;
       const def = findDef(it.id);
-      if(!def) return;
-      if(def.get() >= it.target){
-        it.done = true;
+      if(def && def.get() >= it.target){
+        it.ready = true;
         changed = true;
-        addXp(it.xp); S.coins += it.coins;
-        SFX.achievement(); confetti(60); vibrate([40,60,40,60]);
-        showModal('calMonth', 'Månedlig udfordring klaret!', it.title + ' — +' + it.xp + ' XP · +' + it.coins + ' mønter', 'Utroligt!', true);
+        newlyReady += 1;
       }
     });
-    if(changed){ save(); renderAll(); }
+
+    if(changed){
+      save();
+      if(newlyReady){
+        SFX.chime();
+        vibrate([35,25,70]);
+        toast(icon('gift',13) + ' Månedlig belønning klar — tryk Hent');
+      }
+    }
     render();
+  }
+
+  function claim(id){
+    ensureCurrent();
+    const it = S.monthly.items.find(function(item){ return item.id === id; });
+    if(!it || !it.ready || it.claimed) return;
+
+    const oldXp = S.xp;
+    const oldCoins = S.coins;
+
+    it.claimed = true;
+    it.done = true;
+    addXp(it.xp);
+    S.coins += it.coins;
+
+    save();
+    renderAll();
+    render();
+
+    ChallengeCelebration.play({
+      id:it.id,
+      title:it.title,
+      xp:it.xp,
+      coins:it.coins,
+      oldXp:oldXp,
+      newXp:S.xp,
+      oldCoins:oldCoins,
+      newCoins:S.coins
+    });
+
+    setTimeout(function(){
+      if(typeof WeeklyChallenges !== 'undefined') WeeklyChallenges.checkProgress();
+    },150);
   }
 
   function render(){
@@ -6658,30 +9694,723 @@ const MonthlyChallenges = (function(){
     const wrap = $('monthlyList');
     if(!wrap) return;
     wrap.innerHTML = '';
+
     S.monthly.items.forEach(function(it){
       const def = findDef(it.id);
-      const cur = it.done ? it.target : Math.min(it.target, def ? def.get() : 0);
-      const pct = Math.min(100, (cur / it.target) * 100);
+      const cur = Math.min(it.target,def ? def.get() : 0);
+      const pct = Math.min(100,(cur / it.target) * 100);
+      const state = it.claimed ? 'claimed' : it.ready ? 'ready' : 'waiting';
+
       const card = document.createElement('div');
-      card.className = 'prog-card' + (it.done ? ' done' : '');
+      card.className = 'prog-card' + (it.claimed ? ' done' : it.ready ? ' ready' : '');
       card.innerHTML =
         '<div class="prog-top">' +
-          '<span class="prog-title">' + challengeImage(it.id, 'prog-title-icon') + '<span>' + it.title + '</span></span>' +
+          '<span class="prog-title">' + challengeImage(it.id,'prog-title-icon') + '<span>' + it.title + '</span></span>' +
           '<span class="prog-reward">+' + it.xp + ' XP · +' + it.coins + ' ' + icon('coin',10) + '</span>' +
         '</div>' +
         '<div class="prog-track"><div class="prog-fill" style="width:' + pct + '%"></div></div>' +
-        '<div class="prog-count">' + cur + ' / ' + it.target + (it.done ? ' ' + icon('check',10) : '') + '</div>';
+        '<div class="prog-bottom">' +
+          '<div class="prog-count">' + cur + ' / ' + it.target + (it.claimed ? ' ' + icon('check',10) : it.ready ? ' · Klar!' : '') + '</div>' +
+          '<button class="reward-claim-btn ' + state + '"' + (it.ready && !it.claimed ? '' : ' disabled') + '>' +
+            (it.claimed ? icon('check',10) + ' Hentet' : it.ready ? icon('gift',10) + ' Hent' : 'Ikke klar') +
+          '</button>' +
+        '</div>';
+
+      const btn = card.querySelector('.reward-claim-btn');
+      if(it.ready && !it.claimed){
+        btn.addEventListener('click',function(){
+          SFX.unlock();
+          claim(it.id);
+        });
+      }
       wrap.appendChild(card);
     });
-    const monthlyProgress = $('monthlyProgressText');
-    if(monthlyProgress){
-      const doneCount = S.monthly.items.filter(function(item){ return item.done; }).length;
-      monthlyProgress.textContent = doneCount + ' / ' + S.monthly.items.length + ' klaret';
+
+    const status = $('monthlyProgressText');
+    if(status){
+      const claimed = S.monthly.items.filter(function(item){ return item.claimed; }).length;
+      const ready = S.monthly.items.filter(function(item){ return item.ready && !item.claimed; }).length;
+      status.textContent = claimed + ' / ' + S.monthly.items.length + ' hentet' + (ready ? ' · ' + ready + ' klar' : '');
     }
   }
 
-  return { ensureCurrent: ensureCurrent, checkProgress: checkProgress, render: render };
+  return { ensureCurrent:ensureCurrent, checkProgress:checkProgress, claim:claim, render:render };
 })();
+
+
+/* ===================================================================
+   MONTHLY EVENT — MIDNIGHT BLOOM
+   Separate Event-XP, daily event challenges and reward path.
+   =================================================================== */
+const MonthlyEvent = (function(){
+  const EVENT_ID = 'midnight-bloom-v1';
+  const EVENT_NAME = 'Midnight Bloom';
+  const MAX_XP = 3600;
+
+  const DAILY_POOL = [
+    {
+      id:'event_daily_photo',
+      title:'Tag dagens STREG-billede',
+      icon:'camera',
+      target:1,
+      xp:55,
+      get:function(){ return S.lastDay === todayKey() ? 1 : 0; },
+      progress:function(v){ return v ? 'Dagens billede taget' : 'Tag dagens billede'; }
+    },
+    {
+      id:'event_two_photos',
+      title:'Tag 2 billeder i dag',
+      icon:'photo',
+      target:2,
+      xp:70,
+      get:function(){ return photosToday().length; },
+      progress:function(v){ return Math.min(v,2) + ' / 2 billeder'; }
+    },
+    {
+      id:'event_three_photos',
+      title:'Udforsk 3 nye steder i dag',
+      icon:'pin',
+      target:3,
+      xp:90,
+      get:function(){ return photosToday().length; },
+      progress:function(v){ return Math.min(v,3) + ' / 3 steder'; }
+    },
+    {
+      id:'event_one_normal',
+      title:'Klar 1 normal daglig challenge',
+      icon:'target',
+      target:1,
+      xp:60,
+      get:function(){ return completedNormalChallenges(); },
+      progress:function(v){ return Math.min(v,1) + ' / 1 challenge'; }
+    },
+    {
+      id:'event_three_normal',
+      title:'Klar 3 normale daglige challenges',
+      icon:'flag',
+      target:3,
+      xp:85,
+      get:function(){ return completedNormalChallenges(); },
+      progress:function(v){ return Math.min(v,3) + ' / 3 challenges'; }
+    },
+    {
+      id:'event_streak3',
+      title:'Hold en streak på mindst 3 dage',
+      icon:'flame',
+      target:3,
+      xp:55,
+      get:function(){ return S.streak; },
+      progress:function(v){ return Math.min(v,3) + ' / 3 streak'; }
+    },
+    {
+      id:'event_streak7',
+      title:'Hold en streak på mindst 7 dage',
+      icon:'flame',
+      target:7,
+      xp:80,
+      get:function(){ return S.streak; },
+      progress:function(v){ return Math.min(v,7) + ' / 7 streak'; }
+    },
+    {
+      id:'event_evening',
+      title:'Tag et billede efter kl. 18',
+      icon:'moon',
+      target:1,
+      xp:70,
+      get:function(){
+        return photosToday().some(function(p){ return new Date(p.ts).getHours() >= 18; }) ? 1 : 0;
+      },
+      progress:function(v){ return v ? 'Aftenbillede taget' : 'Ikke taget endnu'; }
+    },
+    {
+      id:'event_morning',
+      title:'Tag et billede før kl. 10',
+      icon:'sunrise',
+      target:1,
+      xp:70,
+      get:function(){
+        return photosToday().some(function(p){ return new Date(p.ts).getHours() < 10; }) ? 1 : 0;
+      },
+      progress:function(v){ return v ? 'Morgenbillede taget' : 'Ikke taget endnu'; }
+    },
+  ];
+
+  const REWARDS = [
+    {
+      id:'event_font',
+      milestone:400,
+      type:'font',
+      itemId:'event_lunar',
+      name:'Lunar',
+      subtitle:'Eksklusiv tekstfont',
+      kind:'font',
+      icon:'font'
+    },
+    {
+      id:'event_frame',
+      milestone:900,
+      type:'frame',
+      itemId:'event_moonring',
+      name:'Månering',
+      subtitle:'Eksklusiv profilring',
+      kind:'frame',
+      icon:'ring'
+    },
+    {
+      id:'event_color',
+      milestone:1500,
+      type:'color',
+      itemId:'event_nordlys',
+      name:'Nordlys',
+      subtitle:'Eksklusiv tekstfarve',
+      kind:'color',
+      icon:'palette'
+    },
+    {
+      id:'event_title',
+      milestone:2300,
+      type:'title',
+      itemId:'event_nattegloed',
+      name:'Natteglød',
+      subtitle:'Eksklusiv profiltitel',
+      kind:'title',
+      icon:'tag'
+    },
+    {
+      id:'event_theme',
+      milestone:3600,
+      type:'theme',
+      itemId:'event_midnight',
+      name:'Midnight Bloom',
+      subtitle:'Komplet event-tema',
+      kind:'theme',
+      icon:'gem'
+    },
+  ];
+
+  function eventKey(){
+    return EVENT_ID + '-' + monthKey();
+  }
+
+  function photosToday(){
+    const key = todayKey();
+    return S.photos.filter(function(p){ return dayKeyOf(p.ts) === key; });
+  }
+
+  function completedNormalChallenges(){
+    if(!S.challenges || S.challenges.day !== todayKey()) return 0;
+    return (S.challenges.items || []).filter(function(ch){ return ch.done; }).length;
+  }
+
+  function pickDaily(){
+    const pool = DAILY_POOL.slice();
+    const picked = [];
+    for(let i = 0; i < 4 && pool.length; i++){
+      const idx = Math.floor(Math.random() * pool.length);
+      const item = pool.splice(idx,1)[0];
+      picked.push({ id:item.id, claimed:false });
+    }
+    return picked;
+  }
+
+  function ensure(){
+    if(!S.event || typeof S.event !== 'object'){
+      S.event = { key:null, xp:0, day:null, daily:[], claimedRewards:[] };
+    }
+
+    if(S.event.key !== eventKey()){
+      S.event = {
+        key:eventKey(),
+        xp:0,
+        day:todayKey(),
+        daily:pickDaily(),
+        claimedRewards:[]
+      };
+      save();
+      return;
+    }
+
+    if(!Array.isArray(S.event.claimedRewards)) S.event.claimedRewards = [];
+    if(!Array.isArray(S.event.daily)) S.event.daily = [];
+
+    if(S.event.day !== todayKey()){
+      S.event.day = todayKey();
+      S.event.daily = pickDaily();
+      save();
+    }
+
+    if(S.event.daily.length !== 4){
+      S.event.daily = pickDaily();
+      save();
+    }
+
+    autoUnlockReachedRewards({ silent:true });
+  }
+
+  function dailyDef(id){
+    return DAILY_POOL.find(function(item){ return item.id === id; });
+  }
+
+  function rewardDef(id){
+    return REWARDS.find(function(item){ return item.id === id; });
+  }
+
+  function daysLeft(){
+    const now = new Date();
+    const last = new Date(now.getFullYear(),now.getMonth() + 1,0);
+    return Math.max(1,last.getDate() - now.getDate() + 1);
+  }
+
+  function owned(reward){
+    if(reward.type === 'font') return S.shop.fonts.indexOf(reward.itemId) !== -1;
+    if(reward.type === 'frame') return S.shop.frames.indexOf(reward.itemId) !== -1;
+    if(reward.type === 'color') return S.shop.colors.indexOf(reward.itemId) !== -1;
+    if(reward.type === 'title') return S.shop.titles.indexOf(reward.itemId) !== -1;
+    if(reward.type === 'theme') return S.shop.themes.indexOf(reward.itemId) !== -1;
+    return false;
+  }
+
+  function active(reward){
+    if(reward.type === 'font') return S.settings.font === reward.itemId;
+    if(reward.type === 'frame') return S.shop.equippedFrame === reward.itemId;
+    if(reward.type === 'color') return S.shop.equippedColor === reward.itemId;
+    if(reward.type === 'title') return S.shop.equippedTitle === reward.itemId;
+    if(reward.type === 'theme') return S.settings.style === reward.itemId;
+    return false;
+  }
+
+  function addOwned(reward){
+    const target =
+      reward.type === 'font' ? S.shop.fonts :
+      reward.type === 'frame' ? S.shop.frames :
+      reward.type === 'color' ? S.shop.colors :
+      reward.type === 'title' ? S.shop.titles :
+      reward.type === 'theme' ? S.shop.themes : null;
+
+    if(target && target.indexOf(reward.itemId) === -1) target.push(reward.itemId);
+  }
+
+  function previewHtml(reward){
+    if(reward.type === 'font'){
+      return '<div class="event-reward-preview font-preview"><span class="font-event-lunar">Lunar</span></div>';
+    }
+    if(reward.type === 'frame'){
+      return '<div class="event-reward-preview"><div class="avatar frame-event-moon">DIG</div></div>';
+    }
+    if(reward.type === 'color'){
+      return '<div class="event-reward-preview text-preview"><span class="name-event-aurora">NORDLYS</span></div>';
+    }
+    if(reward.type === 'title'){
+      return '<div class="event-reward-preview text-preview"><span class="sw-eventaurora" style="padding:9px 12px;border-radius:12px;">Natteglød</span></div>';
+    }
+    return '<div class="event-reward-preview theme-preview"><div class="event-theme-mini"></div></div>';
+  }
+
+  function cutscenePreview(reward){
+    if(reward.type === 'font') return '<div class="cut-preview-font font-event-lunar">Aa</div>';
+    if(reward.type === 'frame') return '<div class="cut-preview-frame avatar frame-event-moon">DIG</div>';
+    if(reward.type === 'color') return '<div class="cut-preview-color name-event-aurora">STREG</div>';
+    if(reward.type === 'title') return '<div class="cut-preview-title sw-eventaurora">Natteglød</div>';
+    return '<div class="cut-preview-theme sw-eventmidnight"><b>STREG</b><span></span></div>';
+  }
+
+  function animateEventXp(amount, sourceEl){
+    const shell = document.querySelector('.event-progress-shell');
+    if(!shell) return;
+
+    const sourceRect = sourceEl ? sourceEl.getBoundingClientRect() : {
+      left:window.innerWidth / 2,
+      top:window.innerHeight * .72,
+      width:0,
+      height:0
+    };
+    const targetRect = shell.getBoundingClientRect();
+    const fly = document.createElement('div');
+    fly.className = 'event-xp-fly';
+    fly.textContent = '+' + amount + ' EVENT-XP';
+    document.body.appendChild(fly);
+
+    const sx = sourceRect.left + sourceRect.width / 2;
+    const sy = sourceRect.top + sourceRect.height / 2;
+    const tx = targetRect.left + targetRect.width / 2;
+    const ty = targetRect.top + targetRect.height / 2;
+
+    const anim = fly.animate([
+      { transform:'translate(' + (sx - 55) + 'px,' + (sy - 18) + 'px) scale(.65)', opacity:0 },
+      { transform:'translate(' + (sx - 55) + 'px,' + (sy - 42) + 'px) scale(1)', opacity:1, offset:.18 },
+      { transform:'translate(' + (tx - 55) + 'px,' + (ty - 18) + 'px) scale(.35)', opacity:.1 }
+    ],{
+      duration:900,
+      easing:'cubic-bezier(.16,.72,.2,1)',
+      fill:'forwards'
+    });
+
+    anim.onfinish = function(){
+      fly.remove();
+      shell.classList.remove('event-hit');
+      void shell.offsetWidth;
+      shell.classList.add('event-hit');
+      setTimeout(function(){ shell.classList.remove('event-hit'); },760);
+      try{ SFX.magic(); vibrate([20,20,55]); }catch(e){}
+    };
+  }
+
+  function claimDaily(id, button){
+    ensure();
+    const state = S.event.daily.find(function(item){ return item.id === id; });
+    const def = dailyDef(id);
+    if(!state || !def || state.claimed) return;
+
+    const progress = def.get();
+    if(progress < def.target){
+      SFX.error();
+      toast('Challenge er ikke klar endnu');
+      return;
+    }
+
+    state.claimed = true;
+    S.event.xp = Math.min(MAX_XP,S.event.xp + def.xp);
+    save();
+
+    animateEventXp(def.xp,button);
+    const unlocked = autoUnlockReachedRewards({ silent:false });
+    SFX.challenge();
+    confetti(26);
+    toast(unlocked.length ? ('+' + def.xp + ' Event-XP · reward låst op') : ('+' + def.xp + ' Event-XP samlet'));
+    render();
+  }
+
+  function autoUnlockReachedRewards(options){
+    options = options || {};
+    const silent = !!options.silent;
+    const unlocked = [];
+
+    REWARDS.forEach(function(reward){
+      if(S.event.xp >= reward.milestone && !owned(reward)){
+        addOwned(reward);
+        if(S.event.claimedRewards.indexOf(reward.id) === -1) S.event.claimedRewards.push(reward.id);
+        unlocked.push(reward);
+      }
+    });
+
+    if(!unlocked.length) return unlocked;
+
+    save();
+    renderAll();
+
+    if(!silent){
+      unlocked.forEach(function(reward,index){
+        setTimeout(function(){
+          purchaseCutscene({
+            name:reward.name,
+            type:'EVENT REWARD LÅST OP',
+            icon:reward.icon,
+            kind:reward.kind,
+            variant:reward.itemId,
+            preview:cutscenePreview(reward),
+            cost:0,
+            remaining:S.coins
+          });
+        }, index * 820);
+      });
+
+      if(unlocked.length === 1){
+        toast(rewardDef(unlocked[0].id).name + ' låst op automatisk');
+      }else{
+        toast(unlocked.length + ' event rewards låst op');
+      }
+    }
+
+    return unlocked;
+  }
+
+  function claimReward(id){
+    ensure();
+    const reward = rewardDef(id);
+    if(!reward) return;
+
+    if(!owned(reward)){
+      if(S.event.xp < reward.milestone){
+        SFX.error();
+        toast('Kræver ' + reward.milestone + ' Event-XP');
+        return;
+      }
+      autoUnlockReachedRewards({ silent:false });
+      render();
+      return;
+    }
+
+    equipReward(reward);
+  }
+
+  function equipReward(reward){
+    if(reward.type === 'font') S.settings.font = reward.itemId;
+    if(reward.type === 'frame') S.shop.equippedFrame = reward.itemId;
+    if(reward.type === 'color') S.shop.equippedColor = reward.itemId;
+    if(reward.type === 'title') S.shop.equippedTitle = reward.itemId;
+    if(reward.type === 'theme') S.settings.style = reward.itemId;
+
+    save();
+    Settings.applyTheme();
+    Settings.refresh();
+    renderAll();
+    render();
+    SFX.magic();
+    vibrate([20,30,20]);
+    toast(reward.name + ' taget i brug');
+  }
+
+  function nextReward(){
+    return REWARDS.find(function(r){ return S.event.xp < r.milestone; }) || null;
+  }
+
+  function renderMarkers(){
+    const wrap = $('eventProgressMarkers');
+    if(!wrap) return;
+    wrap.innerHTML = '';
+
+    REWARDS.forEach(function(reward){
+      const isOwned = owned(reward);
+      const isActive = active(reward);
+      const reached = S.event.xp >= reward.milestone;
+
+      const marker = document.createElement('div');
+      marker.className =
+        'event-progress-marker' +
+        (reached ? ' reached' : '') +
+        (isOwned ? ' owned' : '') +
+        (isActive ? ' active' : '') +
+        (reached && !isOwned ? ' ready' : '');
+      marker.style.left = (reward.milestone / MAX_XP * 100) + '%';
+
+      marker.innerHTML =
+        '<button class="event-progress-node ' +
+          (isActive ? 'active' : isOwned ? 'unlocked' : 'locked') +
+          '" type="button" aria-label="' + reward.name + '">' +
+            icon(reward.icon,18) +
+        '</button>' +
+        '<span class="event-progress-xp">' + reward.milestone + ' XP</span>' +
+        '<span class="event-progress-name">' + reward.name + '</span>';
+
+      const btn = marker.querySelector('button');
+      btn.addEventListener('click', function(){
+        if(isOwned){
+          SFX.unlock();
+          equipReward(reward);
+          return;
+        }
+        if(reached){
+          autoUnlockReachedRewards({ silent:false });
+          render();
+          return;
+        }
+        SFX.error();
+        toast(reward.name + ' låses op ved ' + reward.milestone + ' Event-XP');
+      });
+
+      wrap.appendChild(marker);
+    });
+  }
+
+  function renderRewards(){
+    const wrap = $('eventRewardTrack');
+    if(!wrap) return;
+    wrap.innerHTML = '';
+
+    REWARDS.forEach(function(reward,index){
+      const isOwned = owned(reward);
+      const isActive = active(reward);
+      const ready = S.event.xp >= reward.milestone;
+      const card = document.createElement('article');
+      card.className = 'event-reward-card ' +
+        (isOwned ? 'claimed' : ready ? 'ready' : 'locked');
+
+      const buttonClass = isActive ? 'active' : isOwned ? 'use' : 'locked';
+      const buttonText = isActive ? icon('check',10) + ' I brug' :
+        isOwned ? 'Brug' :
+        icon('lock',10) + ' Låst';
+
+      card.innerHTML =
+        '<div class="event-reward-top">' +
+          '<span class="event-reward-step">Reward ' + (index + 1) + '</span>' +
+          '<span class="event-reward-xp">' + reward.milestone + ' XP</span>' +
+        '</div>' +
+        previewHtml(reward) +
+        '<div class="event-reward-name">' + reward.name + '</div>' +
+        '<div class="event-reward-type">' + reward.subtitle + '</div>' +
+        '<button class="event-reward-btn ' + buttonClass + '">' + buttonText + '</button>';
+
+      const button = card.querySelector('button');
+      if(!isActive && isOwned){
+        button.addEventListener('click',function(){
+          SFX.unlock();
+          equipReward(reward);
+        });
+      }else{
+        button.disabled = true;
+      }
+
+      wrap.appendChild(card);
+    });
+
+    $('eventRewardCount').textContent =
+      REWARDS.filter(function(reward){ return owned(reward); }).length + ' / ' + REWARDS.length + ' låst op';
+  }
+
+  function renderDaily(){
+    const wrap = $('eventDailyList');
+    if(!wrap) return;
+    wrap.innerHTML = '';
+
+    let claimedCount = 0;
+    S.event.daily.forEach(function(state,index){
+      const def = dailyDef(state.id);
+      if(!def) return;
+      const current = Math.min(def.target,def.get());
+      const ready = current >= def.target;
+      if(state.claimed) claimedCount += 1;
+
+      const card = document.createElement('article');
+      card.className = 'event-daily-card' +
+        (state.claimed ? ' claimed' : ready ? ' ready' : '');
+      card.style.animationDelay = (index * 55) + 'ms';
+
+      const btnClass = state.claimed ? 'claimed' : ready ? 'ready' : 'waiting';
+      const btnText = state.claimed ? icon('check',10) + ' Hentet' :
+        ready ? '+' + def.xp + ' XP' :
+        'Ikke klar';
+
+      card.innerHTML =
+        '<div class="event-daily-icon">' + icon(def.icon,26) + '</div>' +
+        '<div style="min-width:0;">' +
+          '<div class="event-daily-title">' + def.title + '</div>' +
+          '<div class="event-daily-progress">' + def.progress(current) + ' · +' + def.xp + ' Event-XP</div>' +
+          '<div class="event-daily-progressbar"><span style="width:' + Math.min(100,current / def.target * 100) + '%"></span></div>' +
+        '</div>' +
+        '<button class="event-daily-action ' + btnClass + '">' + btnText + '</button>';
+
+      const button = card.querySelector('button');
+      if(ready && !state.claimed){
+        button.addEventListener('click',function(){
+          SFX.unlock();
+          claimDaily(state.id,button);
+        });
+      }else{
+        button.disabled = true;
+      }
+
+      wrap.appendChild(card);
+    });
+
+    $('eventDailyStatus').textContent = claimedCount + ' / ' + S.event.daily.length + ' hentet';
+  }
+
+
+  function renderHomeShortcut(next,pct){
+    const card = $('homeEventCard');
+    if(!card) return;
+
+    const rewardCount = REWARDS.filter(function(reward){ return owned(reward); }).length;
+    $('homeEventProgressFill').style.width = pct + '%';
+    $('homeEventProgressStar').style.left = pct + '%';
+    $('homeEventXp').textContent = S.event.xp + ' / ' + MAX_XP + ' Event-XP';
+    $('homeEventDays').textContent = daysLeft() + (daysLeft() === 1 ? ' dag tilbage' : ' dage tilbage');
+    $('homeEventRewardProgress').textContent = rewardCount + ' / ' + REWARDS.length + ' rewards';
+    $('homeEventNextReward').textContent = next
+      ? next.name + ' · ' + next.milestone + ' XP'
+      : 'Alle rewards er låst op';
+
+    const orb = $('homeEventRewardOrb');
+    if(orb){
+      orb.dataset.reward = next ? next.type : 'complete';
+      const core = orb.querySelector('.home-event-orb-core');
+      if(core){
+        core.innerHTML = next
+          ? icon(next.icon,24)
+          : icon('check',24);
+      }
+    }
+  }
+
+  function openEvent(){
+    SFX.unlock();
+    SFX.magic();
+    vibrate(18);
+
+    if(typeof switchTab === 'function'){
+      switchTab('tab-challenges');
+    }
+
+    const delay = reduceMotion ? 20 : 285;
+    setTimeout(function(){
+      const button = document.querySelector('.ch-subtab[data-ch-pane="pane-ch-event"]');
+      if(button && !button.classList.contains('on')) button.click();
+
+      const eventPane = $('pane-ch-event');
+      if(eventPane){
+        try{ eventPane.scrollIntoView({ behavior:'smooth', block:'start' }); }catch(e){}
+      }
+    },delay);
+  }
+
+  function render(){
+    ensure();
+
+    const pct = Math.min(100,S.event.xp / MAX_XP * 100);
+    $('eventProgressFill').style.width = pct + '%';
+    $('eventProgressGlow').style.left = pct + '%';
+    $('eventXpText').textContent = S.event.xp + ' / ' + MAX_XP + ' Event-XP';
+    $('eventDaysLeft').textContent = daysLeft() + (daysLeft() === 1 ? ' dag tilbage' : ' dage tilbage');
+
+    const next = nextReward();
+    $('eventNextRewardText').textContent = next
+      ? 'Næste: ' + next.name + ' ved ' + next.milestone + ' XP'
+      : 'Alle rewards låst op';
+
+    renderHomeShortcut(next,pct);
+    renderMarkers();
+    renderRewards();
+    renderDaily();
+  }
+
+  function checkProgress(){
+    ensure();
+    render();
+  }
+
+
+  $('homeEventCard').addEventListener('click',function(e){
+    if(e.target.closest('#homeEventOpenBtn')){
+      e.preventDefault();
+    }
+    openEvent();
+  });
+  $('homeEventCard').addEventListener('keydown',function(e){
+    if(e.key === 'Enter' || e.key === ' '){
+      e.preventDefault();
+      openEvent();
+    }
+  });
+
+  $('eventTestXpBtn').addEventListener('click',function(){
+    ensure();
+    const before = S.event.xp;
+    S.event.xp = Math.min(MAX_XP,S.event.xp + 250);
+    save();
+    animateEventXp(S.event.xp - before,this);
+    autoUnlockReachedRewards({ silent:false });
+    confetti(18);
+    render();
+  });
+
+  return {
+    render:render,
+    checkProgress:checkProgress,
+    claimReward:claimReward,
+    claimDaily:claimDaily
+  };
+})();
+
 
 /* ===================================================================
    ONBOARDING
@@ -6838,6 +10567,7 @@ const Settings = (function(){
     glass:  { light:'#EEF1F6', dark:'#000000' },
     neon:   { light:'#050806', dark:'#050806' },
     sketch: { light:'#F6EFE0', dark:'#221D16' },
+    event_midnight: { light:'#080D20', dark:'#080D20' },
   };
 
   function applyTheme(){
@@ -6904,7 +10634,8 @@ const Settings = (function(){
     else { SFX.pop(); }
     vibrate(20);
     const names = { nature:'Natur', glass:'Liquid Glass', neon:'Neon Trail', sketch:'Skitsebog',
-      silver:'Sølv', gold:'Guld', diamond:'Diamant', blackred:'Sort & Rød Diamant' };
+      silver:'Sølv', gold:'Guld', diamond:'Diamant', blackred:'Sort & Rød Diamant',
+      event_midnight:'Midnight Bloom' };
     toast('Tema: ' + (names[b.dataset.style] || b.dataset.style));
   });
 
@@ -7102,6 +10833,7 @@ function switchTab(id){
     if(id === 'tab-map'){ MapView.init(); MapView.invalidate(); }
     if(id === 'tab-shop'){ Shop.render(); }
     if(id === 'tab-friends'){ renderFriends(); Friends.refreshCachedFriends().then(renderFriends); }
+    if(id === 'tab-challenges' && typeof MonthlyEvent !== 'undefined'){ MonthlyEvent.render(); }
     return;
   }
 
@@ -7121,6 +10853,7 @@ function switchTab(id){
     if(id === 'tab-map'){ MapView.init(); MapView.invalidate(); }
     if(id === 'tab-shop'){ Shop.render(); }
     if(id === 'tab-friends'){ renderFriends(); Friends.refreshCachedFriends().then(renderFriends); }
+    if(id === 'tab-challenges' && typeof MonthlyEvent !== 'undefined'){ MonthlyEvent.render(); }
     setTimeout(function(){
       if(token !== tabToken) return;
       next.classList.remove('entering');
@@ -7184,9 +10917,9 @@ try{
 }
 </script>
 
+
 <div class="purchase-cutscene" id="purchaseCutscene" aria-hidden="true">
   <div class="purchase-cutscene-bars"></div>
-  <div class="purchase-cutscene-flash"></div>
   <div class="purchase-cutscene-grid"></div>
   <div class="purchase-cutscene-rays"></div>
   <div class="purchase-cutscene-speedlines"></div>
@@ -7196,6 +10929,7 @@ try{
   <div class="purchase-cutscene-shockwave"></div>
   <div class="purchase-cutscene-unlocked">UNLOCKED</div>
   <div class="purchase-cutscene-particles" id="purchaseCutsceneParticles"></div>
+  <div class="purchase-cutscene-special" id="purchaseCutsceneSpecial"></div>
 
   <button class="purchase-cutscene-skip" id="purchaseCutsceneSkip" type="button">SPRING OVER</button>
 
@@ -7220,6 +10954,7 @@ try{
 (function(){
   const overlay = document.getElementById('purchaseCutscene');
   const particles = document.getElementById('purchaseCutsceneParticles');
+  const special = document.getElementById('purchaseCutsceneSpecial');
   const iconEl = document.getElementById('purchaseCutsceneIcon');
   const titleEl = document.getElementById('purchaseCutsceneTitle');
   const typeEl = document.getElementById('purchaseCutsceneType');
@@ -7228,6 +10963,10 @@ try{
   let closeTimer = null;
   let unlockTimer = null;
   let canClose = false;
+
+  function safeClass(value){
+    return String(value || '').toLowerCase().replace(/[^a-z0-9_-]/g,'');
+  }
 
   function particleColor(index){
     const colors = [
@@ -7239,9 +10978,10 @@ try{
     return colors[index % colors.length];
   }
 
-  function makeParticles(){
+  function makeParticles(kind){
     particles.innerHTML = '';
-    const total = window.innerWidth < 500 ? 54 : 76;
+    const base = window.innerWidth < 500 ? 54 : 76;
+    const total = kind === 'theme' ? base + 18 : kind === 'color' ? base + 12 : base;
 
     for(let i = 0; i < total; i++){
       const p = document.createElement('span');
@@ -7251,8 +10991,8 @@ try{
       const distance = 150 + Math.random() * Math.max(window.innerWidth, window.innerHeight) * .58;
       const x = Math.cos(angle) * distance;
       const y = Math.sin(angle) * distance;
-      const size = 3 + Math.random() * 9;
-      const square = i % 4 === 0;
+      const size = 3 + Math.random() * (kind === 'theme' ? 12 : 9);
+      const square = kind === 'font' ? i % 2 === 0 : i % 4 === 0;
 
       p.style.setProperty('--x', x.toFixed(1) + 'px');
       p.style.setProperty('--y', y.toFixed(1) + 'px');
@@ -7275,6 +11015,153 @@ try{
     }
   }
 
+  function shieldSvg(){
+    try{ return icon('shield',46); }
+    catch(e){ return '◆'; }
+  }
+
+  function buildSpecialFx(kind, variant){
+    special.innerHTML = '';
+
+    if(kind === 'shield'){
+      for(let i = 0; i < 10; i++){
+        const el = document.createElement('div');
+        el.className = 'cut-special cut-shield';
+        el.innerHTML = shieldSvg();
+        el.style.setProperty('--rot', (i * 36) + 'deg');
+        el.style.setProperty('--sd', (.08 + i * .045) + 's');
+        special.appendChild(el);
+      }
+      return;
+    }
+
+    if(kind === 'frame'){
+      [180,240,310,380].forEach(function(size,i){
+        const el = document.createElement('div');
+        el.className = 'cut-special cut-orbit';
+        el.style.setProperty('--orbit-size', size + 'px');
+        el.style.setProperty('--spin', (i % 2 ? -480 : 480) + 'deg');
+        el.style.setProperty('--sd', (.05 + i * .08) + 's');
+        special.appendChild(el);
+      });
+      return;
+    }
+
+    if(kind === 'color'){
+      const colors = ['#FF725E','#FFB347','#FFE46B','#65E2A2','#62C7FF','#A77BFF','#FF75C8'];
+      for(let i = 0; i < 18; i++){
+        const el = document.createElement('div');
+        el.className = 'cut-special cut-paint';
+        const angle = Math.PI * 2 * i / 18 + Math.random() * .28;
+        const dist = 170 + Math.random() * 270;
+        el.style.setProperty('--px', (Math.cos(angle) * dist).toFixed(1) + 'px');
+        el.style.setProperty('--py', (Math.sin(angle) * dist).toFixed(1) + 'px');
+        el.style.setProperty('--blob-size', (18 + Math.random() * 38).toFixed(0) + 'px');
+        el.style.setProperty('--blob-color', colors[i % colors.length]);
+        el.style.setProperty('--spin', ((Math.random() * 700) - 350).toFixed(0) + 'deg');
+        el.style.setProperty('--sd', (.05 + Math.random() * .32).toFixed(2) + 's');
+        special.appendChild(el);
+      }
+      return;
+    }
+
+    if(kind === 'title'){
+      const words = ['LEGEND','STREAK','ELITE','UNLOCKED','RARE','STREG','TITLE','EPIC'];
+      words.forEach(function(word,i){
+        const el = document.createElement('div');
+        el.className = 'cut-special cut-word';
+        el.textContent = word;
+        const angle = Math.PI * 2 * i / words.length;
+        const dist = 210 + (i % 3) * 45;
+        el.style.setProperty('--wx', (Math.cos(angle) * dist).toFixed(1) + 'px');
+        el.style.setProperty('--wy', (Math.sin(angle) * dist).toFixed(1) + 'px');
+        el.style.setProperty('--spin', ((i % 2 ? -1 : 1) * (45 + i * 8)) + 'deg');
+        el.style.setProperty('--sd', (.08 + i * .045) + 's');
+        special.appendChild(el);
+      });
+      return;
+    }
+
+    if(kind === 'font'){
+      const letters = ['A','a','S','T','R','E','G','Æ','Ø','Å','?','!'];
+      letters.forEach(function(letter,i){
+        const el = document.createElement('div');
+        el.className = 'cut-special cut-letter';
+        el.textContent = letter;
+        const angle = Math.PI * 2 * i / letters.length;
+        const dist = 190 + (i % 4) * 36;
+        el.style.setProperty('--lx', (Math.cos(angle) * dist).toFixed(1) + 'px');
+        el.style.setProperty('--ly', (Math.sin(angle) * dist).toFixed(1) + 'px');
+        el.style.setProperty('--letter-size', (18 + (i % 4) * 8) + 'px');
+        el.style.setProperty('--spin', ((i % 2 ? -1 : 1) * (65 + i * 11)) + 'deg');
+        el.style.setProperty('--sd', (.05 + i * .035) + 's');
+        special.appendChild(el);
+      });
+      return;
+    }
+
+    if(kind === 'theme'){
+      const themes = {
+        silver:['#D5E0EC','#6C7C90'],
+        gold:['#FFE68D','#B87A11'],
+        diamond:['#C9FAFF','#36C6E8'],
+        blackred:['#FF425B','#210008']
+      };
+      const palette = themes[variant] || themes.diamond;
+      for(let i = 0; i < 5; i++){
+        const el = document.createElement('div');
+        el.className = 'cut-special cut-theme-panel';
+        el.style.left = (16 + i * 19) + '%';
+        el.style.setProperty('--panel-a', palette[i % 2]);
+        el.style.setProperty('--panel-b', i % 2 ? '#020407' : palette[1]);
+        el.style.setProperty('--start-x', (i % 2 ? -700 : 700) + 'px');
+        el.style.setProperty('--end-x', (i % 2 ? 700 : -700) + 'px');
+        el.style.setProperty('--sd', (.03 + i * .07) + 's');
+        special.appendChild(el);
+      }
+    }
+  }
+
+  function playPurchaseSound(kind){
+    try{
+      SFX.unlock();
+      if(kind === 'shield'){
+        SFX.open();
+        setTimeout(function(){ SFX.chime(); },130);
+        setTimeout(function(){ SFX.coin(); },360);
+      }else if(kind === 'frame'){
+        SFX.whoosh(1);
+        setTimeout(function(){ SFX.magic(); },120);
+        setTimeout(function(){ SFX.chime(); },430);
+      }else if(kind === 'color'){
+        SFX.magic();
+        setTimeout(function(){ SFX.challenge(); },220);
+      }else if(kind === 'title'){
+        SFX.achievement();
+        setTimeout(function(){ SFX.coin(); },310);
+      }else if(kind === 'theme'){
+        SFX.levelup();
+        setTimeout(function(){ SFX.magic(); },360);
+      }else if(kind === 'font'){
+        SFX.magic();
+        setTimeout(function(){ SFX.chime(); },240);
+        setTimeout(function(){ SFX.pop(); },520);
+      }else{
+        SFX.magic();
+      }
+    }catch(e){}
+  }
+
+  function vibrationFor(kind){
+    if(kind === 'shield') return [45,35,90,45,140];
+    if(kind === 'frame') return [30,25,45,25,70,30,120];
+    if(kind === 'color') return [18,18,35,18,55,18,85];
+    if(kind === 'title') return [35,30,70,30,110];
+    if(kind === 'theme') return [55,30,100,35,160,45,220];
+    if(kind === 'font') return [20,20,30,20,45,20,80];
+    return [35,45,70,35,120];
+  }
+
   function closePurchaseCutscene(force){
     if(!overlay.classList.contains('active')) return;
     if(!force && !canClose) return;
@@ -7285,10 +11172,12 @@ try{
     canClose = false;
 
     setTimeout(function(){
-      overlay.classList.remove('active','closing','kind-profile','kind-theme','kind-font','kind-shield');
+      overlay.className = 'purchase-cutscene';
+      iconEl.className = 'purchase-cutscene-item';
       overlay.setAttribute('aria-hidden','true');
       document.body.classList.remove('purchase-cutscene-open');
       particles.innerHTML = '';
+      special.innerHTML = '';
     }, 280);
   }
 
@@ -7297,44 +11186,54 @@ try{
     clearTimeout(closeTimer);
     clearTimeout(unlockTimer);
 
-    overlay.classList.remove('active','closing','kind-profile','kind-theme','kind-font','kind-shield');
+    overlay.className = 'purchase-cutscene';
+    iconEl.className = 'purchase-cutscene-item';
     void overlay.offsetWidth;
 
-    const kind = options.kind || 'profile';
+    const kind = safeClass(options.kind || 'profile') || 'profile';
+    const variant = safeClass(options.variant || '');
+
     overlay.classList.add('active','kind-' + kind);
+    if(variant) overlay.classList.add('variant-' + variant);
     overlay.setAttribute('aria-hidden','false');
     document.body.classList.add('purchase-cutscene-open');
 
-    iconEl.innerHTML = safeIcon(options.icon || 'sparkle');
+    iconEl.classList.add('preview-' + kind);
+    iconEl.innerHTML = options.preview || safeIcon(options.icon || 'sparkle');
     titleEl.textContent = options.name || 'Nyt item';
     typeEl.textContent = options.type || 'LÅST OP';
 
-    makeParticles();
+    buildSpecialFx(kind,variant);
+    makeParticles(kind);
+    playPurchaseSound(kind);
+    try{ vibrate(vibrationFor(kind)); }catch(e){}
+
     canClose = false;
 
-    // Add one last impact after the reveal begins.
     setTimeout(function(){
       try{
-        confetti(90, window.innerWidth / 2, window.innerHeight * .43);
-        vibrate([35,45,70,35,120]);
+        const amount = kind === 'theme' ? 135 : kind === 'color' ? 110 : 90;
+        confetti(amount,window.innerWidth / 2,window.innerHeight / 2);
+        vibrate(vibrationFor(kind));
       }catch(e){}
-    }, 420);
+    },420);
 
     unlockTimer = setTimeout(function(){
       canClose = true;
-    }, 1250);
+    },1250);
 
     closeTimer = setTimeout(function(){
       canClose = true;
       closePurchaseCutscene(true);
-    }, 3300);
+    },3600);
   };
 
-  overlay.addEventListener('click', function(e){
+  overlay.addEventListener('click',function(e){
     if(e.target === skipBtn) return;
     closePurchaseCutscene(false);
   });
-  skipBtn.addEventListener('click', function(e){
+
+  skipBtn.addEventListener('click',function(e){
     e.stopPropagation();
     closePurchaseCutscene(true);
   });
