@@ -459,12 +459,12 @@ button:focus-visible{outline:2px solid var(--amber);outline-offset:2px;}
 }
 .featured-challenge:active{transform:scale(.98);}
 .featured-challenge-icon{
-  width:46px;height:46px;border-radius:50%;flex-shrink:0;
-  background:linear-gradient(160deg,var(--amber) 0%,var(--amber-2) 100%);
-  color:#16242B;
+  width:58px;height:58px;border-radius:50%;flex-shrink:0;
   display:flex;align-items:center;justify-content:center;
-  box-shadow:0 3px 8px -2px rgba(224,138,60,.5);
+  background:transparent;overflow:hidden;
+  box-shadow:0 5px 14px -5px rgba(22,36,43,.28);
 }
+.featured-challenge-icon img{width:100%;height:100%;object-fit:contain;display:block;}
 .featured-challenge-body{flex:1;min-width:0;}
 .featured-challenge-title{font-family:var(--font-body);font-size:14.5px;font-weight:600;}
 .featured-challenge-sub{font-size:11px;color:var(--ink-soft);margin:1px 0 7px;}
@@ -616,8 +616,12 @@ button:focus-visible{outline:2px solid var(--amber);outline-offset:2px;}
 .ch-card.done{background:var(--moss-soft);border-color:var(--moss);}
 .ch-card.justDone{animation:doneWave .6s var(--spring);}
 @keyframes doneWave{0%{transform:scale(1);}40%{transform:scale(1.04) translateX(3px);}100%{transform:scale(1);}}
-.ch-icon{width:44px;height:44px;border-radius:var(--r-s);display:flex;align-items:center;justify-content:center;flex-shrink:0;background:var(--amber-soft);color:var(--amber-2);transition:background .35s,transform .4s var(--spring);}
-.ch-card.done .ch-icon{background:var(--moss);color:#fff;transform:rotate(360deg) scale(1.06);}
+.ch-icon{width:58px;height:58px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:transparent;overflow:hidden;box-shadow:0 4px 12px -5px rgba(22,36,43,.28);transition:transform .4s var(--spring),filter .35s;}
+.ch-icon img{width:100%;height:100%;object-fit:contain;display:block;}
+.ch-card.done .ch-icon{transform:rotate(360deg) scale(1.06);filter:saturate(.7);}
+.challenge-art{display:block;width:100%;height:100%;object-fit:contain;}
+.prog-title-icon{width:42px;height:42px;border-radius:50%;object-fit:contain;flex-shrink:0;box-shadow:0 3px 10px -5px rgba(22,36,43,.25);}
+.prog-title{align-items:center;}
 .ch-body{flex:1;min-width:0;}
 .ch-title{font-family:var(--font-display);font-size:14.5px;font-weight:600;margin-bottom:2px;}
 .ch-reward{font-size:11px;color:var(--ink-soft);font-weight:600;}
@@ -3119,6 +3123,11 @@ const Shop = (function(){
 /* ===================================================================
    RENDER
    =================================================================== */
+function challengeImage(id, className){
+  className = className || 'challenge-art';
+  return '<img class="' + className + '" src="challenge-icons/' + id + '.png" alt="" loading="lazy">';
+}
+
 function greetingWord(){
   const h = new Date().getHours();
   if(h < 5) return 'Godnat';
@@ -3163,7 +3172,7 @@ function renderFeaturedChallenge(){
   const pct = Math.min(100, (cur / pick.target) * 100);
   wrap.className = 'featured-challenge';
   wrap.innerHTML =
-    '<div class="featured-challenge-icon">' + icon(pick.icon, 21) + '</div>' +
+    '<div class="featured-challenge-icon">' + challengeImage(pick.id) + '</div>' +
     '<div class="featured-challenge-body">' +
       '<div class="featured-challenge-title">' + pick.title + '</div>' +
       '<div class="featured-challenge-sub">' + (pick.done ? 'Klaret! ' : '') + '+' + pick.xp + ' XP · +' + pick.coins + ' mønter</div>' +
@@ -4828,7 +4837,7 @@ const Challenges = (function(){
       const card = document.createElement('div');
       card.className = 'ch-card' + (ch.done ? ' done' : '');
       card.innerHTML =
-        '<div class="ch-icon">' + icon(ch.icon, 21) + '</div>' +
+        '<div class="ch-icon">' + challengeImage(ch.id) + '</div>' +
         '<div class="ch-body"><div class="ch-title">' + ch.title + '</div>' +
         '<div class="ch-reward">+' + ch.xp + ' XP · +' + ch.coins + ' ' + icon('coin',10) + '</div></div>' +
         '<button class="ch-btn ' + (ch.done ? 'done' : 'start') + '">' + (ch.done ? icon('check',12) + ' Klaret' : icon('camera',12) + ' Tag') + '</button>';
@@ -4963,7 +4972,7 @@ const WeeklyChallenges = (function(){
       card.className = 'prog-card' + (it.done ? ' done' : '');
       card.innerHTML =
         '<div class="prog-top">' +
-          '<span class="prog-title">' + icon(it.icon,14) + ' ' + it.title + '</span>' +
+          '<span class="prog-title">' + challengeImage(it.id, 'prog-title-icon') + '<span>' + it.title + '</span></span>' +
           '<span class="prog-reward">+' + it.xp + ' XP · +' + it.coins + ' ' + icon('coin',10) + '</span>' +
         '</div>' +
         '<div class="prog-track"><div class="prog-fill" style="width:' + pct + '%"></div></div>' +
@@ -5040,7 +5049,7 @@ const MonthlyChallenges = (function(){
       card.className = 'prog-card' + (it.done ? ' done' : '');
       card.innerHTML =
         '<div class="prog-top">' +
-          '<span class="prog-title">' + icon(it.icon,14) + ' ' + it.title + '</span>' +
+          '<span class="prog-title">' + challengeImage(it.id, 'prog-title-icon') + '<span>' + it.title + '</span></span>' +
           '<span class="prog-reward">+' + it.xp + ' XP · +' + it.coins + ' ' + icon('coin',10) + '</span>' +
         '</div>' +
         '<div class="prog-track"><div class="prog-fill" style="width:' + pct + '%"></div></div>' +
