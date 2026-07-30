@@ -12944,16 +12944,27 @@ const MapView = (function(){
       }
     });
 
+    /* Keep the player marker at the real GPS coordinates.
+       Previously redraw() snapped it to the center of the current hex,
+       while GPS updates moved it back to the real position. That caused
+       the visible jumping/glitch between both positions. */
     const currentCenter = S.hexMap.currentHex && centerForId(S.hexMap.currentHex);
-    if(currentCenter && !meMarker){
-      meMarker = L.marker([currentCenter.lat,currentCenter.lng],{
+    const realPosition =
+      Geo.last &&
+      Number.isFinite(Geo.last.lat) &&
+      Number.isFinite(Geo.last.lng)
+        ? {lat:Geo.last.lat,lng:Geo.last.lng}
+        : currentCenter;
+
+    if(realPosition && !meMarker){
+      meMarker = L.marker([realPosition.lat,realPosition.lng],{
         icon:userIcon(),
         pane:'userPane',
         zIndexOffset:2000,
         interactive:false
       }).addTo(map);
-    }else if(currentCenter && meMarker){
-      meMarker.setLatLng([currentCenter.lat,currentCenter.lng]);
+    }else if(realPosition && meMarker){
+      meMarker.setLatLng([realPosition.lat,realPosition.lng]);
     }
 
     renderCurrentCard(chests);
