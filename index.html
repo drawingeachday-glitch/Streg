@@ -7099,6 +7099,1361 @@ body.photo-celebration-open{
   100%{opacity:0;transform:translateY(24px) scale(.92);}
 }
 
+
+/* =========================================================
+   MEDIEVAL MONEY POUCH CUTSCENE
+   ========================================================= */
+.chest-cutscene{
+  background:
+    radial-gradient(circle at 50% 39%, rgba(255,213,111,.20), transparent 16%),
+    radial-gradient(circle at 50% 58%, rgba(116,73,40,.18), transparent 30%),
+    linear-gradient(180deg, rgba(4,7,13,.62), rgba(7,9,15,.92));
+}
+.chest-cutscene-box{
+  width:210px;
+  height:210px;
+  margin:0 auto 12px;
+  transform-origin:50% 78%;
+  z-index:4;
+}
+.chest-cutscene.show .chest-cutscene-box{
+  animation:pouchDrop 1.12s cubic-bezier(.15,.9,.18,1) both;
+}
+@keyframes pouchDrop{
+  0%{opacity:0;transform:translateY(-300px) rotate(-16deg) scale(.58);}
+  34%{opacity:1;transform:translateY(12px) rotate(4deg) scale(1.05);}
+  52%{transform:translateY(-18px) rotate(-2deg) scale(.98);}
+  72%{transform:translateY(6px) rotate(1deg) scale(1.01);}
+  100%{opacity:1;transform:translateY(0) rotate(0) scale(1);}
+}
+.chest-cutscene-box::before{
+  content:"";
+  position:absolute;
+  inset:-40px;
+  border-radius:50%;
+  background:radial-gradient(circle, rgba(255,221,118,.26), transparent 66%);
+  filter:blur(12px);
+  opacity:.82;
+}
+.pouch-body{
+  position:absolute;
+  left:50%;
+  bottom:14px;
+  width:154px;
+  height:142px;
+  transform:translateX(-50%);
+  border-radius:42% 42% 36% 36% / 28% 28% 54% 54%;
+  background:
+    radial-gradient(circle at 32% 25%, rgba(255,224,169,.18), transparent 18%),
+    linear-gradient(145deg, #9C5D2D 0%, #744019 48%, #4D2810 100%);
+  border:3px solid rgba(55,28,11,.72);
+  box-shadow:
+    0 34px 46px rgba(0,0,0,.35),
+    inset 10px 8px 18px rgba(255,209,136,.10),
+    inset -12px -14px 24px rgba(0,0,0,.24);
+  overflow:hidden;
+}
+.pouch-body::before{
+  content:"";
+  position:absolute;
+  inset:10px 12px 12px;
+  border-radius:inherit;
+  background:
+    repeating-linear-gradient(115deg, rgba(255,255,255,.035) 0 2px, transparent 2px 9px),
+    repeating-linear-gradient(18deg, rgba(0,0,0,.035) 0 1px, transparent 1px 8px);
+  mix-blend-mode:overlay;
+  opacity:.8;
+}
+.pouch-body::after{
+  content:"";
+  position:absolute;
+  left:14px; right:14px; bottom:12px;
+  height:34px;
+  border-radius:50%;
+  background:radial-gradient(ellipse at center, rgba(0,0,0,.28), transparent 70%);
+}
+.pouch-neck{
+  position:absolute;
+  left:50%;
+  top:28px;
+  width:130px;
+  height:50px;
+  transform:translateX(-50%);
+  border-radius:50% 50% 34% 34%;
+  background:
+    linear-gradient(180deg, #A86735, #6F3C1B 65%, #4C260F);
+  border:3px solid rgba(55,28,11,.72);
+  box-shadow:
+    inset 0 8px 12px rgba(255,214,153,.10),
+    inset 0 -8px 14px rgba(0,0,0,.20);
+  transform-origin:50% 100%;
+}
+.pouch-mouth{
+  position:absolute;
+  left:50%;
+  top:24px;
+  width:104px;
+  height:24px;
+  transform:translateX(-50%) scaleY(.34);
+  border-radius:50%;
+  background:
+    radial-gradient(ellipse at center, #140B06 0%, #2A160B 48%, #6A391A 70%, #A56633 100%);
+  border:2px solid rgba(42,20,8,.80);
+  opacity:.28;
+  transition:transform .62s cubic-bezier(.16,.9,.2,1), opacity .42s ease;
+}
+.pouch-cinch{
+  position:absolute;
+  left:50%;
+  top:56px;
+  width:126px;
+  height:18px;
+  transform:translateX(-50%);
+  border-radius:999px;
+  background:linear-gradient(180deg,#6A3515,#3E1F0D);
+  box-shadow:
+    0 3px 5px rgba(0,0,0,.28),
+    inset 0 1px 0 rgba(255,202,122,.13);
+}
+.pouch-rope{
+  position:absolute;
+  top:60px;
+  width:76px;
+  height:54px;
+  border:6px solid #C28A44;
+  border-top:none;
+  border-radius:0 0 50px 50px;
+  filter:drop-shadow(0 3px 2px rgba(0,0,0,.30));
+  transition:transform .68s cubic-bezier(.16,.9,.2,1), opacity .35s ease;
+}
+.pouch-rope.left{
+  left:28px;
+  transform:rotate(18deg);
+  transform-origin:90% 0;
+}
+.pouch-rope.right{
+  right:28px;
+  transform:rotate(-18deg);
+  transform-origin:10% 0;
+}
+.pouch-knot{
+  position:absolute;
+  left:50%;
+  top:50px;
+  width:30px;
+  height:24px;
+  transform:translateX(-50%);
+  border-radius:50%;
+  background:
+    radial-gradient(circle at 35% 30%, #E2B36A, #A96C2E 56%, #754118);
+  box-shadow:
+    0 5px 9px rgba(0,0,0,.28),
+    inset 0 2px 0 rgba(255,231,178,.22);
+  transition:transform .58s cubic-bezier(.16,.9,.2,1), opacity .34s ease;
+}
+.pouch-medallion{
+  position:absolute;
+  left:50%;
+  top:104px;
+  width:58px;
+  height:58px;
+  transform:translateX(-50%);
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  color:#6B451A;
+  font:1000 24px/1 Inter,sans-serif;
+  background:
+    radial-gradient(circle at 35% 28%, #FFF0A8, #D7A33B 54%, #A86B1E);
+  border:3px solid rgba(89,54,14,.52);
+  box-shadow:
+    0 8px 15px rgba(0,0,0,.22),
+    inset 0 2px 0 rgba(255,255,255,.40);
+}
+.pouch-seam{
+  position:absolute;
+  left:50%;
+  bottom:22px;
+  width:92px;
+  height:26px;
+  transform:translateX(-50%);
+  border-bottom:3px dashed rgba(227,168,93,.45);
+  border-radius:50%;
+}
+.pouch-glow{
+  position:absolute;
+  left:50%;
+  top:10px;
+  width:178px;
+  height:190px;
+  transform:translateX(-50%) scale(.32);
+  border-radius:50%;
+  background:radial-gradient(circle at 50% 36%, rgba(255,250,203,.98), rgba(255,210,77,.46) 32%, transparent 68%);
+  filter:blur(14px);
+  opacity:0;
+  pointer-events:none;
+}
+.chest-cutscene.stage-opened .pouch-rope.left{
+  transform:translate(-30px,10px) rotate(54deg);
+  opacity:.30;
+}
+.chest-cutscene.stage-opened .pouch-rope.right{
+  transform:translate(30px,10px) rotate(-54deg);
+  opacity:.30;
+}
+.chest-cutscene.stage-opened .pouch-knot{
+  transform:translate(-50%,24px) rotate(22deg) scale(.7);
+  opacity:0;
+}
+.chest-cutscene.stage-opened .pouch-neck{
+  animation:pouchNeckOpen .72s cubic-bezier(.16,.9,.2,1) forwards;
+}
+@keyframes pouchNeckOpen{
+  0%{transform:translateX(-50%) scaleX(1) scaleY(1);}
+  42%{transform:translateX(-50%) scaleX(1.10) scaleY(.88);}
+  100%{transform:translateX(-50%) scaleX(1.18) scaleY(.82);}
+}
+.chest-cutscene.stage-opened .pouch-mouth{
+  opacity:1;
+  transform:translateX(-50%) scaleY(1);
+}
+.chest-cutscene.stage-opened .pouch-glow{
+  animation:pouchGlowBurst 1.45s ease-out both;
+}
+@keyframes pouchGlowBurst{
+  0%{opacity:0;transform:translateX(-50%) scale(.22);}
+  18%{opacity:1;}
+  100%{opacity:.28;transform:translateX(-50%) scale(1.46);}
+}
+.chest-cutscene.stage-opened .pouch-body{
+  animation:pouchOpenSquish .72s cubic-bezier(.16,.9,.2,1) both;
+}
+@keyframes pouchOpenSquish{
+  0%{transform:translateX(-50%) scale(1);}
+  34%{transform:translateX(-50%) scale(1.06,.94);}
+  100%{transform:translateX(-50%) scale(1);}
+}
+.chest-cutscene.stage-coins .chest-cutscene-box,
+.chest-cutscene.stage-xp .chest-cutscene-box{
+  animation:pouchExit .54s cubic-bezier(.16,.9,.2,1) forwards;
+}
+@keyframes pouchExit{
+  0%{opacity:1;transform:translateY(0) scale(1) rotate(0);}
+  100%{opacity:0;transform:translateY(48px) scale(.72) rotate(-8deg);}
+}
+.pouch-dust{
+  position:absolute;
+  left:50%;
+  bottom:8px;
+  width:0;
+  height:0;
+}
+.pouch-dust i{
+  position:absolute;
+  width:13px;
+  height:13px;
+  border-radius:50%;
+  background:rgba(208,165,106,.48);
+  filter:blur(1px);
+  opacity:0;
+}
+.chest-cutscene.show .pouch-dust i{
+  animation:pouchDust 1s ease-out both;
+}
+.pouch-dust i:nth-child(1){--x:-92px;--y:-12px;animation-delay:.34s}
+.pouch-dust i:nth-child(2){--x:-58px;--y:-28px;animation-delay:.37s}
+.pouch-dust i:nth-child(3){--x:58px;--y:-26px;animation-delay:.39s}
+.pouch-dust i:nth-child(4){--x:94px;--y:-10px;animation-delay:.42s}
+.pouch-dust i:nth-child(5){--x:-24px;--y:-38px;animation-delay:.44s}
+.pouch-dust i:nth-child(6){--x:28px;--y:-42px;animation-delay:.46s}
+@keyframes pouchDust{
+  0%{opacity:0;transform:translate(0,0) scale(.2);}
+  28%{opacity:.9;}
+  100%{opacity:0;transform:translate(var(--x),var(--y)) scale(1.7);}
+}
+
+
+/* =========================================================
+   FULL-SCREEN GLOWING PARALLAX PARTICLES + NO TITLE/SUB
+   ========================================================= */
+.chest-cutscene{
+  --stars-px: 0px;
+  --stars-py: 0px;
+}
+.chest-cutscene-title,
+.chest-cutscene-sub{
+  display:none !important;
+}
+.chest-cutscene-stars{
+  position:fixed !important;
+  inset:0 !important;
+  width:100vw !important;
+  height:100vh !important;
+  z-index:1 !important;
+  pointer-events:none !important;
+  overflow:hidden !important;
+  transform:translate3d(var(--stars-px), var(--stars-py), 0);
+  transition:transform .18s ease-out;
+}
+.chest-cutscene-rays{
+  z-index:0 !important;
+}
+.chest-cutscene-inner{
+  position:relative;
+  z-index:3;
+}
+.chest-cutscene-stars span{
+  position:absolute !important;
+  display:block !important;
+  border-radius:50%;
+  background:#fff;
+  box-shadow:
+    0 0 8px rgba(255,255,255,.85),
+    0 0 16px rgba(255,255,255,.55),
+    0 0 28px rgba(255,247,200,.28);
+  opacity:.92;
+  will-change:transform, opacity;
+}
+
+
+/* =========================================================
+   CENTERED REWARD LAYOUT + NO REWARD CARD BACKGROUND
+   ========================================================= */
+.chest-cutscene-rewards{
+  min-height: 0 !important;
+  margin-top: -6px !important;
+}
+.chest-reward-center{
+  width:min(84vw, 340px) !important;
+  min-height: 0 !important;
+  margin:-12px auto 0 !important;
+  transform:translateY(-10px) scale(.86) !important;
+}
+.chest-cutscene.stage-coins .chest-reward-center,
+.chest-cutscene.stage-xp .chest-reward-center{
+  transform:translateY(-26px) scale(1) !important;
+}
+.chest-reward-core{
+  width:auto !important;
+  padding:0 !important;
+  background:transparent !important;
+  border:none !important;
+  backdrop-filter:none !important;
+  box-shadow:none !important;
+}
+.chest-reward-icon{
+  margin-bottom:10px !important;
+  font-size:48px !important;
+}
+.chest-reward-value{
+  font-size:clamp(48px, 11vw, 74px) !important;
+}
+.chest-reward-word{
+  margin-top:8px !important;
+  font-size:15px !important;
+  letter-spacing:.24em !important;
+}
+.chest-cutscene-hint{
+  margin-top:8px !important;
+}
+.chest-cutscene-progress{
+  margin-top:10px !important;
+}
+
+
+/* =========================================================
+   BIGGER COIN / XP REWARD SIZE
+   ========================================================= */
+.chest-reward-center{
+  width:min(88vw, 380px) !important;
+}
+.chest-reward-icon{
+  font-size:60px !important;
+  margin-bottom:12px !important;
+}
+.chest-reward-ring{
+  width:128px !important;
+  height:128px !important;
+}
+.chest-reward-ring::after{
+  width:176px !important;
+  height:176px !important;
+}
+.chest-reward-value{
+  font-size:clamp(66px, 15vw, 110px) !important;
+  line-height:.86 !important;
+  text-shadow:0 14px 30px rgba(0,0,0,.26) !important;
+}
+.chest-reward-word{
+  font-size:18px !important;
+  letter-spacing:.28em !important;
+  margin-top:10px !important;
+}
+
+
+/* =========================================================
+   EVEN BIGGER COINS / XP
+   ========================================================= */
+.chest-reward-center{
+  width:min(94vw, 460px) !important;
+  transform:translateY(-16px) scale(.9) !important;
+}
+.chest-cutscene.stage-coins .chest-reward-center,
+.chest-cutscene.stage-xp .chest-reward-center{
+  transform:translateY(-36px) scale(1.03) !important;
+}
+.chest-reward-icon{
+  font-size:74px !important;
+  margin-bottom:14px !important;
+}
+.chest-reward-ring{
+  width:150px !important;
+  height:150px !important;
+}
+.chest-reward-ring::after{
+  width:210px !important;
+  height:210px !important;
+}
+.chest-reward-value{
+  font-size:clamp(84px, 19vw, 144px) !important;
+  line-height:.82 !important;
+  letter-spacing:-.06em !important;
+  text-shadow:0 16px 34px rgba(0,0,0,.28) !important;
+}
+.chest-reward-word{
+  font-size:22px !important;
+  letter-spacing:.34em !important;
+  margin-top:12px !important;
+}
+
+
+/* =========================================================
+   ULTRA HUGE COINS / XP
+   ========================================================= */
+.chest-reward-center{
+  width:min(96vw, 520px) !important;
+  transform:translateY(-24px) scale(.94) !important;
+}
+.chest-cutscene.stage-coins .chest-reward-center,
+.chest-cutscene.stage-xp .chest-reward-center{
+  transform:translateY(-48px) scale(1.06) !important;
+}
+.chest-reward-icon{
+  font-size:88px !important;
+  margin-bottom:16px !important;
+}
+.chest-reward-ring{
+  width:172px !important;
+  height:172px !important;
+}
+.chest-reward-ring::after{
+  width:236px !important;
+  height:236px !important;
+}
+.chest-reward-value{
+  font-size:clamp(108px, 24vw, 190px) !important;
+  line-height:.78 !important;
+  letter-spacing:-.07em !important;
+  text-shadow:0 18px 40px rgba(0,0,0,.30) !important;
+}
+.chest-reward-word{
+  font-size:26px !important;
+  letter-spacing:.38em !important;
+  margin-top:14px !important;
+}
+
+
+/* =========================================================
+   SMALLER TEXT + EVEN BIGGER COINS / XP
+   ========================================================= */
+.chest-reward-center{
+  width:min(98vw, 560px) !important;
+  transform:translateY(-30px) scale(.96) !important;
+}
+.chest-cutscene.stage-coins .chest-reward-center,
+.chest-cutscene.stage-xp .chest-reward-center{
+  transform:translateY(-56px) scale(1.08) !important;
+}
+.chest-reward-icon{
+  font-size:96px !important;
+  margin-bottom:10px !important;
+}
+.chest-reward-ring{
+  width:184px !important;
+  height:184px !important;
+}
+.chest-reward-ring::after{
+  width:252px !important;
+  height:252px !important;
+}
+.chest-reward-value{
+  font-size:clamp(126px, 28vw, 230px) !important;
+  line-height:.74 !important;
+  letter-spacing:-.08em !important;
+  text-shadow:0 20px 44px rgba(0,0,0,.32) !important;
+}
+.chest-reward-word{
+  font-size:14px !important;
+  letter-spacing:.30em !important;
+  margin-top:6px !important;
+}
+.chest-cutscene-hint{
+  font-size:11px !important;
+  letter-spacing:.16em !important;
+  margin-top:4px !important;
+  opacity:.78 !important;
+}
+.chest-cutscene-progress{
+  margin-top:8px !important;
+}
+.chest-cutscene-progress span{
+  width:10px !important;
+  height:10px !important;
+}
+
+
+/* =========================================================
+   REMOVE THE LARGE +18 / +XP NUMBER TEXT
+   ========================================================= */
+.chest-reward-value{
+  display:none !important;
+}
+.chest-reward-center{
+  transform:translateY(-18px) scale(.96) !important;
+}
+.chest-cutscene.stage-coins .chest-reward-center,
+.chest-cutscene.stage-xp .chest-reward-center{
+  transform:translateY(-34px) scale(1.04) !important;
+}
+.chest-reward-icon{
+  font-size:112px !important;
+  margin-bottom:8px !important;
+}
+.chest-reward-word{
+  margin-top:0 !important;
+}
+
+
+/* Move the coin bag a little bit down */
+.chest-cutscene-box{
+  margin: 18px auto 12px !important;
+}
+
+
+/* Move the money pouch farther down */
+.chest-cutscene-box{
+  margin: 58px auto 12px !important;
+}
+
+
+
+/* =========================================================
+   EVENT LAB — MIDNIGHT / PLANT / SOLAR
+   ========================================================= */
+.event-picker{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:9px;
+  margin-bottom:9px;
+}
+.event-choice{
+  position:relative;
+  min-height:126px;
+  overflow:hidden;
+  border:1px solid var(--line);
+  border-radius:20px;
+  padding:11px 8px 10px;
+  background:var(--card);
+  color:var(--ink);
+  cursor:pointer;
+  box-shadow:var(--shadow-s);
+  transition:transform .2s var(--spring),border-color .2s ease,box-shadow .2s ease;
+}
+.event-choice:active{transform:scale(.96)}
+.event-choice.on{
+  border-color:var(--event-choice-accent,#8B75FF);
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--event-choice-accent,#8B75FF) 18%,transparent),var(--shadow-s);
+}
+.event-choice-preview{
+  position:relative;
+  height:70px;
+  margin-bottom:8px;
+  border-radius:15px;
+  overflow:hidden;
+  display:grid;
+  place-items:center;
+  color:#fff;
+  isolation:isolate;
+}
+.event-choice-preview::before,
+.event-choice-preview::after{
+  content:"";
+  position:absolute;
+  pointer-events:none;
+}
+.event-choice-preview::before{
+  inset:-30%;
+  background:repeating-conic-gradient(from 0deg,rgba(255,255,255,.10) 0 7deg,transparent 7deg 18deg);
+  animation:eventPickerSpin 18s linear infinite;
+}
+.event-choice-preview::after{
+  inset:0;
+  background-image:
+    radial-gradient(circle at 16% 18%,rgba(255,255,255,.95) 0 1px,transparent 1.8px),
+    radial-gradient(circle at 76% 24%,rgba(255,255,255,.9) 0 1px,transparent 1.8px),
+    radial-gradient(circle at 38% 76%,rgba(255,255,255,.8) 0 1px,transparent 1.8px),
+    radial-gradient(circle at 88% 74%,rgba(255,255,255,.9) 0 1px,transparent 1.8px);
+  opacity:.65;
+}
+@keyframes eventPickerSpin{to{transform:rotate(360deg)}}
+.event-choice-icon{
+  position:relative;
+  z-index:2;
+  width:42px;height:42px;
+  display:grid;place-items:center;
+  border-radius:15px;
+  background:rgba(255,255,255,.15);
+  border:1px solid rgba(255,255,255,.18);
+  backdrop-filter:blur(10px);
+  box-shadow:0 10px 24px rgba(0,0,0,.18);
+}
+.event-choice-icon svg{width:24px!important;height:24px!important}
+.event-choice-name{display:block;font:900 10.5px/1.15 Inter,sans-serif;letter-spacing:-.015em}
+.event-choice-sub{display:block;margin-top:3px;color:var(--ink-soft);font:700 8.5px/1.25 Inter,sans-serif}
+.event-choice.midnight{--event-choice-accent:#8B70FF}
+.event-choice.midnight .event-choice-preview{background:radial-gradient(circle at 75% 22%,#C766FF 0,transparent 30%),linear-gradient(145deg,#09051A,#351263 72%,#120821)}
+.event-choice.plant{--event-choice-accent:#62C96B}
+.event-choice.plant .event-choice-preview{background:radial-gradient(circle at 70% 20%,#C9F36A 0,transparent 30%),linear-gradient(145deg,#102714,#236A32 62%,#0D321C)}
+.event-choice.solar{--event-choice-accent:#FFB23F}
+.event-choice.solar .event-choice-preview{background:radial-gradient(circle at 68% 20%,#FFF7A0 0,transparent 27%),linear-gradient(145deg,#4C1705,#E26718 62%,#FFB52F)}
+
+/* Dynamic event colour system. */
+[data-active-event="plant"] .event-tab-button.on{
+  background:linear-gradient(135deg,#338A45,#82C84A)!important;
+  box-shadow:0 8px 24px rgba(60,146,65,.25)!important;
+}
+[data-active-event="plant"] .event-tab-spark{color:#D8FF95;text-shadow:0 0 11px #83E268}
+[data-active-event="solar"] .event-tab-button.on{
+  background:linear-gradient(135deg,#E65714,#FFB92E)!important;
+  box-shadow:0 8px 24px rgba(231,108,25,.28)!important;
+}
+[data-active-event="solar"] .event-tab-spark{color:#FFF5A3;text-shadow:0 0 11px #FFB82E}
+
+.event-hero[data-event-theme="plant"]{
+  background:
+    radial-gradient(circle at 82% 10%,rgba(212,255,122,.34),transparent 25%),
+    radial-gradient(circle at 12% 88%,rgba(78,225,103,.28),transparent 31%),
+    radial-gradient(circle at 48% 44%,rgba(63,150,75,.30),transparent 36%),
+    linear-gradient(145deg,#07190D 0%,#123A1B 44%,#2F6B29 100%);
+  box-shadow:0 24px 50px -30px rgba(42,124,52,.78),inset 0 0 0 1px rgba(202,255,160,.16);
+}
+.event-hero[data-event-theme="plant"] .event-aurora.a1{background:linear-gradient(90deg,transparent,#48A95C,#B9F16E,transparent)}
+.event-hero[data-event-theme="plant"] .event-aurora.a2{background:linear-gradient(90deg,transparent,#236B37,#7CD876,transparent)}
+.event-hero[data-event-theme="plant"] .event-label,
+[data-active-event="plant"] .event-level-line strong{color:#D7FFA5}
+[data-active-event="plant"] .event-progress-fill,
+[data-active-event="plant"] .event-daily-progressbar span{background:linear-gradient(90deg,#3E9D52,#88D957 52%,#D2EF6B);box-shadow:0 0 22px rgba(111,213,91,.5)}
+[data-active-event="plant"] .event-progress-glow{background:#F4FFD1;box-shadow:0 0 12px #fff,0 0 24px rgba(155,236,94,.9),0 0 42px rgba(48,151,65,.95)}
+[data-active-event="plant"] .event-progress-node.unlocked,
+[data-active-event="plant"] .event-progress-node.active{background:radial-gradient(circle at 32% 28%,rgba(255,255,255,.22),transparent 30%),linear-gradient(145deg,#2E813F,#80C94B 60%,#CDE968);box-shadow:0 12px 28px rgba(60,157,70,.42),0 0 22px rgba(145,219,92,.36)}
+[data-active-event="plant"] .event-daily-icon{background:radial-gradient(circle at 70% 20%,rgba(208,255,127,.28),transparent 35%),linear-gradient(145deg,#204A27,#17613B);color:#DCFFB7}
+[data-active-event="plant"] .event-daily-action.ready,
+[data-active-event="plant"] .event-reward-btn.use{background:linear-gradient(135deg,#328947,#87C94E)}
+
+.event-hero[data-event-theme="solar"]{
+  background:
+    radial-gradient(circle at 82% 8%,rgba(255,248,142,.55),transparent 24%),
+    radial-gradient(circle at 12% 88%,rgba(255,92,32,.28),transparent 31%),
+    radial-gradient(circle at 48% 44%,rgba(255,164,48,.32),transparent 36%),
+    linear-gradient(145deg,#351006 0%,#7A2508 42%,#E36D16 100%);
+  box-shadow:0 24px 50px -30px rgba(223,94,18,.78),inset 0 0 0 1px rgba(255,240,151,.18);
+}
+.event-hero[data-event-theme="solar"] .event-aurora.a1{background:linear-gradient(90deg,transparent,#FF6A19,#FFE269,transparent)}
+.event-hero[data-event-theme="solar"] .event-aurora.a2{background:linear-gradient(90deg,transparent,#D7440E,#FFB438,transparent)}
+.event-hero[data-event-theme="solar"] .event-label,
+[data-active-event="solar"] .event-level-line strong{color:#FFF2A3}
+[data-active-event="solar"] .event-progress-fill,
+[data-active-event="solar"] .event-daily-progressbar span{background:linear-gradient(90deg,#E34A12,#FF9C24 52%,#FFE267);box-shadow:0 0 22px rgba(255,155,35,.55)}
+[data-active-event="solar"] .event-progress-glow{background:#FFF8C6;box-shadow:0 0 12px #fff,0 0 24px rgba(255,203,69,.9),0 0 42px rgba(255,93,16,.95)}
+[data-active-event="solar"] .event-progress-node.unlocked,
+[data-active-event="solar"] .event-progress-node.active{background:radial-gradient(circle at 32% 28%,rgba(255,255,255,.24),transparent 30%),linear-gradient(145deg,#DB4511,#FF9C25 60%,#FFE36B);box-shadow:0 12px 28px rgba(224,79,17,.44),0 0 22px rgba(255,190,53,.40)}
+[data-active-event="solar"] .event-daily-icon{background:radial-gradient(circle at 70% 20%,rgba(255,245,157,.30),transparent 35%),linear-gradient(145deg,#7B2709,#D86515);color:#FFF2A3}
+[data-active-event="solar"] .event-daily-action.ready,
+[data-active-event="solar"] .event-reward-btn.use{background:linear-gradient(135deg,#DF4C13,#FFAD2C)}
+
+.home-event-card[data-event-theme="plant"]{
+  background:radial-gradient(circle at 76% 10%,rgba(205,255,114,.28),transparent 25%),radial-gradient(circle at 15% 88%,rgba(70,213,92,.22),transparent 30%),linear-gradient(145deg,#07190D,#1C5628 60%,#36742D)!important;
+}
+.home-event-card[data-event-theme="solar"]{
+  background:radial-gradient(circle at 76% 10%,rgba(255,244,126,.46),transparent 25%),radial-gradient(circle at 15% 88%,rgba(255,85,24,.25),transparent 30%),linear-gradient(145deg,#351006,#9A3109 58%,#F07A18)!important;
+}
+.home-event-card[data-event-theme="plant"] .home-event-orb-core{background:linear-gradient(145deg,#CFF47A,#4FAE5C)!important;color:#153C1E!important}
+.home-event-card[data-event-theme="solar"] .home-event-orb-core{background:linear-gradient(145deg,#FFF3A0,#FF9424)!important;color:#742108!important}
+
+.event-theme-mini.event-theme-mini-plant,
+.sw-eventplant{
+  color:#fff!important;
+  background:radial-gradient(circle at 80% 18%,rgba(209,247,105,.62),transparent 25%),radial-gradient(circle at 20% 80%,rgba(74,213,93,.45),transparent 30%),linear-gradient(145deg,#07190D,#226032 65%,#4D862F)!important;
+}
+.event-theme-mini.event-theme-mini-plant::before{content:"PLANT BLOOM"}
+.event-theme-mini.event-theme-mini-solar,
+.sw-eventsolar{
+  color:#fff!important;
+  background:radial-gradient(circle at 80% 18%,rgba(255,247,132,.72),transparent 25%),radial-gradient(circle at 20% 80%,rgba(255,83,22,.43),transparent 30%),linear-gradient(145deg,#351006,#A93409 60%,#F58C20)!important;
+}
+.event-theme-mini.event-theme-mini-solar::before{content:"SOLAR FLARE"}
+
+.name-event-verdant{background:linear-gradient(90deg,#2C9A50,#83D75D 55%,#C8E96A);-webkit-background-clip:text;background-clip:text;color:transparent!important;text-shadow:none!important}
+.name-event-solar{background:linear-gradient(90deg,#E84C12,#FF9F27 55%,#FFE267);-webkit-background-clip:text;background-clip:text;color:transparent!important;text-shadow:none!important}
+.frame-event-vine{position:relative;box-shadow:0 0 0 3px #3A9C52,0 0 0 6px #A5DC63,0 0 20px rgba(91,190,91,.62)!important}
+.frame-event-vine::after{content:"❋";position:absolute;right:-8px;top:-8px;width:21px;height:21px;display:grid;place-items:center;border-radius:50%;color:#173A20;background:linear-gradient(135deg,#D9F681,#57B463);box-shadow:0 0 15px rgba(115,216,98,.7);font-size:11px;animation:eventRingSpark 2.6s ease-in-out infinite}
+.frame-event-sun{position:relative;box-shadow:0 0 0 3px #E95816,0 0 0 6px #FFD24F,0 0 22px rgba(255,157,35,.68)!important}
+.frame-event-sun::after{content:"☀";position:absolute;right:-8px;top:-8px;width:22px;height:22px;display:grid;place-items:center;border-radius:50%;color:#792208;background:linear-gradient(135deg,#FFF398,#FF9D26);box-shadow:0 0 16px rgba(255,169,42,.78);font-size:12px;animation:eventRingSpark 2.4s ease-in-out infinite}
+.font-event-botanic{font-family:Georgia,"Times New Roman",serif!important;letter-spacing:.035em!important;font-style:italic}
+[data-font="event_botanic"] body,[data-font="event_botanic"] button,[data-font="event_botanic"] input,[data-font="event_botanic"] select{font-family:Georgia,"Times New Roman",serif!important}
+.font-event-helios{font-family:"Arial Black","Avenir Next",Arial,sans-serif!important;letter-spacing:.04em!important;text-transform:uppercase}
+[data-font="event_helios"] body,[data-font="event_helios"] button,[data-font="event_helios"] input,[data-font="event_helios"] select{font-family:"Avenir Next",Arial,sans-serif!important;letter-spacing:.012em}
+
+[data-style="event_plant"]{--paper:#F1F7E9;--paper-2:#E3EFD7;--panel:#F7FBF1;--card:#FBFEF8;--ink:#19321F;--ink-soft:#6B806D;--line:#CFE0C7;--moss:#3D9B54;--moss-dark:#173B21;--moss-soft:#DCEFD7;--amber:#7BBE4E;--amber-2:#3D9B54;--amber-soft:#E0F0D3;--brick:#A35A32}
+[data-style="event_plant"] body{background:radial-gradient(circle at 82% 8%,rgba(200,238,117,.25),transparent 24%),linear-gradient(180deg,#F4F8EC,#EAF2DF)}
+[data-style="event_solar"]{--paper:#FFF7E9;--paper-2:#FBE7CB;--panel:#FFF9F0;--card:#FFFDF8;--ink:#4A2512;--ink-soft:#906B54;--line:#EBCDAE;--moss:#E56720;--moss-dark:#5E2309;--moss-soft:#F9DDC6;--amber:#FF9D29;--amber-2:#E85B18;--amber-soft:#FFE5C1;--brick:#C94518}
+[data-style="event_solar"] body{background:radial-gradient(circle at 82% 8%,rgba(255,216,91,.28),transparent 24%),linear-gradient(180deg,#FFF9EE,#FBEBD5)}
+
+@media(max-width:360px){.event-picker{gap:6px}.event-choice{padding:8px 6px;min-height:118px}.event-choice-name{font-size:9.6px}.event-choice-sub{font-size:8px}}
+
+
+/* =========================================================
+   PLANT EVENT VINE BACKGROUND WITH PARALLAX
+   ========================================================= */
+:root{
+  --vine-x: 0px;
+  --vine-y: 0px;
+}
+
+.vine-parallax{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:0;
+  opacity:0;
+  transition:opacity .35s ease;
+  overflow:hidden;
+}
+.vine-parallax::before{
+  content:"";
+  position:absolute;
+  inset:-6%;
+  background-repeat:no-repeat;
+  background-position:center;
+  background-size:cover;
+  will-change:transform;
+  transition:transform .16s ease-out;
+}
+.vine-parallax.layer-a::before{
+  background-image:url("data:image/svg+xml;utf8,%0A%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%20800%201200%27%3E%0A%20%20%3Cg%20fill%3D%27none%27%20stroke%3D%27%237CC95C%27%20stroke-width%3D%277%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%20opacity%3D%27.9%27%3E%0A%20%20%20%20%3Cpath%20d%3D%27M120%2C-40%20C80%2C120%20170%2C210%20130%2C360%20C96%2C490%20148%2C565%20116%2C720%20C90%2C852%20142%2C982%20112%2C1210%27/%3E%0A%20%20%20%20%3Cpath%20d%3D%27M352%2C-20%20C318%2C110%20396%2C220%20356%2C344%20C316%2C468%20388%2C592%20352%2C718%20C318%2C840%20386%2C962%20356%2C1212%27/%3E%0A%20%20%20%20%3Cpath%20d%3D%27M612%2C-10%20C578%2C132%20660%2C248%20620%2C390%20C584%2C520%20648%2C620%20614%2C760%20C584%2C882%20636%2C1006%20606%2C1212%27/%3E%0A%20%20%3C/g%3E%0A%20%20%3Cg%20fill%3D%27%23BDE986%27%20opacity%3D%27.9%27%3E%0A%20%20%20%20%3Cpath%20d%3D%27M132%20120c34-23%2059-22%2082%203-34%2024-58%2024-82-3Z%27/%3E%0A%20%20%20%20%3Cpath%20d%3D%27M78%20268c28-20%2052-19%2073%204-29%2020-54%2020-73-4Z%27/%3E%0A%20%20%20%20%3Cpath%20d%3D%27M372%20160c30-22%2054-20%2076%205-29%2021-54%2020-76-5Z%27/%3E%0A%20%20%20%20%3Cpath%20d%3D%27M306%20302c27-19%2049-18%2069%205-28%2018-50%2018-69-5Z%27/%3E%0A%20%20%20%20%3Cpath%20d%3D%27M636%20192c31-22%2055-20%2079%205-31%2021-57%2020-79-5Z%27/%3E%0A%20%20%20%20%3Cpath%20d%3D%27M564%20346c27-19%2049-18%2069%205-27%2019-49%2018-69-5Z%27/%3E%0A%20%20%20%20%3Cpath%20d%3D%27M145%20536c34-23%2059-22%2082%203-34%2024-58%2024-82-3Z%27/%3E%0A%20%20%20%20%3Cpath%20d%3D%27M367%20560c29-20%2052-19%2074%204-30%2021-54%2020-74-4Z%27/%3E%0A%20%20%20%20%3Cpath%20d%3D%27M621%20620c32-22%2056-20%2078%205-31%2021-55%2020-78-5Z%27/%3E%0A%20%20%20%20%3Cpath%20d%3D%27M120%20844c32-22%2058-21%2081%204-32%2022-58%2022-81-4Z%27/%3E%0A%20%20%20%20%3Cpath%20d%3D%27M360%20892c31-22%2055-20%2078%205-31%2021-55%2020-78-5Z%27/%3E%0A%20%20%20%20%3Cpath%20d%3D%27M604%20930c31-22%2056-20%2078%205-31%2021-56%2020-78-5Z%27/%3E%0A%20%20%3C/g%3E%0A%3C/svg%3E%0A");
+  opacity:.90;
+  transform:translate3d(calc(var(--vine-x) * .9), calc(var(--vine-y) * .9), 0) scale(1.03);
+}
+.vine-parallax.layer-b::before{
+  background-image:url("data:image/svg+xml;utf8,%0A%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%20800%201200%27%3E%0A%20%20%3Cg%20fill%3D%27none%27%20stroke%3D%27%233B8B47%27%20stroke-width%3D%2710%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%20opacity%3D%27.75%27%3E%0A%20%20%20%20%3Cpath%20d%3D%27M-40%20220%20C160%20118%20232%20168%20358%20114%20C486%2058%20588%20102%20828%20-10%27/%3E%0A%20%20%20%20%3Cpath%20d%3D%27M-40%20640%20C166%20542%20236%20592%20364%20532%20C504%20468%20606%20520%20828%20402%27/%3E%0A%20%20%20%20%3Cpath%20d%3D%27M-40%201000%20C162%20892%20236%20936%20376%20878%20C516%20818%20620%20860%20828%20742%27/%3E%0A%20%20%3C/g%3E%0A%20%20%3Cg%20fill%3D%27%234AAE5B%27%20opacity%3D%27.7%27%3E%0A%20%20%20%20%3Cpath%20d%3D%27M170%20130c38-28%2071-26%20101%207-39%2028-72%2027-101-7Z%27/%3E%0A%20%20%20%20%3Cpath%20d%3D%27M448%2088c38-28%2070-26%20100%206-39%2028-72%2028-100-6Z%27/%3E%0A%20%20%20%20%3Cpath%20d%3D%27M224%20560c36-26%2066-25%2094%206-37%2026-68%2026-94-6Z%27/%3E%0A%20%20%20%20%3Cpath%20d%3D%27M536%20500c35-25%2065-23%2092%206-36%2025-67%2025-92-6Z%27/%3E%0A%20%20%20%20%3Cpath%20d%3D%27M152%20914c37-27%2068-25%2096%207-37%2027-69%2026-96-7Z%27/%3E%0A%20%20%20%20%3Cpath%20d%3D%27M500%20844c37-26%2067-24%2095%206-37%2027-69%2026-95-6Z%27/%3E%0A%20%20%3C/g%3E%0A%3C/svg%3E%0A");
+  opacity:.55;
+  transform:translate3d(calc(var(--vine-x) * .45), calc(var(--vine-y) * .45), 0) scale(1.04);
+  filter:blur(.25px);
+}
+.vine-parallax.layer-c::before{
+  background-image:url("data:image/svg+xml;utf8,%0A%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%20800%201200%27%3E%0A%20%20%3Cg%20fill%3D%27none%27%20stroke%3D%27%23A6E26D%27%20stroke-width%3D%274%27%20stroke-linecap%3D%27round%27%20opacity%3D%27.6%27%3E%0A%20%20%20%20%3Cpath%20d%3D%27M730%20-20%20C760%20180%20642%20220%20678%20430%20C714%20630%20620%20700%20658%20928%20C676%201040%20650%201120%20662%201220%27/%3E%0A%20%20%20%20%3Cpath%20d%3D%27M40%20-10%20C74%20160%20-28%20260%2026%20422%20C70%20560%20-6%20650%2042%20830%20C74%20952%2018%201060%2054%201218%27/%3E%0A%20%20%3C/g%3E%0A%20%20%3Cg%20fill%3D%27%23DDF7A9%27%20opacity%3D%27.8%27%3E%0A%20%20%20%20%3Ccircle%20cx%3D%27690%27%20cy%3D%27244%27%20r%3D%279%27/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%27112%27%20cy%3D%27300%27%20r%3D%278%27/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%27662%27%20cy%3D%27702%27%20r%3D%2710%27/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%2786%27%20cy%3D%27864%27%20r%3D%279%27/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%27702%27%20cy%3D%271040%27%20r%3D%278%27/%3E%0A%20%20%3C/g%3E%0A%3C/svg%3E%0A");
+  opacity:.42;
+  transform:translate3d(calc(var(--vine-x) * .18), calc(var(--vine-y) * .18), 0) scale(1.02);
+}
+
+[data-style="event_plant"] .vine-parallax{ opacity:1; }
+[data-style="event_plant"] body{
+  background:
+    radial-gradient(circle at 86% 10%,rgba(224,255,166,.34),transparent 22%),
+    radial-gradient(circle at 12% 16%,rgba(143,222,110,.17),transparent 24%),
+    linear-gradient(180deg,#F5FBEF,#E7F2DB) !important;
+}
+[data-style="event_plant"] .app,
+[data-style="event_plant"] .screen{
+  position:relative;
+}
+[data-style="event_plant"] .screen::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:
+    radial-gradient(circle at 10% 18%,rgba(255,255,255,.34),transparent 16%),
+    radial-gradient(circle at 88% 14%,rgba(201,247,126,.14),transparent 24%),
+    linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,0) 30%);
+  z-index:0;
+}
+[data-style="event_plant"] .card,
+[data-style="event_plant"] .capture,
+[data-style="event_plant"] .ch-card,
+[data-style="event_plant"] .prog-card,
+[data-style="event_plant"] .shop-item,
+[data-style="event_plant"] .friend,
+[data-style="event_plant"] .map-card{
+  background:rgba(251,254,248,.86);
+  backdrop-filter:blur(14px);
+  box-shadow:0 18px 32px rgba(42,102,40,.10);
+}
+[data-style="event_plant"] .event-hero{
+  background:
+    radial-gradient(circle at 84% 18%,rgba(220,255,169,.42),transparent 24%),
+    radial-gradient(circle at 18% 82%,rgba(84,183,92,.28),transparent 26%),
+    linear-gradient(145deg,rgba(7,25,13,.97),rgba(24,77,40,.95) 58%,rgba(62,126,54,.94)) !important;
+  box-shadow:0 22px 40px rgba(34,86,38,.22);
+}
+[data-style="event_plant"] .event-aurora.a1{
+  background:radial-gradient(circle at center,rgba(217,255,157,.56),transparent 68%);
+}
+[data-style="event_plant"] .event-aurora.a2{
+  background:radial-gradient(circle at center,rgba(104,219,94,.42),transparent 68%);
+}
+
+
+/* =========================================================
+   SOLAR PROFILE RING: ROTATING SUN AROUND PROFILE IMAGE
+   ========================================================= */
+.frame-event-sun,
+.home-avatar.frame-event-sun,
+.p-avatar.frame-event-sun,
+.topbar-avatar.frame-event-sun,
+.avatar.frame-event-sun{
+  position:relative !important;
+  overflow:visible !important;
+  isolation:isolate;
+  box-shadow:
+    0 0 0 3px #E95816,
+    0 0 0 6px #FFD24F,
+    0 0 22px rgba(255,157,35,.68) !important;
+}
+
+.frame-event-sun::before,
+.home-avatar.frame-event-sun::before,
+.p-avatar.frame-event-sun::before,
+.topbar-avatar.frame-event-sun::before,
+.avatar.frame-event-sun::before{
+  content:"";
+  position:absolute;
+  inset:-8px;
+  border-radius:50%;
+  background:
+    conic-gradient(
+      from 0deg,
+      rgba(255,238,142,.00) 0deg,
+      rgba(255,214,77,.72) 32deg,
+      rgba(255,126,29,.14) 56deg,
+      rgba(255,238,142,.00) 88deg,
+      rgba(255,238,142,.00) 180deg,
+      rgba(255,214,77,.38) 216deg,
+      rgba(255,126,29,.10) 236deg,
+      rgba(255,238,142,.00) 268deg,
+      rgba(255,238,142,.00) 360deg
+    );
+  -webkit-mask: radial-gradient(circle, transparent calc(100% - 6px), #000 calc(100% - 5px));
+  mask: radial-gradient(circle, transparent calc(100% - 6px), #000 calc(100% - 5px));
+  opacity:.92;
+  filter:drop-shadow(0 0 8px rgba(255,193,54,.34));
+  animation:solarCoronaSpin 7.5s linear infinite;
+  z-index:2;
+  pointer-events:none;
+}
+
+.frame-event-sun::after,
+.home-avatar.frame-event-sun::after,
+.p-avatar.frame-event-sun::after,
+.topbar-avatar.frame-event-sun::after,
+.avatar.frame-event-sun::after{
+  content:"☀";
+  position:absolute;
+  inset:-14px;
+  display:flex;
+  align-items:flex-start;
+  justify-content:center;
+  padding-top:0;
+  font-size:18px;
+  line-height:1;
+  color:#7E2A08;
+  text-shadow:
+    0 0 10px rgba(255,232,128,.75),
+    0 0 18px rgba(255,156,43,.55);
+  z-index:3;
+  pointer-events:none;
+  animation:solarSunOrbit 4.2s linear infinite;
+  filter:drop-shadow(0 0 7px rgba(255,190,66,.9));
+}
+
+.home-avatar.frame-event-sun::after{ font-size:20px; inset:-15px; }
+.p-avatar.frame-event-sun::after{ font-size:24px; inset:-17px; }
+.topbar-avatar.frame-event-sun::after{ font-size:15px; inset:-12px; }
+.avatar.frame-event-sun::after{ font-size:16px; inset:-12px; }
+
+@keyframes solarCoronaSpin{
+  from{ transform:rotate(0deg); }
+  to{ transform:rotate(-360deg); }
+}
+
+@keyframes solarSunOrbit{
+  0%{
+    transform:rotate(0deg) scale(1);
+  }
+  25%{
+    transform:rotate(90deg) scale(1.08);
+  }
+  50%{
+    transform:rotate(180deg) scale(1);
+  }
+  75%{
+    transform:rotate(270deg) scale(1.08);
+  }
+  100%{
+    transform:rotate(360deg) scale(1);
+  }
+}
+
+
+/* =========================================================
+   EVENT PAGE USES SELECTED EVENT FONT + BACKGROUND
+   ========================================================= */
+:root{
+  --event-page-font: var(--font-body);
+  --event-page-letter: .01em;
+  --event-page-kicker-letter: .18em;
+}
+
+[data-active-event="midnight"]{
+  --event-page-font: "Trebuchet MS","Avenir Next",Avenir,sans-serif;
+  --event-page-letter: .018em;
+  --event-page-kicker-letter: .22em;
+}
+[data-active-event="plant"]{
+  --event-page-font: Georgia,"Times New Roman",serif;
+  --event-page-letter: .016em;
+  --event-page-kicker-letter: .18em;
+}
+[data-active-event="solar"]{
+  --event-page-font: "Arial Black","Avenir Next",Arial,sans-serif;
+  --event-page-letter: .012em;
+  --event-page-kicker-letter: .20em;
+}
+
+#pane-ch-event{
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;
+  border-radius:28px;
+  padding:14px 12px 24px;
+  margin-top:2px;
+  font-family:var(--event-page-font);
+  letter-spacing:var(--event-page-letter);
+  box-shadow:0 18px 34px rgba(0,0,0,.06);
+}
+#pane-ch-event > *{
+  position:relative;
+  z-index:2;
+}
+#pane-ch-event::before,
+#pane-ch-event::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+}
+#pane-ch-event::after{
+  z-index:1;
+  opacity:.9;
+}
+
+/* apply the selected event font inside the event page */
+#pane-ch-event,
+#pane-ch-event button,
+#pane-ch-event input,
+#pane-ch-event select,
+#pane-ch-event textarea{
+  font-family:var(--event-page-font) !important;
+}
+#pane-ch-event .event-label,
+#pane-ch-event .event-section-kicker,
+#pane-ch-event .event-reward-step,
+#pane-ch-event .event-reward-xp,
+#pane-ch-event .event-progress-xp,
+#pane-ch-event .event-progress-name{
+  letter-spacing:var(--event-page-kicker-letter);
+}
+#pane-ch-event .event-topline h2,
+#pane-ch-event .event-section-head h3{
+  letter-spacing:var(--event-page-letter);
+}
+[data-active-event="solar"] #pane-ch-event .event-topline h2,
+[data-active-event="solar"] #pane-ch-event .event-section-head h3,
+[data-active-event="solar"] #pane-ch-event .event-label,
+[data-active-event="solar"] #pane-ch-event .event-section-kicker{
+  text-transform:uppercase;
+}
+[data-active-event="plant"] #pane-ch-event .event-topline h2,
+[data-active-event="plant"] #pane-ch-event .event-section-head h3{
+  font-style:italic;
+}
+
+/* theme backgrounds for the whole event page */
+[data-active-event="midnight"] #pane-ch-event{
+  background:
+    radial-gradient(circle at 82% 8%, rgba(181,118,255,.26), transparent 24%),
+    radial-gradient(circle at 12% 24%, rgba(67,216,255,.14), transparent 22%),
+    linear-gradient(180deg, #0A0716 0%, #130A24 58%, #1A0F2F 100%);
+  color:#F7F2FF;
+  box-shadow:0 24px 42px rgba(33,16,60,.28);
+}
+[data-active-event="midnight"] #pane-ch-event::before{
+  background:
+    radial-gradient(circle, rgba(255,255,255,.88) 0 1px, transparent 1.5px) 8% 12%/54px 54px,
+    radial-gradient(circle, rgba(167,244,255,.75) 0 1px, transparent 1.6px) 72% 18%/78px 78px,
+    radial-gradient(circle, rgba(215,176,255,.64) 0 1px, transparent 1.6px) 24% 68%/68px 68px;
+  opacity:.45;
+  z-index:0;
+}
+[data-active-event="midnight"] #pane-ch-event::after{
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255,255,255,.09), transparent 38%),
+    linear-gradient(180deg, rgba(255,255,255,.05), transparent 26%);
+}
+[data-active-event="midnight"] #pane-ch-event .event-reward-card,
+[data-active-event="midnight"] #pane-ch-event .event-daily-card,
+[data-active-event="midnight"] #pane-ch-event .event-info-card{
+  background:rgba(24,14,45,.78);
+  border-color:rgba(123,97,255,.22);
+  box-shadow:0 16px 30px rgba(16,8,32,.22);
+}
+[data-active-event="midnight"] #pane-ch-event .event-section-head h3,
+[data-active-event="midnight"] #pane-ch-event .event-section-head strong,
+[data-active-event="midnight"] #pane-ch-event .event-info-card strong{
+  color:#F9F5FF;
+}
+
+/* plant */
+[data-active-event="plant"] #pane-ch-event{
+  background:
+    radial-gradient(circle at 86% 10%, rgba(220,255,150,.24), transparent 24%),
+    radial-gradient(circle at 10% 16%, rgba(120,206,102,.12), transparent 22%),
+    linear-gradient(180deg, #F3F9EC 0%, #E9F3DF 55%, #E1EDD6 100%);
+  color:#19321F;
+  box-shadow:0 22px 42px rgba(42,102,40,.14);
+}
+[data-active-event="plant"] #pane-ch-event::before{
+  background:
+    linear-gradient(115deg, transparent 0 18%, rgba(110,181,85,.08) 18.5% 19.2%, transparent 19.8% 100%),
+    linear-gradient(72deg, transparent 0 70%, rgba(152,218,89,.07) 70.4% 71.2%, transparent 71.8% 100%);
+  opacity:1;
+  z-index:0;
+}
+[data-active-event="plant"] #pane-ch-event::after{
+  background:
+    radial-gradient(circle at 12% 22%, rgba(255,255,255,.45), transparent 18%),
+    radial-gradient(circle at 88% 80%, rgba(168,230,114,.16), transparent 22%);
+}
+[data-active-event="plant"] #pane-ch-event .event-reward-card,
+[data-active-event="plant"] #pane-ch-event .event-daily-card,
+[data-active-event="plant"] #pane-ch-event .event-info-card{
+  background:rgba(251,254,248,.88);
+  border-color:rgba(102,171,77,.18);
+  box-shadow:0 16px 28px rgba(57,123,50,.10);
+}
+[data-active-event="plant"] #pane-ch-event .event-section-head h3,
+[data-active-event="plant"] #pane-ch-event .event-section-head strong,
+[data-active-event="plant"] #pane-ch-event .event-info-card strong{
+  color:#173521;
+}
+
+/* solar */
+[data-active-event="solar"] #pane-ch-event{
+  background:
+    radial-gradient(circle at 84% 8%, rgba(255,225,111,.34), transparent 22%),
+    radial-gradient(circle at 16% 22%, rgba(255,126,29,.14), transparent 22%),
+    linear-gradient(180deg, #FFF9EF 0%, #FFF0DC 52%, #FBE2BE 100%);
+  color:#4A2512;
+  box-shadow:0 24px 42px rgba(170,82,18,.16);
+}
+[data-active-event="solar"] #pane-ch-event::before{
+  background:
+    radial-gradient(circle at 18% 16%, rgba(255,255,255,.60), transparent 18%),
+    radial-gradient(circle at 84% 12%, rgba(255,196,69,.34), transparent 20%),
+    linear-gradient(140deg, rgba(255,164,40,.08), transparent 28%);
+  z-index:0;
+}
+[data-active-event="solar"] #pane-ch-event::after{
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255,212,105,.18), transparent 36%),
+    linear-gradient(180deg, rgba(255,255,255,.18), transparent 24%);
+}
+[data-active-event="solar"] #pane-ch-event .event-reward-card,
+[data-active-event="solar"] #pane-ch-event .event-daily-card,
+[data-active-event="solar"] #pane-ch-event .event-info-card{
+  background:rgba(255,250,241,.90);
+  border-color:rgba(234,152,56,.22);
+  box-shadow:0 16px 30px rgba(185,95,23,.10);
+}
+[data-active-event="solar"] #pane-ch-event .event-section-head h3,
+[data-active-event="solar"] #pane-ch-event .event-section-head strong,
+[data-active-event="solar"] #pane-ch-event .event-info-card strong{
+  color:#4A2512;
+}
+
+
+/* =========================================================
+   HOME MINI HEX MAP PREVIEW INSIDE CAPTURE CARD
+   ========================================================= */
+.cap-icon{
+  width:min(100%, 320px);
+  height:128px;
+  border-radius:22px;
+  margin:0 auto 12px;
+  padding:0;
+  background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.01));
+  border:1px solid rgba(255,255,255,.10);
+  overflow:hidden;
+}
+.cap-icon.big{
+  width:128px;height:128px;border-radius:20px;padding:0;
+}
+.mini-hex-nav{
+  position:relative;
+  width:100%;height:100%;
+  border:none;outline:none;cursor:pointer;
+  padding:0;margin:0;display:block;
+  background:
+    radial-gradient(circle at 18% 18%, rgba(255,255,255,.08), transparent 26%),
+    radial-gradient(circle at 82% 78%, rgba(196,115,255,.10), transparent 22%),
+    linear-gradient(180deg, rgba(13,10,31,.92), rgba(24,12,51,.96));
+}
+.mini-hex-nav:active{ transform:scale(.988); }
+.mini-hex-bg{
+  position:absolute; inset:0;
+  background:
+    linear-gradient(120deg, transparent 0 9%, rgba(255,255,255,.05) 9.4% 10%, transparent 10.4% 100%),
+    linear-gradient(42deg, transparent 0 56%, rgba(255,255,255,.045) 56.3% 56.9%, transparent 57.2% 100%),
+    radial-gradient(circle at 72% 18%, rgba(98,194,255,.09), transparent 18%),
+    radial-gradient(circle at 24% 76%, rgba(168,129,255,.08), transparent 16%);
+  opacity:.9;
+}
+.mini-hex-svg{
+  position:absolute; inset:8px 10px 28px 10px;
+  width:calc(100% - 20px); height:calc(100% - 36px);
+  overflow:visible;
+}
+.mini-hex-open{
+  position:absolute; left:12px; right:12px; bottom:8px;
+  display:flex; align-items:center; justify-content:space-between;
+  gap:8px; padding:7px 10px;
+  border-radius:999px;
+  background:rgba(8,6,24,.46);
+  border:1px solid rgba(255,255,255,.08);
+  color:#F2ECFF; font-size:11px; font-weight:700;
+  letter-spacing:.02em;
+  backdrop-filter:blur(10px);
+}
+.mini-hex-open strong{font-size:11px; font-weight:800;}
+.mini-hex-open .pill{
+  display:inline-flex; align-items:center; gap:6px;
+  padding:6px 10px; border-radius:999px;
+  background:linear-gradient(135deg, rgba(198,108,255,.28), rgba(123,97,255,.34));
+  color:#F8F2FF;
+  box-shadow:0 6px 16px rgba(118,78,229,.20);
+}
+.mini-hex-open .arr{
+  opacity:.85; font-size:12px; transform:translateY(-.5px);
+}
+.mini-hex-cell{ transition:transform .2s ease, opacity .2s ease; }
+.mini-hex-cell.current{ filter:drop-shadow(0 0 10px rgba(111,219,255,.35)); }
+.mini-hex-cell.selected{ filter:drop-shadow(0 0 10px rgba(198,108,255,.30)); }
+.mini-hex-label{
+  font-size:7px; fill:rgba(255,255,255,.66); font-weight:700;
+  letter-spacing:.04em;
+}
+
+
+/* =========================================================
+   REAL OPENSTREETMAP MINI MAP ON HOME CAPTURE CARD
+   ========================================================= */
+.cap-icon{
+  width:min(100%, 430px) !important;
+  height:172px !important;
+  border-radius:24px !important;
+  margin:0 auto 15px !important;
+  padding:0 !important;
+  overflow:hidden !important;
+  border:1px solid rgba(255,255,255,.13) !important;
+  background:#171328 !important;
+  box-shadow:
+    0 18px 36px rgba(0,0,0,.18),
+    inset 0 1px 0 rgba(255,255,255,.08) !important;
+}
+.cap-icon.big{
+  width:128px !important;
+  height:128px !important;
+  border-radius:20px !important;
+}
+.mini-real-map-card{
+  position:relative;
+  width:100%;
+  height:100%;
+  cursor:pointer;
+  overflow:hidden;
+  border-radius:inherit;
+  isolation:isolate;
+  text-align:left;
+}
+.mini-real-map-card:active{
+  transform:scale(.992);
+}
+.mini-real-map{
+  position:absolute;
+  inset:0;
+  z-index:1;
+  background:#DDE5DA;
+}
+.mini-real-map.leaflet-container{
+  font-family:var(--font-body);
+}
+.mini-real-map .leaflet-control-container{
+  display:none !important;
+}
+.mini-real-map .leaflet-tile-pane{
+  filter:saturate(.90) contrast(.96) brightness(.88);
+}
+.mini-real-map .leaflet-overlay-pane{
+  z-index:420;
+}
+.mini-real-map .leaflet-marker-pane{
+  z-index:520;
+}
+.mini-real-map-shade{
+  position:absolute;
+  inset:0;
+  z-index:3;
+  pointer-events:none;
+  background:
+    linear-gradient(180deg,rgba(7,5,20,.08),transparent 45%,rgba(7,5,20,.68) 100%),
+    radial-gradient(circle at 50% 45%,transparent 42%,rgba(7,5,20,.16) 100%);
+}
+.mini-real-map-top{
+  position:absolute;
+  top:10px;
+  left:10px;
+  right:10px;
+  z-index:5;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  pointer-events:none;
+}
+.mini-real-map-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  min-height:30px;
+  padding:7px 10px;
+  border-radius:999px;
+  color:#fff;
+  background:rgba(10,8,24,.66);
+  border:1px solid rgba(255,255,255,.13);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  box-shadow:0 8px 18px rgba(0,0,0,.14);
+  font-size:10.5px;
+  font-weight:800;
+  letter-spacing:.02em;
+}
+.mini-real-map-live{
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:#66DFFF;
+  box-shadow:0 0 0 4px rgba(102,223,255,.14),0 0 13px rgba(102,223,255,.75);
+  animation:miniMapPulse 1.9s ease-in-out infinite;
+}
+@keyframes miniMapPulse{
+  50%{transform:scale(.72);opacity:.62;}
+}
+.mini-real-map-bottom{
+  position:absolute;
+  left:10px;
+  right:10px;
+  bottom:9px;
+  z-index:5;
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:12px;
+  pointer-events:none;
+  color:#fff;
+}
+.mini-real-map-copy{
+  min-width:0;
+  text-shadow:0 2px 10px rgba(0,0,0,.62);
+}
+.mini-real-map-copy strong{
+  display:block;
+  font-size:14px;
+  font-weight:900;
+  line-height:1.1;
+}
+.mini-real-map-copy span{
+  display:block;
+  margin-top:3px;
+  font-size:10px;
+  font-weight:650;
+  opacity:.82;
+}
+.mini-real-map-open{
+  flex-shrink:0;
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  padding:9px 12px;
+  border-radius:999px;
+  background:linear-gradient(135deg,#C66CFF,#7B61FF);
+  color:#fff;
+  box-shadow:0 9px 22px rgba(91,65,210,.34);
+  font-size:10.5px;
+  font-weight:900;
+  letter-spacing:.04em;
+}
+.mini-map-chest-icon{
+  width:22px !important;
+  height:22px !important;
+  margin-left:-11px !important;
+  margin-top:-11px !important;
+  display:grid !important;
+  place-items:center !important;
+  border-radius:50% !important;
+  color:#744310 !important;
+  background:linear-gradient(145deg,#FFF1A8,#F1AE38) !important;
+  border:2px solid rgba(255,255,255,.84) !important;
+  box-shadow:0 6px 14px rgba(91,54,12,.28),0 0 14px rgba(255,203,72,.62) !important;
+  font:900 12px/1 Inter,sans-serif !important;
+}
+.mini-map-photo-icon{
+  width:20px !important;
+  height:20px !important;
+  margin-left:-10px !important;
+  margin-top:-10px !important;
+  border-radius:50% !important;
+  border:2px solid #fff !important;
+  box-shadow:0 5px 12px rgba(0,0,0,.26) !important;
+  overflow:hidden !important;
+  background:#E96562 !important;
+}
+.mini-map-photo-icon img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+
 </style>
 <!-- topbar removed + top content lowered -->
 </head>
@@ -7107,6 +8462,9 @@ body.photo-celebration-open{
 <div class="bg-blob b1"></div>
 <div class="bg-blob b2"></div>
 <div class="bg-blob b3"></div>
+<div class="vine-parallax layer-c" aria-hidden="true"></div>
+<div class="vine-parallax layer-b" aria-hidden="true"></div>
+<div class="vine-parallax layer-a" aria-hidden="true"></div>
 
 <!-- ============ ONBOARDING ============ -->
 <div class="onb" id="onb">
@@ -7276,7 +8634,7 @@ body.photo-celebration-open{
       </div>
 
 
-      <section class="home-event-card" id="homeEventCard" role="button" tabindex="0" aria-label="Åbn Midnight Bloom-eventet">
+      <section class="home-event-card" id="homeEventCard" data-event-theme="midnight" role="button" tabindex="0" aria-label="Åbn Midnight Bloom-eventet">
         <div class="home-event-nebula nebula-one"></div>
         <div class="home-event-nebula nebula-two"></div>
         <div class="home-event-stars"></div>
@@ -7292,8 +8650,8 @@ body.photo-celebration-open{
 
         <div class="home-event-main">
           <div class="home-event-copy">
-            <div class="home-event-title">MIDNIGHT BLOOM</div>
-            <div class="home-event-sub">Saml Event-XP og lås et komplet nebula-look op.</div>
+            <div class="home-event-title" id="homeEventTitle">MIDNIGHT BLOOM</div>
+            <div class="home-event-sub" id="homeEventSub">Saml Event-XP og lås et komplet nebula-look op.</div>
           </div>
 
           <div class="home-event-reward-orb" id="homeEventRewardOrb">
@@ -7473,7 +8831,7 @@ body.photo-celebration-open{
           <button class="btn btn-primary hex-capture-btn" id="hexCaptureBtn">Tag billede</button>
         </div>
 
-        <p class="hint" id="gpsStatus" style="display:block;">Testtilstand: Tryk direkte på en kiste for at åbne den og starte hele kiste-cutscenen. Du behøver ikke tage et testbillede først. Kister refresher tilfældigt hver dag.</p>
+        <p class="hint" id="gpsStatus" style="display:block;">Testtilstand: Tryk direkte på en pengepung for at åbne den og starte hele kiste-cutscenen. Du behøver ikke tage et testbillede først. Pengepunge refresher tilfældigt hver dag.</p>
         <input type="file" accept="image/*" capture="environment" id="hexCameraInput" style="display:none;">
       </div>
     </div>
@@ -7509,20 +8867,20 @@ body.photo-celebration-open{
 
 
       <div class="ch-pane" id="pane-ch-event">
-        <section class="event-hero">
+        <section class="event-hero" id="eventHero" data-event-theme="midnight">
           <div class="event-aurora a1"></div>
           <div class="event-aurora a2"></div>
           <div class="event-stars"></div>
 
           <div class="event-topline">
             <div>
-              <div class="event-label">MÅNEDLIGT TESTEVENT</div>
-              <h2>MIDNIGHT BLOOM</h2>
+              <div class="event-label" id="eventHeroLabel">MÅNEDLIGT TESTEVENT</div>
+              <h2 id="eventHeroTitle">MIDNIGHT BLOOM</h2>
             </div>
             <div class="event-days" id="eventDaysLeft">— dage</div>
           </div>
 
-          <p class="event-intro">Klar daglige event-challenges, saml Event-XP og lås rewards op automatisk direkte på baren, så snart du rammer deres XP-krav.</p>
+          <p class="event-intro" id="eventHeroIntro">Klar daglige event-challenges, saml Event-XP og lås rewards op automatisk direkte på baren, så snart du rammer deres XP-krav.</p>
 
           <div class="event-level-line">
             <span id="eventXpText">0 / 3600 Event-XP</span>
@@ -7562,10 +8920,10 @@ body.photo-celebration-open{
         <div class="event-daily-list stagger" id="eventDailyList"></div>
 
         <div class="event-info-card">
-          <div class="event-info-icon">✦</div>
+          <div class="event-info-icon" id="eventInfoIcon">✦</div>
           <div>
             <strong>Sådan virker eventet</strong>
-            <p>Challenges giver kun Event-XP. Rewards sidder direkte på XP-baren og låses automatisk op, så snart du rammer deres milestone. Eventet nulstilles automatisk ved en ny måned.</p>
+            <p id="eventInfoText">Challenges giver kun Event-XP. Rewards sidder direkte på XP-baren og låses automatisk op, så snart du rammer deres milestone. Eventet nulstilles automatisk ved en ny måned.</p>
           </div>
         </div>
       </div>
@@ -7719,6 +9077,26 @@ body.photo-celebration-open{
           <p class="hint" id="acctLinkSentMsg" style="display:none;margin-bottom:10px;"></p>
           <button class="btn-outline" id="acctGoogleBtn" style="margin-bottom:18px;" disabled><svg class="icn" width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.6"/><path d="M3.5 12h17M12 3.5c2.6 2.3 4 5.2 4 8.5s-1.4 6.2-4 8.5c-2.6-2.3-4-5.2-4-8.5s1.4-6.2 4-8.5Z" stroke="currentColor" stroke-width="1.4"/></svg> Log ind med Google</button>
         </div>
+
+        <p class="eyebrow" style="margin:0 0 8px;">Aktivt event</p>
+        <div class="event-picker" id="eventPicker">
+          <button class="event-choice midnight" data-event="midnight" type="button">
+            <span class="event-choice-preview"><span class="event-choice-icon"><svg class="icn" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M19.5 14.5A8 8 0 1 1 9.5 4.5a6.5 6.5 0 0 0 10 10Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></span></span>
+            <span class="event-choice-name">Midnight Bloom</span>
+            <span class="event-choice-sub">Nat · nebula</span>
+          </button>
+          <button class="event-choice plant" data-event="plant" type="button">
+            <span class="event-choice-preview"><span class="event-choice-icon"><svg class="icn" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 21v-8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M12 13C12 8 8 6.5 5 6.5 5 10.5 7.5 13 12 13Zm0 0c0-4 3.5-5 6.5-5 0 4-2 6.5-6.5 6.5Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg></span></span>
+            <span class="event-choice-name">Plant Bloom</span>
+            <span class="event-choice-sub">Planter · vækst</span>
+          </button>
+          <button class="event-choice solar" data-event="solar" type="button">
+            <span class="event-choice-preview"><span class="event-choice-icon"><svg class="icn" width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="4.3" stroke="currentColor" stroke-width="1.6"/><path d="M12 3v2.2M12 18.8V21M21 12h-2.2M5.2 12H3M18.4 5.6l-1.6 1.6M7.2 16.8l-1.6 1.6M18.4 18.4l-1.6-1.6M7.2 7.2 5.6 5.6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span></span>
+            <span class="event-choice-name">Solar Flare</span>
+            <span class="event-choice-sub">Sol · energi</span>
+          </button>
+        </div>
+        <p class="hint" style="display:block;margin:0 0 18px;">Hvert event har sit eget XP, sine egne rewards og sin egen daglige progression. Du kan skifte frit i denne prototype.</p>
 
         <p class="eyebrow" style="margin:0 0 8px;">Udseende</p>
         <div class="theme-grid" id="themeGrid">
@@ -8116,6 +9494,7 @@ const DEFAULTS = {
     daily: [],
     claimedRewards: [],
   },
+  events: {},
   hexMap: {
     selectedHex: 'hx_2_2',
     currentHex: 'hx_2_2',
@@ -8134,7 +9513,7 @@ const DEFAULTS = {
   settings: {
     sound: true, vibe: true, minDist: 50, cooldownDays: 30,
     habit: '', mapTheme: 'street', dark: false, style: 'nature',
-    tabColors: true, font: 'default', layoutMode: 'normal',
+    tabColors: true, font: 'default', layoutMode: 'normal', activeEvent: 'midnight',
   },
 };
 
@@ -8151,6 +9530,7 @@ function load(){
       weekly: Object.assign({}, DEFAULTS.weekly, p.weekly || {}),
       monthly: Object.assign({}, DEFAULTS.monthly, p.monthly || {}),
       event: Object.assign({}, DEFAULTS.event, p.event || {}),
+      events: Object.assign({}, DEFAULTS.events, p.events || {}),
       achievements: p.achievements || [],
       shop: Object.assign({}, DEFAULTS.shop, p.shop || {}),
     });
@@ -8567,9 +9947,365 @@ function refreshCaptureCard(){
     card.classList.remove('locked','ring-mode');
     btn.disabled = false;
     btn.textContent = 'Tag billede';
+    if(window.renderMiniCaptureMap) window.renderMiniCaptureMap();
   }
 }
 setInterval(refreshCaptureCard, 30000);
+
+
+/* ===================================================================
+   HOME REAL OPENSTREETMAP MINI MAP
+   =================================================================== */
+(function(){
+  let miniMap = null;
+  let miniTiles = null;
+  let miniHexLayer = null;
+  let miniMarkerLayer = null;
+  let renderTimer = null;
+
+  function todayLocalKey(){
+    const d = new Date();
+    return d.getFullYear() + '-' +
+      String(d.getMonth() + 1).padStart(2,'0') + '-' +
+      String(d.getDate()).padStart(2,'0');
+  }
+
+  function axialFromId(id){
+    const match = /^h_(-?\d+)_(-?\d+)$/.exec(String(id || ''));
+    if(!match) return null;
+    return {q:parseInt(match[1],10),r:parseInt(match[2],10)};
+  }
+
+  function idFromAxial(q,r){
+    return 'h_' + q + '_' + r;
+  }
+
+  function nearbyHexIds(centerId, radius){
+    const center = axialFromId(centerId);
+    if(!center) return [];
+    const result = [];
+    for(let dq=-radius;dq<=radius;dq++){
+      const minDr = Math.max(-radius,-dq-radius);
+      const maxDr = Math.min(radius,-dq+radius);
+      for(let dr=minDr;dr<=maxDr;dr++){
+        result.push(idFromAxial(center.q+dq,center.r+dr));
+      }
+    }
+    return result;
+  }
+
+  function currentCenter(){
+    if(typeof Geo !== 'undefined' && Geo.last && Number.isFinite(Geo.last.lat) && Number.isFinite(Geo.last.lng)){
+      return [Geo.last.lat,Geo.last.lng];
+    }
+
+    const currentId = S.hexMap && (S.hexMap.currentHex || S.hexMap.selectedHex);
+    if(currentId && typeof MapView !== 'undefined' && MapView.centerForId){
+      const center = MapView.centerForId(currentId);
+      if(center) return [center.lat,center.lng];
+    }
+
+    const lastPhoto = S.photos && S.photos.length ? S.photos[S.photos.length-1] : null;
+    if(lastPhoto && Number.isFinite(lastPhoto.lat) && Number.isFinite(lastPhoto.lng)){
+      return [lastPhoto.lat,lastPhoto.lng];
+    }
+
+    return [55.6761,12.5683];
+  }
+
+  function currentHexId(center){
+    const existing = S.hexMap && (S.hexMap.currentHex || S.hexMap.selectedHex);
+    if(existing && axialFromId(existing)) return existing;
+    if(typeof MapView !== 'undefined' && MapView.hexForLatLng){
+      return MapView.hexForLatLng(center[0],center[1]);
+    }
+    return null;
+  }
+
+  function activeChestIds(){
+    const daily = S.hexMap && S.hexMap.daily;
+    if(!daily || !Array.isArray(daily.chests)) return [];
+    if(daily.day && daily.day !== todayLocalKey()) return [];
+
+    const opened =
+      S.hexMap &&
+      S.hexMap.chestOpened &&
+      S.hexMap.chestOpened[todayLocalKey()]
+        ? S.hexMap.chestOpened[todayLocalKey()]
+        : {};
+
+    return daily.chests
+      .map(function(chest){ return chest.id; })
+      .filter(function(id){ return id && !opened[id]; });
+  }
+
+  function tileConfig(){
+    if(S.settings && S.settings.mapTheme === 'topo'){
+      return {
+        url:'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
+        options:{
+          subdomains:'abc',
+          maxZoom:19,
+          crossOrigin:true
+        }
+      };
+    }
+    return {
+      url:'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+      options:{
+        subdomains:'abc',
+        maxZoom:19,
+        crossOrigin:true
+      }
+    };
+  }
+
+  function buildShell(cap){
+    cap.innerHTML =
+      '<div class="mini-real-map-card" id="miniRealMapCard" role="button" tabindex="0" aria-label="Åbn det fulde kort">' +
+        '<div class="mini-real-map" id="miniRealMap"></div>' +
+        '<div class="mini-real-map-shade"></div>' +
+        '<div class="mini-real-map-top">' +
+          '<span class="mini-real-map-badge"><i class="mini-real-map-live"></i> Live kort</span>' +
+          '<span class="mini-real-map-badge" id="miniMapHexBadge">Hexagoner</span>' +
+        '</div>' +
+        '<div class="mini-real-map-bottom">' +
+          '<div class="mini-real-map-copy">' +
+            '<strong>Se området omkring dig</strong>' +
+            '<span id="miniMapMeta">Indlæser OpenStreetMap…</span>' +
+          '</div>' +
+          '<span class="mini-real-map-open">Åbn kort <b>→</b></span>' +
+        '</div>' +
+      '</div>';
+  }
+
+  function initMap(){
+    const mapRoot = $('miniRealMap');
+    if(!mapRoot || typeof L === 'undefined') return false;
+
+    const center = currentCenter();
+    miniMap = L.map(mapRoot,{
+      zoomControl:false,
+      attributionControl:false,
+      dragging:false,
+      scrollWheelZoom:false,
+      doubleClickZoom:false,
+      boxZoom:false,
+      keyboard:false,
+      tap:false,
+      touchZoom:false,
+      preferCanvas:true,
+      minZoom:14,
+      maxZoom:19
+    }).setView(center,16);
+
+    const config = tileConfig();
+    miniTiles = L.tileLayer(config.url,config.options).addTo(miniMap);
+    miniHexLayer = L.layerGroup().addTo(miniMap);
+    miniMarkerLayer = L.layerGroup().addTo(miniMap);
+
+    setTimeout(function(){
+      if(miniMap) miniMap.invalidateSize();
+    },80);
+    return true;
+  }
+
+  function updateTiles(){
+    if(!miniMap) return;
+    const config = tileConfig();
+    const nextUrl = config.url;
+    if(miniTiles && miniTiles._url === nextUrl) return;
+    if(miniTiles) miniMap.removeLayer(miniTiles);
+    miniTiles = L.tileLayer(nextUrl,config.options).addTo(miniMap);
+    miniTiles.bringToBack();
+  }
+
+  function drawHexes(center,centerId){
+    if(!miniHexLayer || !miniMarkerLayer || typeof MapView === 'undefined') return;
+
+    miniHexLayer.clearLayers();
+    miniMarkerLayer.clearLayers();
+
+    const selectedId = S.hexMap && S.hexMap.selectedHex;
+    const photos = S.hexMap && S.hexMap.photos ? S.hexMap.photos : {};
+    const chestIds = activeChestIds();
+    const ids = nearbyHexIds(centerId,2);
+
+    ids.forEach(function(id){
+      if(!MapView.polygonForId) return;
+      const polygon = MapView.polygonForId(id);
+      if(!polygon || !polygon.length) return;
+
+      const captured = !!photos[id];
+      const isCurrent = id === centerId;
+      const isSelected = id === selectedId;
+      const isChest = chestIds.indexOf(id) !== -1;
+
+      let fillColor = '#FFFFFF';
+      let fillOpacity = .05;
+      let color = 'rgba(255,255,255,.52)';
+      let weight = 1;
+
+      if(captured){
+        fillColor = '#D95A5D';
+        fillOpacity = .45;
+        color = '#FFD7D7';
+        weight = 1.4;
+      }
+      if(isChest){
+        fillColor = '#F4B83E';
+        fillOpacity = .48;
+        color = '#FFF0B5';
+        weight = 1.6;
+      }
+      if(isSelected){
+        color = '#C66CFF';
+        weight = 2.4;
+      }
+      if(isCurrent){
+        color = '#5EDCFF';
+        weight = 3;
+        fillColor = captured ? '#D95A5D' : '#51CDEA';
+        fillOpacity = captured ? .48 : .22;
+      }
+
+      L.polygon(polygon,{
+        interactive:false,
+        color:color,
+        weight:weight,
+        opacity:.96,
+        fillColor:fillColor,
+        fillOpacity:fillOpacity,
+        lineJoin:'round'
+      }).addTo(miniHexLayer);
+
+      const hexCenter = MapView.centerForId ? MapView.centerForId(id) : null;
+      if(!hexCenter) return;
+
+      if(isChest){
+        L.marker([hexCenter.lat,hexCenter.lng],{
+          interactive:false,
+          icon:L.divIcon({
+            className:'mini-map-chest-icon',
+            html:'¤',
+            iconSize:[22,22],
+            iconAnchor:[11,11]
+          })
+        }).addTo(miniMarkerLayer);
+      }else if(captured && photos[id] && photos[id].img){
+        L.marker([hexCenter.lat,hexCenter.lng],{
+          interactive:false,
+          icon:L.divIcon({
+            className:'mini-map-photo-icon',
+            html:'<img src="' + photos[id].img + '" alt="">',
+            iconSize:[20,20],
+            iconAnchor:[10,10]
+          })
+        }).addTo(miniMarkerLayer);
+      }
+    });
+
+    L.circleMarker(center,{
+      interactive:false,
+      radius:5.5,
+      color:'#FFFFFF',
+      weight:2,
+      fillColor:'#5EDCFF',
+      fillOpacity:1
+    }).addTo(miniMarkerLayer);
+  }
+
+  function updateMeta(){
+    const photos = S.hexMap && S.hexMap.photos ? Object.keys(S.hexMap.photos).length : 0;
+    const chests = activeChestIds().length;
+    const meta = $('miniMapMeta');
+    const badge = $('miniMapHexBadge');
+    if(meta) meta.textContent = photos + ' udforsket · ' + chests + ' pengepunge i nærheden';
+    if(badge) badge.textContent = 'Rigtigt kort + hex';
+  }
+
+  function renderMiniCaptureMap(){
+    const cap = $('capIcon');
+    if(!cap || cap.classList.contains('big') || dailyDone()) return;
+
+    if(!$('miniRealMapCard')){
+      if(miniMap){
+        miniMap.remove();
+        miniMap = null;
+        miniTiles = null;
+        miniHexLayer = null;
+        miniMarkerLayer = null;
+      }
+      buildShell(cap);
+    }
+
+    if(!miniMap && !initMap()) return;
+
+    updateTiles();
+
+    const center = currentCenter();
+    const centerId = currentHexId(center);
+
+    miniMap.setView(center,16,{animate:false});
+    if(centerId) drawHexes(center,centerId);
+    updateMeta();
+
+    clearTimeout(renderTimer);
+    renderTimer = setTimeout(function(){
+      if(miniMap) miniMap.invalidateSize();
+    },50);
+  }
+
+  function openFullMap(){
+    if(typeof SFX !== 'undefined' && SFX.unlock) SFX.unlock();
+    if(typeof switchTab === 'function') switchTab('tab-map');
+    setTimeout(function(){
+      if(typeof MapView !== 'undefined' && MapView.init){
+        MapView.init();
+        if(MapView.invalidate) MapView.invalidate();
+        const center = currentCenter();
+        if(MapView.focusAt) MapView.focusAt(center[0],center[1],16);
+      }
+    },220);
+  }
+
+  window.renderMiniCaptureMap = renderMiniCaptureMap;
+
+  document.addEventListener('click',function(event){
+    if(event.target.closest('#miniRealMapCard')) openFullMap();
+  });
+
+  document.addEventListener('keydown',function(event){
+    const card = event.target.closest && event.target.closest('#miniRealMapCard');
+    if(!card || (event.key !== 'Enter' && event.key !== ' ')) return;
+    event.preventDefault();
+    openFullMap();
+  });
+
+  window.addEventListener('resize',function(){
+    if(miniMap) miniMap.invalidateSize();
+  });
+
+  /* Geo is declared later in the main script, so connect after initialization. */
+  setTimeout(function(){
+    try{
+      if(typeof Geo !== 'undefined' && Geo.onUpdate){
+        Geo.onUpdate(function(){
+          if(visibleTab === 'tab-home') renderMiniCaptureMap();
+        });
+      }
+    }catch(error){}
+  },500);
+
+  setTimeout(renderMiniCaptureMap,650);
+  setInterval(function(){
+    const cap = $('capIcon');
+    if(cap && !cap.classList.contains('big') && visibleTab === 'tab-home' && !dailyDone()){
+      renderMiniCaptureMap();
+    }
+  },6000);
+})();
+
 
 /* ===================================================================
    PROFILE SUB-TABS
@@ -8685,7 +10421,7 @@ const Dev = (function(){
     save(); renderAll(); refreshCaptureCard();
     $('captureCard').classList.remove('captured','locked','rejected');
     $('capIcon').classList.remove('big');
-    $('capIcon').innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 8.5C4 7.4 4.9 6.5 6 6.5h2l1-2h6l1 2h2c1.1 0 2 .9 2 2V17c0 1.1-.9 2-2 2H6c-1.1 0-2-.9-2-2V8.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="12" cy="13" r="3.2" stroke="currentColor" stroke-width="1.5"/></svg>';
+    if(window.renderMiniCaptureMap) window.renderMiniCaptureMap();
     $('capTitle').textContent = 'Klar til dagens billede?';
       SFX.chime();
     toast('Dagens billede låst op');
@@ -8849,6 +10585,8 @@ const TITLE_CATALOG = [
   { id:'kmkonge',    name:'Kilometerkonge',   cost:300, sw:'neonclr'},
   { id:'stilegende', name:'Sti-legende',      cost:400, sw:'berry'  },
   { id:'event_nattegloed', name:'Natteglød', cost:0, sw:'eventaurora', eventOnly:true },
+  { id:'event_gartner', name:'Vild Gartner', cost:0, sw:'eventplant', eventOnly:true },
+  { id:'event_solvaer', name:'Solbærer', cost:0, sw:'eventsolar', eventOnly:true },
 ];
 
 const COLOR_CATALOG = [
@@ -8858,6 +10596,8 @@ const COLOR_CATALOG = [
   { id:'gold',   name:'Guld',       cost:250, cls:'name-gold',   sw:'gold'   },
   { id:'berry',  name:'Bær',        cost:200, cls:'name-berry',  sw:'berry'  },
   { id:'event_nordlys', name:'Nordlys', cost:0, cls:'name-event-aurora', sw:'eventaurora', eventOnly:true },
+  { id:'event_chlorophyll', name:'Klorofyl', cost:0, cls:'name-event-verdant', sw:'eventplant', eventOnly:true },
+  { id:'event_sunbeam', name:'Solstråle', cost:0, cls:'name-event-solar', sw:'eventsolar', eventOnly:true },
 ];
 
 const FRAME_CATALOG = [
@@ -8866,6 +10606,8 @@ const FRAME_CATALOG = [
   { id:'leaf',    name:'Løvkrans',    cost:150, cls:'frame-leaf',    sw:'frame-leaf'    },
   { id:'sparkle', name:'Stjerneglimt',cost:250, cls:'frame-sparkle', sw:'frame-sparkle' },
   { id:'event_moonring', name:'Månering', cost:0, cls:'frame-event-moon', sw:'frame-event-moon', eventOnly:true },
+  { id:'event_vinering', name:'Vinranke', cost:0, cls:'frame-event-vine', sw:'frame-event-vine', eventOnly:true },
+  { id:'event_coronaring', name:'Solar-ring', cost:0, cls:'frame-event-sun', sw:'frame-event-sun', eventOnly:true },
 ];
 
 const THEME_CATALOG = [
@@ -8874,6 +10616,8 @@ const THEME_CATALOG = [
   { id:'diamond',  name:'Diamant',             cost:800,  sw:'diamond'  },
   { id:'blackred', name:'Sort & Rød Diamant',  cost:1000, sw:'blackred' },
   { id:'event_midnight', name:'Midnight Bloom', cost:0, sw:'eventmidnight', eventOnly:true },
+  { id:'event_plant', name:'Plant Bloom', cost:0, sw:'eventplant', eventOnly:true },
+  { id:'event_solar', name:'Solar Flare', cost:0, sw:'eventsolar', eventOnly:true },
 ];
 
 const FONT_CATALOG = [
@@ -8882,6 +10626,8 @@ const FONT_CATALOG = [
   { id:'grotesk',  name:'Skarp',       cost:200, cls:'font-grotesk'  },
   { id:'marker',   name:'Håndskrift',  cost:150, cls:'font-marker'   },
   { id:'event_lunar', name:'Lunar', cost:0, cls:'font-event-lunar', eventOnly:true },
+  { id:'event_botanic', name:'Botanica', cost:0, cls:'font-event-botanic', eventOnly:true },
+  { id:'event_helios', name:'Helios', cost:0, cls:'font-event-helios', eventOnly:true },
 ];
 // each exclusive font is locked behind owning its paired premium theme --
 // it's meant to feel like a matching set, not just another item on a list
@@ -10944,7 +12690,7 @@ const MapView = (function(){
 
           const currentOpened = openedToday();
           if(currentOpened[id]){
-            toast('Denne kiste er allerede åbnet i dag');
+            toast('Denne pengepung er allerede åbnet i dag');
             return;
           }
 
@@ -10966,7 +12712,7 @@ const MapView = (function(){
             });
           },120);
 
-          toast(icon('bag',13) + ' Kisten åbnes');
+          toast(icon('bag',13) + ' Pungen åbnes');
         });
       }
     });
@@ -11080,20 +12826,20 @@ const MapView = (function(){
           '<div class="chest-cutscene-rays"></div>' +
           '<div class="chest-cutscene-stars" id="chestCutsceneStars"></div>' +
           '<div class="chest-cutscene-box">' +
-            '<div class="chest-cutscene-glow"></div>' +
-            '<div class="chest-cutscene-lid"></div>' +
-            '<div class="chest-cutscene-base"></div>' +
-            '<div class="chest-cutscene-band"></div>' +
-            '<div class="chest-cutscene-lock"></div>' +
-            '<div class="chest-cutscene-goldline top"></div>' +
-            '<div class="chest-cutscene-goldline bottom"></div>' +
-            '<div class="chest-cutscene-corner c1"></div>' +
-            '<div class="chest-cutscene-corner c2"></div>' +
-            '<div class="chest-cutscene-corner c3"></div>' +
-            '<div class="chest-cutscene-corner c4"></div>' +
+            '<div class="pouch-glow"></div>' +
+            '<div class="pouch-neck"></div>' +
+            '<div class="pouch-mouth"></div>' +
+            '<div class="pouch-body"></div>' +
+            '<div class="pouch-cinch"></div>' +
+            '<div class="pouch-rope left"></div>' +
+            '<div class="pouch-rope right"></div>' +
+            '<div class="pouch-knot"></div>' +
+            '<div class="pouch-medallion">S</div>' +
+            '<div class="pouch-seam"></div>' +
+            '<div class="pouch-dust"><i></i><i></i><i></i><i></i><i></i><i></i></div>' +
           '</div>' +
-          '<div class="chest-cutscene-title" id="chestCutsceneTitle">KISTE FUNDET</div>' +
-          '<div class="chest-cutscene-sub" id="chestCutsceneSub">Kisten falder ned — tryk for at åbne den.</div>' +
+          '<div class="chest-cutscene-title" id="chestCutsceneTitle">PENGEPUNG FUNDET</div>' +
+          '<div class="chest-cutscene-sub" id="chestCutsceneSub">Pengepungen falder ned — tryk for at løsne snoren.</div>' +
           '<div class="chest-cutscene-rewards">' +
             '<div class="chest-pill" id="chestCutsceneCoins"></div>' +
             '<div class="chest-pill" id="chestCutsceneXp"></div>' +
@@ -11107,34 +12853,71 @@ const MapView = (function(){
               '</div>' +
             '</div>' +
           '</div>' +
-          '<div class="chest-cutscene-hint" id="chestCutsceneHint">Tryk 1/4 · Åbn kiste</div>' +
+          '<div class="chest-cutscene-hint" id="chestCutsceneHint">Tryk 1/4 · Løsn snoren</div>' +
           '<div class="chest-cutscene-progress" id="chestCutsceneProgress"><span></span><span></span><span></span><span></span></div>' +
         '</div>';
       document.body.appendChild(overlay);
       overlay.addEventListener('click', advance);
+
+      overlay.addEventListener('pointermove', function(event){
+        const x = (event.clientX / window.innerWidth - 0.5) * 18;
+        const y = (event.clientY / window.innerHeight - 0.5) * 18;
+        overlay.style.setProperty('--stars-px', x.toFixed(2) + 'px');
+        overlay.style.setProperty('--stars-py', y.toFixed(2) + 'px');
+      });
+
+      overlay.addEventListener('pointerleave', function(){
+        overlay.style.setProperty('--stars-px', '0px');
+        overlay.style.setProperty('--stars-py', '0px');
+      });
     }
 
     function stars(){
       const root = $('chestCutsceneStars');
       if(!root) return;
       root.innerHTML = '';
-      for(let i=0;i<34;i++){
+
+      const count = Math.max(55, Math.round((window.innerWidth * window.innerHeight) / 18000));
+      for(let i=0;i<count;i++){
         const dot = document.createElement('span');
-        const angle = Math.PI * 2 * i / 34;
-        const distance = 82 + Math.random() * 152;
-        dot.style.left = Math.cos(angle) * distance + 'px';
-        dot.style.top = Math.sin(angle) * distance + 'px';
-        dot.style.color = Math.random() > .45 ? '#FFE58B' : (Math.random() > .5 ? '#FFFFFF' : '#A9F0FF');
-        dot.animate([
-          {opacity:0,transform:'translate(-50%,-50%) scale(.1)'},
-          {opacity:1,transform:'translate(-50%,-50%) scale(1.35)',offset:.34},
-          {opacity:0,transform:'translate(-50%,-50%) scale(.5)'}
-        ],{
-          duration:1300 + Math.random() * 700,
-          easing:'ease-out',
-          delay:Math.random() * 260
-        });
+        const size = 3 + Math.random() * 7;
+        const x = Math.random() * window.innerWidth;
+        const y = Math.random() * window.innerHeight;
+        const dur = 7000 + Math.random() * 9000;
+        const driftX = (Math.random() - 0.5) * 36;
+        const driftY = (Math.random() - 0.5) * 42;
+        const twinkleDur = 1800 + Math.random() * 2600;
+
+        dot.style.width = size.toFixed(1) + 'px';
+        dot.style.height = size.toFixed(1) + 'px';
+        dot.style.left = x.toFixed(1) + 'px';
+        dot.style.top = y.toFixed(1) + 'px';
+        dot.style.opacity = (0.4 + Math.random() * 0.55).toFixed(2);
         root.appendChild(dot);
+
+        dot.animate([
+          { transform:'translate3d(0px,0px,0) scale(.88)' },
+          { transform:`translate3d(${driftX.toFixed(1)}px, ${driftY.toFixed(1)}px, 0) scale(1.12)` },
+          { transform:'translate3d(0px,0px,0) scale(.92)' }
+        ],{
+          duration:dur,
+          iterations:Infinity,
+          direction:'alternate',
+          easing:'ease-in-out',
+          delay:Math.random() * 1200
+        });
+
+        dot.animate([
+          { opacity:0.28 + Math.random() * 0.18 },
+          { opacity:0.88 + Math.random() * 0.12 },
+          { opacity:0.36 + Math.random() * 0.18 }
+        ],{
+          duration:twinkleDur,
+          iterations:Infinity,
+          direction:'alternate',
+          easing:'ease-in-out',
+          delay:Math.random() * 700
+        });
       }
     }
 
@@ -11164,8 +12947,8 @@ const MapView = (function(){
     }
 
     function stageTitleFound(){
-      if(!active) return 'KISTE FUNDET';
-      return active.rarity === 'epic' ? 'EPIC KISTE!' : active.rarity === 'rare' ? 'SJÆLDEN KISTE!' : 'KISTE FUNDET';
+      if(!active) return 'PENGEPUNG FUNDET';
+      return active.rarity === 'epic' ? 'EPISK PENGEPUNG!' : active.rarity === 'rare' ? 'SJÆLDEN PENGEPUNG!' : 'PENGEPUNG FUNDET';
     }
 
     function playReward(type){
@@ -11199,7 +12982,7 @@ const MapView = (function(){
       if(step === 0){
         step = 1;
         syncStageClasses();
-        setTexts('KISTE ÅBNET', labelForId(active.hexId) + ' gemte på rewards.', 'Tryk 2/4 · Vis coins');
+        setTexts('PUNGEN ER ÅBEN', labelForId(active.hexId) + ' gemte på rewards.', 'Tryk 2/4 · Vis coins');
         try{
           SFX.unlock();
           setTimeout(function(){ try{ SFX.magic(); }catch(e){} }, 80);
@@ -11214,7 +12997,7 @@ const MapView = (function(){
         step = 2;
         syncStageClasses();
         playReward('coins');
-        setTexts('COINS!', 'Kisten er væk — dine coins kommer frem i midten.', 'Tryk 3/4 · Vis XP');
+        setTexts('COINS!', 'Pungen forsvinder — dine coins kommer frem i midten.', 'Tryk 3/4 · Vis XP');
         try{
           SFX.levelup();
           setTimeout(function(){ try{ SFX.magic(); }catch(e){} }, 60);
@@ -11280,7 +13063,7 @@ const MapView = (function(){
       void overlay.offsetWidth;
       overlay.classList.add('show');
 
-      setTexts(stageTitleFound(), 'Kisten falder ned — tryk for at åbne den.', 'Tryk 1/4 · Åbn kiste');
+      setTexts(stageTitleFound(), 'Pengepungen falder ned — tryk for at løsne snoren.', 'Tryk 1/4 · Løsn snoren');
       syncStageClasses();
 
       try{
@@ -11758,7 +13541,9 @@ const MapView = (function(){
     focusAt:focusAt,
     fitAll:fitAll,
     setTheme:setTheme,
-    hexForLatLng:hexForLatLng
+    hexForLatLng:hexForLatLng,
+    centerForId:centerForId,
+    polygonForId:polygonForId
   };
 })();
 
@@ -13091,224 +14876,164 @@ const MonthlyChallenges = (function(){
    Separate Event-XP, daily event challenges and reward path.
    =================================================================== */
 const MonthlyEvent = (function(){
-  const EVENT_ID = 'midnight-bloom-v1';
-  const EVENT_NAME = 'Midnight Bloom';
   const MAX_XP = 3600;
 
-  const DAILY_POOL = [
-    {
-      id:'event_daily_photo',
-      title:'Tag dagens STREG-billede',
-      icon:'camera',
-      target:1,
-      xp:55,
+  const DAILY_DEFS = [
+    { id:'event_daily_photo', title:'Tag dagens STREG-billede', icon:'camera', target:1, xp:55,
       get:function(){ return S.lastDay === todayKey() ? 1 : 0; },
-      progress:function(v){ return v ? 'Dagens billede taget' : 'Tag dagens billede'; }
-    },
-    {
-      id:'event_two_photos',
-      title:'Tag 2 billeder i dag',
-      icon:'photo',
-      target:2,
-      xp:70,
+      progress:function(v){ return v ? 'Dagens billede taget' : 'Tag dagens billede'; } },
+    { id:'event_two_photos', title:'Tag 2 billeder i dag', icon:'photo', target:2, xp:70,
       get:function(){ return photosToday().length; },
-      progress:function(v){ return Math.min(v,2) + ' / 2 billeder'; }
-    },
-    {
-      id:'event_three_photos',
-      title:'Udforsk 3 nye steder i dag',
-      icon:'pin',
-      target:3,
-      xp:90,
+      progress:function(v){ return Math.min(v,2) + ' / 2 billeder'; } },
+    { id:'event_three_photos', title:'Udforsk 3 nye steder i dag', icon:'pin', target:3, xp:90,
       get:function(){ return photosToday().length; },
-      progress:function(v){ return Math.min(v,3) + ' / 3 steder'; }
-    },
-    {
-      id:'event_one_normal',
-      title:'Klar 1 normal daglig challenge',
-      icon:'target',
-      target:1,
-      xp:60,
+      progress:function(v){ return Math.min(v,3) + ' / 3 steder'; } },
+    { id:'event_one_normal', title:'Klar 1 normal daglig challenge', icon:'target', target:1, xp:60,
       get:function(){ return completedNormalChallenges(); },
-      progress:function(v){ return Math.min(v,1) + ' / 1 challenge'; }
-    },
-    {
-      id:'event_three_normal',
-      title:'Klar 3 normale daglige challenges',
-      icon:'flag',
-      target:3,
-      xp:85,
+      progress:function(v){ return Math.min(v,1) + ' / 1 challenge'; } },
+    { id:'event_three_normal', title:'Klar 3 normale daglige challenges', icon:'flag', target:3, xp:85,
       get:function(){ return completedNormalChallenges(); },
-      progress:function(v){ return Math.min(v,3) + ' / 3 challenges'; }
-    },
-    {
-      id:'event_streak3',
-      title:'Hold en streak på mindst 3 dage',
-      icon:'flame',
-      target:3,
-      xp:55,
+      progress:function(v){ return Math.min(v,3) + ' / 3 challenges'; } },
+    { id:'event_streak3', title:'Hold en streak på mindst 3 dage', icon:'flame', target:3, xp:55,
       get:function(){ return S.streak; },
-      progress:function(v){ return Math.min(v,3) + ' / 3 streak'; }
-    },
-    {
-      id:'event_streak7',
-      title:'Hold en streak på mindst 7 dage',
-      icon:'flame',
-      target:7,
-      xp:80,
+      progress:function(v){ return Math.min(v,3) + ' / 3 streak'; } },
+    { id:'event_streak7', title:'Hold en streak på mindst 7 dage', icon:'flame', target:7, xp:80,
       get:function(){ return S.streak; },
-      progress:function(v){ return Math.min(v,7) + ' / 7 streak'; }
-    },
-    {
-      id:'event_evening',
-      title:'Tag et billede efter kl. 18',
-      icon:'moon',
-      target:1,
-      xp:70,
-      get:function(){
-        return photosToday().some(function(p){ return new Date(p.ts).getHours() >= 18; }) ? 1 : 0;
-      },
-      progress:function(v){ return v ? 'Aftenbillede taget' : 'Ikke taget endnu'; }
-    },
-    {
-      id:'event_morning',
-      title:'Tag et billede før kl. 10',
-      icon:'sunrise',
-      target:1,
-      xp:70,
-      get:function(){
-        return photosToday().some(function(p){ return new Date(p.ts).getHours() < 10; }) ? 1 : 0;
-      },
-      progress:function(v){ return v ? 'Morgenbillede taget' : 'Ikke taget endnu'; }
-    },
+      progress:function(v){ return Math.min(v,7) + ' / 7 streak'; } },
+    { id:'event_evening', title:'Tag et billede efter kl. 18', icon:'moon', target:1, xp:70,
+      get:function(){ return photosToday().some(function(p){ return new Date(p.ts).getHours() >= 18; }) ? 1 : 0; },
+      progress:function(v){ return v ? 'Aftenbillede taget' : 'Ikke taget endnu'; } },
+    { id:'event_morning', title:'Tag et billede før kl. 10', icon:'sunrise', target:1, xp:70,
+      get:function(){ return photosToday().some(function(p){ return new Date(p.ts).getHours() < 10; }) ? 1 : 0; },
+      progress:function(v){ return v ? 'Morgenbillede taget' : 'Ikke taget endnu'; } },
+    { id:'event_green_day', title:'Giv plante-eventet 3 nye steder', icon:'seedling', target:3, xp:95,
+      get:function(){ return photosToday().length; },
+      progress:function(v){ return Math.min(v,3) + ' / 3 vækstpunkter'; } },
+    { id:'event_growth_streak', title:'Byg en vækststreak på 5 dage', icon:'tree', target:5, xp:75,
+      get:function(){ return S.streak; },
+      progress:function(v){ return Math.min(v,5) + ' / 5 dage'; } },
+    { id:'event_solar_noon', title:'Tag et billede mellem kl. 11 og 15', icon:'sun', target:1, xp:90,
+      get:function(){ return photosToday().some(function(p){ const h=new Date(p.ts).getHours(); return h >= 11 && h < 15; }) ? 1 : 0; },
+      progress:function(v){ return v ? 'Solbillede taget' : 'Vent på middagssolen'; } },
+    { id:'event_daylight', title:'Tag et billede i dagtimerne', icon:'sunrise', target:1, xp:70,
+      get:function(){ return photosToday().some(function(p){ const h=new Date(p.ts).getHours(); return h >= 7 && h < 20; }) ? 1 : 0; },
+      progress:function(v){ return v ? 'Dagslys fanget' : 'Intet dagslysbillede endnu'; } }
   ];
 
-  const REWARDS = [
-    {
-      id:'event_font',
-      milestone:400,
-      type:'font',
-      itemId:'event_lunar',
-      name:'Lunar',
-      subtitle:'Eksklusiv tekstfont',
-      kind:'font',
-      icon:'font'
+  const EVENT_CONFIGS = {
+    midnight:{
+      id:'midnight-bloom-v1', theme:'midnight', symbol:'✦', name:'MIDNIGHT BLOOM', shortName:'Midnight Bloom',
+      label:'MÅNEDLIGT NATEVENT', homeSub:'Saml Event-XP og lås et komplet nebula-look op.',
+      intro:'Klar natlige event-challenges, saml Event-XP og lås kosmiske rewards op direkte på baren.',
+      info:'Challenges giver kun Event-XP. Rewards låses automatisk op ved deres milestone, og Midnight-progressionen gemmes separat.',
+      dailyIds:['event_daily_photo','event_two_photos','event_three_photos','event_one_normal','event_three_normal','event_streak3','event_streak7','event_evening','event_morning'],
+      rewards:[
+        {id:'midnight_font',milestone:400,type:'font',itemId:'event_lunar',name:'Lunar',subtitle:'Eksklusiv tekstfont',kind:'font',icon:'font',previewClass:'font-event-lunar',previewText:'Lunar'},
+        {id:'midnight_frame',milestone:900,type:'frame',itemId:'event_moonring',name:'Månering',subtitle:'Eksklusiv profilring',kind:'frame',icon:'ring',previewClass:'frame-event-moon'},
+        {id:'midnight_color',milestone:1500,type:'color',itemId:'event_nordlys',name:'Nordlys',subtitle:'Eksklusiv tekstfarve',kind:'color',icon:'palette',previewClass:'name-event-aurora',previewText:'NORDLYS'},
+        {id:'midnight_title',milestone:2300,type:'title',itemId:'event_nattegloed',name:'Natteglød',subtitle:'Eksklusiv profiltitel',kind:'title',icon:'tag',previewClass:'sw-eventaurora',previewText:'Natteglød'},
+        {id:'midnight_theme',milestone:3600,type:'theme',itemId:'event_midnight',name:'Midnight Bloom',subtitle:'Komplet event-tema',kind:'theme',icon:'gem',previewClass:'sw-eventmidnight',miniClass:''}
+      ]
     },
-    {
-      id:'event_frame',
-      milestone:900,
-      type:'frame',
-      itemId:'event_moonring',
-      name:'Månering',
-      subtitle:'Eksklusiv profilring',
-      kind:'frame',
-      icon:'ring'
+    plant:{
+      id:'plant-bloom-v1', theme:'plant', symbol:'❋', name:'PLANT BLOOM', shortName:'Plant Bloom',
+      label:'MÅNEDLIGT VÆKSTEVENT', homeSub:'Udforsk nye steder og dyrk et levende grønt reward-sæt.',
+      intro:'Saml vækst-XP gennem billeder, streaks og udforskning. Hver milestone får eventet til at gro videre.',
+      info:'Plant Bloom har sin egen Event-XP og daglige progression. Skift tilbage senere uden at miste din vækst.',
+      dailyIds:['event_daily_photo','event_two_photos','event_three_photos','event_one_normal','event_three_normal','event_streak3','event_morning','event_green_day','event_growth_streak'],
+      rewards:[
+        {id:'plant_font',milestone:400,type:'font',itemId:'event_botanic',name:'Botanica',subtitle:'Organisk event-font',kind:'font',icon:'font',previewClass:'font-event-botanic',previewText:'Botanica'},
+        {id:'plant_frame',milestone:900,type:'frame',itemId:'event_vinering',name:'Vinranke',subtitle:'Levende grøn profilring',kind:'frame',icon:'ring',previewClass:'frame-event-vine'},
+        {id:'plant_color',milestone:1500,type:'color',itemId:'event_chlorophyll',name:'Klorofyl',subtitle:'Grøn gradientfarve',kind:'color',icon:'palette',previewClass:'name-event-verdant',previewText:'VÆKST'},
+        {id:'plant_title',milestone:2300,type:'title',itemId:'event_gartner',name:'Vild Gartner',subtitle:'Eksklusiv profiltitel',kind:'title',icon:'tag',previewClass:'sw-eventplant',previewText:'Vild Gartner'},
+        {id:'plant_theme',milestone:3600,type:'theme',itemId:'event_plant',name:'Plant Bloom',subtitle:'Komplet plante-tema',kind:'theme',icon:'gem',previewClass:'sw-eventplant',miniClass:'event-theme-mini-plant'}
+      ]
     },
-    {
-      id:'event_color',
-      milestone:1500,
-      type:'color',
-      itemId:'event_nordlys',
-      name:'Nordlys',
-      subtitle:'Eksklusiv tekstfarve',
-      kind:'color',
-      icon:'palette'
-    },
-    {
-      id:'event_title',
-      milestone:2300,
-      type:'title',
-      itemId:'event_nattegloed',
-      name:'Natteglød',
-      subtitle:'Eksklusiv profiltitel',
-      kind:'title',
-      icon:'tag'
-    },
-    {
-      id:'event_theme',
-      milestone:3600,
-      type:'theme',
-      itemId:'event_midnight',
-      name:'Midnight Bloom',
-      subtitle:'Komplet event-tema',
-      kind:'theme',
-      icon:'gem'
-    },
-  ];
+    solar:{
+      id:'solar-flare-v1', theme:'solar', symbol:'☀', name:'SOLAR FLARE', shortName:'Solar Flare',
+      label:'MÅNEDLIGT SOLAREVENT', homeSub:'Byg solenergi og lås et varmt, eksplosivt reward-sæt op.',
+      intro:'Fang dagslys, hold din streak og saml Solar Event-XP gennem en glødende reward path.',
+      info:'Solar Flare gemmer sin progression separat. Dine Solar-rewards forbliver ejet, selv når du skifter event.',
+      dailyIds:['event_daily_photo','event_two_photos','event_three_photos','event_one_normal','event_streak7','event_morning','event_evening','event_solar_noon','event_daylight'],
+      rewards:[
+        {id:'solar_font',milestone:400,type:'font',itemId:'event_helios',name:'Helios',subtitle:'Kraftig solar-font',kind:'font',icon:'font',previewClass:'font-event-helios',previewText:'HELIOS'},
+        {id:'solar_frame',milestone:900,type:'frame',itemId:'event_coronaring',name:'Solar-ring',subtitle:'Glødende profilring',kind:'frame',icon:'ring',previewClass:'frame-event-sun'},
+        {id:'solar_color',milestone:1500,type:'color',itemId:'event_sunbeam',name:'Solstråle',subtitle:'Varm solar-gradient',kind:'color',icon:'palette',previewClass:'name-event-solar',previewText:'SOLAR'},
+        {id:'solar_title',milestone:2300,type:'title',itemId:'event_solvaer',name:'Solbærer',subtitle:'Eksklusiv profiltitel',kind:'title',icon:'tag',previewClass:'sw-eventsolar',previewText:'Solbærer'},
+        {id:'solar_theme',milestone:3600,type:'theme',itemId:'event_solar',name:'Solar Flare',subtitle:'Komplet solar-tema',kind:'theme',icon:'gem',previewClass:'sw-eventsolar',miniClass:'event-theme-mini-solar'}
+      ]
+    }
+  };
 
-  function eventKey(){
-    return EVENT_ID + '-' + monthKey();
+  function activeId(){
+    return EVENT_CONFIGS[S.settings.activeEvent] ? S.settings.activeEvent : 'midnight';
   }
+  function config(){ return EVENT_CONFIGS[activeId()]; }
+  function rewards(){ return config().rewards; }
+  function eventKey(){ return config().id + '-' + monthKey(); }
 
   function photosToday(){
     const key = todayKey();
     return S.photos.filter(function(p){ return dayKeyOf(p.ts) === key; });
   }
-
   function completedNormalChallenges(){
     if(!S.challenges || S.challenges.day !== todayKey()) return 0;
     return (S.challenges.items || []).filter(function(ch){ return ch.done; }).length;
   }
-
+  function dailyPool(){
+    const ids = config().dailyIds;
+    return DAILY_DEFS.filter(function(item){ return ids.indexOf(item.id) !== -1; });
+  }
   function pickDaily(){
-    const pool = DAILY_POOL.slice();
+    const pool = dailyPool().slice();
     const picked = [];
-    for(let i = 0; i < 4 && pool.length; i++){
-      const idx = Math.floor(Math.random() * pool.length);
-      const item = pool.splice(idx,1)[0];
-      picked.push({ id:item.id, claimed:false });
+    for(let i=0;i<4 && pool.length;i++){
+      const idx = Math.floor(Math.random()*pool.length);
+      picked.push({id:pool.splice(idx,1)[0].id,claimed:false});
     }
     return picked;
   }
-
+  function newState(){
+    return {key:eventKey(),xp:0,day:todayKey(),daily:pickDaily(),claimedRewards:[]};
+  }
   function ensure(){
-    if(!S.event || typeof S.event !== 'object'){
-      S.event = { key:null, xp:0, day:null, daily:[], claimedRewards:[] };
+    if(!S.events || typeof S.events !== 'object') S.events = {};
+
+    if(!S.events.midnight && S.event && typeof S.event === 'object' && (S.event.key || S.event.xp || (S.event.daily && S.event.daily.length))){
+      S.events.midnight = clone(S.event);
     }
 
-    if(S.event.key !== eventKey()){
-      S.event = {
-        key:eventKey(),
-        xp:0,
-        day:todayKey(),
-        daily:pickDaily(),
-        claimedRewards:[]
-      };
+    const id = activeId();
+    if(!S.events[id] || typeof S.events[id] !== 'object') S.events[id] = newState();
+    let st = S.events[id];
+
+    if(st.key !== eventKey()){
+      S.events[id] = newState();
+      st = S.events[id];
       save();
-      return;
+      return st;
     }
-
-    if(!Array.isArray(S.event.claimedRewards)) S.event.claimedRewards = [];
-    if(!Array.isArray(S.event.daily)) S.event.daily = [];
-
-    if(S.event.day !== todayKey()){
-      S.event.day = todayKey();
-      S.event.daily = pickDaily();
-      save();
-    }
-
-    if(S.event.daily.length !== 4){
-      S.event.daily = pickDaily();
+    if(!Array.isArray(st.claimedRewards)) st.claimedRewards = [];
+    if(!Array.isArray(st.daily)) st.daily = [];
+    if(st.day !== todayKey()){
+      st.day = todayKey();
+      st.daily = pickDaily();
       save();
     }
-
-    autoUnlockReachedRewards({ silent:true });
+    if(st.daily.length !== 4){
+      st.daily = pickDaily();
+      save();
+    }
+    return st;
   }
 
-  function dailyDef(id){
-    return DAILY_POOL.find(function(item){ return item.id === id; });
-  }
-
-  function rewardDef(id){
-    return REWARDS.find(function(item){ return item.id === id; });
-  }
-
+  function dailyDef(id){ return DAILY_DEFS.find(function(item){ return item.id === id; }); }
+  function rewardDef(id){ return rewards().find(function(item){ return item.id === id; }); }
   function daysLeft(){
     const now = new Date();
-    const last = new Date(now.getFullYear(),now.getMonth() + 1,0);
-    return Math.max(1,last.getDate() - now.getDate() + 1);
+    const last = new Date(now.getFullYear(),now.getMonth()+1,0);
+    return Math.max(1,last.getDate()-now.getDate()+1);
   }
-
   function owned(reward){
     if(reward.type === 'font') return S.shop.fonts.indexOf(reward.itemId) !== -1;
     if(reward.type === 'frame') return S.shop.frames.indexOf(reward.itemId) !== -1;
@@ -13317,7 +15042,6 @@ const MonthlyEvent = (function(){
     if(reward.type === 'theme') return S.shop.themes.indexOf(reward.itemId) !== -1;
     return false;
   }
-
   function active(reward){
     if(reward.type === 'font') return S.settings.font === reward.itemId;
     if(reward.type === 'frame') return S.shop.equippedFrame === reward.itemId;
@@ -13326,507 +15050,235 @@ const MonthlyEvent = (function(){
     if(reward.type === 'theme') return S.settings.style === reward.itemId;
     return false;
   }
-
   function addOwned(reward){
-    const target =
-      reward.type === 'font' ? S.shop.fonts :
-      reward.type === 'frame' ? S.shop.frames :
-      reward.type === 'color' ? S.shop.colors :
-      reward.type === 'title' ? S.shop.titles :
-      reward.type === 'theme' ? S.shop.themes : null;
-
+    const target = reward.type === 'font' ? S.shop.fonts : reward.type === 'frame' ? S.shop.frames : reward.type === 'color' ? S.shop.colors : reward.type === 'title' ? S.shop.titles : reward.type === 'theme' ? S.shop.themes : null;
     if(target && target.indexOf(reward.itemId) === -1) target.push(reward.itemId);
   }
-
   function previewHtml(reward){
-    if(reward.type === 'font'){
-      return '<div class="event-reward-preview font-preview"><span class="font-event-lunar">Lunar</span></div>';
-    }
-    if(reward.type === 'frame'){
-      return '<div class="event-reward-preview"><div class="avatar frame-event-moon">DIG</div></div>';
-    }
-    if(reward.type === 'color'){
-      return '<div class="event-reward-preview text-preview"><span class="name-event-aurora">NORDLYS</span></div>';
-    }
-    if(reward.type === 'title'){
-      return '<div class="event-reward-preview text-preview"><span class="sw-eventaurora" style="padding:9px 12px;border-radius:12px;">Natteglød</span></div>';
-    }
-    return '<div class="event-reward-preview theme-preview"><div class="event-theme-mini"></div></div>';
+    const text = reward.previewText || reward.name;
+    if(reward.type === 'font') return '<div class="event-reward-preview font-preview"><span class="' + reward.previewClass + '">' + text + '</span></div>';
+    if(reward.type === 'frame') return '<div class="event-reward-preview"><div class="avatar ' + reward.previewClass + '">DIG</div></div>';
+    if(reward.type === 'color') return '<div class="event-reward-preview text-preview"><span class="' + reward.previewClass + '">' + text + '</span></div>';
+    if(reward.type === 'title') return '<div class="event-reward-preview text-preview"><span class="' + reward.previewClass + '" style="padding:9px 12px;border-radius:12px;">' + text + '</span></div>';
+    return '<div class="event-reward-preview theme-preview"><div class="event-theme-mini ' + (reward.miniClass || '') + '"></div></div>';
   }
-
   function cutscenePreview(reward){
-    if(reward.type === 'font') return '<div class="cut-preview-font font-event-lunar">Aa</div>';
-    if(reward.type === 'frame') return '<div class="cut-preview-frame avatar frame-event-moon">DIG</div>';
-    if(reward.type === 'color') return '<div class="cut-preview-color name-event-aurora">STREG</div>';
-    if(reward.type === 'title') return '<div class="cut-preview-title sw-eventaurora">Natteglød</div>';
-    return '<div class="cut-preview-theme sw-eventmidnight"><b>STREG</b><span></span></div>';
+    const text = reward.previewText || reward.name;
+    if(reward.type === 'font') return '<div class="cut-preview-font ' + reward.previewClass + '">Aa</div>';
+    if(reward.type === 'frame') return '<div class="cut-preview-frame avatar ' + reward.previewClass + '">DIG</div>';
+    if(reward.type === 'color') return '<div class="cut-preview-color ' + reward.previewClass + '">STREG</div>';
+    if(reward.type === 'title') return '<div class="cut-preview-title ' + reward.previewClass + '">' + text + '</div>';
+    return '<div class="cut-preview-theme ' + reward.previewClass + '"><b>STREG</b><span></span></div>';
   }
 
-  window.animateEventXp = function animateEventXp(amount, sourceEl){
+  window.animateEventXp = function animateEventXp(amount,sourceEl){
     const shell = document.querySelector('.event-progress-shell');
     if(!shell) return;
-
-    const sourceRect = sourceEl ? sourceEl.getBoundingClientRect() : {
-      left:window.innerWidth / 2,
-      top:window.innerHeight * .72,
-      width:0,
-      height:0
-    };
+    const sourceRect = sourceEl ? sourceEl.getBoundingClientRect() : {left:window.innerWidth/2,top:window.innerHeight*.72,width:0,height:0};
     const targetRect = shell.getBoundingClientRect();
     const fly = document.createElement('div');
     fly.className = 'event-xp-fly';
     fly.textContent = '+' + amount + ' EVENT-XP';
     document.body.appendChild(fly);
-
-    const sx = sourceRect.left + sourceRect.width / 2;
-    const sy = sourceRect.top + sourceRect.height / 2;
-    const tx = targetRect.left + targetRect.width / 2;
-    const ty = targetRect.top + targetRect.height / 2;
-
+    const sx=sourceRect.left+sourceRect.width/2, sy=sourceRect.top+sourceRect.height/2, tx=targetRect.left+targetRect.width/2, ty=targetRect.top+targetRect.height/2;
     const anim = fly.animate([
-      { transform:'translate(' + (sx - 55) + 'px,' + (sy - 18) + 'px) scale(.65)', opacity:0 },
-      { transform:'translate(' + (sx - 55) + 'px,' + (sy - 42) + 'px) scale(1)', opacity:1, offset:.18 },
-      { transform:'translate(' + (tx - 55) + 'px,' + (ty - 18) + 'px) scale(.35)', opacity:.1 }
-    ],{
-      duration:900,
-      easing:'cubic-bezier(.16,.72,.2,1)',
-      fill:'forwards'
-    });
-
-    anim.onfinish = function(){
-      fly.remove();
-      shell.classList.remove('event-hit');
-      void shell.offsetWidth;
-      shell.classList.add('event-hit');
-      setTimeout(function(){ shell.classList.remove('event-hit'); },760);
-      try{ SFX.magic(); vibrate([20,20,55]); }catch(e){}
+      {transform:'translate('+(sx-55)+'px,'+(sy-18)+'px) scale(.65)',opacity:0},
+      {transform:'translate('+(sx-55)+'px,'+(sy-42)+'px) scale(1)',opacity:1,offset:.18},
+      {transform:'translate('+(tx-55)+'px,'+(ty-18)+'px) scale(.35)',opacity:.1}
+    ],{duration:900,easing:'cubic-bezier(.16,.72,.2,1)',fill:'forwards'});
+    anim.onfinish=function(){
+      fly.remove(); shell.classList.remove('event-hit'); void shell.offsetWidth; shell.classList.add('event-hit');
+      setTimeout(function(){shell.classList.remove('event-hit')},760);
+      try{SFX.magic();vibrate([20,20,55])}catch(e){}
     };
-  }
+  };
 
-  function claimDaily(id, button){
-    ensure();
-    const state = S.event.daily.find(function(item){ return item.id === id; });
-    const def = dailyDef(id);
-    if(!state || !def || state.claimed) return;
-
-    const progress = def.get();
-    if(progress < def.target){
-      SFX.error();
-      toast('Challenge er ikke klar endnu');
-      return;
-    }
-
-    state.claimed = true;
-    S.event.xp = Math.min(MAX_XP,S.event.xp + def.xp);
+  function claimDaily(id,button){
+    const st=ensure();
+    const state=st.daily.find(function(item){return item.id===id});
+    const def=dailyDef(id);
+    if(!state||!def||state.claimed)return;
+    const progress=def.get();
+    if(progress<def.target){SFX.error();toast('Challenge er ikke klar endnu');return}
+    state.claimed=true;
+    st.xp=Math.min(MAX_XP,st.xp+def.xp);
     save();
-
-    const unlocked = autoUnlockReachedRewards({ silent:true });
-    const pct = Math.min(100,S.event.xp / MAX_XP * 100);
-
-    render();
-    confetti(26);
-
-    if(typeof window.eventChallengeCutscene === 'function'){
-      window.eventChallengeCutscene({
-        title:def.title,
-        icon:def.icon,
-        amount:def.xp,
-        sourceEl:button,
-        afterXp:S.event.xp,
-        maxXp:MAX_XP,
-        afterPct:pct,
-        rewardLine:rewardLineText(unlocked),
-        onDone:function(){
-          if(unlocked.length){
-            unlocked.forEach(function(reward,index){
-              setTimeout(function(){
-                purchaseCutscene({
-                  name:reward.name,
-                  type:'EVENT REWARD LÅST OP',
-                  icon:reward.icon,
-                  kind:reward.kind,
-                  variant:reward.itemId,
-                  preview:cutscenePreview(reward),
-                  cost:0,
-                  remaining:S.coins
-                });
-              }, index * 820);
-            });
-            toast('+' + def.xp + ' Event-XP · reward låst op');
-          }else{
-            toast('+' + def.xp + ' Event-XP samlet');
-          }
-        }
-      });
+    const unlocked=autoUnlockReachedRewards({silent:true});
+    const pct=Math.min(100,st.xp/MAX_XP*100);
+    render(); confetti(26);
+    if(typeof window.eventChallengeCutscene==='function'){
+      window.eventChallengeCutscene({title:def.title,icon:def.icon,amount:def.xp,sourceEl:button,afterXp:st.xp,maxXp:MAX_XP,afterPct:pct,rewardLine:rewardLineText(unlocked),onDone:function(){
+        if(unlocked.length){unlocked.forEach(function(reward,index){setTimeout(function(){purchaseCutscene({name:reward.name,type:'EVENT REWARD LÅST OP',icon:reward.icon,kind:reward.kind,variant:reward.itemId,preview:cutscenePreview(reward),cost:0,remaining:S.coins})},index*820)});toast('+'+def.xp+' Event-XP · reward låst op')}
+        else toast('+'+def.xp+' Event-XP samlet');
+      }});
     }else{
       animateEventXp(def.xp,button);
-      if(unlocked.length){
-        unlocked.forEach(function(reward,index){
-          setTimeout(function(){
-            purchaseCutscene({
-              name:reward.name,
-              type:'EVENT REWARD LÅST OP',
-              icon:reward.icon,
-              kind:reward.kind,
-              variant:reward.itemId,
-              preview:cutscenePreview(reward),
-              cost:0,
-              remaining:S.coins
-            });
-          }, index * 820);
-        });
-      }
-      toast(unlocked.length ? ('+' + def.xp + ' Event-XP · reward låst op') : ('+' + def.xp + ' Event-XP samlet'));
+      unlocked.forEach(function(reward,index){setTimeout(function(){purchaseCutscene({name:reward.name,type:'EVENT REWARD LÅST OP',icon:reward.icon,kind:reward.kind,variant:reward.itemId,preview:cutscenePreview(reward),cost:0,remaining:S.coins})},index*820)});
+      toast(unlocked.length?('+'+def.xp+' Event-XP · reward låst op'):('+'+def.xp+' Event-XP samlet'));
     }
   }
 
   function autoUnlockReachedRewards(options){
-    options = options || {};
-    const silent = !!options.silent;
-    const unlocked = [];
-
-    REWARDS.forEach(function(reward){
-      if(S.event.xp >= reward.milestone && !owned(reward)){
+    options=options||{};
+    const st=ensure();
+    const unlocked=[];
+    rewards().forEach(function(reward){
+      if(st.xp>=reward.milestone&&!owned(reward)){
         addOwned(reward);
-        if(S.event.claimedRewards.indexOf(reward.id) === -1) S.event.claimedRewards.push(reward.id);
+        if(st.claimedRewards.indexOf(reward.id)===-1)st.claimedRewards.push(reward.id);
         unlocked.push(reward);
       }
     });
-
-    if(!unlocked.length) return unlocked;
-
-    save();
-    renderAll();
-
-    if(!silent){
-      unlocked.forEach(function(reward,index){
-        setTimeout(function(){
-          purchaseCutscene({
-            name:reward.name,
-            type:'EVENT REWARD LÅST OP',
-            icon:reward.icon,
-            kind:reward.kind,
-            variant:reward.itemId,
-            preview:cutscenePreview(reward),
-            cost:0,
-            remaining:S.coins
-          });
-        }, index * 820);
-      });
-
-      if(unlocked.length === 1){
-        toast(rewardDef(unlocked[0].id).name + ' låst op automatisk');
-      }else{
-        toast(unlocked.length + ' event rewards låst op');
-      }
+    if(!unlocked.length)return unlocked;
+    save(); renderAll();
+    if(!options.silent){
+      unlocked.forEach(function(reward,index){setTimeout(function(){purchaseCutscene({name:reward.name,type:'EVENT REWARD LÅST OP',icon:reward.icon,kind:reward.kind,variant:reward.itemId,preview:cutscenePreview(reward),cost:0,remaining:S.coins})},index*820)});
+      toast(unlocked.length===1?unlocked[0].name+' låst op automatisk':unlocked.length+' event rewards låst op');
     }
-
     return unlocked;
   }
 
   function claimReward(id){
-    ensure();
-    const reward = rewardDef(id);
-    if(!reward) return;
-
+    const st=ensure();
+    const reward=rewardDef(id);
+    if(!reward)return;
     if(!owned(reward)){
-      if(S.event.xp < reward.milestone){
-        SFX.error();
-        toast('Kræver ' + reward.milestone + ' Event-XP');
-        return;
-      }
-      autoUnlockReachedRewards({ silent:false });
-      render();
-      return;
+      if(st.xp<reward.milestone){SFX.error();toast('Kræver '+reward.milestone+' Event-XP');return}
+      autoUnlockReachedRewards({silent:false}); render(); return;
     }
-
     equipReward(reward);
   }
-
   function equipReward(reward){
-    if(reward.type === 'font') S.settings.font = reward.itemId;
-    if(reward.type === 'frame') S.shop.equippedFrame = reward.itemId;
-    if(reward.type === 'color') S.shop.equippedColor = reward.itemId;
-    if(reward.type === 'title') S.shop.equippedTitle = reward.itemId;
-    if(reward.type === 'theme') S.settings.style = reward.itemId;
-
-    save();
-    Settings.applyTheme();
-    Settings.refresh();
-    renderAll();
-    render();
-    SFX.magic();
-    vibrate([20,30,20]);
-    toast(reward.name + ' taget i brug');
+    if(reward.type==='font')S.settings.font=reward.itemId;
+    if(reward.type==='frame')S.shop.equippedFrame=reward.itemId;
+    if(reward.type==='color')S.shop.equippedColor=reward.itemId;
+    if(reward.type==='title')S.shop.equippedTitle=reward.itemId;
+    if(reward.type==='theme')S.settings.style=reward.itemId;
+    save(); Settings.applyTheme(); Settings.refresh(); renderAll(); render(); SFX.magic(); vibrate([20,30,20]); toast(reward.name+' taget i brug');
   }
-
   function nextReward(){
-    return REWARDS.find(function(r){ return S.event.xp < r.milestone; }) || null;
+    const st=ensure();
+    return rewards().find(function(r){return st.xp<r.milestone})||null;
   }
-
   function rewardLineText(unlocked){
-    if(unlocked && unlocked.length){
-      if(unlocked.length === 1){
-        return 'Reward låst op: <b>' + unlocked[0].name + '</b>';
-      }
-      return unlocked.length + ' rewards låst op automatisk';
-    }
-    const next = nextReward();
-    return next
-      ? 'Næste reward: <b>' + next.name + '</b> ved ' + next.milestone + ' XP'
-      : 'Alle event rewards er <b>låst op</b>';
+    if(unlocked&&unlocked.length)return unlocked.length===1?'Reward låst op: <b>'+unlocked[0].name+'</b>':unlocked.length+' rewards låst op automatisk';
+    const next=nextReward();
+    return next?'Næste reward: <b>'+next.name+'</b> ved '+next.milestone+' XP':'Alle event rewards er <b>låst op</b>';
   }
 
   function renderMarkers(){
-    const wrap = $('eventProgressMarkers');
-    if(!wrap) return;
-    wrap.innerHTML = '';
-
-    REWARDS.forEach(function(reward){
-      const isOwned = owned(reward);
-      const isActive = active(reward);
-      const reached = S.event.xp >= reward.milestone;
-
-      const marker = document.createElement('div');
-      marker.className =
-        'event-progress-marker' +
-        (reached ? ' reached' : '') +
-        (isOwned ? ' owned' : '') +
-        (isActive ? ' active' : '') +
-        (reached && !isOwned ? ' ready' : '');
-      marker.style.left = (reward.milestone / MAX_XP * 100) + '%';
-
-      marker.innerHTML =
-        '<button class="event-progress-node ' +
-          (isActive ? 'active' : isOwned ? 'unlocked' : 'locked') +
-          '" type="button" aria-label="' + reward.name + '">' +
-            icon(reward.icon,18) +
-        '</button>' +
-        '<span class="event-progress-xp">' + reward.milestone + ' XP</span>' +
-        '<span class="event-progress-name">' + reward.name + '</span>';
-
-      const btn = marker.querySelector('button');
-      btn.addEventListener('click', function(){
-        if(isOwned){
-          SFX.unlock();
-          equipReward(reward);
-          return;
-        }
-        if(reached){
-          autoUnlockReachedRewards({ silent:false });
-          render();
-          return;
-        }
-        SFX.error();
-        toast(reward.name + ' låses op ved ' + reward.milestone + ' Event-XP');
+    const st=ensure(),wrap=$('eventProgressMarkers'); if(!wrap)return; wrap.innerHTML='';
+    rewards().forEach(function(reward){
+      const isOwned=owned(reward),isActive=active(reward),reached=st.xp>=reward.milestone;
+      const marker=document.createElement('div');
+      marker.className='event-progress-marker'+(reached?' reached':'')+(isOwned?' owned':'')+(isActive?' active':'')+(reached&&!isOwned?' ready':'');
+      marker.style.left=(reward.milestone/MAX_XP*100)+'%';
+      marker.innerHTML='<button class="event-progress-node '+(isActive?'active':isOwned?'unlocked':'locked')+'" type="button" aria-label="'+reward.name+'">'+icon(reward.icon,18)+'</button><span class="event-progress-xp">'+reward.milestone+' XP</span><span class="event-progress-name">'+reward.name+'</span>';
+      marker.querySelector('button').addEventListener('click',function(){
+        if(isOwned){SFX.unlock();equipReward(reward);return}
+        if(reached){autoUnlockReachedRewards({silent:false});render();return}
+        SFX.error();toast(reward.name+' låses op ved '+reward.milestone+' Event-XP');
       });
-
       wrap.appendChild(marker);
     });
   }
-
   function renderRewards(){
-    const wrap = $('eventRewardTrack');
-    if(!wrap) return;
-    wrap.innerHTML = '';
-
-    REWARDS.forEach(function(reward,index){
-      const isOwned = owned(reward);
-      const isActive = active(reward);
-      const ready = S.event.xp >= reward.milestone;
-      const card = document.createElement('article');
-      card.className = 'event-reward-card ' +
-        (isOwned ? 'claimed' : ready ? 'ready' : 'locked');
-
-      const buttonClass = isActive ? 'active' : isOwned ? 'use' : 'locked';
-      const buttonText = isActive ? icon('check',10) + ' I brug' :
-        isOwned ? 'Brug' :
-        icon('lock',10) + ' Låst';
-
-      card.innerHTML =
-        '<div class="event-reward-top">' +
-          '<span class="event-reward-step">Reward ' + (index + 1) + '</span>' +
-          '<span class="event-reward-xp">' + reward.milestone + ' XP</span>' +
-        '</div>' +
-        previewHtml(reward) +
-        '<div class="event-reward-name">' + reward.name + '</div>' +
-        '<div class="event-reward-type">' + reward.subtitle + '</div>' +
-        '<button class="event-reward-btn ' + buttonClass + '">' + buttonText + '</button>';
-
-      const button = card.querySelector('button');
-      if(!isActive && isOwned){
-        button.addEventListener('click',function(){
-          SFX.unlock();
-          equipReward(reward);
-        });
-      }else{
-        button.disabled = true;
-      }
-
+    const st=ensure(),wrap=$('eventRewardTrack'); if(!wrap)return; wrap.innerHTML='';
+    rewards().forEach(function(reward,index){
+      const isOwned=owned(reward),isActive=active(reward),ready=st.xp>=reward.milestone;
+      const card=document.createElement('article'); card.className='event-reward-card '+(isOwned?'claimed':ready?'ready':'locked');
+      const buttonClass=isActive?'active':isOwned?'use':'locked';
+      const buttonText=isActive?icon('check',10)+' I brug':isOwned?'Brug':icon('lock',10)+' Låst';
+      card.innerHTML='<div class="event-reward-top"><span class="event-reward-step">Reward '+(index+1)+'</span><span class="event-reward-xp">'+reward.milestone+' XP</span></div>'+previewHtml(reward)+'<div class="event-reward-name">'+reward.name+'</div><div class="event-reward-type">'+reward.subtitle+'</div><button class="event-reward-btn '+buttonClass+'">'+buttonText+'</button>';
+      const button=card.querySelector('button');
+      if(!isActive&&isOwned)button.addEventListener('click',function(){SFX.unlock();equipReward(reward)});else button.disabled=true;
       wrap.appendChild(card);
     });
-
-    $('eventRewardCount').textContent =
-      REWARDS.filter(function(reward){ return owned(reward); }).length + ' / ' + REWARDS.length + ' låst op';
+    $('eventRewardCount').textContent=rewards().filter(owned).length+' / '+rewards().length+' låst op';
   }
-
   function renderDaily(){
-    const wrap = $('eventDailyList');
-    if(!wrap) return;
-    wrap.innerHTML = '';
-
-    let claimedCount = 0;
-    S.event.daily.forEach(function(state,index){
-      const def = dailyDef(state.id);
-      if(!def) return;
-      const current = Math.min(def.target,def.get());
-      const ready = current >= def.target;
-      if(state.claimed) claimedCount += 1;
-
-      const card = document.createElement('article');
-      card.className = 'event-daily-card' +
-        (state.claimed ? ' claimed' : ready ? ' ready' : '');
-      card.style.animationDelay = (index * 55) + 'ms';
-
-      const btnClass = state.claimed ? 'claimed' : ready ? 'ready' : 'waiting';
-      const btnText = state.claimed ? icon('check',10) + ' Hentet' :
-        ready ? '+' + def.xp + ' XP' :
-        'Ikke klar';
-
-      card.innerHTML =
-        '<div class="event-daily-icon">' + icon(def.icon,26) + '</div>' +
-        '<div style="min-width:0;">' +
-          '<div class="event-daily-title">' + def.title + '</div>' +
-          '<div class="event-daily-progress">' + def.progress(current) + ' · +' + def.xp + ' Event-XP</div>' +
-          '<div class="event-daily-progressbar"><span style="width:' + Math.min(100,current / def.target * 100) + '%"></span></div>' +
-        '</div>' +
-        '<button class="event-daily-action ' + btnClass + '">' + btnText + '</button>';
-
-      const button = card.querySelector('button');
-      if(ready && !state.claimed){
-        button.addEventListener('click',function(){
-          SFX.unlock();
-          claimDaily(state.id,button);
-        });
-      }else{
-        button.disabled = true;
-      }
-
+    const st=ensure(),wrap=$('eventDailyList'); if(!wrap)return; wrap.innerHTML=''; let claimedCount=0;
+    st.daily.forEach(function(state,index){
+      const def=dailyDef(state.id); if(!def)return;
+      const current=Math.min(def.target,def.get()),ready=current>=def.target;
+      if(state.claimed)claimedCount++;
+      const card=document.createElement('article');
+      card.className='event-daily-card'+(state.claimed?' claimed':ready?' ready':''); card.style.animationDelay=(index*55)+'ms';
+      const btnClass=state.claimed?'claimed':ready?'ready':'waiting';
+      const btnText=state.claimed?icon('check',10)+' Hentet':ready?'+'+def.xp+' XP':'Ikke klar';
+      card.innerHTML='<div class="event-daily-icon">'+icon(def.icon,26)+'</div><div style="min-width:0;"><div class="event-daily-title">'+def.title+'</div><div class="event-daily-progress">'+def.progress(current)+' · +'+def.xp+' Event-XP</div><div class="event-daily-progressbar"><span style="width:'+Math.min(100,current/def.target*100)+'%"></span></div></div><button class="event-daily-action '+btnClass+'">'+btnText+'</button>';
+      const button=card.querySelector('button');
+      if(ready&&!state.claimed)button.addEventListener('click',function(){SFX.unlock();claimDaily(state.id,button)});else button.disabled=true;
       wrap.appendChild(card);
     });
-
-    $('eventDailyStatus').textContent = claimedCount + ' / ' + S.event.daily.length + ' hentet';
+    $('eventDailyStatus').textContent=claimedCount+' / '+st.daily.length+' hentet';
   }
 
-
+  function applyEventIdentity(){
+    const cfg=config();
+    document.documentElement.setAttribute('data-active-event',cfg.theme);
+    const hero=$('eventHero'),home=$('homeEventCard');
+    if(hero)hero.dataset.eventTheme=cfg.theme;
+    if(home){home.dataset.eventTheme=cfg.theme;home.setAttribute('aria-label','Åbn '+cfg.shortName+'-eventet')}
+    if($('eventHeroLabel'))$('eventHeroLabel').textContent=cfg.label;
+    if($('eventHeroTitle'))$('eventHeroTitle').textContent=cfg.name;
+    if($('eventHeroIntro'))$('eventHeroIntro').textContent=cfg.intro;
+    if($('eventInfoText'))$('eventInfoText').textContent=cfg.info;
+    if($('eventInfoIcon'))$('eventInfoIcon').textContent=cfg.symbol;
+    if($('homeEventTitle'))$('homeEventTitle').textContent=cfg.name;
+    if($('homeEventSub'))$('homeEventSub').textContent=cfg.homeSub;
+    const spark=document.querySelector('.event-tab-spark'); if(spark)spark.textContent=cfg.symbol;
+  }
   function renderHomeShortcut(next,pct){
-    const card = $('homeEventCard');
-    if(!card) return;
-
-    const rewardCount = REWARDS.filter(function(reward){ return owned(reward); }).length;
-    $('homeEventProgressFill').style.width = pct + '%';
-    $('homeEventProgressStar').style.left = pct + '%';
-    $('homeEventXp').textContent = S.event.xp + ' / ' + MAX_XP + ' Event-XP';
-    $('homeEventDays').textContent = daysLeft() + (daysLeft() === 1 ? ' dag tilbage' : ' dage tilbage');
-    $('homeEventRewardProgress').textContent = rewardCount + ' / ' + REWARDS.length + ' rewards';
-    $('homeEventNextReward').textContent = next
-      ? next.name + ' · ' + next.milestone + ' XP'
-      : 'Alle rewards er låst op';
-
-    const orb = $('homeEventRewardOrb');
-    if(orb){
-      orb.dataset.reward = next ? next.type : 'complete';
-      const core = orb.querySelector('.home-event-orb-core');
-      if(core){
-        core.innerHTML = next
-          ? icon(next.icon,24)
-          : icon('check',24);
-      }
-    }
+    const st=ensure(),card=$('homeEventCard'); if(!card)return;
+    const rewardCount=rewards().filter(owned).length;
+    $('homeEventProgressFill').style.width=pct+'%'; $('homeEventProgressStar').style.left=pct+'%';
+    $('homeEventXp').textContent=st.xp+' / '+MAX_XP+' Event-XP';
+    $('homeEventDays').textContent=daysLeft()+(daysLeft()===1?' dag tilbage':' dage tilbage');
+    $('homeEventRewardProgress').textContent=rewardCount+' / '+rewards().length+' rewards';
+    $('homeEventNextReward').textContent=next?next.name+' · '+next.milestone+' XP':'Alle rewards er låst op';
+    const orb=$('homeEventRewardOrb');
+    if(orb){orb.dataset.reward=next?next.type:'complete';const core=orb.querySelector('.home-event-orb-core');if(core)core.innerHTML=next?icon(next.icon,24):icon('check',24)}
   }
-
   function openEvent(){
-    SFX.unlock();
-    SFX.magic();
-    vibrate(18);
-
-    if(typeof switchTab === 'function'){
-      switchTab('tab-challenges');
-    }
-
-    const delay = reduceMotion ? 12 : 250;
+    SFX.unlock();SFX.magic();vibrate(18);
+    if(typeof switchTab==='function')switchTab('tab-challenges');
+    const delay=reduceMotion?12:250;
     setTimeout(function(){
-      if(typeof window.activateChallengePane === 'function'){
-        window.activateChallengePane('pane-ch-event');
-      }else{
-        const button = document.querySelector('.ch-subtab[data-ch-pane="pane-ch-event"]');
-        if(button && !button.classList.contains('on')) button.click();
-      }
-
-      const eventPane = $('pane-ch-event');
-      if(eventPane){
-        try{ eventPane.scrollIntoView({ behavior:'smooth', block:'start' }); }catch(e){}
-      }
+      if(typeof window.activateChallengePane==='function')window.activateChallengePane('pane-ch-event');
+      else{const button=document.querySelector('.ch-subtab[data-ch-pane="pane-ch-event"]');if(button&&!button.classList.contains('on'))button.click()}
+      const pane=$('pane-ch-event');if(pane)try{pane.scrollIntoView({behavior:'smooth',block:'start'})}catch(e){}
     },delay);
   }
-
   function render(){
-    ensure();
-
-    const pct = Math.min(100,S.event.xp / MAX_XP * 100);
-    $('eventProgressFill').style.width = pct + '%';
-    $('eventProgressGlow').style.left = pct + '%';
-    $('eventXpText').textContent = S.event.xp + ' / ' + MAX_XP + ' Event-XP';
-    $('eventDaysLeft').textContent = daysLeft() + (daysLeft() === 1 ? ' dag tilbage' : ' dage tilbage');
-
-    const next = nextReward();
-    $('eventNextRewardText').textContent = next
-      ? 'Næste: ' + next.name + ' ved ' + next.milestone + ' XP'
-      : 'Alle rewards låst op';
-
-    renderHomeShortcut(next,pct);
-    renderMarkers();
-    renderRewards();
-    renderDaily();
+    const st=ensure();
+    applyEventIdentity();
+    autoUnlockReachedRewards({silent:true});
+    const pct=Math.min(100,st.xp/MAX_XP*100);
+    $('eventProgressFill').style.width=pct+'%'; $('eventProgressGlow').style.left=pct+'%';
+    $('eventXpText').textContent=st.xp+' / '+MAX_XP+' Event-XP';
+    $('eventDaysLeft').textContent=daysLeft()+(daysLeft()===1?' dag tilbage':' dage tilbage');
+    const next=nextReward();
+    $('eventNextRewardText').textContent=next?'Næste: '+next.name+' ved '+next.milestone+' XP':'Alle rewards låst op';
+    renderHomeShortcut(next,pct);renderMarkers();renderRewards();renderDaily();
+  }
+  function checkProgress(){render()}
+  function switchEvent(id){
+    if(!EVENT_CONFIGS[id]||id===activeId())return;
+    S.settings.activeEvent=id;save();ensure();render();
+    if(typeof Settings!=='undefined')Settings.refresh();
+    SFX.magic();vibrate([16,24,16]);toast('Aktivt event: '+config().shortName);
   }
 
-  function checkProgress(){
-    ensure();
-    render();
-  }
-
-
-  $('homeEventCard').addEventListener('click',function(e){
-    if(e.target.closest('#homeEventOpenBtn')){
-      e.preventDefault();
-    }
-    openEvent();
-  });
-  $('homeEventCard').addEventListener('keydown',function(e){
-    if(e.key === 'Enter' || e.key === ' '){
-      e.preventDefault();
-      openEvent();
-    }
-  });
-
+  $('homeEventCard').addEventListener('click',function(e){if(e.target.closest('#homeEventOpenBtn'))e.preventDefault();openEvent()});
+  $('homeEventCard').addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();openEvent()}});
   $('eventTestXpBtn').addEventListener('click',function(){
-    ensure();
-    const before = S.event.xp;
-    S.event.xp = Math.min(MAX_XP,S.event.xp + 250);
-    save();
-    animateEventXp(S.event.xp - before,this);
-    autoUnlockReachedRewards({ silent:false });
-    confetti(18);
-    render();
+    const st=ensure(),before=st.xp;st.xp=Math.min(MAX_XP,st.xp+250);save();animateEventXp(st.xp-before,this);autoUnlockReachedRewards({silent:false});confetti(18);render();
   });
 
-  return {
-    render:render,
-    checkProgress:checkProgress,
-    claimReward:claimReward,
-    claimDaily:claimDaily
-  };
+  return {render:render,checkProgress:checkProgress,claimReward:claimReward,claimDaily:claimDaily,switchEvent:switchEvent,getActive:function(){return activeId()},configs:EVENT_CONFIGS};
 })();
+
 
 
 /* ===================================================================
@@ -13985,6 +15437,8 @@ const Settings = (function(){
     neon:   { light:'#050806', dark:'#050806' },
     sketch: { light:'#F6EFE0', dark:'#221D16' },
     event_midnight: { light:'#080D20', dark:'#080D20' },
+    event_plant: { light:'#F1F7E9', dark:'#102416' },
+    event_solar: { light:'#FFF7E9', dark:'#351006' },
   };
 
   function applyTheme(){
@@ -14013,6 +15467,9 @@ const Settings = (function(){
     seg($('setMapTheme'), S.settings.mapTheme);
     seg($('setLayoutMode'), S.settings.layoutMode || 'normal');
     $('setHabit').value = S.settings.habit || '';
+    document.querySelectorAll('.event-choice').forEach(function(b){
+      b.classList.toggle('on', b.dataset.event === (S.settings.activeEvent || 'midnight'));
+    });
     document.querySelectorAll('.theme-swatch').forEach(function(b){
       b.classList.toggle('on', b.dataset.style === (S.settings.style || 'nature'));
       if(b.dataset.premium){
@@ -14024,6 +15481,12 @@ const Settings = (function(){
     });
     applyTheme();
   }
+
+  $('eventPicker').addEventListener('click', function(e){
+    const button = e.target.closest('.event-choice');
+    if(!button) return;
+    MonthlyEvent.switchEvent(button.dataset.event);
+  });
 
   $('setTabColors').addEventListener('click', function(){
     S.settings.tabColors = !S.settings.tabColors;
@@ -14052,7 +15515,7 @@ const Settings = (function(){
     vibrate(20);
     const names = { nature:'Natur', glass:'Liquid Glass', neon:'Neon Trail', sketch:'Skitsebog',
       silver:'Sølv', gold:'Guld', diamond:'Diamant', blackred:'Sort & Rød Diamant',
-      event_midnight:'Midnight Bloom' };
+      event_midnight:'Midnight Bloom', event_plant:'Plant Bloom', event_solar:'Solar Flare' };
     toast('Tema: ' + (names[b.dataset.style] || b.dataset.style));
   });
 
@@ -14313,6 +15776,7 @@ function switchTab(id){
     if(id === 'tab-shop'){ Shop.render(); }
     if(id === 'tab-friends'){ renderFriends(); Friends.refreshCachedFriends().then(renderFriends); }
     if(id === 'tab-challenges' && typeof MonthlyEvent !== 'undefined'){ MonthlyEvent.render(); }
+    if(id === 'tab-home' && window.renderMiniCaptureMap){ setTimeout(window.renderMiniCaptureMap, 60); }
     return;
   }
 
@@ -14333,6 +15797,7 @@ function switchTab(id){
     if(id === 'tab-shop'){ Shop.render(); }
     if(id === 'tab-friends'){ renderFriends(); Friends.refreshCachedFriends().then(renderFriends); }
     if(id === 'tab-challenges' && typeof MonthlyEvent !== 'undefined'){ MonthlyEvent.render(); }
+    if(id === 'tab-home' && window.renderMiniCaptureMap){ setTimeout(window.renderMiniCaptureMap, 80); }
     setTimeout(function(){
       if(token !== tabToken) return;
       next.classList.remove('entering');
@@ -14913,6 +16378,55 @@ try{
     e.stopPropagation();
     closePurchaseCutscene(true);
   });
+})();
+</script>
+
+
+<script>
+(function(){
+  const root = document.documentElement;
+  let tx = 0, ty = 0, cx = 0, cy = 0, raf = null;
+
+  function setTarget(clientX, clientY){
+    const x = (clientX / window.innerWidth - 0.5) * 24;
+    const y = (clientY / window.innerHeight - 0.5) * 24;
+    tx = x;
+    ty = y;
+    if(!raf) raf = requestAnimationFrame(tick);
+  }
+
+  function tick(){
+    cx += (tx - cx) * 0.08;
+    cy += (ty - cy) * 0.08;
+    root.style.setProperty('--vine-x', cx.toFixed(2) + 'px');
+    root.style.setProperty('--vine-y', cy.toFixed(2) + 'px');
+    if(Math.abs(tx - cx) < 0.05 && Math.abs(ty - cy) < 0.05){
+      raf = null;
+      return;
+    }
+    raf = requestAnimationFrame(tick);
+  }
+
+  window.addEventListener('pointermove', function(e){
+    setTarget(e.clientX, e.clientY);
+  }, {passive:true});
+
+  window.addEventListener('touchmove', function(e){
+    const t = e.touches && e.touches[0];
+    if(t) setTarget(t.clientX, t.clientY);
+  }, {passive:true});
+
+  window.addEventListener('mouseleave', function(){
+    tx = 0; ty = 0;
+    if(!raf) raf = requestAnimationFrame(tick);
+  });
+
+  window.addEventListener('deviceorientation', function(e){
+    if(typeof e.gamma !== 'number' || typeof e.beta !== 'number') return;
+    tx = Math.max(-14, Math.min(14, e.gamma * 0.5));
+    ty = Math.max(-14, Math.min(14, (e.beta - 45) * 0.18));
+    if(!raf) raf = requestAnimationFrame(tick);
+  }, true);
 })();
 </script>
 
