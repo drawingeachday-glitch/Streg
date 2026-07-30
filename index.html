@@ -8454,6 +8454,106 @@ body.photo-celebration-open{
   display:block;
 }
 
+
+/* =========================================================
+   PHONE COMPASS / DIRECTION INDICATOR
+   ========================================================= */
+:root{
+  --phone-heading:0deg;
+}
+
+.hex-user-marker-wrap{
+  position:relative;
+  width:24px;
+  height:24px;
+  overflow:visible;
+  isolation:isolate;
+}
+
+.hex-user-heading{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:0;
+  height:0;
+  z-index:0;
+  transform:rotate(var(--phone-heading));
+  transform-origin:0 0;
+  opacity:0;
+  transition:opacity .28s ease;
+  pointer-events:none;
+  will-change:transform;
+}
+
+.hex-user-heading::before{
+  content:"";
+  position:absolute;
+  left:-21px;
+  bottom:4px;
+  width:42px;
+  height:61px;
+  clip-path:polygon(50% 0, 100% 100%, 50% 83%, 0 100%);
+  background:
+    linear-gradient(
+      180deg,
+      rgba(75,190,255,.95) 0%,
+      rgba(37,131,255,.50) 54%,
+      rgba(37,131,255,.05) 100%
+    );
+  filter:
+    drop-shadow(0 0 8px rgba(77,197,255,.62))
+    drop-shadow(0 7px 12px rgba(37,131,255,.20));
+}
+
+html[data-compass-active="true"] .hex-user-heading{
+  opacity:.92;
+}
+
+.hex-user-marker-wrap .hex-user-marker{
+  position:absolute;
+  left:0;
+  top:0;
+  z-index:2;
+}
+
+.hex-user-marker-wrap.compass-mini .hex-user-heading::before{
+  left:-17px;
+  width:34px;
+  height:48px;
+  bottom:3px;
+}
+
+.hex-user-marker-wrap.compass-mini .hex-user-marker{
+  width:20px;
+  height:20px;
+  left:2px;
+  top:2px;
+  border-width:3px;
+  box-shadow:
+    0 7px 18px rgba(37,131,255,.30),
+    0 0 0 6px rgba(37,131,255,.12);
+}
+
+.mini-map-compass-badge{
+  min-width:62px;
+  justify-content:center;
+}
+
+html[data-compass-active="true"] .mini-map-compass-badge{
+  color:#DDF8FF;
+  border-color:rgba(102,223,255,.28);
+  box-shadow:
+    0 8px 18px rgba(0,0,0,.14),
+    0 0 18px rgba(102,223,255,.13);
+}
+
+.compass-degree{
+  display:inline-block;
+  min-width:30px;
+  text-align:right;
+  font-variant-numeric:tabular-nums;
+}
+
 </style>
 <!-- topbar removed + top content lowered -->
 </head>
@@ -9954,6 +10054,124 @@ setInterval(refreshCaptureCard, 30000);
 
 
 /* ===================================================================
+   PHONE HEADING / COMPASS
+   =================================================================== */
+window.PhoneHeading = (function(){
+  const root = document.documentElement;
+  let listening = false;
+  let permissionPending = false;
+  let smoothHeading = 0;
+  let hasHeading = false;
+
+  function screenAngle(){
+    if(window.screen && screen.orientation && Number.isFinite(screen.orientation.angle)){
+      return screen.orientation.angle;
+    }
+    if(Number.isFinite(window.orientation)) return Number(window.orientation);
+    return 0;
+  }
+
+  function normalize(value){
+    return ((value % 360) + 360) % 360;
+  }
+
+  function updateBadge(heading){
+    const badge = document.getElementById('miniMapCompassBadge');
+    if(!badge) return;
+    badge.innerHTML =
+      '<span aria-hidden="true">↑</span>' +
+      '<span class="compass-degree">' + Math.round(heading) + '°</span>';
+  }
+
+  function handleOrientation(event){
+    let heading = null;
+
+    if(Number.isFinite(event.webkitCompassHeading)){
+      heading = event.webkitCompassHeading;
+    }else if(Number.isFinite(event.alpha)){
+      heading = 360 - event.alpha + screenAngle();
+    }
+
+    if(!Number.isFinite(heading)) return;
+    heading = normalize(heading);
+
+    if(!hasHeading){
+      smoothHeading = heading;
+      hasHeading = true;
+    }else{
+      const delta = ((heading - smoothHeading + 540) % 360) - 180;
+      smoothHeading = normalize(smoothHeading + delta * .20);
+    }
+
+    root.style.setProperty('--phone-heading', smoothHeading.toFixed(1) + 'deg');
+    root.setAttribute('data-compass-active','true');
+    updateBadge(smoothHeading);
+  }
+
+  function startListening(){
+    if(listening) return true;
+    listening = true;
+    window.addEventListener('deviceorientationabsolute',handleOrientation,true);
+    window.addEventListener('deviceorientation',handleOrientation,true);
+    return true;
+  }
+
+  async function enable(){
+    if(listening) return true;
+    if(permissionPending) return false;
+
+    const Orientation = window.DeviceOrientationEvent;
+    if(!Orientation){
+      return false;
+    }
+
+    if(typeof Orientation.requestPermission === 'function'){
+      permissionPending = true;
+      try{
+        const result = await Orientation.requestPermission();
+        permissionPending = false;
+        if(result === 'granted'){
+          return startListening();
+        }
+        const badge = document.getElementById('miniMapCompassBadge');
+        if(badge) badge.textContent = 'Kompas blokeret';
+        return false;
+      }catch(error){
+        permissionPending = false;
+        return false;
+      }
+    }
+
+    return startListening();
+  }
+
+  function heading(){
+    return hasHeading ? smoothHeading : null;
+  }
+
+  /* Android and browsers without a permission prompt can start immediately. */
+  try{
+    if(window.DeviceOrientationEvent &&
+       typeof window.DeviceOrientationEvent.requestPermission !== 'function'){
+      startListening();
+    }
+  }catch(error){}
+
+  return {
+    enable:enable,
+    heading:heading
+  };
+})();
+
+document.addEventListener('click',function(event){
+  const target = event.target.closest &&
+    event.target.closest('#realMap, #followBtn, #miniRealMapCard');
+  if(target && window.PhoneHeading){
+    PhoneHeading.enable();
+  }
+});
+
+/* ===================================================================
    HOME REAL OPENSTREETMAP MINI MAP
    =================================================================== */
 (function(){
@@ -10067,7 +10285,7 @@ setInterval(refreshCaptureCard, 30000);
         '<div class="mini-real-map-shade"></div>' +
         '<div class="mini-real-map-top">' +
           '<span class="mini-real-map-badge"><i class="mini-real-map-live"></i> Live kort</span>' +
-          '<span class="mini-real-map-badge" id="miniMapHexBadge">Hexagoner</span>' +
+          '<span class="mini-real-map-badge mini-map-compass-badge" id="miniMapCompassBadge">Kompas</span>' +
         '</div>' +
         '<div class="mini-real-map-bottom">' +
           '<div class="mini-real-map-copy">' +
@@ -10205,13 +10423,19 @@ setInterval(refreshCaptureCard, 30000);
       }
     });
 
-    L.circleMarker(center,{
+    L.marker(center,{
       interactive:false,
-      radius:5.5,
-      color:'#FFFFFF',
-      weight:2,
-      fillColor:'#5EDCFF',
-      fillOpacity:1
+      zIndexOffset:2200,
+      icon:L.divIcon({
+        className:'',
+        iconSize:[24,24],
+        iconAnchor:[12,12],
+        html:
+          '<div class="hex-user-marker-wrap compass-mini">' +
+            '<div class="hex-user-heading"></div>' +
+            '<div class="hex-user-marker"></div>' +
+          '</div>'
+      })
     }).addTo(miniMarkerLayer);
   }
 
@@ -10219,9 +10443,7 @@ setInterval(refreshCaptureCard, 30000);
     const photos = S.hexMap && S.hexMap.photos ? Object.keys(S.hexMap.photos).length : 0;
     const chests = activeChestIds().length;
     const meta = $('miniMapMeta');
-    const badge = $('miniMapHexBadge');
     if(meta) meta.textContent = photos + ' udforsket · ' + chests + ' pengepunge i nærheden';
-    if(badge) badge.textContent = 'Rigtigt kort + hex';
   }
 
   function renderMiniCaptureMap(){
@@ -10257,6 +10479,7 @@ setInterval(refreshCaptureCard, 30000);
   }
 
   function openFullMap(){
+    if(window.PhoneHeading && PhoneHeading.enable) PhoneHeading.enable();
     if(typeof SFX !== 'undefined' && SFX.unlock) SFX.unlock();
     if(typeof switchTab === 'function') switchTab('tab-map');
     setTimeout(function(){
@@ -12539,7 +12762,11 @@ const MapView = (function(){
       className:'',
       iconSize:[24,24],
       iconAnchor:[12,12],
-      html:'<div class="hex-user-marker"></div>'
+      html:
+        '<div class="hex-user-marker-wrap">' +
+          '<div class="hex-user-heading"></div>' +
+          '<div class="hex-user-marker"></div>' +
+        '</div>'
     });
   }
 
