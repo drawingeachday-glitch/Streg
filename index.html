@@ -1877,7 +1877,7 @@ html{scroll-behavior:smooth;}
   60%{transform:scale(.99) rotate(1.5deg);}
 }
 
-/* Main streak hero */
+/* Main streak hero - layered, asymmetric motion makes the SVG feel like living fire. */
 .hero{
   overflow:hidden;
 }
@@ -1889,38 +1889,137 @@ html{scroll-behavior:smooth;}
   animation-direction:alternate-reverse;
 }
 .hero-flame-outline{
-  animation:heroFlameFloat 4.2s ease-in-out infinite;
-  transform-origin:50% 60%;
+  isolation:isolate;
+  animation:heroFlameFloat 3.6s ease-in-out infinite;
+  transform-origin:50% 82%;
+  will-change:transform;
 }
 .hero-flame-outline::before{
-  animation:heroFlameAura 4.2s ease-in-out infinite;
+  z-index:0;
+  animation:heroFlameAura 1.32s ease-in-out infinite;
+  will-change:transform,opacity,filter;
+}
+.hero-flame-outline::after{
+  content:"";
+  position:absolute;
+  z-index:3;
+  left:50%;
+  top:56%;
+  width:3px;
+  height:3px;
+  border-radius:50%;
+  background:var(--streak-flame-light);
+  box-shadow:
+    -18px 12px 0 -1px var(--streak-flame-main),
+    17px 22px 0 -1px var(--streak-flame-light),
+    -8px 34px 0 -1px var(--streak-flame-dark),
+    11px 45px 0 -1px var(--streak-flame-main);
+  filter:drop-shadow(0 0 5px var(--streak-flame-glow));
+  opacity:0;
+  pointer-events:none;
+  animation:heroFlameEmbers 2.15s linear infinite;
 }
 .hero-flame-outline svg{
-  transform-origin:50% 55%;
-  animation:heroFlameBreath 4.2s ease-in-out infinite;
+  z-index:1;
+  overflow:visible;
+  transform-origin:50% 82%;
+  animation:heroFlameBreath 1.08s cubic-bezier(.45,.05,.55,.95) infinite;
+  will-change:transform,filter;
+}
+.hero-flame-outline svg > ellipse{
+  transform-box:fill-box;
+  transform-origin:center;
+  animation:heroFireGlow 1.24s ease-in-out infinite;
+}
+.hero-flame-outline svg > path:first-of-type{
+  transform-box:fill-box;
+  transform-origin:50% 88%;
+  animation:heroFireBody 1.08s cubic-bezier(.45,.05,.55,.95) infinite;
+  will-change:transform,filter,opacity;
+}
+.hero-flame-outline svg > path:last-of-type{
+  transform-box:fill-box;
+  transform-origin:50% 92%;
+  animation:heroFireCore .73s ease-in-out infinite reverse;
+  will-change:transform,opacity;
 }
 .hero-flame-num{
-  animation:numberBreath 4.2s ease-in-out infinite;
+  z-index:2;
+  animation:numberBreath 3.6s ease-in-out infinite;
 }
+
 @keyframes heroGlowDrift{
   0%,100%{transform:translate3d(0,0,0) scale(1);}
   50%{transform:translate3d(6px,-5px,0) scale(1.04);}
 }
 @keyframes heroFlameFloat{
-  0%,100%{transform:translateY(0);}
-  50%{transform:translateY(-3px);}
+  0%,100%{transform:translateY(1px) rotate(-.4deg);}
+  32%{transform:translateY(-2px) rotate(.7deg);}
+  68%{transform:translateY(-4px) rotate(-.8deg);}
 }
 @keyframes heroFlameAura{
-  0%,100%{opacity:.78; transform:scale(1);}
-  50%{opacity:1; transform:scale(1.07);}
+  0%,100%{opacity:.62;transform:scale(.94);filter:blur(7px);}
+  24%{opacity:.92;transform:scale(1.08) translateX(-1px);filter:blur(5px);}
+  51%{opacity:.72;transform:scale(.98) translateX(1px);filter:blur(7px);}
+  76%{opacity:1;transform:scale(1.13) translateY(-2px);filter:blur(5px);}
 }
 @keyframes heroFlameBreath{
-  0%,100%{transform:scale(1);}
-  50%{transform:scale(1.025);}
+  0%,100%{transform:scaleX(.98) scaleY(1.01) rotate(-.6deg);}
+  20%{transform:scaleX(1.025) scaleY(.975) rotate(.8deg);}
+  43%{transform:scaleX(.97) scaleY(1.035) rotate(-1.1deg);}
+  67%{transform:scaleX(1.018) scaleY(.99) rotate(.45deg);}
+  84%{transform:scaleX(.99) scaleY(1.02) rotate(-.35deg);}
+}
+@keyframes heroFireBody{
+  0%,100%{
+    transform:skewX(-1.5deg) scaleX(.99) scaleY(1.01);
+    opacity:.96;
+    filter:drop-shadow(0 4px 7px var(--streak-flame-glow));
+  }
+  18%{transform:skewX(2.2deg) scaleX(1.025) scaleY(.975);opacity:1;}
+  39%{
+    transform:skewX(-2.8deg) translateX(-.7px) scaleX(.975) scaleY(1.04);
+    filter:drop-shadow(1px 2px 10px var(--streak-flame-glow));
+  }
+  61%{transform:skewX(1.6deg) translateX(.8px) scaleX(1.018) scaleY(.99);opacity:.98;}
+  79%{
+    transform:skewX(-.8deg) scaleX(.985) scaleY(1.025);
+    filter:drop-shadow(-1px 3px 8px var(--streak-flame-glow));
+  }
+}
+@keyframes heroFireCore{
+  0%,100%{transform:translateY(0) rotate(-1deg) scale(.98);opacity:.82;}
+  28%{transform:translateY(-1.5px) rotate(2deg) scaleX(1.08) scaleY(1.04);opacity:1;}
+  57%{transform:translate(1px,.5px) rotate(-2.5deg) scaleX(.94) scaleY(1.08);opacity:.88;}
+  81%{transform:translate(-.7px,-1px) rotate(1.2deg) scale(1.04);opacity:.96;}
+}
+@keyframes heroFireGlow{
+  0%,100%{transform:scale(.9);opacity:.58;}
+  33%{transform:translate(-1px,1px) scale(1.08);opacity:.9;}
+  62%{transform:translate(1px,-1px) scale(.98);opacity:.68;}
+  82%{transform:scale(1.14);opacity:1;}
+}
+@keyframes heroFlameEmbers{
+  0%,18%{transform:translate(-50%,18px) scale(.55);opacity:0;}
+  28%{opacity:.9;}
+  72%{opacity:.5;}
+  100%{transform:translate(calc(-50% + 8px),-62px) scale(1.1);opacity:0;}
 }
 @keyframes numberBreath{
   0%,100%{transform:translateY(0);}
   50%{transform:translateY(-1px);}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .hero-flame-outline,
+  .hero-flame-outline::before,
+  .hero-flame-outline svg,
+  .hero-flame-outline svg > ellipse,
+  .hero-flame-outline svg > path,
+  .hero-flame-num{
+    animation:none !important;
+  }
+  .hero-flame-outline::after{display:none;}
 }
 
 /* Buttons */
