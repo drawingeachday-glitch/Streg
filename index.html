@@ -12794,6 +12794,590 @@ body.bh-preview-open{overflow:hidden;}
   .chest-cutscene.stage-complete .chest-summary{opacity:1;transform:none!important}
 }
 
+
+/* =========================================================
+   SHOP EXPERIENCE V3 — SMOOTH GRID + CINEMATIC PURCHASE DROP
+   ========================================================= */
+#tab-shop{
+  --shop-ease:cubic-bezier(.2,.78,.2,1);
+}
+#tab-shop .shop-subtabs-four{
+  position:sticky;
+  top:-7px;
+  z-index:24;
+  margin:0 -4px 10px;
+  padding:9px 4px 11px;
+  background:linear-gradient(180deg,var(--paper) 0 82%,transparent);
+  scroll-snap-type:x proximity;
+  scroll-padding-inline:4px;
+  overscroll-behavior-inline:contain;
+}
+#tab-shop .shop-subtab{
+  scroll-snap-align:center;
+  transform:translateZ(0);
+  backface-visibility:hidden;
+  transition:
+    transform .22s var(--shop-ease),
+    background-color .22s ease,
+    border-color .22s ease,
+    color .22s ease,
+    box-shadow .22s ease;
+}
+#tab-shop .shop-subtab.on{
+  transform:translateY(-1px) translateZ(0);
+  box-shadow:0 8px 18px rgba(224,138,60,.19);
+}
+#tab-shop .shop-pane{
+  transform-origin:50% 0;
+}
+#tab-shop .shop-pane.on,
+#tab-shop .shop-pane.shop-pane-entering{
+  animation:shopPaneGlideIn .34s var(--shop-ease) both;
+}
+#tab-shop .shop-pane-scroll{
+  overscroll-behavior:contain;
+}
+#tab-shop .shop-grid{
+  align-items:stretch;
+  contain:layout style;
+}
+#tab-shop .shop-item{
+  --shop-index:0;
+  min-height:180px;
+  contain:layout paint style;
+  content-visibility:auto;
+  contain-intrinsic-size:auto 180px;
+  transform:translateZ(0);
+  backface-visibility:hidden;
+  animation:shopCardGlideIn .38s var(--shop-ease) backwards;
+  animation-delay:var(--shop-delay,0ms);
+}
+#tab-shop .shop-item.locked-card{
+  filter:none;
+  opacity:.62;
+}
+#tab-shop .shop-preview{
+  transform:translateZ(0);
+  transition:transform .34s var(--shop-ease),box-shadow .34s ease;
+}
+#tab-shop .shop-btn{
+  min-height:34px;
+  transform:translateZ(0);
+  transition:transform .18s var(--shop-ease),box-shadow .22s ease,filter .22s ease;
+}
+#tab-shop .shop-btn:active{
+  transform:scale(.965) translateZ(0);
+}
+@media(hover:hover){
+  #tab-shop .shop-item:hover{
+    transform:translateY(-3px) translateZ(0);
+    box-shadow:0 15px 34px rgba(28,36,32,.11);
+  }
+  #tab-shop .shop-item:hover .shop-preview{
+    transform:translateY(-2px) scale(1.025) translateZ(0);
+  }
+  #tab-shop .shop-btn.buy:hover{
+    filter:brightness(1.045);
+    box-shadow:0 10px 22px rgba(224,138,60,.27);
+  }
+}
+@keyframes shopPaneGlideIn{
+  from{opacity:0;transform:translate3d(0,12px,0) scale(.992)}
+  to{opacity:1;transform:translate3d(0,0,0) scale(1)}
+}
+@keyframes shopCardGlideIn{
+  from{opacity:0;transform:translate3d(0,10px,0) scale(.985)}
+  to{opacity:1;transform:translate3d(0,0,0) scale(1)}
+}
+
+/* One definitive purchase layout. Earlier experimental centering rules
+   remain harmless because this ID-scoped layer wins the cascade. */
+#purchaseCutscene.purchase-cutscene{
+  --cut-accent:#F1A34B;
+  --cut-accent-2:#FFE7A3;
+  --cut-deep:#2A1309;
+  --cut-halo:rgba(241,163,75,.34);
+  perspective:1100px;
+  background:
+    radial-gradient(circle at 50% 43%,var(--cut-halo),transparent 22%),
+    radial-gradient(circle at 50% 82%,rgba(76,38,18,.28),transparent 37%),
+    linear-gradient(155deg,#030706 0%,#0A1110 48%,#020404 100%);
+}
+#purchaseCutscene.rarity-rare{
+  --cut-accent:#6DDCFF;
+  --cut-accent-2:#D8F7FF;
+  --cut-deep:#082435;
+  --cut-halo:rgba(72,202,255,.36);
+}
+#purchaseCutscene.rarity-epic{
+  --cut-accent:#B783FF;
+  --cut-accent-2:#F1DFFF;
+  --cut-deep:#24103C;
+  --cut-halo:rgba(169,99,255,.38);
+}
+#purchaseCutscene.rarity-legendary{
+  --cut-accent:#FFD255;
+  --cut-accent-2:#FFF5B8;
+  --cut-deep:#3A2105;
+  --cut-halo:rgba(255,196,57,.44);
+}
+#purchaseCutscene.rarity-cosmic{
+  --cut-accent:#82F4FF;
+  --cut-accent-2:#E8C5FF;
+  --cut-deep:#17092C;
+  --cut-halo:rgba(146,89,255,.46);
+  background:
+    radial-gradient(circle at 50% 42%,rgba(112,224,255,.20),transparent 18%),
+    radial-gradient(circle at 42% 48%,rgba(195,91,255,.26),transparent 34%),
+    linear-gradient(155deg,#010207 0%,#0C0619 50%,#010207 100%);
+}
+#purchaseCutscene .purchase-cutscene-bars{
+  position:absolute;
+  inset:0;
+  z-index:25;
+  pointer-events:none;
+}
+#purchaseCutscene .purchase-cutscene-grid{
+  inset:-35%;
+  z-index:1;
+  opacity:.16;
+  background-size:54px 54px;
+  transform:perspective(700px) rotateX(68deg) translateY(22%);
+}
+#purchaseCutscene .purchase-cutscene-aurora{
+  position:absolute;
+  inset:-35%;
+  z-index:2;
+  opacity:0;
+  pointer-events:none;
+  background:
+    conic-gradient(from 190deg at 50% 48%,transparent,var(--cut-halo),transparent 23%,rgba(97,211,255,.10),transparent 53%,var(--cut-halo),transparent);
+  mix-blend-mode:screen;
+}
+#purchaseCutscene.active .purchase-cutscene-aurora{
+  animation:purchaseAurora 5.4s linear both;
+}
+#purchaseCutscene .purchase-cutscene-rays{
+  left:50%;
+  top:43%;
+  z-index:3;
+  opacity:0;
+  transform:translate(-50%,-50%) scale(.2);
+  filter:none;
+}
+#purchaseCutscene.active .purchase-cutscene-rays{
+  animation:purchaseRaysV3 4.8s cubic-bezier(.16,.84,.24,1) both;
+}
+#purchaseCutscene .purchase-cutscene-speedlines{
+  z-index:4;
+}
+#purchaseCutscene .purchase-cutscene-ring{
+  left:50%;
+  top:43%;
+  z-index:5;
+  transform:translate(-50%,-50%) scale(.1);
+}
+#purchaseCutscene.active .purchase-cutscene-ring.r1,
+#purchaseCutscene.active .purchase-cutscene-ring.r2,
+#purchaseCutscene.active .purchase-cutscene-ring.r3{
+  animation:none;
+}
+#purchaseCutscene.phase-impact .purchase-cutscene-ring.r1{
+  animation:purchaseRingV3 1.35s 0s cubic-bezier(.12,.8,.2,1) both;
+}
+#purchaseCutscene.phase-impact .purchase-cutscene-ring.r2{
+  animation:purchaseRingV3 1.6s .08s cubic-bezier(.12,.8,.2,1) both reverse;
+}
+#purchaseCutscene.phase-impact .purchase-cutscene-ring.r3{
+  animation:purchaseRingSpinV3 2.8s .12s linear both;
+}
+#purchaseCutscene .purchase-cutscene-shockwave{
+  left:50%;
+  top:43%;
+  z-index:6;
+  transform:translate(-50%,-50%) scale(.1);
+}
+#purchaseCutscene.active .purchase-cutscene-shockwave{
+  animation:none;
+}
+#purchaseCutscene.phase-impact .purchase-cutscene-shockwave{
+  animation:purchaseShockV3 1.2s ease-out both;
+}
+#purchaseCutscene .purchase-cutscene-floor{
+  position:absolute;
+  left:50%;
+  top:calc(43% + 116px);
+  z-index:5;
+  width:300px;
+  height:68px;
+  border-radius:50%;
+  opacity:0;
+  transform:translate(-50%,-50%) scale(.45);
+  background:radial-gradient(ellipse,var(--cut-halo),rgba(0,0,0,.52) 42%,transparent 72%);
+  border:1px solid color-mix(in srgb,var(--cut-accent) 28%,transparent);
+  pointer-events:none;
+}
+#purchaseCutscene.phase-reveal .purchase-cutscene-floor,
+#purchaseCutscene.phase-settle .purchase-cutscene-floor{
+  animation:purchaseFloorV3 1.2s var(--shop-ease) both;
+}
+#purchaseCutscene .purchase-cutscene-flash{
+  position:absolute;
+  inset:0;
+  z-index:9;
+  opacity:0;
+  pointer-events:none;
+  background:radial-gradient(circle at 50% 43%,#FFFFFF 0 3%,var(--cut-accent-2) 10%,var(--cut-halo) 25%,transparent 52%);
+  mix-blend-mode:screen;
+}
+#purchaseCutscene.phase-impact .purchase-cutscene-flash{
+  animation:purchaseFlashV3 .9s ease-out both;
+}
+#purchaseCutscene .purchase-cutscene-particles{
+  position:absolute;
+  inset:0;
+  z-index:7;
+  pointer-events:none;
+}
+#purchaseCutscene .purchase-cutscene-special{
+  z-index:8;
+}
+#purchaseCutscene .purchase-cutscene-unlocked{
+  top:43%;
+  z-index:6;
+  color:transparent;
+  -webkit-text-stroke:1px color-mix(in srgb,var(--cut-accent-2) 25%,transparent);
+}
+#purchaseCutscene.active .purchase-cutscene-unlocked{
+  animation:purchaseUnlockedV3 1.7s .25s cubic-bezier(.16,.84,.24,1) both;
+}
+#purchaseCutscene .purchase-cutscene-content{
+  position:relative!important;
+  inset:auto!important;
+  left:auto!important;
+  top:auto!important;
+  width:min(92vw,520px)!important;
+  max-width:520px!important;
+  height:auto!important;
+  min-height:0!important;
+  margin:0!important;
+  padding:clamp(24px,5vh,46px) 20px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:0!important;
+  transform:translateZ(80px)!important;
+  text-align:center!important;
+  pointer-events:auto;
+  z-index:12;
+}
+#purchaseCutscene .purchase-cutscene-kicker{
+  position:relative;
+  opacity:0;
+  color:var(--cut-accent-2);
+}
+#purchaseCutscene.active .purchase-cutscene-kicker{
+  animation:purchaseKickerV3 .64s .2s var(--shop-ease) both;
+}
+#purchaseCutscene .purchase-cutscene-item-wrap{
+  position:relative!important;
+  left:auto!important;
+  top:auto!important;
+  width:210px!important;
+  height:210px!important;
+  margin:14px 0 2px!important;
+  transform:none!important;
+  display:grid!important;
+  place-items:center!important;
+}
+#purchaseCutscene.kind-theme .purchase-cutscene-item-wrap{
+  width:230px!important;
+  height:210px!important;
+}
+#purchaseCutscene .purchase-cutscene-item-glow{
+  inset:2%!important;
+  filter:none;
+  background:
+    radial-gradient(circle,var(--cut-halo),transparent 58%),
+    conic-gradient(from 0deg,transparent,var(--cut-halo),transparent 34%,var(--cut-halo),transparent 70%);
+}
+#purchaseCutscene.active .purchase-cutscene-item-glow{
+  animation:purchaseGlowV3 3.8s .15s ease-in-out both;
+}
+#purchaseCutscene .purchase-cutscene-item{
+  width:138px;
+  height:138px;
+  border-radius:38px;
+  transform-style:preserve-3d;
+  overflow:visible;
+  border:1px solid color-mix(in srgb,var(--cut-accent-2) 42%,transparent);
+  background:
+    linear-gradient(145deg,rgba(255,255,255,.24),rgba(255,255,255,.045)),
+    linear-gradient(155deg,color-mix(in srgb,var(--cut-accent) 20%,#111A1A),#080E0D);
+  box-shadow:
+    0 34px 70px rgba(0,0,0,.58),
+    0 0 0 1px color-mix(in srgb,var(--cut-accent) 38%,transparent),
+    0 0 54px var(--cut-halo),
+    inset 0 1px rgba(255,255,255,.38);
+}
+#purchaseCutscene.kind-theme .purchase-cutscene-item{
+  width:184px;
+  height:126px;
+  border-radius:30px;
+}
+#purchaseCutscene.active .purchase-cutscene-item{
+  animation:purchaseItemArrival 1.25s .28s cubic-bezier(.12,.9,.2,1.12) both;
+}
+#purchaseCutscene.phase-reveal .purchase-cutscene-item,
+#purchaseCutscene.phase-settle .purchase-cutscene-item{
+  opacity:1;
+}
+#purchaseCutscene.phase-reveal .purchase-cutscene-item::after{
+  content:"";
+  position:absolute;
+  inset:-18%;
+  border-radius:inherit;
+  pointer-events:none;
+  background:linear-gradient(110deg,transparent 34%,rgba(255,255,255,.88) 49%,transparent 64%);
+  transform:translateX(-130%) skewX(-10deg);
+  animation:purchaseItemShineV3 .72s ease-out both;
+}
+#purchaseCutscene .purchase-cutscene-title{
+  position:relative!important;
+  inset:auto!important;
+  left:auto!important;
+  top:auto!important;
+  width:min(88vw,500px)!important;
+  margin:10px 0 0!important;
+  transform:none!important;
+  opacity:0;
+  font-size:clamp(30px,9vw,46px)!important;
+  line-height:1!important;
+  color:#FFFFFF;
+  text-shadow:0 8px 34px rgba(0,0,0,.62),0 0 22px var(--cut-halo);
+}
+#purchaseCutscene.active .purchase-cutscene-title,
+#purchaseCutscene.active .purchase-cutscene-type,
+#purchaseCutscene.active .purchase-cutscene-meta,
+#purchaseCutscene.active .purchase-cutscene-footer{
+  animation:none;
+}
+#purchaseCutscene.phase-reveal .purchase-cutscene-title,
+#purchaseCutscene.phase-settle .purchase-cutscene-title{
+  animation:purchaseTitleV3 .78s var(--shop-ease) both;
+}
+#purchaseCutscene .purchase-cutscene-type{
+  position:relative!important;
+  inset:auto!important;
+  left:auto!important;
+  top:auto!important;
+  width:min(88vw,500px)!important;
+  margin:9px 0 0!important;
+  transform:none!important;
+  opacity:0;
+  color:var(--cut-accent-2);
+}
+#purchaseCutscene.phase-reveal .purchase-cutscene-type,
+#purchaseCutscene.phase-settle .purchase-cutscene-type{
+  animation:purchaseTypeV3 .62s .08s ease-out both;
+}
+#purchaseCutscene .purchase-cutscene-meta{
+  display:flex;
+  justify-content:center;
+  gap:8px;
+  margin-top:18px;
+  opacity:0;
+  transform:translateY(12px);
+}
+#purchaseCutscene.phase-settle .purchase-cutscene-meta{
+  animation:purchaseMetaV3 .58s ease-out both;
+}
+#purchaseCutscene .purchase-cutscene-meta-pill{
+  min-width:112px;
+  display:grid;
+  grid-template-columns:auto auto;
+  align-items:center;
+  gap:3px 7px;
+  padding:10px 13px;
+  border-color:color-mix(in srgb,var(--cut-accent) 22%,rgba(255,255,255,.12));
+  background:rgba(7,13,13,.66);
+  backdrop-filter:none;
+}
+#purchaseCutscene .purchase-cutscene-meta-pill span:first-child{
+  grid-column:1 / -1;
+  color:rgba(255,255,255,.46);
+  font-size:8px;
+  letter-spacing:.13em;
+  text-transform:uppercase;
+}
+#purchaseCutscene .purchase-cutscene-meta-pill b{
+  font-size:13px;
+  color:var(--cut-accent-2);
+}
+#purchaseCutscene .purchase-cutscene-meta-currency{
+  font-style:normal;
+  font-size:8px;
+  color:rgba(255,255,255,.52);
+  letter-spacing:.05em;
+}
+#purchaseCutscene .purchase-cutscene-footer{
+  opacity:0;
+}
+#purchaseCutscene.phase-settle .purchase-cutscene-footer{
+  animation:purchaseFooterV3 .5s .25s ease-out both;
+}
+#purchaseCutscene .purchase-cutscene-vignette{
+  z-index:18;
+  box-shadow:inset 0 0 160px 26px rgba(0,0,0,.84);
+}
+#purchaseCutscene.closing{
+  animation:purchaseCloseV3 .5s cubic-bezier(.65,0,.8,.2) both;
+}
+#purchaseCutscene.closing .purchase-cutscene-content{
+  animation:purchaseContentOutV3 .38s ease-in both;
+}
+@keyframes purchaseAurora{
+  0%{opacity:0;transform:scale(.72) rotate(-24deg)}
+  20%{opacity:.72}
+  100%{opacity:.24;transform:scale(1.18) rotate(44deg)}
+}
+@keyframes purchaseRaysV3{
+  0%{opacity:0;transform:translate(-50%,-50%) scale(.14) rotate(-38deg)}
+  16%{opacity:.78}
+  100%{opacity:.08;transform:translate(-50%,-50%) scale(1.85) rotate(44deg)}
+}
+@keyframes purchaseRingV3{
+  0%{opacity:0;transform:translate(-50%,-50%) scale(.08) rotate(-90deg)}
+  22%{opacity:1}
+  100%{opacity:0;transform:translate(-50%,-50%) scale(3.1) rotate(75deg)}
+}
+@keyframes purchaseRingSpinV3{
+  0%{opacity:0;transform:translate(-50%,-50%) scale(.38) rotate(0)}
+  20%{opacity:.64}
+  100%{opacity:.05;transform:translate(-50%,-50%) scale(1.9) rotate(260deg)}
+}
+@keyframes purchaseShockV3{
+  0%{opacity:0;transform:translate(-50%,-50%) scale(.1)}
+  16%{opacity:1}
+  100%{opacity:0;transform:translate(-50%,-50%) scale(8);border-width:1px}
+}
+@keyframes purchaseFloorV3{
+  from{opacity:0;transform:translate(-50%,-50%) scale(.45)}
+  to{opacity:.92;transform:translate(-50%,-50%) scale(1)}
+}
+@keyframes purchaseFlashV3{
+  0%{opacity:0}
+  8%{opacity:.96}
+  100%{opacity:0}
+}
+@keyframes purchaseUnlockedV3{
+  0%{opacity:0;transform:translate(-50%,-50%) scale(2.6);filter:blur(12px)}
+  24%{opacity:.38;filter:none}
+  72%{opacity:.12;transform:translate(-50%,-50%) scale(.94)}
+  100%{opacity:0;transform:translate(-50%,-50%) scale(.78)}
+}
+@keyframes purchaseKickerV3{
+  from{opacity:0;transform:translateY(-14px);letter-spacing:.46em}
+  to{opacity:1;transform:none;letter-spacing:.28em}
+}
+@keyframes purchaseGlowV3{
+  0%{opacity:0;transform:scale(.2) rotate(-30deg)}
+  28%{opacity:.92;transform:scale(1.06) rotate(8deg)}
+  100%{opacity:.42;transform:scale(1.18) rotate(34deg)}
+}
+@keyframes purchaseItemArrival{
+  0%{opacity:0;transform:translate3d(0,92px,-220px) scale(.08) rotateX(42deg) rotateZ(-18deg);filter:blur(16px)}
+  48%{opacity:1;transform:translate3d(0,-12px,70px) scale(1.18) rotateX(-6deg) rotateZ(4deg);filter:none}
+  72%{transform:translate3d(0,4px,25px) scale(.96) rotateX(2deg) rotateZ(-1deg)}
+  100%{opacity:1;transform:translate3d(0,0,40px) scale(1);filter:none}
+}
+@keyframes purchaseItemShineV3{
+  to{transform:translateX(130%) skewX(-10deg)}
+}
+@keyframes purchaseTitleV3{
+  from{opacity:0;transform:translateY(22px) scale(.78);letter-spacing:.02em}
+  65%{opacity:1;transform:translateY(-2px) scale(1.025)}
+  to{opacity:1;transform:none}
+}
+@keyframes purchaseTypeV3{
+  from{opacity:0;transform:translateY(8px)}
+  to{opacity:1;transform:none}
+}
+@keyframes purchaseMetaV3{
+  from{opacity:0;transform:translateY(14px) scale(.94)}
+  to{opacity:1;transform:none}
+}
+@keyframes purchaseFooterV3{to{opacity:.58}}
+@keyframes purchaseCloseV3{
+  to{opacity:0;filter:blur(8px);transform:scale(1.025)}
+}
+@keyframes purchaseContentOutV3{
+  to{opacity:0}
+}
+@media(max-width:430px){
+  #purchaseCutscene .purchase-cutscene-content{
+    width:100%!important;
+    padding:48px 14px 34px!important;
+  }
+  #purchaseCutscene .purchase-cutscene-item-wrap{
+    width:182px!important;
+    height:182px!important;
+  }
+  #purchaseCutscene .purchase-cutscene-item{
+    width:124px;
+    height:124px;
+    border-radius:34px;
+  }
+  #purchaseCutscene.kind-theme .purchase-cutscene-item-wrap{
+    width:210px!important;
+    height:182px!important;
+  }
+  #purchaseCutscene.kind-theme .purchase-cutscene-item{
+    width:166px;
+    height:112px;
+  }
+  #purchaseCutscene .purchase-cutscene-meta-pill{
+    min-width:104px;
+    padding:9px 11px;
+  }
+}
+@media(max-height:620px){
+  #purchaseCutscene .purchase-cutscene-content{
+    transform:scale(.84) translateZ(80px)!important;
+    padding:16px!important;
+  }
+  #purchaseCutscene .purchase-cutscene-item-wrap{
+    margin:0!important;
+  }
+  #purchaseCutscene .purchase-cutscene-meta{
+    margin-top:10px;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  #tab-shop .shop-pane.on,
+  #tab-shop .shop-item{
+    animation:none!important;
+  }
+  #purchaseCutscene .purchase-cutscene-grid,
+  #purchaseCutscene .purchase-cutscene-speedlines,
+  #purchaseCutscene .purchase-cutscene-rays,
+  #purchaseCutscene .purchase-cutscene-particles,
+  #purchaseCutscene .purchase-cutscene-special,
+  #purchaseCutscene .purchase-cutscene-aurora{
+    display:none!important;
+  }
+  #purchaseCutscene.active .purchase-cutscene-item,
+  #purchaseCutscene.active .purchase-cutscene-kicker,
+  #purchaseCutscene.phase-reveal .purchase-cutscene-title,
+  #purchaseCutscene.phase-reveal .purchase-cutscene-type,
+  #purchaseCutscene.phase-settle .purchase-cutscene-meta{
+    opacity:1!important;
+    transform:none!important;
+    animation:none!important;
+  }
+}
+
 /* =========================================================
    STARTUP HEX ASSEMBLY + CINEMATIC REVEAL
    ========================================================= */
@@ -15685,6 +16269,38 @@ const Shop = (function(){
     {kind:'theme', key:'themes', item:THEME_CATALOG.find(function(x){return x.id==='fragment_void';})}
   ].filter(function(entry){return !!entry.item;});
 
+  let lastRenderKey = '';
+
+  function shopRenderKey(){
+    const shop = S.shop || {};
+    return [
+      Number(S.coins) || 0,
+      Number(S.fragments) || 0,
+      Number(S.freezes) || 0,
+      (S.settings && S.settings.style) || '',
+      (S.settings && S.settings.font) || '',
+      (shop.titles || []).join(','),
+      (shop.colors || []).join(','),
+      (shop.frames || []).join(','),
+      (shop.themes || []).join(','),
+      (shop.fonts || []).join(','),
+      shop.equippedTitle || '',
+      shop.equippedColor || '',
+      shop.equippedFrame || ''
+    ].join('|');
+  }
+
+  function replaceGridChildren(grid,nodes){
+    if(!grid) return;
+    const fragment = document.createDocumentFragment();
+    nodes.forEach(function(node,index){
+      node.style.setProperty('--shop-index',String(index));
+      node.style.setProperty('--shop-delay',(Math.min(index,10) * 24) + 'ms');
+      fragment.appendChild(node);
+    });
+    grid.replaceChildren(fragment);
+  }
+
   function fragmentOwned(entry){
     return S.shop[entry.key].indexOf(entry.item.id) !== -1;
   }
@@ -15848,10 +16464,7 @@ const Shop = (function(){
     const balance = $('shopFragmentBalance');
     if(balance) countTo(balance, Number(S.fragments) || 0, 500);
     if(!grid) return;
-    grid.innerHTML = '';
-    FRAGMENT_ITEMS.forEach(function(entry){
-      grid.appendChild(fragmentCard(entry));
-    });
+    replaceGridChildren(grid,FRAGMENT_ITEMS.map(fragmentCard));
   }
 
   function buyFreeze(){
@@ -15952,11 +16565,13 @@ const Shop = (function(){
     return el;
   }
 
-  function fillSection(id, catalog, key){
-    const g = $(id);
-    if(!g) return;
-    g.innerHTML = '';
-    catalog.filter(function(item){ return !item.eventOnly && !item.fragmentOnly; }).forEach(function(item){ g.appendChild(card(catalog, key, item)); });
+  function fillSection(id,catalog,key){
+    const grid = $(id);
+    if(!grid) return;
+    const nodes = catalog
+      .filter(function(item){ return !item.eventOnly && !item.fragmentOnly; })
+      .map(function(item){ return card(catalog,key,item); });
+    replaceGridChildren(grid,nodes);
   }
 
   function themeCard(item){
@@ -16015,10 +16630,12 @@ const Shop = (function(){
   }
 
   function fillThemes(){
-    const g = $('shopThemes');
-    if(!g) return;
-    g.innerHTML = '';
-    THEME_CATALOG.filter(function(item){ return !item.eventOnly && !item.fragmentOnly; }).forEach(function(item){ g.appendChild(themeCard(item)); });
+    const grid = $('shopThemes');
+    if(!grid) return;
+    const nodes = THEME_CATALOG
+      .filter(function(item){ return !item.eventOnly && !item.fragmentOnly; })
+      .map(themeCard);
+    replaceGridChildren(grid,nodes);
   }
 
   function fontCard(item){
@@ -16097,12 +16714,26 @@ const Shop = (function(){
   }
 
   function fillFonts(){
-    const g1 = $('shopFonts'), g2 = $('shopFontsExclusive');
-    if(g1){ g1.innerHTML = ''; FONT_CATALOG.filter(function(item){ return !item.eventOnly && !item.fragmentOnly; }).forEach(function(item){ g1.appendChild(fontCard(item)); }); }
-    if(g2){ g2.innerHTML = ''; FONT_CATALOG_EXCLUSIVE.forEach(function(item){ g2.appendChild(fontCard(item)); }); }
+    const standard = $('shopFonts');
+    const exclusive = $('shopFontsExclusive');
+    if(standard){
+      replaceGridChildren(
+        standard,
+        FONT_CATALOG
+          .filter(function(item){ return !item.eventOnly && !item.fragmentOnly; })
+          .map(fontCard)
+      );
+    }
+    if(exclusive){
+      replaceGridChildren(exclusive,FONT_CATALOG_EXCLUSIVE.map(fontCard));
+    }
   }
 
-  function render(){
+  function render(force){
+    const nextKey = shopRenderKey();
+    if(force !== true && nextKey === lastRenderKey) return;
+    lastRenderKey = nextKey;
+
     $('shopFreezeCount').textContent = S.freezes;
     $('shopFreezeMax').textContent = 'maks. ' + FREEZE_MAX;
     const buyBtn = $('shopBuyFreeze');
@@ -16113,9 +16744,10 @@ const Shop = (function(){
         : 'Ikke nok mønter';
     buyBtn.disabled = S.freezes >= FREEZE_MAX;
     buyBtn.className = 'shop-btn ' + (S.freezes >= FREEZE_MAX ? 'locked' : S.coins >= FREEZE_COST ? 'buy' : 'poor');
-    fillSection('shopTitles', TITLE_CATALOG, 'titles');
-    fillSection('shopColors', COLOR_CATALOG, 'colors');
-    fillSection('shopFrames', FRAME_CATALOG, 'frames');
+
+    fillSection('shopTitles',TITLE_CATALOG,'titles');
+    fillSection('shopColors',COLOR_CATALOG,'colors');
+    fillSection('shopFrames',FRAME_CATALOG,'frames');
     fillThemes();
     fillFonts();
     fillFragments();
@@ -16132,12 +16764,28 @@ const Shop = (function(){
   });
 
   document.querySelectorAll('.shop-subtab').forEach(function(b){
-    b.addEventListener('click', function(){
-      SFX.pop(); vibrate(15);
-      document.querySelectorAll('.shop-subtab').forEach(function(x){ x.classList.toggle('on', x === b); });
-      document.querySelectorAll('.shop-pane').forEach(function(p){ p.classList.toggle('on', p.id === b.dataset.shopPane); });
-      b.scrollIntoView({ behavior:'smooth', inline:'center', block:'nearest' });
-      render(); // rebuild grids fresh so the now-visible pane's cards replay their entrance animation
+    b.addEventListener('click',function(){
+      const target = $(b.dataset.shopPane);
+      if(!target || target.classList.contains('on')) return;
+
+      SFX.pop();
+      vibrate(15);
+      document.querySelectorAll('.shop-subtab').forEach(function(x){
+        x.classList.toggle('on',x === b);
+      });
+      document.querySelectorAll('.shop-pane').forEach(function(p){
+        p.classList.remove('on','shop-pane-entering');
+      });
+
+      target.classList.add('on','shop-pane-entering');
+      b.scrollIntoView({
+        behavior:reduceMotion ? 'auto' : 'smooth',
+        inline:'center',
+        block:'nearest'
+      });
+      setTimeout(function(){
+        target.classList.remove('shop-pane-entering');
+      },380);
     });
   });
 
@@ -21524,15 +22172,18 @@ try{
   </div>
 </div>
 
-<div class="purchase-cutscene" id="purchaseCutscene" aria-hidden="true">
+<div class="purchase-cutscene" id="purchaseCutscene" role="dialog" aria-modal="true" aria-labelledby="purchaseCutsceneTitle" aria-hidden="true" tabindex="-1">
   <div class="purchase-cutscene-bars"></div>
   <div class="purchase-cutscene-grid"></div>
+  <div class="purchase-cutscene-aurora"></div>
   <div class="purchase-cutscene-rays"></div>
   <div class="purchase-cutscene-speedlines"></div>
   <div class="purchase-cutscene-ring r1"></div>
   <div class="purchase-cutscene-ring r2"></div>
   <div class="purchase-cutscene-ring r3"></div>
   <div class="purchase-cutscene-shockwave"></div>
+  <div class="purchase-cutscene-floor"></div>
+  <div class="purchase-cutscene-flash"></div>
   <div class="purchase-cutscene-unlocked">UNLOCKED</div>
   <div class="purchase-cutscene-particles" id="purchaseCutsceneParticles"></div>
   <div class="purchase-cutscene-special" id="purchaseCutsceneSpecial"></div>
@@ -21540,21 +22191,30 @@ try{
   <button class="purchase-cutscene-skip" id="purchaseCutsceneSkip" type="button">SPRING OVER</button>
 
   <div class="purchase-cutscene-content">
-        <div class="purchase-cutscene-item-wrap">
+    <div class="purchase-cutscene-kicker" id="purchaseCutsceneKicker">NEW DROP</div>
+    <div class="purchase-cutscene-item-wrap">
       <div class="purchase-cutscene-item-glow"></div>
       <div class="purchase-cutscene-item" id="purchaseCutsceneIcon"></div>
     </div>
-
     <div class="purchase-cutscene-title" id="purchaseCutsceneTitle">Nyt item</div>
     <div class="purchase-cutscene-type" id="purchaseCutsceneType">LÅST OP</div>
-
-
+    <div class="purchase-cutscene-meta">
+      <div class="purchase-cutscene-meta-pill">
+        <span>Betalt</span>
+        <b id="purchaseCutsceneCost">0</b>
+        <em class="purchase-cutscene-meta-currency" id="purchaseCutsceneCurrency">COINS</em>
+      </div>
+      <div class="purchase-cutscene-meta-pill">
+        <span>Tilbage</span>
+        <b id="purchaseCutsceneRemaining">0</b>
+        <em class="purchase-cutscene-meta-currency" id="purchaseCutsceneCurrencyRemaining">COINS</em>
+      </div>
+    </div>
   </div>
 
   <div class="purchase-cutscene-footer">TRYK FOR AT FORTSÆTTE</div>
   <div class="purchase-cutscene-vignette"></div>
 </div>
-
 
 
 
@@ -21720,14 +22380,53 @@ try{
   const iconEl = document.getElementById('purchaseCutsceneIcon');
   const titleEl = document.getElementById('purchaseCutsceneTitle');
   const typeEl = document.getElementById('purchaseCutsceneType');
+  const kickerEl = document.getElementById('purchaseCutsceneKicker');
+  const costEl = document.getElementById('purchaseCutsceneCost');
+  const remainingEl = document.getElementById('purchaseCutsceneRemaining');
+  const currencyEl = document.getElementById('purchaseCutsceneCurrency');
+  const currencyRemainingEl = document.getElementById('purchaseCutsceneCurrencyRemaining');
   const skipBtn = document.getElementById('purchaseCutsceneSkip');
 
   let closeTimer = null;
   let unlockTimer = null;
+  let phaseTimers = [];
   let canClose = false;
+  let previousFocus = null;
+
+  function clearPurchaseTimers(){
+    clearTimeout(closeTimer);
+    clearTimeout(unlockTimer);
+    phaseTimers.forEach(clearTimeout);
+    phaseTimers = [];
+    closeTimer = null;
+    unlockTimer = null;
+  }
+
+  function phaseLater(fn,delay){
+    const timer = setTimeout(fn,delay);
+    phaseTimers.push(timer);
+    return timer;
+  }
 
   function safeClass(value){
     return String(value || '').toLowerCase().replace(/[^a-z0-9_-]/g,'');
+  }
+
+  function rarityFor(options,kind){
+    if(options.currency === 'fragments' || kind === 'fragment') return 'cosmic';
+    const cost = Math.max(0,Number(options.cost) || 0);
+    if(kind === 'theme' || cost >= 900) return 'legendary';
+    if(kind === 'font' || cost >= 500) return 'epic';
+    if(kind === 'frame' || cost >= 250) return 'rare';
+    return 'common';
+  }
+
+  function rarityLabel(rarity){
+    if(rarity === 'cosmic') return 'COSMIC DROP';
+    if(rarity === 'legendary') return 'LEGENDARY DROP';
+    if(rarity === 'epic') return 'EPIC DROP';
+    if(rarity === 'rare') return 'RARE DROP';
+    return 'NEW SHOP DROP';
   }
 
   function particleColor(index){
@@ -21928,8 +22627,7 @@ try{
     if(!overlay.classList.contains('active')) return;
     if(!force && !canClose) return;
 
-    clearTimeout(closeTimer);
-    clearTimeout(unlockTimer);
+    clearPurchaseTimers();
     overlay.classList.add('closing');
     canClose = false;
 
@@ -21940,13 +22638,16 @@ try{
       document.body.classList.remove('purchase-cutscene-open');
       particles.innerHTML = '';
       special.innerHTML = '';
-    }, 280);
+      if(previousFocus && typeof previousFocus.focus === 'function'){
+        try{ previousFocus.focus({preventScroll:true}); }catch(e){ try{ previousFocus.focus(); }catch(inner){} }
+      }
+      previousFocus = null;
+    },520);
   }
 
   window.purchaseCutscene = function(options){
     options = options || {};
-    clearTimeout(closeTimer);
-    clearTimeout(unlockTimer);
+    clearPurchaseTimers();
 
     overlay.className = 'purchase-cutscene';
     iconEl.className = 'purchase-cutscene-item';
@@ -21954,16 +22655,26 @@ try{
 
     const kind = safeClass(options.kind || 'profile') || 'profile';
     const variant = safeClass(options.variant || '');
+    const rarity = rarityFor(options,kind);
+    const currency = options.currency === 'fragments' ? 'FRAGMENTS' : 'COINS';
+    const cost = Math.max(0,Number(options.cost) || 0);
+    const remaining = Math.max(0,Number(options.remaining) || 0);
 
-    overlay.classList.add('active','kind-' + kind);
+    previousFocus = document.activeElement;
+    overlay.classList.add('active','phase-arrival','kind-' + kind,'rarity-' + rarity);
     if(variant) overlay.classList.add('variant-' + variant);
     overlay.setAttribute('aria-hidden','false');
     document.body.classList.add('purchase-cutscene-open');
 
     iconEl.classList.add('preview-' + kind);
     iconEl.innerHTML = options.preview || safeIcon(options.icon || 'sparkle');
+    kickerEl.textContent = rarityLabel(rarity);
     titleEl.textContent = options.name || 'Nyt item';
     typeEl.textContent = options.type || 'LÅST OP';
+    costEl.textContent = cost ? '-' + cost : 'GRATIS';
+    remainingEl.textContent = String(remaining);
+    currencyEl.textContent = currency;
+    currencyRemainingEl.textContent = currency;
 
     buildSpecialFx(kind,variant);
     makeParticles(kind);
@@ -21971,23 +22682,41 @@ try{
     try{ vibrate(vibrationFor(kind)); }catch(e){}
 
     canClose = false;
+    try{ overlay.focus({preventScroll:true}); }catch(e){}
 
-    setTimeout(function(){
+    phaseLater(function(){
+      overlay.classList.remove('phase-arrival');
+      overlay.classList.add('phase-impact');
+    },360);
+
+    phaseLater(function(){
+      overlay.classList.add('phase-reveal');
       try{
-        const amount = kind === 'theme' ? 135 : kind === 'color' ? 110 : 90;
-        confetti(amount,window.innerWidth / 2,window.innerHeight / 2);
+        const amount = rarity === 'cosmic' ? 190 : rarity === 'legendary' ? 165 : rarity === 'epic' ? 135 : rarity === 'rare' ? 112 : 92;
+        confetti(amount,window.innerWidth / 2,window.innerHeight * .43);
         vibrate(vibrationFor(kind));
       }catch(e){}
-    },420);
+    },760);
+
+    phaseLater(function(){
+      overlay.classList.remove('phase-impact');
+      overlay.classList.add('phase-settle');
+      try{
+        if(rarity === 'legendary' || rarity === 'cosmic'){
+          confetti(rarity === 'cosmic' ? 110 : 82,window.innerWidth / 2,window.innerHeight * .38);
+        }
+      }catch(e){}
+    },1480);
 
     unlockTimer = setTimeout(function(){
       canClose = true;
-    },1250);
+    },1750);
 
+    const duration = Number(options.duration) || (rarity === 'cosmic' || rarity === 'legendary' ? 5600 : 5000);
     closeTimer = setTimeout(function(){
       canClose = true;
       closePurchaseCutscene(true);
-    },3600);
+    },duration);
   };
 
   overlay.addEventListener('click',function(e){
@@ -21998,6 +22727,12 @@ try{
   skipBtn.addEventListener('click',function(e){
     e.stopPropagation();
     closePurchaseCutscene(true);
+  });
+
+  document.addEventListener('keydown',function(e){
+    if(overlay.classList.contains('active') && e.key === 'Escape'){
+      closePurchaseCutscene(true);
+    }
   });
 })();
 </script>
