@@ -587,7 +587,12 @@ button:focus-visible{outline:2px solid var(--amber);outline-offset:2px;}
 }
 /* once today's photo is done, the card becomes the reference's solid,
    subtly-shadowed "next photo" panel instead of the dashed invitation box */
-.capture.ring-mode{border-style:solid;border-color:transparent;box-shadow:var(--shadow-s);}
+.capture.ring-mode{
+  border-style:solid;
+  border-color:transparent;
+  padding:12px 14px;
+  box-shadow:var(--shadow-s);
+}
 .capture.captured{background:var(--moss-soft);border-color:var(--moss);border-style:solid;animation:popIn .5s var(--spring);}
 .capture.rejected{background:var(--brick-soft);border-color:var(--brick);border-style:solid;animation:shake .45s cubic-bezier(.36,.07,.19,.97);}
 @keyframes popIn{0%{transform:scale(.96);}55%{transform:scale(1.02);}100%{transform:scale(1);}}
@@ -595,6 +600,42 @@ button:focus-visible{outline:2px solid var(--amber);outline-offset:2px;}
 .capture-slider{display:flex;width:200%;transition:transform .5s var(--glide);}
 .capture-slider.show-challenge{transform:translateX(-50%);}
 .capture-panel{width:50%;flex-shrink:0;text-align:center;padding:0 2px;}
+/* The inactive map panel must not keep the completed-state card tall.
+   It stays horizontally in the slider so the slide transition still works,
+   but collapses vertically until tomorrow's capture becomes available. */
+.capture-panel:first-child{
+  max-height:420px;
+  overflow:hidden;
+  transition:max-height .4s var(--glide),opacity .24s ease;
+}
+.capture.ring-mode .capture-panel:first-child{
+  max-height:0;
+  padding-block:0;
+  opacity:0;
+  visibility:hidden;
+}
+.capture.ring-mode .next-photo-panel{
+  gap:12px;
+  padding:0;
+}
+.capture.ring-mode .ring-wrap{
+  width:58px;
+  height:58px;
+}
+.capture.ring-mode .ring-track,
+.capture.ring-mode .ring-fill{
+  stroke-width:6;
+}
+.capture.ring-mode .ring-icon svg{
+  width:20px;
+  height:20px;
+}
+.capture.ring-mode .next-photo-label{font-size:11px;}
+.capture.ring-mode .next-photo-time{
+  margin:1px 0 2px;
+  font-size:20px;
+}
+.capture.ring-mode .next-photo-sub{font-size:10.5px;}
 .cap-icon{
   width:56px;height:56px;border-radius:50%;background:var(--card);
   display:flex;align-items:center;justify-content:center;margin:0 auto 11px;
