@@ -6413,7 +6413,7 @@ body.photo-celebration-open{
   background:#E9EFF0;
 }
 #realMap .leaflet-tile-pane{
-  filter:saturate(.88) contrast(.98) brightness(1.035);
+  filter:none;
 }
 #realMap .leaflet-control-zoom{
   border:none;
@@ -11788,183 +11788,172 @@ body.bh-preview-open{overflow:hidden;}
 
 /* =========================================================
    LOOT EXPERIENCE V2
-   Definitive chest marker, pouch, reward and cutscene layer.
+   Definitive money-pouch marker, reward and cutscene layer.
    ========================================================= */
-.hex-chest-marker{
+.hex-money-pouch-marker{
   --loot-a:#FFD978;
-  --loot-b:#E78533;
-  --loot-c:#71371A;
-  --loot-glow:rgba(255,200,85,.72);
+  --loot-b:#C76D2B;
+  --loot-c:#5C2F1D;
+  --loot-glow:rgba(255,201,83,.52);
   position:relative;
-  width:64px;
+  width:60px;
   height:64px;
   display:grid;
   place-items:center;
   isolation:isolate;
-  filter:drop-shadow(0 15px 16px rgba(28,19,8,.32));
-  animation:lootMarkerFloat 2.8s cubic-bezier(.45,.05,.55,.95) infinite;
+  contain:layout paint;
+  animation:mapPouchFloat 3.6s cubic-bezier(.45,.05,.55,.95) infinite;
 }
-.hex-chest-marker.rare{
-  --loot-a:#D2C7FF;
-  --loot-b:#8170F1;
-  --loot-c:#352A83;
-  --loot-glow:rgba(150,128,255,.78);
+.hex-money-pouch-marker.rare{
+  --loot-a:#D8D0FF;
+  --loot-b:#7764D8;
+  --loot-c:#322777;
+  --loot-glow:rgba(146,127,255,.58);
 }
-.hex-chest-marker.epic{
-  --loot-a:#FFD0F0;
-  --loot-b:#F162C2;
-  --loot-c:#7B1F70;
-  --loot-glow:rgba(255,91,208,.82);
+.hex-money-pouch-marker.epic{
+  --loot-a:#FFD3F2;
+  --loot-b:#D950AA;
+  --loot-c:#6E1F62;
+  --loot-glow:rgba(255,91,208,.62);
 }
-.hex-chest-marker::before{
+.hex-money-pouch-marker::before{
   content:"";
   position:absolute;
-  inset:-2px;
+  inset:2px;
   z-index:-2;
   border-radius:50%;
+  opacity:.74;
   background:radial-gradient(circle,var(--loot-glow),transparent 68%);
-  filter:blur(4px);
-  animation:lootMarkerAura 1.8s ease-in-out infinite;
 }
-.hex-chest-marker::after{
+.hex-money-pouch-marker::after{
   content:"";
   position:absolute;
   left:50%;
   bottom:5px;
   z-index:-1;
-  width:44px;
-  height:12px;
+  width:38px;
+  height:9px;
   border-radius:50%;
-  background:rgba(12,10,8,.32);
-  filter:blur(5px);
+  background:rgba(19,12,8,.28);
   transform:translateX(-50%);
-  animation:lootMarkerShadow 2.8s ease-in-out infinite;
 }
-.hex-chest-mini{
+.hex-money-pouch{
   position:relative;
-  width:50px;
-  height:43px;
-  transform-origin:50% 86%;
-  transition:transform .24s cubic-bezier(.2,.9,.2,1),filter .24s ease;
+  width:48px;
+  height:50px;
+  transform-origin:50% 88%;
+  transition:transform .2s cubic-bezier(.2,.9,.2,1);
 }
-.hex-chest-marker:hover .hex-chest-mini{
-  transform:translateY(-3px) scale(1.08) rotate(-1deg);
-  filter:brightness(1.12);
+.hex-money-pouch-marker:hover .hex-money-pouch{
+  transform:translateY(-2px) scale(1.055) rotate(-1deg);
 }
-.hex-chest-mini .base{
+.map-pouch-body{
   position:absolute;
-  left:2px;
-  right:2px;
+  left:3px;
+  right:3px;
   bottom:1px;
-  height:27px;
-  border:2px solid color-mix(in srgb,var(--loot-c) 76%,#160D08);
-  border-radius:7px 7px 11px 11px;
+  height:39px;
+  border:2px solid color-mix(in srgb,var(--loot-c) 82%,#160D08);
+  border-radius:42% 42% 34% 34% / 28% 28% 48% 48%;
   background:
-    linear-gradient(100deg,transparent 0 18%,rgba(255,255,255,.12) 19% 24%,transparent 25% 100%),
+    radial-gradient(ellipse at 33% 25%,rgba(255,255,255,.24),transparent 25%),
+    linear-gradient(115deg,transparent 0 18%,rgba(255,255,255,.10) 19% 25%,transparent 26%),
     linear-gradient(180deg,var(--loot-b),var(--loot-c));
   box-shadow:
-    inset 0 2px 0 rgba(255,255,255,.24),
-    inset 0 -7px 9px rgba(0,0,0,.20),
-    0 8px 12px rgba(0,0,0,.24);
+    inset 0 2px 0 rgba(255,255,255,.22),
+    inset 0 -8px 10px rgba(0,0,0,.19),
+    0 8px 12px rgba(26,15,9,.24);
 }
-.hex-chest-mini .lid{
+.map-pouch-neck{
   position:absolute;
-  left:4px;
-  right:4px;
-  top:1px;
+  left:50%;
+  top:0;
   z-index:2;
-  height:19px;
-  border:2px solid color-mix(in srgb,var(--loot-c) 72%,#160D08);
-  border-radius:12px 12px 5px 5px;
-  background:
-    linear-gradient(90deg,transparent 0 16%,rgba(255,255,255,.24) 17% 25%,transparent 26%),
-    linear-gradient(180deg,color-mix(in srgb,var(--loot-a) 82%,white),var(--loot-b));
-  box-shadow:inset 0 2px 0 rgba(255,255,255,.34),0 3px 5px rgba(0,0,0,.18);
-  transform-origin:50% 100%;
-  animation:lootMarkerLid 2.8s ease-in-out infinite;
-}
-.hex-chest-mini .band{
-  position:absolute;
-  left:50%;
-  top:2px;
-  z-index:3;
-  width:10px;
-  height:38px;
+  width:29px;
+  height:18px;
   transform:translateX(-50%);
-  border-radius:5px;
-  background:linear-gradient(90deg,#A56D1E,#FFE99B 45%,#C58B29);
-  box-shadow:0 0 0 1px rgba(82,50,13,.24),0 0 9px var(--loot-glow);
+  border:2px solid color-mix(in srgb,var(--loot-c) 80%,#160D08);
+  border-radius:6px 6px 48% 48%;
+  background:linear-gradient(180deg,color-mix(in srgb,var(--loot-a) 76%,white),var(--loot-b));
+  box-shadow:inset 0 2px 0 rgba(255,255,255,.27);
 }
-.hex-chest-mini .lock{
+.map-pouch-tie{
   position:absolute;
   left:50%;
-  top:21px;
-  z-index:5;
-  width:16px;
+  top:13px;
+  z-index:4;
+  width:37px;
+  height:7px;
+  transform:translateX(-50%);
+  border-radius:999px;
+  background:linear-gradient(180deg,#FFF0A6,#BC7B24);
+  box-shadow:0 2px 3px rgba(0,0,0,.25),inset 0 1px 0 rgba(255,255,255,.5);
+}
+.map-pouch-tie::before,
+.map-pouch-tie::after{
+  content:"";
+  position:absolute;
+  top:4px;
+  width:12px;
   height:14px;
+  border-radius:3px 3px 8px 8px;
+  border-left:3px solid #D79A39;
+  transform-origin:top;
+}
+.map-pouch-tie::before{left:4px;transform:rotate(18deg)}
+.map-pouch-tie::after{right:1px;transform:rotate(-20deg)}
+.map-pouch-seal{
+  position:absolute;
+  left:50%;
+  top:23px;
+  z-index:5;
+  width:20px;
+  height:20px;
   display:grid;
   place-items:center;
   transform:translateX(-50%);
-  border-radius:5px 5px 7px 7px;
-  color:#6A4314;
-  background:linear-gradient(180deg,#FFF0A3,#D6972D);
-  box-shadow:0 2px 4px rgba(0,0,0,.26),inset 0 1px 0 rgba(255,255,255,.5);
-}
-.hex-chest-mini .lock::before{
-  content:"";
-  width:4px;
-  height:5px;
-  border-radius:4px;
-  background:#654013;
-}
-.hex-chest-mini .shine{
-  position:absolute;
-  right:3px;
-  top:-3px;
-  z-index:6;
-  width:11px;
-  height:11px;
-  opacity:0;
-  transform:rotate(45deg) scale(.2);
-  background:linear-gradient(90deg,transparent 42%,#fff 43% 57%,transparent 58%),
-             linear-gradient(transparent 42%,#fff 43% 57%,transparent 58%);
-  filter:drop-shadow(0 0 5px #fff);
-  animation:lootMarkerShine 2.8s ease-in-out infinite;
-}
-.hex-chest-mini .rivet{
-  position:absolute;
-  z-index:4;
-  bottom:8px;
-  width:4px;
-  height:4px;
+  border:2px solid #8A5B1B;
   border-radius:50%;
-  background:#FFEAA0;
-  box-shadow:inset 0 -1px 0 #9E651D;
+  background:radial-gradient(circle at 35% 28%,#FFF7B8,#E4A735 58%,#9B651E);
+  box-shadow:0 3px 5px rgba(0,0,0,.28),0 0 10px var(--loot-glow);
 }
-.hex-chest-mini .rivet.r1{left:9px}
-.hex-chest-mini .rivet.r2{right:9px}
-@keyframes lootMarkerFloat{
-  0%,100%{transform:translateY(1px) rotate(-.5deg)}
-  48%{transform:translateY(-7px) rotate(.8deg)}
-  62%{transform:translateY(-6px) rotate(-.4deg)}
+.map-pouch-seal::before{
+  content:"";
+  width:7px;
+  height:7px;
+  border:2px solid rgba(100,61,12,.72);
+  border-radius:50%;
 }
-@keyframes lootMarkerShadow{
-  0%,100%{opacity:.58;transform:translateX(-50%) scale(1)}
-  50%{opacity:.30;transform:translateX(-50%) scale(.72)}
+.map-pouch-shine{
+  position:absolute;
+  right:4px;
+  top:16px;
+  z-index:6;
+  width:9px;
+  height:9px;
+  opacity:0;
+  transform:rotate(45deg) scale(.25);
+  background:
+    linear-gradient(90deg,transparent 41%,#fff 42% 58%,transparent 59%),
+    linear-gradient(transparent 41%,#fff 42% 58%,transparent 59%);
+  animation:mapPouchShine 3.6s ease-in-out infinite;
 }
-@keyframes lootMarkerAura{
-  0%,100%{opacity:.42;transform:scale(.78)}
-  50%{opacity:.95;transform:scale(1.16)}
+@keyframes mapPouchFloat{
+  0%,100%{transform:translateY(1px) rotate(-.35deg)}
+  50%{transform:translateY(-5px) rotate(.5deg)}
 }
-@keyframes lootMarkerLid{
-  0%,76%,100%{transform:rotate(0)}
-  82%{transform:rotate(-5deg) translateY(-1px)}
-  88%{transform:rotate(2deg)}
+@keyframes mapPouchShine{
+  0%,72%{opacity:0;transform:rotate(45deg) scale(.25)}
+  80%{opacity:.95;transform:rotate(45deg) scale(1.05)}
+  88%,100%{opacity:0;transform:rotate(45deg) scale(1.55)}
 }
-@keyframes lootMarkerShine{
-  0%,68%{opacity:0;transform:rotate(45deg) scale(.2)}
-  76%{opacity:1;transform:rotate(45deg) scale(1.2)}
-  84%,100%{opacity:0;transform:rotate(45deg) scale(1.8)}
+#realMap.map-interacting .leaflet-marker-pane *,
+#realMap.map-interacting .leaflet-overlay-pane *{
+  animation-play-state:paused!important;
+  transition:none!important;
+}
+#realMap.map-interacting .leaflet-interactive{
+  filter:none!important;
 }
 
 .chest-cutscene{
@@ -12771,7 +12760,7 @@ body.bh-preview-open{overflow:hidden;}
 @keyframes lootSceneOut{to{opacity:0;transform:translateY(28px) scale(.92);filter:blur(8px)}}
 @keyframes lootBackdropOut{to{opacity:0}}
 @media(max-width:430px){
-  .hex-chest-marker{transform:scale(.94)}
+  .hex-money-pouch-marker{transform:scale(.94)}
   .chest-cutscene-inner{min-height:94dvh;padding:42px 12px 18px!important}
   .chest-cutscene-box{width:218px!important;height:218px!important}
   .pouch-body{width:164px!important;height:151px!important}
@@ -12783,11 +12772,10 @@ body.bh-preview-open{overflow:hidden;}
   .chest-cutscene .chest-reward-core{width:216px!important;height:178px}
 }
 @media(prefers-reduced-motion:reduce){
-  .hex-chest-marker,
-  .hex-chest-marker::before,
-  .hex-chest-marker::after,
-  .hex-chest-mini .lid,
-  .hex-chest-mini .shine,
+  .hex-money-pouch-marker,
+  .hex-money-pouch-marker::before,
+  .hex-money-pouch-marker::after,
+  .hex-money-pouch-marker .map-pouch-shine,
   .chest-cutscene::before,
   .loot-aurora,
   .loot-orbit,
@@ -17058,6 +17046,9 @@ const MapView = (function(){
   let ready = false;
   let follow = true;
   let redrawTimer = null;
+  let redrawFrame = null;
+  let lastViewportKey = '';
+  let interactionTimer = null;
   let hotspotTicker = null;
   const photoMarkers = {};
   const HEX_SIZE_M = 90;
@@ -17468,8 +17459,8 @@ const MapView = (function(){
     if(zoom >= 18) return 4;
     if(zoom >= 17) return 5;
     if(zoom >= 16) return 7;
-    if(zoom >= 15) return 10;
-    return 13;
+    if(zoom >= 15) return 9;
+    return 11;
   }
 
   function hexStyle(id,chests,opened,hotspots,claimedHotspots){
@@ -17539,22 +17530,20 @@ const MapView = (function(){
     };
   }
 
-  function chestIcon(chest){
+  function moneyPouchIcon(chest){
     const rarity = chest && chest.rarity ? chest.rarity : 'common';
     return L.divIcon({
       className:'',
-      iconSize:[64,64],
-      iconAnchor:[32,41],
+      iconSize:[60,64],
+      iconAnchor:[30,43],
       html:
-        '<div class="hex-chest-marker ' + rarity + '" aria-hidden="true">' +
-          '<div class="hex-chest-mini">' +
-            '<span class="lid"></span>' +
-            '<span class="base"></span>' +
-            '<span class="band"></span>' +
-            '<span class="lock"></span>' +
-            '<span class="shine"></span>' +
-            '<span class="rivet r1"></span>' +
-            '<span class="rivet r2"></span>' +
+        '<div class="hex-money-pouch-marker ' + rarity + '" aria-hidden="true">' +
+          '<div class="hex-money-pouch">' +
+            '<span class="map-pouch-neck"></span>' +
+            '<span class="map-pouch-body"></span>' +
+            '<span class="map-pouch-tie"></span>' +
+            '<span class="map-pouch-seal"></span>' +
+            '<span class="map-pouch-shine"></span>' +
           '</div>' +
         '</div>'
     });
@@ -17599,7 +17588,9 @@ const MapView = (function(){
 
     const center = map.getCenter();
     const centerId = hexForLatLng(center.lat,center.lng);
-    const ids = disk(centerId,visibleRadius());
+    const radius = visibleRadius();
+    const ids = disk(centerId,radius);
+    lastViewportKey = centerId + '|' + radius;
     const chests = chestMap();
     const opened = openedToday();
     const hotspots = hotspotMap();
@@ -17752,7 +17743,7 @@ const MapView = (function(){
       if(chest && !opened[id]){
         const centerPoint = centerForId(id);
         const marker = L.marker([centerPoint.lat,centerPoint.lng],{
-          icon:chestIcon(chest),
+          icon:moneyPouchIcon(chest),
           pane:'chestPane',
           interactive:true
         }).addTo(markerLayer);
@@ -18563,12 +18554,45 @@ const MapView = (function(){
     }
 
     if(changed) save();
-    scheduleRedraw();
+    scheduleRedraw(changed);
   }
 
-  function scheduleRedraw(){
+  function setMapInteracting(active){
+    if(!map) return;
+    const container = map.getContainer();
+    clearTimeout(interactionTimer);
+    if(active){
+      container.classList.add('map-interacting');
+      return;
+    }
+    interactionTimer = setTimeout(function(){
+      container.classList.remove('map-interacting');
+    },120);
+  }
+
+  function scheduleRedraw(force){
     clearTimeout(redrawTimer);
-    redrawTimer = setTimeout(redraw,90);
+    if(redrawFrame && window.cancelAnimationFrame){
+      cancelAnimationFrame(redrawFrame);
+      redrawFrame = null;
+    }
+    const mustRedraw = force === true;
+    redrawTimer = setTimeout(function(){
+      const center = map && map.getCenter();
+      const radius = visibleRadius();
+      const viewportKey = center ? hexForLatLng(center.lat,center.lng) + '|' + radius : '';
+      if(!mustRedraw && viewportKey && viewportKey === lastViewportKey) return;
+
+      const run = function(){
+        redrawFrame = null;
+        redraw();
+      };
+      if(window.requestAnimationFrame){
+        redrawFrame = requestAnimationFrame(run);
+      }else{
+        run();
+      }
+    },130);
   }
 
   function setTheme(name){
@@ -18579,7 +18603,10 @@ const MapView = (function(){
       maxZoom:19,
       attribution:config.attr,
       subdomains:'abc',
-      crossOrigin:true
+      crossOrigin:true,
+      updateWhenZooming:false,
+      updateWhenIdle:true,
+      keepBuffer:1
     }).addTo(map);
     tiles.bringToBack();
   }
@@ -18632,7 +18659,13 @@ const MapView = (function(){
       follow = false;
       $('followBtn').classList.remove('on');
     });
-    map.on('moveend zoomend',scheduleRedraw);
+    map.on('movestart zoomstart',function(){
+      setMapInteracting(true);
+    });
+    map.on('moveend zoomend',function(){
+      setMapInteracting(false);
+      scheduleRedraw(false);
+    });
 
     ready = true;
     bindControls();
