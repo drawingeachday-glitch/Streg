@@ -1,0 +1,14 @@
+
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 1200'>
+  <g fill='none' stroke='#A6E26D' stroke-width='4' stroke-linecap='round' opacity='.6'>
+    <path d='M730 -20 C760 180 642 220 678 430 C714 630 620 700 658 928 C676 1040 650 1120 662 1220'/>
+    <path d='M40 -10 C74 160 -28 260 26 422 C70 560 -6 650 42 830 C74 952 18 1060 54 1218'/>
+  </g>
+  <g fill='#DDF7A9' opacity='.8'>
+    <circle cx='690' cy='244' r='9'/>
+    <circle cx='112' cy='300' r='8'/>
+    <circle cx='662' cy='702' r='10'/>
+    <circle cx='86' cy='864' r='9'/>
+    <circle cx='702' cy='1040' r='8'/>
+  </g>
+</svg>

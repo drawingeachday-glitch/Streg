@@ -1,0 +1,207 @@
+{
+  "source_chars": 12986235,
+  "cleaned_chars": 808325,
+  "replacements": 49,
+  "unique_assets": 39,
+  "remaining_data_image_urls": 0,
+  "asset_references": 49,
+  "missing_assets": [],
+  "max_line_length_after": 3479,
+  "assets": [
+    {
+      "file": "img-014acb0997e3.svg",
+      "bytes": 1252,
+      "mime": "image/svg+xml"
+    },
+    {
+      "file": "img-07fc48235320.png",
+      "bytes": 4657,
+      "mime": "image/png"
+    },
+    {
+      "file": "img-10e7c9384fee.png",
+      "bytes": 28432,
+      "mime": "image/png"
+    },
+    {
+      "file": "img-1e9e367f34ec.png",
+      "bytes": 4508,
+      "mime": "image/png"
+    },
+    {
+      "file": "img-235572202eee.png",
+      "bytes": 19442,
+      "mime": "image/png"
+    },
+    {
+      "file": "img-33219d31cca5.png",
+      "bytes": 23962,
+      "mime": "image/png"
+    },
+    {
+      "file": "img-33d333d856c0.png",
+      "bytes": 3031,
+      "mime": "image/png"
+    },
+    {
+      "file": "img-41977fd810a1.svg",
+      "bytes": 180,
+      "mime": "image/svg+xml"
+    },
+    {
+      "file": "img-467748e3567c.png",
+      "bytes": 5142,
+      "mime": "image/png"
+    },
+    {
+      "file": "img-4ba28da44218.png",
+      "bytes": 4942,
+      "mime": "image/png"
+    },
+    {
+      "file": "img-502b0a63d782.jpg",
+      "bytes": 677874,
+      "mime": "image/jpeg"
+    },
+    {
+      "file": "img-6a072c217908.png",
+      "bytes": 4304,
+      "mime": "image/png"
+    },
+    {
+      "file": "img-6b61750c17c4.png",
+      "bytes": 4230,
+      "mime": "image/png"
+    },
+    {
+      "file": "img-6e294e502803.png",
+      "bytes": 19378,
+      "mime": "image/png"
+    },
+    {
+      "file": "img-73f681759497.png",
+      "bytes": 3477,
+      "mime": "image/png"
+    },
+    {
+      "file": "img-7d6954eb351a.png",
+      "bytes": 23323,
+      "mime": "image/png"
+    },
+    {
+      "file": "img-7e0c9b1a6e98.png",
+      "bytes": 1471900,
+      "mime": "image/png"
+    },
+    {
+      "file": "img-7ee857d3c2d8.png",
+      "bytes": 22967,
+      "mime": "image/png"
+    },
+    {
+      "file": "img-84fac1fb3a1a.svg",
+      "bytes": 822,
+      "mime": "image/svg+xml"
+    },
+    {
+      "file": "img-85049cca97b9.png",
+      "bytes": 19519,
+      "mime": "image/png"
+    },
+    {
+      "file": "img-87a57e44df65.png",
+      "bytes": 4051,
+      "mime": "image/png"
+    },
+    {
+      "file": "img-898d5a1ebf72.png",
+      "bytes": 25035,
+      "mime": "image/png"
+    },
+    {
+      "file": "img-8b0898ff2c8a.png",
+      "bytes": 27121,
+      "mime": "image/png"
+    },
+    {
+      "file": "img-9a0e43778923.png",
+      "bytes": 23734,
+      "mime": "image/png"
+    },
+    {
+      "file": "img-abf75625c09f.png",
+      "bytes": 18835,
+      "mime": "image/png"
+    },
+    {
+      "file": "img-afb40901d96e.png",
+      "bytes": 23034,
+      "mime": "image/png"
+    },
+    {
+      "file": "img-bae9a2b9b340.png",
+      "bytes": 4867,
+      "mime": "image/png"
+    },
+    {
+      "file": "img-c0ec37be69e0.png",
+      "bytes": 22155,
+      "mime": "image/png"
+    },
+    {
+      "file": "img-c0ef27805e3f.png",
+      "bytes": 25926,
+      "mime": "image/png"
+    },
+    {
+      "file": "img-c3afbfba385b.png",
+      "bytes": 24500,
+      "mime": "image/png"
+    },
+    {
+      "file": "img-c65027236374.png",
+      "bytes": 3394,
+      "mime": "image/png"
+    },
+    {
+      "file": "img-c93dc68efc19.png",
+      "bytes": 4391,
+      "mime": "image/png"
+    },
+    {
+      "file": "img-d10c6c80d468.png",
+      "bytes": 22805,
+      "mime": "image/png"
+    },
+    {
+      "file": "img-e074b2a994ab.svg",
+      "bytes": 595,
+      "mime": "image/svg+xml"
+    },
+    {
+      "file": "img-ed0a07f0ce5c.png",
+      "bytes": 27131,
+      "mime": "image/png"
+    },
+    {
+      "file": "img-ee87a9226235.png",
+      "bytes": 24859,
+      "mime": "image/png"
+    },
+    {
+      "file": "img-eeebbcc44610.png",
+      "bytes": 27606,
+      "mime": "image/png"
+    },
+    {
+      "file": "img-f730f991cca9.png",
+      "bytes": 3630,
+      "mime": "image/png"
+    },
+    {
+      "file": "img-ffe22d1fbc2f.png",
+      "bytes": 22200,
+      "mime": "image/png"
+    }
+  ]
+}
