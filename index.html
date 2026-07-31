@@ -12794,10 +12794,361 @@ body.bh-preview-open{overflow:hidden;}
   .chest-cutscene.stage-complete .chest-summary{opacity:1;transform:none!important}
 }
 
+/* =========================================================
+   STARTUP HEX ASSEMBLY + CINEMATIC REVEAL
+   ========================================================= */
+body.app-preloading{
+  overflow:hidden!important;
+}
+body.app-preloading .screen,
+body.app-preloading .onb{
+  opacity:0!important;
+  transform:scale(.965);
+  filter:blur(9px);
+}
+body.startup-revealing .screen,
+body.startup-revealing .onb{
+  opacity:1!important;
+  transform:none;
+  filter:none;
+  transition:opacity .9s ease,transform 1.15s cubic-bezier(.16,.82,.22,1),filter .9s ease;
+}
+.startup-loader{
+  --startup-progress:0%;
+  position:fixed;
+  inset:0;
+  z-index:30000;
+  display:grid;
+  place-items:center;
+  overflow:hidden;
+  color:#FFF8E8;
+  background:
+    radial-gradient(circle at 50% 42%,rgba(240,154,76,.20),transparent 23%),
+    radial-gradient(circle at 20% 12%,rgba(94,157,118,.12),transparent 30%),
+    linear-gradient(152deg,#08110F 0%,#101A16 48%,#060B0A 100%);
+  isolation:isolate;
+  opacity:1;
+  clip-path:circle(150% at 50% 50%);
+  -webkit-font-smoothing:antialiased;
+}
+.startup-loader::before{
+  content:"";
+  position:absolute;
+  inset:-22%;
+  z-index:-2;
+  opacity:.32;
+  background:
+    linear-gradient(30deg,transparent 48.8%,rgba(255,255,255,.035) 49% 51%,transparent 51.2%) 0 0/42px 72px,
+    linear-gradient(150deg,transparent 48.8%,rgba(255,255,255,.035) 49% 51%,transparent 51.2%) 0 0/42px 72px;
+  animation:startupGridDrift 18s linear infinite;
+}
+.startup-loader::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:20;
+  pointer-events:none;
+  background:radial-gradient(ellipse at center,transparent 35%,rgba(1,5,4,.34) 72%,rgba(0,2,2,.76) 100%);
+}
+.startup-scan{
+  position:absolute;
+  inset:-20% 0;
+  z-index:1;
+  opacity:.34;
+  background:linear-gradient(180deg,transparent 0 42%,rgba(255,223,152,.16) 49.5%,rgba(255,255,255,.32) 50%,rgba(255,197,101,.10) 50.6%,transparent 58%);
+  transform:translateY(-55%);
+  animation:startupScan 2.4s cubic-bezier(.5,0,.5,1) infinite;
+  pointer-events:none;
+}
+.startup-stage{
+  position:relative;
+  z-index:5;
+  width:min(100%,440px);
+  min-height:min(760px,100dvh);
+  padding:clamp(36px,7vh,72px) 24px max(30px,env(safe-area-inset-bottom));
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+}
+.startup-hexfield{
+  position:relative;
+  width:280px;
+  height:280px;
+  flex:0 0 280px;
+  margin-bottom:clamp(2px,1.5vh,14px);
+}
+.startup-hex{
+  --x:0px;
+  --y:0px;
+  --i:0;
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:52px;
+  height:59px;
+  opacity:0;
+  clip-path:polygon(25% 4%,75% 4%,100% 50%,75% 96%,25% 96%,0 50%);
+  background:linear-gradient(145deg,rgba(255,238,186,.96),rgba(224,134,55,.92) 52%,rgba(114,63,28,.92));
+  box-shadow:inset 0 0 0 2px rgba(255,244,207,.34);
+  transform:translate(calc(-50% + var(--x)),calc(-50% + var(--y))) scale(.05) rotate(-34deg);
+  animation:startupHexAssemble .72s cubic-bezier(.18,.9,.2,1.25) forwards;
+  animation-delay:calc(.12s + var(--i) * .075s);
+}
+.startup-hex::before{
+  content:"";
+  position:absolute;
+  inset:3px;
+  clip-path:inherit;
+  background:
+    radial-gradient(circle at 34% 28%,rgba(255,255,255,.66),transparent 20%),
+    linear-gradient(145deg,rgba(255,255,255,.13),transparent 48%,rgba(24,15,8,.16));
+}
+.startup-hex:nth-child(3n){
+  background:linear-gradient(145deg,#E4F0D8,#6EA57B 55%,#294C39);
+}
+.startup-hex:nth-child(4n){
+  background:linear-gradient(145deg,#D8D1FF,#806ADF 55%,#30266B);
+}
+.startup-hex:nth-child(7n){
+  background:linear-gradient(145deg,#FFD5EE,#DB5BAB 55%,#6D235F);
+}
+.startup-core{
+  position:absolute;
+  left:50%;
+  top:50%;
+  z-index:4;
+  width:64px;
+  height:72px;
+  display:grid;
+  place-items:center;
+  opacity:0;
+  transform:translate(-50%,-50%) scale(.2) rotate(-24deg);
+  clip-path:polygon(25% 4%,75% 4%,100% 50%,75% 96%,25% 96%,0 50%);
+  color:#2F1B0E;
+  font:900 28px/1 var(--font-display);
+  letter-spacing:-.06em;
+  background:linear-gradient(145deg,#FFF5C9,#F0AA47 56%,#9C5726);
+  box-shadow:0 0 46px rgba(255,190,89,.62);
+  animation:startupCoreIn .8s cubic-bezier(.16,.86,.2,1.25) 1.25s forwards;
+}
+.startup-core::after{
+  content:"";
+  position:absolute;
+  inset:-24px;
+  z-index:-1;
+  border:1px solid rgba(255,218,142,.28);
+  border-radius:50%;
+  animation:startupCoreRing 2s ease-out 1.55s infinite;
+}
+.startup-brand{
+  position:relative;
+  z-index:6;
+  opacity:0;
+  transform:translateY(16px);
+  animation:startupCopyIn .7s ease 1.38s forwards;
+}
+.startup-kicker{
+  margin-bottom:7px;
+  color:#E6B76F;
+  font:800 10px/1 var(--font-body);
+  letter-spacing:.28em;
+  text-transform:uppercase;
+}
+.startup-title{
+  margin:0;
+  color:#FFF9EA;
+  font:900 clamp(34px,11vw,48px)/.9 var(--font-display);
+  letter-spacing:.12em;
+  text-indent:.12em;
+  text-shadow:0 8px 30px rgba(0,0,0,.34);
+}
+.startup-manifesto{
+  height:23px;
+  margin-top:12px;
+  opacity:0;
+  transform:translateY(8px);
+  color:rgba(255,249,234,.72);
+  font:650 12px/1.4 var(--font-body);
+  letter-spacing:.04em;
+}
+.startup-loader.is-ready .startup-manifesto{
+  animation:startupCopyIn .55s ease forwards;
+}
+.startup-loader.is-ready .startup-core{
+  animation:startupCoreReady .9s cubic-bezier(.16,.86,.2,1) both;
+}
+.startup-loader.is-ready .startup-hex{
+  animation:startupHexReady .9s cubic-bezier(.16,.86,.2,1) both;
+  animation-delay:calc(var(--i) * .022s);
+}
+.startup-progress{
+  width:min(280px,78vw);
+  margin-top:clamp(28px,5vh,44px);
+}
+.startup-progress-meta{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  margin-bottom:10px;
+  color:rgba(255,248,232,.68);
+  font:700 10px/1 var(--font-body);
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+.startup-percent{
+  color:#F3C476;
+  font-variant-numeric:tabular-nums;
+}
+.startup-track{
+  position:relative;
+  height:4px;
+  overflow:hidden;
+  border-radius:999px;
+  background:rgba(255,255,255,.10);
+  box-shadow:inset 0 1px 2px rgba(0,0,0,.28);
+}
+.startup-fill{
+  position:absolute;
+  inset:0 auto 0 0;
+  width:var(--startup-progress);
+  border-radius:inherit;
+  background:linear-gradient(90deg,#5FA675,#F1B258,#FFF0AC);
+  box-shadow:0 0 18px rgba(244,181,87,.52);
+  transition:width .5s cubic-bezier(.2,.75,.2,1);
+}
+.startup-loader.is-revealing{
+  pointer-events:none;
+  animation:startupCurtain 1.05s cubic-bezier(.7,0,.2,1) forwards;
+}
+.startup-loader.is-revealing .startup-hex{
+  animation:startupHexRelease .82s cubic-bezier(.3,0,.7,1) both;
+  animation-delay:calc(var(--i) * .012s);
+}
+.startup-loader.is-revealing .startup-core{
+  animation:startupCoreRelease .82s cubic-bezier(.2,.8,.2,1) both;
+}
+.startup-loader.is-revealing .startup-brand,
+.startup-loader.is-revealing .startup-progress{
+  animation:startupCopyOut .45s ease forwards;
+}
+@keyframes startupHexAssemble{
+  0%{opacity:0;transform:translate(calc(-50% + var(--x)),calc(-50% + var(--y))) scale(.05) rotate(-34deg)}
+  68%{opacity:1;transform:translate(calc(-50% + var(--x)),calc(-50% + var(--y))) scale(1.12) rotate(3deg)}
+  100%{opacity:.88;transform:translate(calc(-50% + var(--x)),calc(-50% + var(--y))) scale(1) rotate(0)}
+}
+@keyframes startupHexReady{
+  0%{opacity:.88;transform:translate(calc(-50% + var(--x)),calc(-50% + var(--y))) scale(1)}
+  48%{opacity:1;transform:translate(calc(-50% + var(--x)),calc(-50% + var(--y))) scale(1.12)}
+  100%{opacity:.92;transform:translate(calc(-50% + var(--x)),calc(-50% + var(--y))) scale(1)}
+}
+@keyframes startupHexRelease{
+  0%{opacity:.92;transform:translate(calc(-50% + var(--x)),calc(-50% + var(--y))) scale(1)}
+  45%{opacity:1;filter:brightness(1.9);transform:translate(calc(-50% + var(--x)),calc(-50% + var(--y))) scale(1.12)}
+  100%{opacity:0;filter:brightness(2.5);transform:translate(calc(-50% + var(--x)),calc(-50% + var(--y))) scale(1.65)}
+}
+@keyframes startupCoreIn{
+  0%{opacity:0;transform:translate(-50%,-50%) scale(.2) rotate(-24deg)}
+  68%{opacity:1;transform:translate(-50%,-50%) scale(1.16) rotate(4deg)}
+  100%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(0)}
+}
+@keyframes startupCoreReady{
+  0%{opacity:1;transform:translate(-50%,-50%) scale(1)}
+  45%{filter:brightness(1.7);transform:translate(-50%,-50%) scale(1.28)}
+  100%{opacity:1;filter:brightness(1);transform:translate(-50%,-50%) scale(1.06)}
+}
+@keyframes startupCoreRelease{
+  0%{opacity:1;transform:translate(-50%,-50%) scale(1.06)}
+  60%{opacity:1;filter:brightness(2);transform:translate(-50%,-50%) scale(1.5)}
+  100%{opacity:0;filter:brightness(3);transform:translate(-50%,-50%) scale(4.8)}
+}
+@keyframes startupCoreRing{
+  0%{opacity:.75;transform:scale(.55)}
+  100%{opacity:0;transform:scale(1.5)}
+}
+@keyframes startupCopyIn{to{opacity:1;transform:translateY(0)}}
+@keyframes startupCopyOut{to{opacity:0;transform:translateY(-12px)}}
+@keyframes startupScan{
+  0%{transform:translateY(-55%)}
+  100%{transform:translateY(55%)}
+}
+@keyframes startupGridDrift{to{transform:translate3d(42px,72px,0)}}
+@keyframes startupCurtain{
+  0%{opacity:1;clip-path:circle(150% at 50% 50%)}
+  58%{opacity:1}
+  100%{opacity:0;clip-path:circle(0% at 50% 50%)}
+}
+@media(max-width:430px){
+  .startup-stage{min-height:100dvh;padding-top:32px}
+  .startup-hexfield{width:252px;height:252px;flex-basis:252px;transform:scale(.9)}
+  .startup-progress{margin-top:18px}
+}
+@media(prefers-reduced-motion:reduce){
+  .startup-loader::before,
+  .startup-scan,
+  .startup-hex,
+  .startup-core,
+  .startup-core::after,
+  .startup-brand,
+  .startup-manifesto{
+    animation:none!important;
+  }
+  .startup-hex{opacity:.88;transform:translate(calc(-50% + var(--x)),calc(-50% + var(--y))) scale(1)}
+  .startup-core{opacity:1;transform:translate(-50%,-50%)}
+  .startup-brand,.startup-loader.is-ready .startup-manifesto{opacity:1;transform:none}
+  .startup-loader.is-revealing{animation:startupFadeReduced .24s ease forwards}
+}
+@keyframes startupFadeReduced{to{opacity:0}}
+
 </style>
 <!-- topbar removed + top content lowered -->
 </head>
-<body>
+<body class="app-preloading">
+
+<!-- ============ STARTUP HEX CINEMATIC ============ -->
+<div class="startup-loader is-loading" id="startupLoader" role="status" aria-live="polite" aria-label="STREG indlæser">
+  <div class="startup-scan" aria-hidden="true"></div>
+  <div class="startup-stage">
+    <div class="startup-hexfield" aria-hidden="true">
+      <span class="startup-hex" style="--x:0px;--y:-108px;--i:0"></span>
+      <span class="startup-hex" style="--x:46px;--y:-81px;--i:1"></span>
+      <span class="startup-hex" style="--x:92px;--y:-54px;--i:2"></span>
+      <span class="startup-hex" style="--x:92px;--y:0px;--i:3"></span>
+      <span class="startup-hex" style="--x:92px;--y:54px;--i:4"></span>
+      <span class="startup-hex" style="--x:46px;--y:81px;--i:5"></span>
+      <span class="startup-hex" style="--x:0px;--y:108px;--i:6"></span>
+      <span class="startup-hex" style="--x:-46px;--y:81px;--i:7"></span>
+      <span class="startup-hex" style="--x:-92px;--y:54px;--i:8"></span>
+      <span class="startup-hex" style="--x:-92px;--y:0px;--i:9"></span>
+      <span class="startup-hex" style="--x:-92px;--y:-54px;--i:10"></span>
+      <span class="startup-hex" style="--x:-46px;--y:-81px;--i:11"></span>
+      <span class="startup-hex" style="--x:0px;--y:-54px;--i:12"></span>
+      <span class="startup-hex" style="--x:46px;--y:-27px;--i:13"></span>
+      <span class="startup-hex" style="--x:46px;--y:27px;--i:14"></span>
+      <span class="startup-hex" style="--x:0px;--y:54px;--i:15"></span>
+      <span class="startup-hex" style="--x:-46px;--y:27px;--i:16"></span>
+      <span class="startup-hex" style="--x:-46px;--y:-27px;--i:17"></span>
+      <span class="startup-hex" style="--x:0px;--y:0px;--i:18"></span>
+      <div class="startup-core">S</div>
+    </div>
+    <div class="startup-brand">
+      <div class="startup-kicker">Din verden bliver tegnet</div>
+      <h1 class="startup-title">STREG</h1>
+      <div class="startup-manifesto">Ét billede. Ét sted. Én streg ad gangen.</div>
+    </div>
+    <div class="startup-progress">
+      <div class="startup-progress-meta">
+        <span id="startupStatus">Vækker kortet…</span>
+        <span class="startup-percent" id="startupPercent">0%</span>
+      </div>
+      <div class="startup-track" role="progressbar" aria-label="Indlæser appen" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+        <div class="startup-fill"></div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="bg-blob b1"></div>
 <div class="bg-blob b2"></div>
@@ -22127,6 +22478,102 @@ try{
   });
 
   refreshValue();
+})();
+</script>
+
+
+<script>
+(function(){
+  const overlay = document.getElementById('startupLoader');
+  const status = document.getElementById('startupStatus');
+  const percent = document.getElementById('startupPercent');
+  const track = overlay && overlay.querySelector('.startup-track');
+  if(!overlay){
+    document.body.classList.remove('app-preloading');
+    return;
+  }
+
+  const reduceMotion = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  const beganAt = performance.now();
+  const minimumLoad = reduceMotion ? 420 : 2100;
+  const readyHold = reduceMotion ? 180 : 820;
+  const revealTime = reduceMotion ? 260 : 1080;
+  let finished = false;
+  const timers = [];
+
+  function later(fn,delay){
+    const id = setTimeout(fn,delay);
+    timers.push(id);
+    return id;
+  }
+
+  function progress(value,label){
+    if(finished) return;
+    const safe = Math.max(0,Math.min(100,Math.round(value)));
+    overlay.style.setProperty('--startup-progress',safe + '%');
+    percent.textContent = safe + '%';
+    if(label) status.textContent = label;
+    if(track) track.setAttribute('aria-valuenow',String(safe));
+  }
+
+  function cleanup(){
+    timers.forEach(clearTimeout);
+    overlay.remove();
+    document.body.classList.remove('app-preloading','startup-revealing');
+  }
+
+  function reveal(){
+    if(finished) return;
+    document.body.classList.add('startup-revealing');
+    overlay.classList.remove('is-ready');
+    overlay.classList.add('is-revealing');
+    later(function(){
+      finished = true;
+      cleanup();
+    },revealTime);
+  }
+
+  function ready(){
+    if(finished || overlay.classList.contains('is-ready') || overlay.classList.contains('is-revealing')) return;
+    progress(100,'Verden er klar');
+    overlay.classList.remove('is-loading');
+    overlay.classList.add('is-ready');
+    later(reveal,readyHold);
+  }
+
+  progress(6,'Vækker kortet…');
+  later(function(){ progress(24,'Tegner verden…'); },320);
+  later(function(){ progress(46,'Samler sekskanter…'); },780);
+  later(function(){ progress(68,'Finder dine steder…'); },1280);
+  later(function(){ progress(86,'Lægger sidste streg…'); },1760);
+
+  const pageReady = new Promise(function(resolve){
+    if(document.readyState === 'complete'){
+      resolve();
+    }else{
+      window.addEventListener('load',resolve,{once:true});
+    }
+  });
+  const fontsReady = document.fonts && document.fonts.ready
+    ? document.fonts.ready.catch(function(){})
+    : Promise.resolve();
+
+  Promise.race([
+    Promise.all([pageReady,fontsReady]),
+    new Promise(function(resolve){ later(resolve,5200); })
+  ]).then(function(){
+    const wait = Math.max(0,minimumLoad - (performance.now() - beganAt));
+    later(ready,wait);
+  }).catch(function(){
+    later(ready,Math.max(0,minimumLoad - (performance.now() - beganAt)));
+  });
+
+  later(function(){
+    if(!finished){
+      progress(100,'Verden er klar');
+      ready();
+    }
+  },6500);
 })();
 </script>
 
