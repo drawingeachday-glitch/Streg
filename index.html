@@ -14714,6 +14714,52 @@ body.startup-revealing .onb{
 
 </style>
 <!-- topbar removed + top content lowered -->
+<style id="hex-photo-rule-styles">
+  .onb-hex-rule{
+    margin:20px auto 8px;
+    display:grid;
+    grid-template-columns:repeat(3,54px);
+    grid-template-rows:repeat(3,48px);
+    place-content:center;
+    filter:drop-shadow(0 12px 22px rgba(69,128,255,.18));
+  }
+  .onb-hex-cell{
+    display:grid;
+    place-items:center;
+    color:var(--muted);
+    font-size:48px;
+    line-height:1;
+    opacity:.18;
+    transform:scale(.82);
+  }
+  .onb-hex-cell.near{opacity:.46;transform:scale(.92)}
+  .onb-hex-cell.current{
+    color:#2583ff;
+    opacity:1;
+    transform:scale(1.12);
+    text-shadow:0 0 18px rgba(37,131,255,.48);
+    animation:onbHexPulse 1.8s ease-in-out infinite;
+  }
+  .hex-rule-badge{
+    display:inline-flex;
+    align-items:center;
+    gap:9px;
+    padding:9px 13px;
+    border-radius:999px;
+    color:#1768c7;
+    background:rgba(37,131,255,.11);
+    border:1px solid rgba(37,131,255,.22);
+    font-weight:800;
+    font-size:12px;
+    text-align:left;
+  }
+  @keyframes onbHexPulse{
+    50%{transform:scale(1.2);text-shadow:0 0 28px rgba(37,131,255,.68)}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .onb-hex-cell.current{animation:none}
+  }
+</style>
 </head>
 <body class="app-preloading">
 
@@ -14857,11 +14903,15 @@ body.startup-revealing .onb{
     <div class="chip-row" id="habitChips"></div>
   </div>
   <div class="onb-step" data-step="3">
-    <div class="onb-art"><svg class="icn" width="62" height="62" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><path d="M12 21.5s-6.2-5.8-6.2-10.5A6.2 6.2 0 0 1 18.2 11c0 4.7-6.2 10.5-6.2 10.5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><circle cx="12" cy="10.7" r="2.1" stroke="currentColor" stroke-width="1.6"/></svg></div>
-    <h1>Hvor langt vil du gå?</h1>
-    <p>Nye billeder skal tages mindst så langt fra dine tidligere steder.</p>
-    <div class="chip-row" id="distChips"></div>
-    <p class="hint" style="margin-top:14px;">15 m er tæt på GPS'ens grænse. 50 m tvinger en rigtig gåtur.</p>
+    <div class="onb-art"><svg class="icn" width="62" height="62" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><path d="m12 2.8 7.7 4.4v8.9L12 20.5l-7.7-4.4V7.2L12 2.8Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><circle cx="12" cy="11.6" r="2.1" fill="currentColor"/></svg></div>
+    <h1>Ét billede pr. hexagon</h1>
+    <p>Der er ikke længere et meterkrav. Gå bare ind i en ny, uudforsket hexagon, når du vil tage dit næste billede.</p>
+    <div class="onb-hex-rule" aria-hidden="true">
+      <span class="onb-hex-cell">⬡</span><span class="onb-hex-cell near">⬡</span><span class="onb-hex-cell">⬡</span>
+      <span class="onb-hex-cell near">⬡</span><span class="onb-hex-cell current">⬢</span><span class="onb-hex-cell near">⬡</span>
+      <span class="onb-hex-cell">⬡</span><span class="onb-hex-cell near">⬡</span><span class="onb-hex-cell">⬡</span>
+    </div>
+    <span class="hex-rule-badge">⬢ Din nuværende hex er tydeligst og følger dig</span>
   </div>
   <div class="onb-dots" id="onbDots"></div>
   <button class="btn btn-primary" id="onbNext" style="width:100%;margin-top:0;">Videre</button>
@@ -15637,12 +15687,8 @@ body.startup-revealing .onb{
             <button class="toggle" id="setVibe"></button>
           </div>
           <div class="set-row">
-            <div class="set-label"><span>Minimum afstand</span><span class="set-sub">Hvor langt væk et nyt sted skal være</span></div>
-            <div class="seg" id="setDist"><button data-v="15">15 m</button><button data-v="25">25 m</button><button data-v="50">50 m</button></div>
-          </div>
-          <div class="set-row">
-            <div class="set-label"><span>Cooldown</span><span class="set-sub">Hvor længe et sted er optaget</span></div>
-            <div class="seg" id="setCool"><button data-v="7">7 d</button><button data-v="30">30 d</button><button data-v="90">90 d</button></div>
+            <div class="set-label"><span>Fotoregel</span><span class="set-sub">Hvert rigtigt billede skal tages i en ny, uudforsket hexagon</span></div>
+            <span class="hex-rule-badge">⬢ Ny hexagon</span>
           </div>
           <div class="set-row">
             <div class="set-label"><span>Din vane</span><span class="set-sub">Bliver en daglig challenge</span></div>
@@ -16107,22 +16153,6 @@ function haversine(lat1, lon1, lat2, lon2){
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 }
 
-function activePhotos(){
-  const ms = S.settings.cooldownDays * 86400000;
-  return S.photos.filter(function(p){ return (Date.now() - p.ts) < ms; });
-}
-
-function nearestDist(lat, lng){
-  const list = activePhotos();
-  if(!list.length) return Infinity;
-  let min = Infinity;
-  for(let i = 0; i < list.length; i++){
-    const d = haversine(lat, lng, list[i].lat, list[i].lng);
-    if(d < min) min = d;
-  }
-  return min;
-}
-
 function agoLabel(ts){
   const days = Math.floor((Date.now() - ts) / 86400000);
   if(days <= 0) return 'i dag';
@@ -16421,39 +16451,35 @@ function countdownText(){
   return m + ' min';
 }
 
-/* Live proximity readout. The old copy just restated the rule ("mindst 50 m
-   fra dine tidligere"); this answers the question you actually have while
-   standing somewhere: can I shoot HERE, right now? It updates on every GPS
-   tick, so walking out of a blocked zone flips it to ready in real time.
-   Deliberately does NOT disable the shutter -- GPS drifts, and locking
-   someone out on a bad fix is worse than the existing post-shot check. */
+/* Live hex readout. The camera rule now follows the world grid: the
+   user's current hex must be unexplored, regardless of meter distance. */
 function refreshGeoStatus(){
   const box = $('capHint');
   if(!box) return;
-  // The capture flow writes its result badge into this same element, which
-  // wipes the inner span. Rebuild it rather than assuming it survived.
+
   let txt = $('geoStatusText');
   if(!txt){
     box.innerHTML = '<span class="geo-dot"></span><span id="geoStatusText"></span>';
     txt = $('geoStatusText');
   }
+
   const p = Geo.last;
   if(!p){
     box.className = 'geo-status checking';
-    txt.textContent = 'Finder din placering…';
+    txt.textContent = 'Finder din hexagon…';
     return;
   }
-  const d = nearestDist(p.lat, p.lng);
-  const need = S.settings.minDist;
-  if(d === Infinity){
-    box.className = 'geo-status ready';
-    txt.textContent = 'Klar — det bliver dit første sted';
-  } else if(d >= need){
-    box.className = 'geo-status ready';
-    txt.textContent = 'Du kan tage et billede her · ' + Math.round(d) + ' m fra nærmeste';
-  } else {
+
+  MapView.ensureState();
+  const hexId = MapView.hexForLatLng(p.lat,p.lng);
+  const explored = !!(S.hexMap.photos && S.hexMap.photos[hexId]);
+
+  if(explored){
     box.className = 'geo-status blocked';
-    txt.textContent = 'For tæt — gå ' + Math.ceil(need - d) + ' m længere væk';
+    txt.textContent = 'Denne hex er udforsket — gå ind i en ny hexagon';
+  }else{
+    box.className = 'geo-status ready';
+    txt.textContent = 'Ny hexagon — klar til dagens billede';
   }
 }
 
@@ -16672,11 +16698,11 @@ document.addEventListener('click',function(event){
   }
 
   function currentHexId(center){
-    const existing = S.hexMap && (S.hexMap.currentHex || S.hexMap.selectedHex);
-    if(existing && axialFromId(existing)) return existing;
     if(typeof MapView !== 'undefined' && MapView.hexForLatLng){
       return MapView.hexForLatLng(center[0],center[1]);
     }
+    const existing = S.hexMap && (S.hexMap.currentHex || S.hexMap.selectedHex);
+    if(existing && axialFromId(existing)) return existing;
     return null;
   }
 
@@ -16806,7 +16832,7 @@ document.addEventListener('click',function(event){
     const hotspots = activeHotspots();
     const hotspotById = {};
     hotspots.forEach(function(hotspot){ hotspotById[hotspot.id] = hotspot; });
-    const ids = nearbyHexIds(centerId,2);
+    const ids = nearbyHexIds(centerId,4);
 
     ids.forEach(function(id){
       if(!MapView.polygonForId) return;
@@ -16818,6 +16844,8 @@ document.addEventListener('click',function(event){
       const isSelected = id === selectedId;
       const isChest = chestIds.indexOf(id) !== -1;
       const isHotspot = !!hotspotById[id];
+      const ring = MapView.hexDistance ? MapView.hexDistance(id,centerId) : 0;
+      const ringFade = [1,.72,.42,.16,0][Math.min(ring == null ? 0 : ring,4)];
 
       let fillColor = '#FFFFFF';
       let fillOpacity = .05;
@@ -16848,16 +16876,19 @@ document.addEventListener('click',function(event){
       }
       if(isCurrent){
         color = '#5EDCFF';
-        weight = 3;
+        weight = 3.6;
         fillColor = captured ? '#D95A5D' : '#51CDEA';
-        fillOpacity = captured ? .48 : .22;
+        fillOpacity = captured ? .54 : .34;
+      }else{
+        weight = Math.max(.45,weight * (.5 + ringFade * .5));
+        fillOpacity *= ringFade;
       }
 
       L.polygon(polygon,{
         interactive:false,
         color:color,
         weight:weight,
-        opacity:.96,
+        opacity:isCurrent ? 1 : .96 * ringFade,
         fillColor:fillColor,
         fillOpacity:fillOpacity,
         lineJoin:'round'
@@ -17400,7 +17431,7 @@ function renderBadgePicker(){
 
 /* ===================================================================
    SHOP -- cosmetics only. Nothing purchasable here affects the rules
-   (min distance, cooldown, XP curve). Streak Savers are the one item
+   (hex claiming, daily cadence, XP curve). Streak Savers are the one item
    that protects gameplay, and even that's opt-in and visible.
    =================================================================== */
 const FREEZE_COST = 150, FREEZE_MAX = 5;
@@ -19550,6 +19581,7 @@ const MapView = (function(){
   let hotspotTicker = null;
   const photoMarkers = {};
   const HEX_SIZE_M = 90;
+  const HEX_RING_VISIBILITY = [1,.74,.48,.28,.13,.045,0];
   const DAILY_CHESTS = 8;
   const HOTSPOT_COUNT = 2;
   const HOTSPOT_CYCLE_MS = 3 * 60 * 60 * 1000;
@@ -19580,6 +19612,33 @@ const MapView = (function(){
     }
     if(S.hexMap.selectedHex && String(S.hexMap.selectedHex).indexOf('h_') !== 0){
       S.hexMap.selectedHex = null;
+    }
+
+    // Migrate photos made through the home camera before hex claiming existed.
+    // Re-run only when the photo count changes, so late cloud syncs are covered.
+    const migratablePhotos = (S.photos || []).filter(function(photo){
+      return photo && !photo.testCapture && Number.isFinite(photo.lat) && Number.isFinite(photo.lng);
+    });
+    if(S.hexMap.photoHexVersion !== 1 ||
+       S.hexMap.photoHexMigratedCount !== migratablePhotos.length){
+      migratablePhotos.forEach(function(photo){
+        const hexId = photo.hexId && String(photo.hexId).indexOf('h_') === 0
+          ? photo.hexId
+          : hexForLatLng(photo.lat,photo.lng);
+        photo.hexId = hexId;
+        if(!S.hexMap.photos[hexId]){
+          S.hexMap.photos[hexId] = {
+            id:hexId,
+            photoId:photo.id,
+            img:photo.img,
+            ts:photo.ts,
+            lat:photo.lat,
+            lng:photo.lng
+          };
+        }
+      });
+      S.hexMap.photoHexVersion = 1;
+      S.hexMap.photoHexMigratedCount = migratablePhotos.length;
     }
   }
 
@@ -19638,6 +19697,22 @@ const MapView = (function(){
     const match = /^h_(-?\d+)_(-?\d+)$/.exec(String(id || ''));
     if(!match) return null;
     return {q:parseInt(match[1],10),r:parseInt(match[2],10)};
+  }
+
+  function hexDistance(aId,bId){
+    const a = axialFromId(aId);
+    const b = axialFromId(bId);
+    if(!a || !b) return null;
+    const dq = a.q - b.q;
+    const dr = a.r - b.r;
+    return (Math.abs(dq) + Math.abs(dr) + Math.abs(dq + dr)) / 2;
+  }
+
+  function hexVisibility(id){
+    const anchor = S.hexMap.currentHex;
+    const ring = anchor ? hexDistance(id,anchor) : null;
+    if(ring === null) return 1;
+    return HEX_RING_VISIBILITY[Math.min(ring,HEX_RING_VISIBILITY.length - 1)] || 0;
   }
 
   function hexForLatLng(lat,lng){
@@ -19997,65 +20072,81 @@ const MapView = (function(){
     const current = id === S.hexMap.currentHex;
     const hasChest = !!chests[id] && !opened[id];
     const hasHotspot = !!hotspots[id] && !claimedHotspots[id];
+    const visibility = hexVisibility(id);
+
+    function finish(style){
+      if(current){
+        style.opacity = 1;
+        style.fillOpacity = Math.max(style.fillOpacity || 0,.34);
+        style.weight = Math.max(style.weight || 1,4.1);
+        style.color = captured ? '#FF7764' : '#1688FF';
+        return style;
+      }
+
+      style.opacity = (style.opacity == null ? 1 : style.opacity) * visibility;
+      style.fillOpacity = (style.fillOpacity || 0) * visibility;
+      style.weight = Math.max(.45,(style.weight || 1) * (.46 + visibility * .54));
+      return style;
+    }
 
     if(hasHotspot){
-      return {
+      return finish({
         className:'hotspot-hex-pulse',
         color:hotspots[id].tier === 'mythic' ? '#F39DFF' : '#FFE17A',
         weight:selected ? 4.2 : 3.5,
         opacity:1,
         fillColor:hotspots[id].tier === 'mythic' ? '#B557F2' : '#F6B83C',
         fillOpacity:selected ? .30 : .22
-      };
+      });
     }
 
     if(captured){
-      return {
+      return finish({
         color:selected ? '#A62F22' : '#C94A38',
         weight:selected ? 3.2 : 2.2,
         opacity:.95,
         fillColor:'#EF5C47',
         fillOpacity:selected ? .50 : .37
-      };
+      });
     }
 
     if(current){
-      return {
+      return finish({
         color:'#1688FF',
         weight:3.2,
         opacity:1,
         fillColor:'#4BA7FF',
-        fillOpacity:.18
-      };
+        fillOpacity:.26
+      });
     }
 
     if(selected){
-      return {
+      return finish({
         color:'#2D73FF',
         weight:3,
         opacity:1,
         fillColor:'#5E91FF',
         fillOpacity:.14
-      };
+      });
     }
 
     if(hasChest){
-      return {
+      return finish({
         color:'#E2A51E',
         weight:2.6,
         opacity:.92,
         fillColor:'#FFD66D',
         fillOpacity:.16
-      };
+      });
     }
 
-    return {
+    return finish({
       color:'#536E61',
       weight:1.45,
-      opacity:.43,
+      opacity:.58,
       fillColor:'#FFFFFF',
-      fillOpacity:.055
-    };
+      fillOpacity:.075
+    });
   }
 
   function moneyPouchIcon(chest){
@@ -20118,19 +20209,20 @@ const MapView = (function(){
     const centerId = hexForLatLng(center.lat,center.lng);
     const radius = visibleRadius();
     const ids = disk(centerId,radius);
-    lastViewportKey = centerId + '|' + radius;
+    lastViewportKey = centerId + '|' + radius + '|' + (S.hexMap.currentHex || '');
     const chests = chestMap();
     const opened = openedToday();
     const hotspots = hotspotMap();
     const claimedHotspots = hotspotClaimed();
 
     ids.forEach(function(id){
+      const style = hexStyle(id,chests,opened,hotspots,claimedHotspots);
       const polygon = L.polygon(
         polygonForId(id),
         Object.assign({
           pane:'hexPane',
-          interactive:true
-        },hexStyle(id,chests,opened,hotspots,claimedHotspots))
+          interactive:style.opacity > .055 || style.fillOpacity > .035
+        },style)
       ).addTo(hexLayer);
 
       polygon.bindTooltip(labelForId(id),{
@@ -20429,8 +20521,10 @@ const MapView = (function(){
     button.textContent = chest && !opened ? 'Tag billede & åbn kiste' : 'Tag billede';
 
     if(photo){
-      label.textContent = 'Billede kan ikke tages';
-      sub.textContent = 'Der er allerede taget et billede i denne hex.';
+      label.textContent = 'Hexagon allerede udforsket';
+      sub.textContent = 'Gå ind i en ny hexagon for at tage dit næste billede.';
+      button.disabled = true;
+      button.textContent = 'Find en ny hex';
     }else if(chest && !opened){
       label.textContent = 'Billede kan blive taget her';
       sub.textContent = 'Tag et billede her og åbn kisten for at få +' + chest.coins + ' coins og +' + chest.xp + ' XP.';
@@ -20895,16 +20989,6 @@ const MapView = (function(){
     const result = saveSpot(center.lat, center.lng, false, img);
     if(!result) return;
 
-    result.photo.hexId = hexId;
-    S.hexMap.photos[hexId] = {
-      id: hexId,
-      photoId: result.photo.id,
-      img: img,
-      ts: result.photo.ts,
-      lat: center.lat,
-      lng: center.lng
-    };
-
     if(chest){
       opened[hexId] = true;
       addXp(chest.xp);
@@ -20959,16 +21043,6 @@ const MapView = (function(){
 
       const result = saveSpot(pos.lat,pos.lng,false,img);
       if(!result) return;
-
-      result.photo.hexId = actualHex;
-      S.hexMap.photos[actualHex] = {
-        id:actualHex,
-        photoId:result.photo.id,
-        img:img,
-        ts:result.photo.ts,
-        lat:pos.lat,
-        lng:pos.lng
-      };
 
       if(chest){
         opened[actualHex] = true;
@@ -21112,7 +21186,9 @@ const MapView = (function(){
     redrawTimer = setTimeout(function(){
       const center = map && map.getCenter();
       const radius = visibleRadius();
-      const viewportKey = center ? hexForLatLng(center.lat,center.lng) + '|' + radius : '';
+      const viewportKey = center
+        ? hexForLatLng(center.lat,center.lng) + '|' + radius + '|' + (S.hexMap.currentHex || '')
+        : '';
       if(!mustRedraw && viewportKey && viewportKey === lastViewportKey) return;
 
       const run = function(){
@@ -21416,7 +21492,10 @@ const MapView = (function(){
     fitAll:fitAll,
     rerollBags:rerollBags,
     setTheme:setTheme,
+    ensureState:ensureState,
+    isExplored:function(id){ ensureState(); return !!S.hexMap.photos[id]; },
     hexForLatLng:hexForLatLng,
+    hexDistance:hexDistance,
     centerForId:centerForId,
     polygonForId:polygonForId,
     getHotspots:function(){ return ensureHotspots(S.hexMap.currentHex || S.hexMap.selectedHex); },
@@ -21860,19 +21939,26 @@ const ChallengeCelebration = (function(){
    =================================================================== */
 function saveSpot(lat, lng, manual, img, options){
   const opts = options || {};
-  const bypassDistance = !!opts.bypassDistance;
-  const dist = nearestDist(lat, lng);
-  if(!bypassDistance && dist < S.settings.minDist){
+  const bypassHex = !!(opts.bypassHex || opts.bypassDistance);
+  const isTestCapture = !!opts.testCapture;
+
+  MapView.ensureState();
+  const hexId = MapView.hexForLatLng(lat,lng);
+  const occupied = hexId && S.hexMap.photos[hexId];
+
+  if(!bypassHex && occupied){
     SFX.reject();
     setTimeout(function(){ SFX.error(); },90);
     vibrate([60,40,60]);
-    toast('For tæt på — kun ' + Math.round(dist) + ' m væk (kræver ' + S.settings.minDist + ' m)');
+    toast('Denne hex er allerede udforsket — gå ind i en ny hexagon');
     if(!manual){
       const card = $('captureCard');
-      card.classList.remove('captured');
-      card.classList.add('rejected');
-      $('capTitle').textContent = 'For tæt på et tidligere sted';
-      $('capHint').innerHTML = '<span class="badge-pill err">' + Math.round(dist) + ' m væk — kræver ' + S.settings.minDist + ' m</span>';
+      if(card){
+        card.classList.remove('captured');
+        card.classList.add('rejected');
+      }
+      if($('capTitle')) $('capTitle').textContent = 'Hexagon allerede udforsket';
+      if($('capHint')) $('capHint').innerHTML = '<span class="badge-pill err">Gå ind i en ny hexagon for at tage billedet</span>';
     }
     return false;
   }
@@ -21888,10 +21974,25 @@ function saveSpot(lat, lng, manual, img, options){
     id:String(Date.now()) + Math.random().toString(16).slice(2,7),
     lat:lat,
     lng:lng,
+    hexId:hexId,
     ts:Date.now(),
-    img:img || fakePhoto(manual ? 'KORT-TEST' : 'TEST')
+    img:img || fakePhoto(manual ? 'KORT-TEST' : 'TEST'),
+    testCapture:isTestCapture
   };
   S.photos.push(photo);
+
+  // Test Photo remains a safe visual test and never claims/overwrites a hex.
+  // Every real capture, from both camera entry points, is registered here.
+  if(!isTestCapture && hexId){
+    S.hexMap.photos[hexId] = {
+      id:hexId,
+      photoId:photo.id,
+      img:photo.img,
+      ts:photo.ts,
+      lat:lat,
+      lng:lng
+    };
+  }
 
   let isDaily = false;
   let shieldUsed = false;
@@ -21942,18 +22043,17 @@ function saveSpot(lat, lng, manual, img, options){
         const p = S.photos.find(function(x){ return x.id === photo.id; });
         if(p && p.img && p.img.indexOf('data:') === 0){
           p.img = publicUrl;
+          const claimed = p.hexId && S.hexMap.photos[p.hexId];
+          if(claimed && claimed.photoId === p.id) claimed.img = publicUrl;
           save();
         }
       }
     });
   }
 
-  let distanceText = bypassDistance
-    ? 'Test photo · afstandskrav ignoreret'
-    : 'Dit første verificerede sted';
-  if(!bypassDistance && dist !== Infinity){
-    distanceText = Math.round(dist) + ' m fra dit nærmeste tidligere sted';
-  }
+  const distanceText = isTestCapture
+    ? 'Test photo · hex-krav ignoreret'
+    : 'Ny hexagon udforsket · ' + hexId;
 
   return {
     ok:true,
@@ -21962,8 +22062,8 @@ function saveSpot(lat, lng, manual, img, options){
     shieldUsed:shieldUsed,
     rewardXp:rewardXp,
     rewardCoins:rewardCoins,
-    testCapture:!!opts.testCapture,
-    bypassedDistance:bypassDistance,
+    testCapture:isTestCapture,
+    bypassedHex:bypassHex,
     oldStreak:before.streak,
     newStreak:S.streak,
     oldXp:before.xp,
@@ -21978,7 +22078,7 @@ function saveSpot(lat, lng, manual, img, options){
 (function(){
   const card = $('captureCard'), capIconEl = $('capIcon');
   const title = $('capTitle'), hint = $('capHint');
-  let bypassDistanceForNextCapture = false;
+  let bypassHexForNextCapture = false;
 
   function preview(img){
     capIconEl.classList.add('big');
@@ -21988,15 +22088,9 @@ function saveSpot(lat, lng, manual, img, options){
     card.classList.remove('rejected');
     card.classList.add('captured');
     title.textContent = 'Billede gemt!';
-    let txt = result && result.testCapture ? 'Test photo · afstand ignoreret' : 'dit første sted';
-    if(!result || !result.testCapture){
-      const others = activePhotos().filter(function(p){ return haversine(pos.lat, pos.lng, p.lat, p.lng) > 0.5; });
-      if(others.length){
-        let min = Infinity;
-        others.forEach(function(p){ const d = haversine(pos.lat, pos.lng, p.lat, p.lng); if(d < min) min = d; });
-        txt = Math.round(min) + ' m fra nærmeste sted';
-      }
-    }
+    const txt = result && result.distanceText
+      ? result.distanceText
+      : 'Ny hexagon udforsket';
     hint.innerHTML = '<span class="badge-pill">' + icon('pin',11) + ' ' + txt + '</span>';
     $('captureBtn').textContent = 'Tag et ekstra';
     if(result){
@@ -22004,14 +22098,27 @@ function saveSpot(lat, lng, manual, img, options){
     }
   }
 
-  function openCamera(bypassDistance){
+  function openCamera(bypassHex){
     SFX.unlock();
     if(dailyDone()){
       SFX.reject();
       toast('Dagens billede er taget — challenges er stadig åbne');
       return;
     }
-    bypassDistanceForNextCapture = !!bypassDistance;
+
+    if(!bypassHex && Geo.last){
+      MapView.ensureState();
+      const hexId = MapView.hexForLatLng(Geo.last.lat,Geo.last.lng);
+      if(S.hexMap.photos[hexId]){
+        SFX.reject();
+        vibrate([45,30,45]);
+        toast('Denne hex er allerede udforsket — gå ind i en ny hexagon');
+        refreshGeoStatus();
+        return;
+      }
+    }
+
+    bypassHexForNextCapture = !!bypassHex;
     SFX.pop();
     $('cameraInput').click();
   }
@@ -22025,8 +22132,8 @@ function saveSpot(lat, lng, manual, img, options){
   });
 
   $('cameraInput').addEventListener('change', function(){
-    const bypassDistance = bypassDistanceForNextCapture;
-    bypassDistanceForNextCapture = false;
+    const bypassHex = bypassHexForNextCapture;
+    bypassHexForNextCapture = false;
     const f = $('cameraInput').files[0];
     if(!f) return;
     SFX.shutter(); shutterFlash();
@@ -22036,8 +22143,8 @@ function saveSpot(lat, lng, manual, img, options){
       hint.innerHTML = '<span class="badge-pill pending">Finder GPS…</span>';
       return Geo.current().then(function(pos){
         const result = saveSpot(pos.lat,pos.lng,false,img,{
-          bypassDistance:bypassDistance,
-          testCapture:bypassDistance
+          bypassHex:bypassHex,
+          testCapture:bypassHex
         });
         if(result) accepted(pos,result);
       }).catch(function(){
@@ -22049,8 +22156,7 @@ function saveSpot(lat, lng, manual, img, options){
   });
 
   // Dev-only: exercise the real daily-streak capture path without a camera.
-  // Same code the on-screen "Test uden kamera" button used to run; moved here
-  // so the home screen stays clean but the flow is still testable.
+  // It searches for a nearby unclaimed hex so it still tests the real rule.
   $('devTestPhoto').addEventListener('click', function(){
     SFX.unlock();
     if(dailyDone()){
@@ -22058,20 +22164,39 @@ function saveSpot(lat, lng, manual, img, options){
       toast('Dagens billede er taget — brug "Lås dagens billede op igen" først');
       return;
     }
+
     SFX.pop();
+    MapView.ensureState();
     const img = fakePhoto('TEST-BILLEDE');
     preview(img);
-    let lat, lng;
-    if(Geo.last){
-      const off = Math.random() * 160 - 20, bear = Math.random() * Math.PI * 2;
-      lat = Geo.last.lat + Math.cos(bear) * off / 110540;
-      lng = Geo.last.lng + Math.sin(bear) * off / (111320 * Math.cos(Geo.last.lat * Math.PI / 180));
-    } else {
-      lat = 55.6761 + (Math.random() - 0.5) * 0.004;
-      lng = 12.5683 + (Math.random() - 0.5) * 0.004;
+
+    const origin = Geo.last
+      ? {lat:Geo.last.lat,lng:Geo.last.lng}
+      : {lat:55.6761,lng:12.5683};
+    const candidates = [origin];
+
+    for(let i=0;i<36;i++){
+      const distance = 150 + Math.random() * 520;
+      const bearing = Math.random() * Math.PI * 2;
+      candidates.push({
+        lat:origin.lat + Math.cos(bearing) * distance / 110540,
+        lng:origin.lng + Math.sin(bearing) * distance / (111320 * Math.cos(origin.lat * Math.PI / 180))
+      });
     }
-    const result = saveSpot(lat,lng,false,img);
-    if(result) accepted({ lat:lat, lng:lng },result);
+
+    const free = candidates.find(function(point){
+      const id = MapView.hexForLatLng(point.lat,point.lng);
+      return !S.hexMap.photos[id];
+    });
+
+    if(!free){
+      SFX.reject();
+      toast('Kunne ikke finde en ledig test-hex i nærheden');
+      return;
+    }
+
+    const result = saveSpot(free.lat,free.lng,false,img);
+    if(result) accepted(free,result);
   });
 })();
 
@@ -22092,10 +22217,9 @@ const Lightbox = (function(){
     $('lbDate').textContent = new Date(p.ts).toLocaleDateString('da-DK', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
     let sub = new Date(p.ts).toLocaleTimeString('da-DK', { hour:'2-digit', minute:'2-digit' }) + ' · ' + agoLabel(p.ts);
     sub += '<br>' + p.lat.toFixed(5) + ', ' + p.lng.toFixed(5);
-    const age = (Date.now() - p.ts) / 86400000;
-    sub += '<br>' + (age < S.settings.cooldownDays
-      ? ('Zonen er optaget i ' + Math.ceil(S.settings.cooldownDays - age) + ' dage mere')
-      : 'Zonen er åben igen');
+    sub += '<br>' + (p.testCapture
+      ? 'Testfoto · tæller ikke som en claimet hex'
+      : 'Denne hex er udforsket · næste billede kræver en ny hexagon');
     $('lbSub').innerHTML = sub;
     $('lbPrev').disabled = idx === 0;
     $('lbNext').disabled = idx === order.length - 1;
@@ -22119,6 +22243,12 @@ const Lightbox = (function(){
     const p = order[idx];
     if(!confirm('Slet dette billede permanent?')) return;
     S.photos = S.photos.filter(function(x){ return x.id !== p.id; });
+    if(S.hexMap && S.hexMap.photos){
+      Object.keys(S.hexMap.photos).forEach(function(hexId){
+        const entry = S.hexMap.photos[hexId];
+        if(entry && entry.photoId === p.id) delete S.hexMap.photos[hexId];
+      });
+    }
     save(); MapView.redraw(); renderAll();
     SFX.error();
     toast('Billede slettet');
@@ -23255,7 +23385,6 @@ const MonthlyEvent = (function(){
    =================================================================== */
 const Onb = (function(){
   const HABITS = ['Naturbilleder','Spis frugt','Gå en tur','Træn','Læs','Drik vand','Mød nogen','Ryd op'];
-  const DISTS = [15, 25, 50];
   const STEP_COUNT = 4;
   let step = 0;
   let originalStyle = null; // remember in case they Skip without confirming a theme
@@ -23310,19 +23439,6 @@ const Onb = (function(){
         buildChips();
       });
       hc.appendChild(b);
-    });
-    const dc = $('distChips');
-    dc.innerHTML = '';
-    DISTS.forEach(function(d){
-      const b = document.createElement('button');
-      b.className = 'chip' + (S.settings.minDist === d ? ' on' : '');
-      b.textContent = d + ' meter';
-      b.addEventListener('click', function(){
-        S.settings.minDist = d;
-        SFX.pop(); vibrate(15);
-        buildChips();
-      });
-      dc.appendChild(b);
     });
   }
 
@@ -23432,8 +23548,6 @@ const Settings = (function(){
     $('setTabColors').classList.toggle('on', S.settings.tabColors);
     $('setSound').classList.toggle('on', S.settings.sound);
     $('setVibe').classList.toggle('on', S.settings.vibe);
-    seg($('setDist'), S.settings.minDist);
-    seg($('setCool'), S.settings.cooldownDays);
     seg($('setMapTheme'), S.settings.mapTheme);
     seg($('setLayoutMode'), S.settings.layoutMode || 'normal');
     $('setHabit').value = S.settings.habit || '';
@@ -23516,20 +23630,6 @@ const Settings = (function(){
     save(); refresh(); vibrate(40);
     if(S.settings.vibe) SFX.toggleOn(); else SFX.toggleOff();
     toast('Vibration ' + (S.settings.vibe ? 'til' : 'fra'));
-  });
-
-  $('setDist').addEventListener('click', function(e){
-    const b = e.target.closest('button'); if(!b) return;
-    S.settings.minDist = Number(b.dataset.v);
-    save(); refresh(); renderAll(); MapView.redraw(); SFX.pop();
-    toast('Minimum afstand: ' + S.settings.minDist + ' m');
-  });
-
-  $('setCool').addEventListener('click', function(e){
-    const b = e.target.closest('button'); if(!b) return;
-    S.settings.cooldownDays = Number(b.dataset.v);
-    save(); refresh(); MapView.redraw(); SFX.pop();
-    toast('Cooldown: ' + S.settings.cooldownDays + ' dage');
   });
 
   $('setMapTheme').addEventListener('click', function(e){
