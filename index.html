@@ -652,6 +652,24 @@ button:focus-visible{outline:2px solid var(--amber);outline-offset:2px;}
 }
 .btn:active{transform:scale(.94);}
 .btn-primary{background:var(--amber);color:#16242B;box-shadow:0 4px 14px -2px rgba(224,138,60,.45);margin-top:14px;}
+.capture-actions{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:9px;
+  margin-top:14px;
+}
+.capture-actions .btn{margin-top:0;}
+.btn-test-photo{
+  padding:12px 18px;
+  color:var(--ink);
+  background:var(--card);
+  border:1px solid var(--line-2);
+  box-shadow:var(--shadow-s);
+}
+.btn-test-photo:hover{transform:translateY(-1px);}
+.btn-test-photo:disabled{opacity:.4;box-shadow:none;}
 .btn-primary:disabled{opacity:.45;box-shadow:none;}
 .btn-ghost{display:block;margin:9px auto 0;background:none;border:none;color:var(--ink-soft);font-size:11.5px;font-weight:600;text-decoration:underline;text-underline-offset:3px;cursor:pointer;}
 .btn-outline{width:100%;margin-top:10px;background:transparent;border:1.5px solid var(--moss);color:var(--moss-dark);font-weight:700;font-size:13px;padding:13px;border-radius:var(--r-s);cursor:pointer;}
@@ -13930,7 +13948,10 @@ body.startup-revealing .onb{
             </div>
             <p class="cap-title" id="capTitle">Klar til dagens billede?</p>
             <div class="geo-status checking" id="capHint"><span class="geo-dot"></span><span id="geoStatusText">Finder din placering…</span></div>
-            <button class="btn btn-primary" id="captureBtn">Tag billede</button>
+            <div class="capture-actions">
+              <button class="btn btn-test-photo" id="testPhotoBtn" type="button">Test photo</button>
+              <button class="btn btn-primary" id="captureBtn" type="button">Tag billede</button>
+            </div>
           </div>
           <div class="capture-panel next-photo-panel">
             <div class="ring-wrap">
@@ -15387,7 +15408,7 @@ function updateNextPhotoRing(){
 }
 
 function refreshCaptureCard(){
-  const card = $('captureCard'), btn = $('captureBtn'), slider = $('captureSlider');
+  const card = $('captureCard'), btn = $('captureBtn'), testBtn = $('testPhotoBtn'), slider = $('captureSlider');
   if(!card) return;
   if(dailyDone()){
     slider.classList.add('show-challenge');
@@ -15396,11 +15417,13 @@ function refreshCaptureCard(){
     if(nextHint) nextHint.textContent = countdownText();
     updateNextPhotoRing();
     btn.disabled = true;
+    if(testBtn) testBtn.disabled = true;
     btn.textContent = 'Kom igen i morgen';
   } else {
     slider.classList.remove('show-challenge');
     card.classList.remove('locked','ring-mode');
     btn.disabled = false;
+    if(testBtn) testBtn.disabled = false;
     btn.textContent = 'Tag billede';
     if(window.renderMiniCaptureMap) window.renderMiniCaptureMap();
   }
@@ -20221,9 +20244,11 @@ const ChallengeCelebration = (function(){
 /* ===================================================================
    CORE: save a spot
    =================================================================== */
-function saveSpot(lat, lng, manual, img){
+function saveSpot(lat, lng, manual, img, options){
+  const opts = options || {};
+  const bypassDistance = !!opts.bypassDistance;
   const dist = nearestDist(lat, lng);
-  if(dist < S.settings.minDist){
+  if(!bypassDistance && dist < S.settings.minDist){
     SFX.reject();
     setTimeout(function(){ SFX.error(); },90);
     vibrate([60,40,60]);
@@ -20309,8 +20334,10 @@ function saveSpot(lat, lng, manual, img){
     });
   }
 
-  let distanceText = 'Dit første verificerede sted';
-  if(dist !== Infinity){
+  let distanceText = bypassDistance
+    ? 'Test photo · afstandskrav ignoreret'
+    : 'Dit første verificerede sted';
+  if(!bypassDistance && dist !== Infinity){
     distanceText = Math.round(dist) + ' m fra dit nærmeste tidligere sted';
   }
 
@@ -20321,6 +20348,8 @@ function saveSpot(lat, lng, manual, img){
     shieldUsed:shieldUsed,
     rewardXp:rewardXp,
     rewardCoins:rewardCoins,
+    testCapture:!!opts.testCapture,
+    bypassedDistance:bypassDistance,
     oldStreak:before.streak,
     newStreak:S.streak,
     oldXp:before.xp,
@@ -20335,6 +20364,7 @@ function saveSpot(lat, lng, manual, img){
 (function(){
   const card = $('captureCard'), capIconEl = $('capIcon');
   const title = $('capTitle'), hint = $('capHint');
+  let bypassDistanceForNextCapture = false;
 
   function preview(img){
     capIconEl.classList.add('big');
@@ -20344,12 +20374,14 @@ function saveSpot(lat, lng, manual, img){
     card.classList.remove('rejected');
     card.classList.add('captured');
     title.textContent = 'Billede gemt!';
-    const others = activePhotos().filter(function(p){ return haversine(pos.lat, pos.lng, p.lat, p.lng) > 0.5; });
-    let txt = 'dit første sted';
-    if(others.length){
-      let min = Infinity;
-      others.forEach(function(p){ const d = haversine(pos.lat, pos.lng, p.lat, p.lng); if(d < min) min = d; });
-      txt = Math.round(min) + ' m fra nærmeste sted';
+    let txt = result && result.testCapture ? 'Test photo · afstand ignoreret' : 'dit første sted';
+    if(!result || !result.testCapture){
+      const others = activePhotos().filter(function(p){ return haversine(pos.lat, pos.lng, p.lat, p.lng) > 0.5; });
+      if(others.length){
+        let min = Infinity;
+        others.forEach(function(p){ const d = haversine(pos.lat, pos.lng, p.lat, p.lng); if(d < min) min = d; });
+        txt = Math.round(min) + ' m fra nærmeste sted';
+      }
     }
     hint.innerHTML = '<span class="badge-pill">' + icon('pin',11) + ' ' + txt + '</span>';
     $('captureBtn').textContent = 'Tag et ekstra';
@@ -20358,18 +20390,29 @@ function saveSpot(lat, lng, manual, img){
     }
   }
 
-  $('captureBtn').addEventListener('click', function(){
+  function openCamera(bypassDistance){
     SFX.unlock();
     if(dailyDone()){
       SFX.reject();
       toast('Dagens billede er taget — challenges er stadig åbne');
       return;
     }
+    bypassDistanceForNextCapture = !!bypassDistance;
     SFX.pop();
     $('cameraInput').click();
+  }
+
+  $('captureBtn').addEventListener('click', function(){
+    openCamera(false);
+  });
+
+  $('testPhotoBtn').addEventListener('click', function(){
+    openCamera(true);
   });
 
   $('cameraInput').addEventListener('change', function(){
+    const bypassDistance = bypassDistanceForNextCapture;
+    bypassDistanceForNextCapture = false;
     const f = $('cameraInput').files[0];
     if(!f) return;
     SFX.shutter(); shutterFlash();
@@ -20378,7 +20421,10 @@ function saveSpot(lat, lng, manual, img){
       title.textContent = 'Henter placering…';
       hint.innerHTML = '<span class="badge-pill pending">Finder GPS…</span>';
       return Geo.current().then(function(pos){
-        const result = saveSpot(pos.lat,pos.lng,false,img);
+        const result = saveSpot(pos.lat,pos.lng,false,img,{
+          bypassDistance:bypassDistance,
+          testCapture:bypassDistance
+        });
         if(result) accepted(pos,result);
       }).catch(function(){
         title.textContent = 'Ingen placering';
