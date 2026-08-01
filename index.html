@@ -14024,6 +14024,387 @@ body.bh-preview-open{overflow:hidden;}
 }
 
 /* =========================================================
+   GUEST START MENU — CINEMATIC AUTH GATE
+   ========================================================= */
+body.guest-start-open{overflow:hidden!important;}
+.guest-start[hidden]{display:none!important;}
+.guest-start{
+  --guest-gold:#FFC45F;
+  --guest-orange:#FF7548;
+  --guest-mint:#72E0AE;
+  --guest-violet:#9B7CFF;
+  position:fixed;
+  inset:0;
+  z-index:29000;
+  display:grid;
+  place-items:center;
+  overflow:hidden;
+  padding:max(22px,env(safe-area-inset-top)) 18px max(20px,env(safe-area-inset-bottom));
+  color:#FFF9EB;
+  background:
+    radial-gradient(circle at 50% 38%,rgba(255,174,79,.14),transparent 24%),
+    radial-gradient(circle at 12% 5%,rgba(104,216,169,.12),transparent 30%),
+    radial-gradient(circle at 88% 92%,rgba(137,104,255,.15),transparent 32%),
+    linear-gradient(155deg,#030806 0%,#091510 46%,#070711 100%);
+  isolation:isolate;
+  opacity:0;
+  visibility:hidden;
+  transition:opacity .55s ease,visibility .55s ease;
+}
+.guest-start.open{
+  opacity:1;
+  visibility:visible;
+}
+.guest-start::before{
+  content:"";
+  position:absolute;
+  inset:-28%;
+  z-index:-4;
+  opacity:.23;
+  background:
+    linear-gradient(30deg,transparent 48.8%,rgba(255,255,255,.055) 49% 51%,transparent 51.2%) 0 0/42px 72px,
+    linear-gradient(150deg,transparent 48.8%,rgba(255,255,255,.055) 49% 51%,transparent 51.2%) 0 0/42px 72px;
+  animation:guestGridDrift 24s linear infinite;
+}
+.guest-start::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:20;
+  pointer-events:none;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.025),transparent 12% 88%,rgba(0,0,0,.22)),
+    radial-gradient(ellipse at center,transparent 38%,rgba(0,0,0,.34) 76%,rgba(0,0,0,.72) 100%);
+}
+.guest-start-aurora{
+  position:absolute;
+  width:78vmax;
+  height:78vmax;
+  z-index:-3;
+  border-radius:44%;
+  opacity:.26;
+  filter:blur(58px);
+  mix-blend-mode:screen;
+  pointer-events:none;
+}
+.guest-start-aurora.a{
+  left:-42vmax;
+  top:-42vmax;
+  background:conic-gradient(from 40deg,transparent,var(--guest-mint),transparent 38%,var(--guest-gold),transparent 68%);
+  animation:guestAuroraA 15s ease-in-out infinite alternate;
+}
+.guest-start-aurora.b{
+  right:-45vmax;
+  bottom:-47vmax;
+  background:conic-gradient(from 210deg,transparent,var(--guest-violet),transparent 42%,var(--guest-orange),transparent 70%);
+  animation:guestAuroraB 18s ease-in-out infinite alternate;
+}
+.guest-start-scan{
+  position:absolute;
+  inset:-25% 0;
+  z-index:-1;
+  opacity:.18;
+  background:linear-gradient(180deg,transparent 0 44%,rgba(255,239,184,.22) 49.7%,rgba(255,255,255,.44) 50%,transparent 56%);
+  animation:guestScan 4.8s cubic-bezier(.45,0,.55,1) infinite;
+  pointer-events:none;
+}
+.guest-start-stars{
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  pointer-events:none;
+}
+.guest-start-stars i{
+  --sx:50%;
+  --sy:50%;
+  --sd:0s;
+  --ss:2px;
+  position:absolute;
+  left:var(--sx);
+  top:var(--sy);
+  width:var(--ss);
+  height:var(--ss);
+  border-radius:50%;
+  background:#FFF5CD;
+  box-shadow:0 0 10px rgba(255,229,157,.88);
+  opacity:.18;
+  animation:guestStar 3.2s var(--sd) ease-in-out infinite;
+}
+.guest-start-panel{
+  position:relative;
+  z-index:5;
+  width:min(100%,430px);
+  max-height:calc(100dvh - max(42px,env(safe-area-inset-top) + env(safe-area-inset-bottom)));
+  overflow:auto;
+  padding:clamp(20px,4vh,34px) 22px 22px;
+  text-align:center;
+  scrollbar-width:none;
+  border:1px solid rgba(255,255,255,.09);
+  border-radius:34px;
+  background:
+    radial-gradient(circle at 50% 2%,rgba(255,204,111,.11),transparent 30%),
+    linear-gradient(150deg,rgba(20,31,27,.78),rgba(7,12,12,.82));
+  box-shadow:
+    0 40px 100px rgba(0,0,0,.52),
+    inset 0 1px 0 rgba(255,255,255,.10),
+    0 0 0 1px rgba(255,190,91,.025);
+  backdrop-filter:blur(18px) saturate(140%);
+  -webkit-backdrop-filter:blur(18px) saturate(140%);
+  opacity:0;
+  transform:translateY(28px) scale(.94);
+}
+.guest-start-panel::-webkit-scrollbar{display:none;}
+.guest-start.open .guest-start-panel{
+  animation:guestPanelIn .9s cubic-bezier(.16,.86,.2,1) .08s forwards;
+}
+.guest-start-orbit-stage{
+  position:relative;
+  width:176px;
+  height:176px;
+  margin:0 auto clamp(10px,2vh,18px);
+}
+.guest-start-orbit,
+.guest-start-orbit::before,
+.guest-start-orbit::after{
+  position:absolute;
+  inset:50%;
+  content:"";
+  border:1px solid rgba(255,216,139,.22);
+  border-radius:50%;
+  transform:translate(-50%,-50%);
+}
+.guest-start-orbit{
+  width:164px;
+  height:164px;
+  border-style:dashed;
+  animation:guestOrbit 18s linear infinite;
+}
+.guest-start-orbit::before{
+  width:126px;
+  height:126px;
+  border-color:rgba(112,224,174,.25);
+  animation:guestOrbitReverse 11s linear infinite;
+}
+.guest-start-orbit::after{
+  width:90px;
+  height:90px;
+  border-color:rgba(155,124,255,.27);
+}
+.guest-start-orbit-dot{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:16px;
+  height:18px;
+  clip-path:polygon(25% 4%,75% 4%,100% 50%,75% 96%,25% 96%,0 50%);
+  background:linear-gradient(145deg,var(--guest-gold),var(--guest-orange));
+  box-shadow:0 0 18px rgba(255,164,77,.65);
+}
+.guest-start-orbit-dot.d1{transform:translate(-50%,-50%) rotate(0deg) translateY(-82px);animation:guestDotPulse 2.2s ease-in-out infinite;}
+.guest-start-orbit-dot.d2{transform:translate(-50%,-50%) rotate(120deg) translateY(-82px);background:linear-gradient(145deg,#9CF2CB,#49A77D);animation:guestDotPulse 2.2s .5s ease-in-out infinite;}
+.guest-start-orbit-dot.d3{transform:translate(-50%,-50%) rotate(240deg) translateY(-82px);background:linear-gradient(145deg,#CDBFFF,#785DE0);animation:guestDotPulse 2.2s 1s ease-in-out infinite;}
+.guest-start-emblem{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:82px;
+  height:92px;
+  display:grid;
+  place-items:center;
+  transform:translate(-50%,-50%);
+  clip-path:polygon(25% 4%,75% 4%,100% 50%,75% 96%,25% 96%,0 50%);
+  color:#29170C;
+  background:
+    radial-gradient(circle at 32% 24%,rgba(255,255,255,.82),transparent 20%),
+    linear-gradient(145deg,#FFF6C9,#F3B64D 53%,#A95627);
+  box-shadow:0 0 58px rgba(255,183,75,.46);
+  font:950 37px/1 var(--font-display);
+  animation:guestEmblemFloat 3.8s ease-in-out infinite;
+}
+.guest-start-emblem::before{
+  content:"";
+  position:absolute;
+  inset:5px;
+  clip-path:inherit;
+  border:1px solid rgba(255,255,255,.32);
+}
+.guest-start-kicker{
+  color:#F1C779;
+  font:900 9px/1 var(--font-body);
+  letter-spacing:.28em;
+  text-transform:uppercase;
+  opacity:0;
+}
+.guest-start.open .guest-start-kicker{animation:guestCopyIn .65s .54s ease forwards;}
+.guest-start-title{
+  margin:8px 0 10px;
+  font:800 clamp(31px,9vw,43px)/.94 var(--font-display);
+  letter-spacing:-.035em;
+  opacity:0;
+  transform:translateY(12px);
+}
+.guest-start.open .guest-start-title{animation:guestCopyIn .72s .62s ease forwards;}
+.guest-start-title span{display:block;color:#FFF9EA;font-size:.56em;line-height:1.2;letter-spacing:.02em;}
+.guest-start-title strong{
+  display:block;
+  color:transparent;
+  background:linear-gradient(90deg,#FFF5C0 0%,#FFBF57 35%,#FF7A4C 62%,#AE91FF 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  filter:drop-shadow(0 6px 22px rgba(255,153,70,.22));
+  letter-spacing:.12em;
+  text-indent:.12em;
+}
+.guest-start-copy{
+  max-width:330px;
+  margin:0 auto;
+  color:rgba(255,249,235,.67);
+  font:650 12px/1.55 var(--font-body);
+  opacity:0;
+  transform:translateY(10px);
+}
+.guest-start.open .guest-start-copy{animation:guestCopyIn .7s .72s ease forwards;}
+.guest-start-features{
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:7px;
+  margin:15px 0 17px;
+  opacity:0;
+}
+.guest-start.open .guest-start-features{animation:guestCopyIn .7s .82s ease forwards;}
+.guest-start-feature{
+  padding:6px 9px;
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:999px;
+  color:rgba(255,255,255,.76);
+  background:rgba(255,255,255,.055);
+  font:800 8px/1 var(--font-body);
+  letter-spacing:.06em;
+}
+.guest-google-btn{
+  position:relative;
+  width:100%;
+  min-height:52px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:11px;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.5);
+  border-radius:17px;
+  color:#1D2422;
+  background:linear-gradient(180deg,#FFFFFF,#F2F3F2);
+  box-shadow:0 14px 34px rgba(0,0,0,.34),inset 0 1px 0 #fff;
+  font:850 13px/1 var(--font-body);
+  cursor:pointer;
+  opacity:0;
+  transform:translateY(14px);
+  transition:transform .18s ease,box-shadow .22s ease,filter .22s ease;
+}
+.guest-start.open .guest-google-btn{animation:guestCopyIn .72s .92s ease forwards;}
+.guest-google-btn::after{
+  content:"";
+  position:absolute;
+  inset:-60% auto -60% -35%;
+  width:30%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.9),transparent);
+  transform:skewX(-18deg);
+  animation:guestButtonShine 3.4s 1.8s ease-in-out infinite;
+}
+.guest-google-btn:hover{transform:translateY(-2px);box-shadow:0 18px 42px rgba(0,0,0,.4);}
+.guest-google-btn:active{transform:scale(.975);}
+.guest-google-btn:disabled{cursor:wait;filter:saturate(.35);opacity:.64!important;}
+.guest-google-icon{
+  width:25px;
+  height:25px;
+  display:grid;
+  place-items:center;
+  flex:0 0 auto;
+  border-radius:50%;
+  background:#fff;
+  box-shadow:0 2px 7px rgba(0,0,0,.12);
+}
+.guest-google-icon svg{width:18px;height:18px;display:block;}
+.guest-google-spinner{
+  width:16px;
+  height:16px;
+  display:none;
+  border:2px solid rgba(29,36,34,.20);
+  border-top-color:#2C6BCF;
+  border-radius:50%;
+  animation:guestSpin .7s linear infinite;
+}
+.guest-google-btn.loading .guest-google-icon{display:none;}
+.guest-google-btn.loading .guest-google-spinner{display:block;}
+.guest-continue-btn{
+  width:100%;
+  min-height:42px;
+  margin-top:7px;
+  border:0;
+  color:rgba(255,255,255,.72);
+  background:transparent;
+  font:750 10px/1 var(--font-body);
+  cursor:pointer;
+  opacity:0;
+  transition:color .2s ease;
+}
+.guest-start.open .guest-continue-btn{animation:guestCopyIn .68s 1.02s ease forwards;}
+.guest-continue-btn:hover{color:#fff;}
+.guest-auth-status{
+  min-height:16px;
+  margin-top:2px;
+  color:rgba(255,228,173,.72);
+  font:700 9px/1.35 var(--font-body);
+  opacity:0;
+}
+.guest-start.open .guest-auth-status{animation:guestCopyIn .6s 1.1s ease forwards;}
+.guest-start.is-leaving .guest-start-panel{animation:guestPanelOut .48s cubic-bezier(.5,0,.8,.2) forwards!important;}
+.guest-start.is-leaving::before{animation-duration:2s;}
+@keyframes guestGridDrift{to{transform:translate3d(84px,144px,0)}}
+@keyframes guestAuroraA{to{transform:translate3d(13vmax,9vmax,0) rotate(22deg) scale(1.08)}}
+@keyframes guestAuroraB{to{transform:translate3d(-12vmax,-8vmax,0) rotate(-19deg) scale(1.1)}}
+@keyframes guestScan{from{transform:translateY(-55%)}to{transform:translateY(55%)}}
+@keyframes guestStar{0%,100%{opacity:.12;transform:scale(.65)}50%{opacity:1;transform:scale(1.7)}}
+@keyframes guestPanelIn{0%{opacity:0;transform:translateY(28px) scale(.94);filter:blur(10px)}100%{opacity:1;transform:none;filter:none}}
+@keyframes guestPanelOut{to{opacity:0;transform:translateY(-18px) scale(1.035);filter:blur(9px)}}
+@keyframes guestOrbit{to{transform:translate(-50%,-50%) rotate(360deg)}}
+@keyframes guestOrbitReverse{to{transform:translate(-50%,-50%) rotate(-360deg)}}
+@keyframes guestDotPulse{50%{filter:brightness(1.8);opacity:.55}}
+@keyframes guestEmblemFloat{0%,100%{transform:translate(-50%,-50%) translateY(-3px) rotate(-1deg)}50%{transform:translate(-50%,-50%) translateY(5px) rotate(1deg)}}
+@keyframes guestCopyIn{to{opacity:1;transform:none}}
+@keyframes guestButtonShine{0%,64%{left:-35%}100%{left:125%}}
+@keyframes guestSpin{to{transform:rotate(360deg)}}
+@media(max-height:720px){
+  .guest-start-panel{padding-top:15px;padding-bottom:15px}
+  .guest-start-orbit-stage{width:132px;height:132px;margin-bottom:5px;transform:scale(.76);margin-top:-16px}
+  .guest-start-title{font-size:30px;margin-top:4px}
+  .guest-start-copy{font-size:10px}
+  .guest-start-features{margin:10px 0 12px}
+  .guest-google-btn{min-height:47px}
+}
+@media(max-width:360px){
+  .guest-start{padding-inline:10px}
+  .guest-start-panel{padding-inline:16px;border-radius:28px}
+  .guest-start-title{font-size:30px}
+}
+@media(prefers-reduced-motion:reduce){
+  .guest-start::before,.guest-start-aurora,.guest-start-scan,.guest-start-stars i,
+  .guest-start-orbit,.guest-start-orbit::before,.guest-start-emblem,.guest-google-btn::after{
+    animation:none!important;
+  }
+  .guest-start.open .guest-start-panel,.guest-start.open .guest-start-kicker,
+  .guest-start.open .guest-start-title,.guest-start.open .guest-start-copy,
+  .guest-start.open .guest-start-features,.guest-start.open .guest-google-btn,
+  .guest-start.open .guest-continue-btn,.guest-start.open .guest-auth-status{
+    animation:none!important;
+    opacity:1;
+    transform:none;
+    filter:none;
+  }
+}
+
+/* =========================================================
    STARTUP HEX ASSEMBLY + CINEMATIC REVEAL
    ========================================================= */
 body.app-preloading{
@@ -14377,6 +14758,59 @@ body.startup-revealing .onb{
       </div>
     </div>
   </div>
+</div>
+
+<!-- ============ GUEST START MENU ============ -->
+<div class="guest-start" id="guestStart" hidden aria-hidden="true" aria-label="Velkommen til STREG">
+  <div class="guest-start-aurora a" aria-hidden="true"></div>
+  <div class="guest-start-aurora b" aria-hidden="true"></div>
+  <div class="guest-start-scan" aria-hidden="true"></div>
+  <div class="guest-start-stars" aria-hidden="true">
+    <i style="--sx:8%;--sy:18%;--sd:.2s;--ss:2px"></i>
+    <i style="--sx:18%;--sy:72%;--sd:1.1s;--ss:3px"></i>
+    <i style="--sx:29%;--sy:10%;--sd:2.2s;--ss:2px"></i>
+    <i style="--sx:38%;--sy:88%;--sd:.7s;--ss:2px"></i>
+    <i style="--sx:49%;--sy:16%;--sd:1.7s;--ss:3px"></i>
+    <i style="--sx:58%;--sy:79%;--sd:2.6s;--ss:2px"></i>
+    <i style="--sx:70%;--sy:7%;--sd:.9s;--ss:2px"></i>
+    <i style="--sx:78%;--sy:66%;--sd:1.4s;--ss:3px"></i>
+    <i style="--sx:91%;--sy:23%;--sd:2.8s;--ss:2px"></i>
+    <i style="--sx:95%;--sy:83%;--sd:.4s;--ss:2px"></i>
+    <i style="--sx:4%;--sy:48%;--sd:2s;--ss:2px"></i>
+    <i style="--sx:84%;--sy:42%;--sd:1.9s;--ss:2px"></i>
+  </div>
+  <main class="guest-start-panel">
+    <div class="guest-start-orbit-stage" aria-hidden="true">
+      <div class="guest-start-orbit">
+        <i class="guest-start-orbit-dot d1"></i>
+        <i class="guest-start-orbit-dot d2"></i>
+        <i class="guest-start-orbit-dot d3"></i>
+      </div>
+      <div class="guest-start-emblem">S</div>
+    </div>
+    <div class="guest-start-kicker">Din verden · din streg</div>
+    <h1 class="guest-start-title"><span>Start noget, der vokser</span><strong>STREG</strong></h1>
+    <p class="guest-start-copy">Ét billede om dagen bliver til steder, minder, streaks og en verden, der kun er din.</p>
+    <div class="guest-start-features" aria-label="App-funktioner">
+      <span class="guest-start-feature">DAGLIGE BILLEDER</span>
+      <span class="guest-start-feature">LEVende KORT</span>
+      <span class="guest-start-feature">STREAKS & REWARDS</span>
+    </div>
+    <button class="guest-google-btn" id="guestGoogleBtn" type="button" disabled>
+      <span class="guest-google-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24">
+          <path fill="#4285F4" d="M21.6 12.23c0-.71-.06-1.4-.18-2.07H12v3.92h5.38a4.6 4.6 0 0 1-2 3.02v2.54h3.24c1.9-1.75 2.98-4.33 2.98-7.41Z"/>
+          <path fill="#34A853" d="M12 22c2.7 0 4.98-.9 6.63-2.36l-3.24-2.54c-.9.6-2.05.96-3.39.96-2.61 0-4.82-1.77-5.61-4.14H3.04v2.62A10 10 0 0 0 12 22Z"/>
+          <path fill="#FBBC05" d="M6.39 13.92A6 6 0 0 1 6.08 12c0-.67.11-1.32.31-1.92V7.46H3.04A10 10 0 0 0 2 12c0 1.61.39 3.14 1.04 4.54l3.35-2.62Z"/>
+          <path fill="#EA4335" d="M12 5.94c1.47 0 2.79.5 3.82 1.5l2.87-2.87A9.64 9.64 0 0 0 12 2a10 10 0 0 0-8.96 5.46l3.35 2.62C7.18 7.7 9.39 5.94 12 5.94Z"/>
+        </svg>
+      </span>
+      <span class="guest-google-spinner" aria-hidden="true"></span>
+      <span class="guest-google-label">Log ind med Google</span>
+    </button>
+    <button class="guest-continue-btn" id="guestContinueBtn" type="button">Fortsæt uden login</button>
+    <div class="guest-auth-status" id="guestAuthStatus" role="status">Forbinder sikkert…</div>
+  </main>
 </div>
 
 <div class="bg-blob b1"></div>
@@ -18192,6 +18626,137 @@ const Geo = (function(){
 })();
 
 /* ===================================================================
+   GUEST START MENU
+   Waits for both the startup cinematic and Supabase auth resolution, so
+   returning Google users never see the guest screen flash.
+   =================================================================== */
+const GuestStart = (function(){
+  const root = $('guestStart');
+  const googleBtn = $('guestGoogleBtn');
+  const continueBtn = $('guestContinueBtn');
+  const status = $('guestAuthStatus');
+  const label = googleBtn && googleBtn.querySelector('.guest-google-label');
+  const SESSION_KEY = 'streg_guest_continue_session';
+  let startupDone = !$('startupLoader');
+  let authResolved = false;
+  let realUser = false;
+  let offline = false;
+  let hideTimer = null;
+
+  function guestContinued(){
+    try{ return sessionStorage.getItem(SESSION_KEY) === '1'; }catch(error){ return false; }
+  }
+
+  function setStatus(message){
+    if(status) status.textContent = message || '';
+  }
+
+  function setGoogleReady(enabled){
+    if(!googleBtn) return;
+    googleBtn.disabled = !enabled;
+    googleBtn.classList.remove('loading');
+    if(label) label.textContent = 'Log ind med Google';
+  }
+
+  function hide(animated){
+    if(!root) return;
+    clearTimeout(hideTimer);
+    document.body.classList.remove('guest-start-open');
+    root.setAttribute('aria-hidden','true');
+    if(!animated || root.hidden){
+      root.classList.remove('open','is-leaving');
+      root.hidden = true;
+      return;
+    }
+    root.classList.add('is-leaving');
+    root.classList.remove('open');
+    hideTimer = setTimeout(function(){
+      root.hidden = true;
+      root.classList.remove('is-leaving');
+    },500);
+  }
+
+  function show(){
+    if(!root || !startupDone || realUser || guestContinued()) return;
+    clearTimeout(hideTimer);
+    root.hidden = false;
+    root.classList.remove('is-leaving');
+    root.setAttribute('aria-hidden','false');
+    document.body.classList.add('guest-start-open');
+    void root.offsetWidth;
+    root.classList.add('open');
+
+    if(!authResolved){
+      setGoogleReady(false);
+      setStatus('Forbinder sikkert…');
+    }else if(offline){
+      setGoogleReady(false);
+      setStatus('Google-login kræver internet — du kan fortsætte som gæst.');
+    }else{
+      setGoogleReady(true);
+      setStatus('Din streak og dine billeder følger med på alle enheder.');
+    }
+  }
+
+  function applyState(){
+    if(!startupDone) return;
+    if(realUser || guestContinued()) hide(false);
+    else show();
+  }
+
+  function sync(user,options){
+    options = options || {};
+    authResolved = true;
+    offline = !!options.offline;
+    realUser = !!(user && !user.is_anonymous);
+    applyState();
+  }
+
+  function reset(){
+    try{ sessionStorage.removeItem(SESSION_KEY); }catch(error){}
+    authResolved = false;
+    realUser = false;
+    offline = false;
+    applyState();
+  }
+
+  window.addEventListener('streg:startup-complete',function(){
+    startupDone = true;
+    applyState();
+  });
+
+  if(googleBtn){
+    googleBtn.addEventListener('click',function(){
+      if(googleBtn.disabled) return;
+      try{ SFX.unlock(); SFX.magic(); vibrate([18,22,42]); }catch(error){}
+      googleBtn.disabled = true;
+      googleBtn.classList.add('loading');
+      if(label) label.textContent = 'Åbner Google…';
+      setStatus('Du sendes sikkert videre til Google.');
+      Cloud.signInGoogle().then(function(result){
+        if(result && result.error){
+          googleBtn.disabled = false;
+          googleBtn.classList.remove('loading');
+          if(label) label.textContent = 'Prøv Google-login igen';
+          setStatus('Google-login fejlede: ' + result.error);
+          try{ SFX.error(); }catch(error){}
+        }
+      });
+    });
+  }
+
+  if(continueBtn){
+    continueBtn.addEventListener('click',function(){
+      try{ sessionStorage.setItem(SESSION_KEY,'1'); }catch(error){}
+      try{ SFX.unlock(); SFX.whoosh(0.8); vibrate(16); }catch(error){}
+      hide(true);
+    });
+  }
+
+  return { sync:sync, reset:reset, show:show, hide:hide };
+})();
+
+/* ===================================================================
    CLOUD -- Supabase sync. Best-effort: localStorage stays the source
    of truth the app always works from; this pushes/pulls in the
    background and never blocks the UI if it's slow or unreachable.
@@ -18216,9 +18781,10 @@ const Cloud = (function(){
   // identity attached -- same user id either way, so no data is ever at risk
   function renderAcctStatus(user){
     const secured = $('acctSecured'), anon = $('acctAnon'), emailLabel = $('acctEmailLabel'), signOutBtn = $('acctSignOut');
-    if(!secured || !anon) return;
-    const isReal = !!(user && user.email && !user.is_anonymous);
+    const isReal = !!(user && !user.is_anonymous);
     isSecured = isReal;
+    GuestStart.sync(user);
+    if(!secured || !anon) return;
     secured.style.display = isReal ? 'block' : 'none';
     anon.style.display = isReal ? 'none' : 'block';
     if(signOutBtn) signOutBtn.style.display = isReal ? 'block' : 'none';
@@ -18261,6 +18827,7 @@ const Cloud = (function(){
   async function boot(){
     if(typeof window.supabase === 'undefined'){
       setStatus('off', 'Ingen forbindelse til sky', 'Kunne ikke hente cloud-biblioteket -- tjek internet');
+      GuestStart.sync(null,{offline:true});
       return;
     }
     try{
@@ -18316,6 +18883,7 @@ const Cloud = (function(){
     }catch(e){
       console.warn('Cloud.boot failed', e);
       setStatus('err', 'Kunne ikke forbinde', 'Appen virker fint offline i mellemtiden');
+      GuestStart.sync(null,{offline:true});
       const sendBtn = $('acctSendLink');
       if(sendBtn) sendBtn.textContent = 'Ingen sky-forbindelse';
       // only show the offline bar when we've actually confirmed we can't connect
@@ -18380,6 +18948,7 @@ const Cloud = (function(){
   async function signOut(){
     if(!client) return { error:'not-ready' };
     try{
+      GuestStart.reset();
       await client.auth.signOut();
       S = clone(DEFAULTS);
       try{
@@ -24472,6 +25041,7 @@ try{
   const track = overlay && overlay.querySelector('.startup-track');
   if(!overlay){
     document.body.classList.remove('app-preloading');
+    window.dispatchEvent(new CustomEvent('streg:startup-complete'));
     return;
   }
 
@@ -24502,6 +25072,7 @@ try{
     timers.forEach(clearTimeout);
     overlay.remove();
     document.body.classList.remove('app-preloading','startup-revealing');
+    window.dispatchEvent(new CustomEvent('streg:startup-complete'));
   }
 
   function reveal(){
