@@ -19615,9 +19615,13 @@ const MapView = (function(){
     }
 
     // Migrate photos made through the home camera before hex claiming existed.
-    if(S.hexMap.photoHexVersion !== 1){
-      (S.photos || []).forEach(function(photo){
-        if(!photo || photo.testCapture || !Number.isFinite(photo.lat) || !Number.isFinite(photo.lng)) return;
+    // Re-run only when the photo count changes, so late cloud syncs are covered.
+    const migratablePhotos = (S.photos || []).filter(function(photo){
+      return photo && !photo.testCapture && Number.isFinite(photo.lat) && Number.isFinite(photo.lng);
+    });
+    if(S.hexMap.photoHexVersion !== 1 ||
+       S.hexMap.photoHexMigratedCount !== migratablePhotos.length){
+      migratablePhotos.forEach(function(photo){
         const hexId = photo.hexId && String(photo.hexId).indexOf('h_') === 0
           ? photo.hexId
           : hexForLatLng(photo.lat,photo.lng);
@@ -19634,6 +19638,7 @@ const MapView = (function(){
         }
       });
       S.hexMap.photoHexVersion = 1;
+      S.hexMap.photoHexMigratedCount = migratablePhotos.length;
     }
   }
 
