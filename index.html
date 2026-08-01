@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="da" data-theme="light">
+<html lang="da" data-theme="light" data-font="baloo">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
@@ -15350,14 +15350,14 @@ const DEFAULTS = {
     titles: [], equippedTitle: null,
     colors: [], equippedColor: null,
     frames: [], equippedFrame: null,
-    fonts: [],
+    fonts: ['baloo'],
     themes: [],
   },
   onboarded: false,
   settings: {
     sound: true, vibe: true, minDist: 50, cooldownDays: 30,
     habit: '', mapTheme: 'street', dark: false, style: 'nature',
-    tabColors: true, font: 'default', layoutMode: 'normal', activeEvent: 'midnight',
+    tabColors: true, font: 'baloo', layoutMode: 'normal', activeEvent: 'midnight',
   },
 };
 
@@ -15368,7 +15368,7 @@ function load(){
     const raw = localStorage.getItem(KEY);
     if(!raw) return clone(DEFAULTS);
     const p = JSON.parse(raw);
-    return Object.assign(clone(DEFAULTS), p, {
+    const next = Object.assign(clone(DEFAULTS), p, {
       settings: Object.assign({}, DEFAULTS.settings, p.settings || {}),
       challenges: Object.assign({}, DEFAULTS.challenges, p.challenges || {}),
       weekly: Object.assign({}, DEFAULTS.weekly, p.weekly || {}),
@@ -15379,6 +15379,16 @@ function load(){
       badges: Object.assign({}, DEFAULTS.badges, p.badges || {}),
       shop: Object.assign({}, DEFAULTS.shop, p.shop || {}),
     });
+
+    // Rund is now the built-in app font. Existing users who were still on the
+    // old default move across once; deliberately selected fonts stay equipped.
+    const hadRund = Array.isArray(next.shop.fonts) && next.shop.fonts.indexOf('baloo') !== -1;
+    if(!Array.isArray(next.shop.fonts)) next.shop.fonts = [];
+    if(!hadRund){
+      next.shop.fonts.push('baloo');
+      if(next.settings.font === 'default') next.settings.font = 'baloo';
+    }
+    return next;
   }catch(e){ return clone(DEFAULTS); }
 }
 
@@ -16804,7 +16814,7 @@ const THEME_CATALOG = [
 
 const FONT_CATALOG = [
   { id:'playfair', name:'Klassisk',    cost:150, cls:'font-playfair' },
-  { id:'baloo',    name:'Rund',        cost:150, cls:'font-baloo'    },
+  { id:'baloo',    name:'Rund',        cost:0,   cls:'font-baloo'    },
   { id:'grotesk',  name:'Skarp',       cost:200, cls:'font-grotesk'  },
   { id:'marker',   name:'Håndskrift',  cost:150, cls:'font-marker'   },
   { id:'event_lunar', name:'Lunar', cost:0, cls:'font-event-lunar', eventOnly:true },
