@@ -22565,6 +22565,120 @@ document.querySelectorAll('.tabbtn').forEach(function(b){
   b.addEventListener('click', function(){ SFX.unlock(); switchTab(b.dataset.tab); });
 });
 
+/* Swipe horizontally across normal tab content to move through the same
+   order as the bottom navigation. Native controls, maps, dialogs, and
+   horizontal scrollers keep ownership of their own gestures. */
+(function enableTabSwipeNavigation(){
+  const surface = document.querySelector('.content');
+  if(!surface || (!('ontouchstart' in window) && !(navigator.maxTouchPoints > 0))) return;
+
+  const blockedSelector = [
+    'input','textarea','select','option','button','a',
+    '[contenteditable="true"]','[data-no-tab-swipe]','[draggable="true"]',
+    '.leaflet-container','#realMap','#miniRealMapCard',
+    '.lightbox','.modal-back','[role="dialog"]',
+    '.purchase-cutscene','.photo-success-cutscene',
+    '.challenge-reward-cutscene','.chest-cutscene','.tour-overlay'
+  ].join(',');
+
+  let gesture = null;
+  let lockedUntil = 0;
+  let suppressClickUntil = 0;
+
+  function ownsHorizontalScroll(target){
+    let el = target;
+    while(el && el !== surface){
+      if(el.nodeType === 1){
+        const style = getComputedStyle(el);
+        const scrollable = el.scrollWidth > el.clientWidth + 8;
+        if(scrollable && /auto|scroll/.test(style.overflowX)) return true;
+      }
+      el = el.parentElement;
+    }
+    return false;
+  }
+
+  function blockedStart(target){
+    if(!target || target.nodeType !== 1) return true;
+    if(target.closest(blockedSelector)) return true;
+    if(ownsHorizontalScroll(target)) return true;
+    const selection = window.getSelection ? window.getSelection() : null;
+    return !!(selection && !selection.isCollapsed);
+  }
+
+  function resetGesture(){
+    gesture = null;
+  }
+
+  surface.addEventListener('touchstart',function(event){
+    if(Date.now() < lockedUntil || event.touches.length !== 1) return resetGesture();
+    const touch = event.touches[0];
+    const edgeGuard = 18;
+    if(touch.clientX <= edgeGuard || touch.clientX >= window.innerWidth - edgeGuard) return resetGesture();
+    if(blockedStart(event.target)) return resetGesture();
+
+    gesture = {
+      x:touch.clientX,
+      y:touch.clientY,
+      started:performance.now(),
+      cancelled:false
+    };
+  },{passive:true});
+
+  surface.addEventListener('touchmove',function(event){
+    if(!gesture) return;
+    if(event.touches.length !== 1){
+      gesture.cancelled = true;
+      return;
+    }
+    const touch = event.touches[0];
+    const dx = touch.clientX - gesture.x;
+    const dy = touch.clientY - gesture.y;
+    if(Math.abs(dy) > 18 && Math.abs(dy) > Math.abs(dx) * 1.1){
+      gesture.cancelled = true;
+    }
+  },{passive:true});
+
+  surface.addEventListener('touchcancel',resetGesture,{passive:true});
+
+  surface.addEventListener('touchend',function(event){
+    if(!gesture) return;
+    const finished = gesture;
+    gesture = null;
+    if(finished.cancelled || event.changedTouches.length !== 1) return;
+
+    const touch = event.changedTouches[0];
+    const dx = touch.clientX - finished.x;
+    const dy = touch.clientY - finished.y;
+    const absX = Math.abs(dx);
+    const absY = Math.abs(dy);
+    const elapsed = performance.now() - finished.started;
+    const threshold = Math.max(48,Math.min(74,surface.clientWidth * .145));
+
+    if(elapsed > 900 || absX < threshold || absX < absY * 1.35) return;
+
+    suppressClickUntil = Date.now() + 460;
+    const currentIndex = TAB_ORDER.indexOf(visibleTab);
+    const direction = dx < 0 ? 1 : -1;
+    const nextIndex = currentIndex + direction;
+
+    if(currentIndex < 0 || nextIndex < 0 || nextIndex >= TAB_ORDER.length){
+      try{ vibrate(8); }catch(e){}
+      return;
+    }
+
+    lockedUntil = Date.now() + 520;
+    SFX.unlock();
+    switchTab(TAB_ORDER[nextIndex]);
+  },{passive:true});
+
+  surface.addEventListener('click',function(event){
+    if(Date.now() >= suppressClickUntil) return;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+  },true);
+})();
+
 document.querySelectorAll('.see-all').forEach(function(b){
   b.addEventListener('click', function(){ SFX.unlock(); SFX.pop(); switchTab(b.dataset.goto); });
 });
