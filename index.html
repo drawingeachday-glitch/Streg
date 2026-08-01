@@ -705,7 +705,9 @@ button:focus-visible{outline:2px solid var(--amber);outline-offset:2px;}
 .map-actions{display:flex;gap:8px;margin-bottom:12px;}
 .map-btn{flex:1;background:var(--card);border:1px solid var(--line);font-weight:700;font-size:12px;padding:12px 8px;border-radius:var(--r-s);cursor:pointer;transition:transform .13s var(--spring),background .2s,color .2s,border-color .2s;}
 .map-btn:active{transform:scale(.95);}
+.map-btn:disabled{opacity:.62;cursor:wait;transform:none;}
 .map-btn.on{background:var(--moss);color:#fff;border-color:var(--moss);}
+.map-btn.loading{background:var(--amber-soft);border-color:var(--amber);color:var(--amber-2);}
 .legend{display:flex;gap:14px;padding:2px 2px 8px;flex-wrap:wrap;}
 .legend-item{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--ink-soft);}
 .legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
@@ -14534,6 +14536,7 @@ body.startup-revealing .onb{
         <div class="map-actions hex-map-actions">
           <button class="map-btn on" id="followBtn"></button>
           <button class="map-btn" id="fitBtn"></button>
+          <button class="map-btn" id="rerollBagsBtn" type="button">Reroll bags</button>
         </div>
 
         <div class="hex-current-card" id="hexCurrentCard">
@@ -14545,7 +14548,7 @@ body.startup-revealing .onb{
           <button class="btn btn-primary hex-capture-btn" id="hexCaptureBtn">Tag billede</button>
         </div>
 
-        <p class="hint" id="gpsStatus" style="display:block;">Testtilstand: Tryk direkte på en pengepung for at åbne den og starte hele kiste-cutscenen. Du behøver ikke tage et testbillede først. Pengepunge refresher tilfældigt hver dag.</p>
+        <p class="hint" id="gpsStatus" style="display:block;">Pengepunge placeres kun på offentligt tilgængelige veje og stier. Brug “Reroll bags” for at flytte alle aktive pengepunge og hotspots.</p>
         <input type="file" accept="image/*" capture="environment" id="hexCameraInput" style="display:none;">
       </div>
     </div>
@@ -15958,7 +15961,7 @@ document.addEventListener('click',function(event){
     return null;
   }
 
-  function activeChestIds(){
+  function activeChests(){
     const daily = S.hexMap && S.hexMap.daily;
     if(!daily || !Array.isArray(daily.chests)) return [];
     if(daily.day && daily.day !== todayLocalKey()) return [];
@@ -15970,9 +15973,13 @@ document.addEventListener('click',function(event){
         ? S.hexMap.chestOpened[todayLocalKey()]
         : {};
 
-    return daily.chests
-      .map(function(chest){ return chest.id; })
-      .filter(function(id){ return id && !opened[id]; });
+    return daily.chests.filter(function(chest){
+      return chest && chest.id && !opened[chest.id];
+    });
+  }
+
+  function activeChestIds(){
+    return activeChests().map(function(chest){ return chest.id; });
   }
 
   function activeHotspots(){
@@ -16076,7 +16083,10 @@ document.addEventListener('click',function(event){
 
     const selectedId = S.hexMap && S.hexMap.selectedHex;
     const photos = S.hexMap && S.hexMap.photos ? S.hexMap.photos : {};
-    const chestIds = activeChestIds();
+    const activeChestList = activeChests();
+    const chestIds = activeChestList.map(function(chest){ return chest.id; });
+    const chestById = {};
+    activeChestList.forEach(function(chest){ chestById[chest.id] = chest; });
     const hotspots = activeHotspots();
     const hotspotById = {};
     hotspots.forEach(function(hotspot){ hotspotById[hotspot.id] = hotspot; });
@@ -16152,7 +16162,12 @@ document.addEventListener('click',function(event){
           })
         }).addTo(miniMarkerLayer);
       }else if(isChest){
-        L.marker([hexCenter.lat,hexCenter.lng],{
+        const chest = chestById[id];
+        const chestPoint =
+          chest && Number.isFinite(chest.lat) && Number.isFinite(chest.lng)
+            ? [chest.lat,chest.lng]
+            : [hexCenter.lat,hexCenter.lng];
+        L.marker(chestPoint,{
           interactive:false,
           icon:L.divIcon({
             className:'mini-map-chest-icon',
@@ -18458,7 +18473,17 @@ const MapView = (function(){
   const DAILY_CHESTS = 8;
   const HOTSPOT_COUNT = 2;
   const HOTSPOT_CYCLE_MS = 3 * 60 * 60 * 1000;
+  const ROAD_DATA_VERSION = 1;
+  const ROAD_CACHE_MS = 6 * 60 * 60 * 1000;
+  const ROAD_RADIUS_M = 2200;
+  const ROAD_SAMPLE_M = 52;
+  const ROAD_ENDPOINTS = [
+    'https://overpass-api.de/api/interpreter',
+    'https://overpass.kumi.systems/api/interpreter'
+  ];
   const EARTH_R = 6378137;
+  let roadFetchPromise = null;
+  let roadLoadErrorShown = false;
 
   const TILES = {
     street:{
@@ -18477,6 +18502,8 @@ const MapView = (function(){
     if(!S.hexMap.chestOpened || typeof S.hexMap.chestOpened !== 'object') S.hexMap.chestOpened = {};
     if(!S.hexMap.daily || typeof S.hexMap.daily !== 'object') S.hexMap.daily = null;
     if(!S.hexMap.hotspots || typeof S.hexMap.hotspots !== 'object') S.hexMap.hotspots = null;
+    if(!S.hexMap.roadCache || typeof S.hexMap.roadCache !== 'object') S.hexMap.roadCache = null;
+    if(!Number.isFinite(S.hexMap.lootReroll)) S.hexMap.lootReroll = 0;
 
     if(S.hexMap.currentHex && String(S.hexMap.currentHex).indexOf('h_') !== 0){
       S.hexMap.currentHex = null;
@@ -18607,19 +18634,213 @@ const MapView = (function(){
     };
   }
 
+  function hexDistance(firstId,secondId){
+    const first = axialFromId(firstId);
+    const second = axialFromId(secondId);
+    if(!first || !second) return Infinity;
+    const dq = first.q - second.q;
+    const dr = first.r - second.r;
+    const ds = (-first.q-first.r) - (-second.q-second.r);
+    return Math.max(Math.abs(dq),Math.abs(dr),Math.abs(ds));
+  }
+
+  function publicRoadQuery(lat,lng){
+    const highwayTypes =
+      'primary|secondary|tertiary|unclassified|residential|living_street|pedestrian|service|track|path|footway|cycleway|bridleway|steps';
+    return '[out:json][timeout:20];' +
+      'way(around:' + ROAD_RADIUS_M + ',' + lat.toFixed(6) + ',' + lng.toFixed(6) + ')' +
+      '["highway"~"^(' + highwayTypes + ')$"]' +
+      '["access"!~"^(no|private|customers|permit|destination|delivery|agricultural|forestry)$"]' +
+      '["foot"!~"^(no|private|customers|permit)$"]' +
+      '["service"!~"^(driveway|private)$"];out geom;';
+  }
+
+  function metersBetween(a,b){
+    const aLng = Number.isFinite(a.lng) ? a.lng : a.lon;
+    const bLng = Number.isFinite(b.lng) ? b.lng : b.lon;
+    const lat = ((a.lat + b.lat) / 2) * Math.PI / 180;
+    const dx = (bLng-aLng) * Math.PI / 180 * EARTH_R * Math.cos(lat);
+    const dy = (b.lat-a.lat) * Math.PI / 180 * EARTH_R;
+    return Math.sqrt(dx*dx + dy*dy);
+  }
+
+  function roadPointsFromOverpass(data,anchorId){
+    const byHex = {};
+    const elements = data && Array.isArray(data.elements) ? data.elements : [];
+
+    elements.forEach(function(way){
+      const geometry = way && Array.isArray(way.geometry) ? way.geometry : [];
+      for(let i=1;i<geometry.length;i++){
+        const from = geometry[i-1];
+        const to = geometry[i];
+        if(!from || !to) continue;
+
+        const length = metersBetween(from,to);
+        const steps = Math.max(1,Math.ceil(length / ROAD_SAMPLE_M));
+        for(let step=0;step<=steps;step++){
+          const t = step / steps;
+          const lat = from.lat + (to.lat-from.lat) * t;
+          const lng = from.lon + (to.lon-from.lon) * t;
+          if(!Number.isFinite(lat) || !Number.isFinite(lng)) continue;
+
+          const id = hexForLatLng(lat,lng);
+          if(id === anchorId || S.hexMap.photos[id] || byHex[id]) continue;
+          byHex[id] = {
+            id:id,
+            lat:Number(lat.toFixed(7)),
+            lng:Number(lng.toFixed(7)),
+            source:'osm'
+          };
+        }
+      }
+    });
+
+    return Object.keys(byHex).map(function(id){ return byHex[id]; }).slice(0,700);
+  }
+
+  function cachedRoadPoints(anchorId,allowStale){
+    const cache = S.hexMap.roadCache;
+    if(!cache || !Array.isArray(cache.points) || !cache.points.length) return [];
+    if(hexDistance(cache.anchorId,anchorId) > 4) return [];
+    if(!allowStale && Date.now() - Number(cache.fetchedAt || 0) > ROAD_CACHE_MS) return [];
+    return cache.points.filter(function(point){
+      return point && point.id && Number.isFinite(point.lat) && Number.isFinite(point.lng);
+    });
+  }
+
+  function fetchPublicRoads(anchorId,force){
+    ensureState();
+    const cached = cachedRoadPoints(anchorId,false);
+    if(!force && cached.length) return Promise.resolve(cached);
+    if(roadFetchPromise) return roadFetchPromise;
+
+    const center = centerForId(anchorId);
+    if(!center) return Promise.reject(new Error('Mangler en gyldig kortplacering'));
+
+    const query = publicRoadQuery(center.lat,center.lng);
+
+    function attempt(index){
+      if(index >= ROAD_ENDPOINTS.length){
+        return Promise.reject(new Error('Kunne ikke hente offentlige veje'));
+      }
+      const url = ROAD_ENDPOINTS[index] + '?data=' + encodeURIComponent(query);
+      return fetch(url,{cache:'no-store'})
+        .then(function(response){
+          if(!response.ok) throw new Error('Overpass ' + response.status);
+          return response.json();
+        })
+        .then(function(data){
+          const points = roadPointsFromOverpass(data,anchorId);
+          if(points.length < DAILY_CHESTS){
+            throw new Error('Der blev ikke fundet nok offentlige veje i området');
+          }
+          return points;
+        })
+        .catch(function(){ return attempt(index+1); });
+    }
+
+    roadFetchPromise = attempt(0)
+      .then(function(points){
+        S.hexMap.roadCache = {
+          anchorId:anchorId,
+          fetchedAt:Date.now(),
+          points:points
+        };
+        roadLoadErrorShown = false;
+        save();
+        return points;
+      })
+      .catch(function(error){
+        const stale = cachedRoadPoints(anchorId,true);
+        if(stale.length) return stale;
+        throw error;
+      })
+      .then(function(points){
+        roadFetchPromise = null;
+        return points;
+      },function(error){
+        roadFetchPromise = null;
+        throw error;
+      });
+
+    return roadFetchPromise;
+  }
+
+  function requestPublicRoads(anchorId){
+    fetchPublicRoads(anchorId,false)
+      .then(function(){
+        if(S.hexMap.daily && S.hexMap.daily.roadVersion !== ROAD_DATA_VERSION){
+          S.hexMap.daily = null;
+        }
+        ensureDailyChests(anchorId);
+        save();
+        scheduleRedraw(true);
+        if(window.renderMiniCaptureMap) window.renderMiniCaptureMap();
+      })
+      .catch(function(){
+        if(roadLoadErrorShown) return;
+        roadLoadErrorShown = true;
+        toast('Kunne ikke finde offentlige veje lige nu — prøv “Reroll bags” igen');
+      });
+  }
+
+  function chestRoadCandidates(anchorId,radius){
+    const allowed = {};
+    disk(anchorId,radius).forEach(function(id){ allowed[id] = true; });
+    const hotspotIds = {};
+    const hotspotItems = S.hexMap.hotspots && Array.isArray(S.hexMap.hotspots.items)
+      ? S.hexMap.hotspots.items
+      : [];
+    hotspotItems.forEach(function(item){ hotspotIds[item.id] = true; });
+
+    return cachedRoadPoints(anchorId,false).filter(function(point){
+      return allowed[point.id] &&
+        point.id !== anchorId &&
+        !S.hexMap.photos[point.id] &&
+        !hotspotIds[point.id];
+    });
+  }
+
+  function createChest(point,rand,template){
+    if(template){
+      return Object.assign({},template,{
+        id:point.id,
+        lat:point.lat,
+        lng:point.lng,
+        roadSource:'osm'
+      });
+    }
+
+    const rarityRoll = rand();
+    let rarity = 'common';
+    let xp = 45;
+    let coins = 18;
+
+    if(rarityRoll > .90){
+      rarity = 'epic';
+      xp = 180;
+      coins = 75;
+    }else if(rarityRoll > .62){
+      rarity = 'rare';
+      xp = 95;
+      coins = 38;
+    }
+
+    return {
+      id:point.id,
+      lat:point.lat,
+      lng:point.lng,
+      roadSource:'osm',
+      rarity:rarity,
+      xp:xp,
+      coins:coins
+    };
+  }
+
   function ensureDailyChests(anchorId){
     ensureState();
     const day = todayKey();
     anchorId = anchorId || S.hexMap.currentHex || S.hexMap.selectedHex;
-
-    if(
-      S.hexMap.daily &&
-      S.hexMap.daily.day === day &&
-      S.hexMap.daily.anchorId &&
-      Array.isArray(S.hexMap.daily.chests)
-    ){
-      return S.hexMap.daily.chests;
-    }
 
     if(!anchorId && map){
       const center = map.getCenter();
@@ -18627,40 +18848,47 @@ const MapView = (function(){
     }
     if(!anchorId) return [];
 
-    const rand = randomFrom(seedFrom(day + '|' + anchorId + '|streg'));
-    let candidates = disk(anchorId,6).filter(function(id){
-      return id !== anchorId && !S.hexMap.photos[id];
-    });
+    const daily = S.hexMap.daily;
+    const opened = S.hexMap.chestOpened[day] || {};
+    const hasRoadSafeDaily =
+      daily &&
+      daily.day === day &&
+      daily.anchorId &&
+      daily.roadVersion === ROAD_DATA_VERSION &&
+      Array.isArray(daily.chests) &&
+      daily.chests.every(function(chest){
+        return opened[chest.id] || (
+          chest.roadSource === 'osm' &&
+          Number.isFinite(chest.lat) &&
+          Number.isFinite(chest.lng)
+        );
+      });
 
+    if(hasRoadSafeDaily) return daily.chests;
+
+    let candidates = chestRoadCandidates(anchorId,8);
     if(candidates.length < DAILY_CHESTS){
-      candidates = disk(anchorId,7).filter(function(id){ return id !== anchorId; });
+      candidates = chestRoadCandidates(anchorId,12);
+    }
+    if(candidates.length < DAILY_CHESTS){
+      requestPublicRoads(anchorId);
+      return [];
     }
 
+    const rand = randomFrom(seedFrom(day + '|' + anchorId + '|public-roads|streg'));
     const chests = [];
+    candidates = candidates.slice();
+
     while(candidates.length && chests.length < DAILY_CHESTS){
       const index = Math.floor(rand() * candidates.length);
-      const id = candidates.splice(index,1)[0];
-      const rarityRoll = rand();
-      let rarity = 'common';
-      let xp = 45;
-      let coins = 18;
-
-      if(rarityRoll > .90){
-        rarity = 'epic';
-        xp = 180;
-        coins = 75;
-      }else if(rarityRoll > .62){
-        rarity = 'rare';
-        xp = 95;
-        coins = 38;
-      }
-
-      chests.push({id:id,rarity:rarity,xp:xp,coins:coins});
+      const point = candidates.splice(index,1)[0];
+      chests.push(createChest(point,rand));
     }
 
     S.hexMap.daily = {
       day:day,
       anchorId:anchorId,
+      roadVersion:ROAD_DATA_VERSION,
       chests:chests
     };
     save();
@@ -19144,7 +19372,10 @@ const MapView = (function(){
 
       const chest = chests[id];
       if(chest && !opened[id]){
-        const centerPoint = centerForId(id);
+        const centerPoint =
+          Number.isFinite(chest.lat) && Number.isFinite(chest.lng)
+            ? {lat:chest.lat,lng:chest.lng}
+            : centerForId(id);
         const marker = L.marker([centerPoint.lat,centerPoint.lng],{
           icon:moneyPouchIcon(chest),
           pane:'chestPane',
@@ -19247,6 +19478,10 @@ const MapView = (function(){
       icon('pin',13) + ' ' + (id ? labelForId(id) : 'Ingen hex valgt');
     $('followBtn').innerHTML = icon('pin',14) + ' Følg mig';
     $('fitBtn').innerHTML = icon('bag',14) + ' Vis kister';
+    const rerollButton = $('rerollBagsBtn');
+    if(rerollButton && !rerollButton.classList.contains('loading')){
+      rerollButton.innerHTML = icon('sparkle',14) + ' Reroll bags';
+    }
 
     const thumb = $('hexCurrentThumb');
     const label = $('hexCurrentLabel');
@@ -20105,7 +20340,10 @@ const MapView = (function(){
 
     ensureDailyChests(S.hexMap.currentHex).forEach(function(chest){
       if(openedToday()[chest.id]) return;
-      const center = centerForId(chest.id);
+      const center =
+        Number.isFinite(chest.lat) && Number.isFinite(chest.lng)
+          ? {lat:chest.lat,lng:chest.lng}
+          : centerForId(chest.id);
       if(center) points.push([center.lat,center.lng]);
     });
 
@@ -20128,6 +20366,124 @@ const MapView = (function(){
     }else{
       toast('Ingen hexes eller kister at vise endnu');
     }
+  }
+
+  function rerollBags(){
+    if(!ready) init();
+    ensureState();
+
+    const button = $('rerollBagsBtn');
+    const anchorId =
+      S.hexMap.currentHex ||
+      S.hexMap.selectedHex ||
+      (map ? hexForLatLng(map.getCenter().lat,map.getCenter().lng) : null);
+
+    if(!anchorId){
+      toast('Venter på din kortplacering');
+      return Promise.resolve(false);
+    }
+
+    if(button){
+      button.disabled = true;
+      button.classList.add('loading');
+      button.innerHTML = icon('sparkle',14) + ' Finder veje…';
+    }
+
+    return fetchPublicRoads(anchorId,true)
+      .then(function(){
+        const currentChests = ensureDailyChests(anchorId).slice();
+        const opened = openedToday();
+        const currentHotspots = ensureHotspots(anchorId).slice();
+        const claimed = hotspotClaimed();
+        const oldActiveIds = {};
+
+        currentChests.forEach(function(chest){
+          if(!opened[chest.id]) oldActiveIds[chest.id] = true;
+        });
+        currentHotspots.forEach(function(hotspot){
+          if(!claimed[hotspot.id]) oldActiveIds[hotspot.id] = true;
+        });
+
+        const keptChests = currentChests.filter(function(chest){ return !!opened[chest.id]; });
+        const activeChests = currentChests.filter(function(chest){ return !opened[chest.id]; });
+        const rerollNumber = Number(S.hexMap.lootReroll || 0) + 1;
+        const rand = randomFrom(seedFrom(
+          todayKey() + '|' + anchorId + '|reroll|' + rerollNumber + '|' + Date.now()
+        ));
+
+        let roadCandidates = chestRoadCandidates(anchorId,12).filter(function(point){
+          return !oldActiveIds[point.id] && !claimed[point.id];
+        });
+
+        if(roadCandidates.length < activeChests.length){
+          throw new Error('Der er ikke nok nye offentlige veje i området');
+        }
+
+        const movedChests = activeChests.map(function(chest){
+          const index = Math.floor(rand() * roadCandidates.length);
+          const point = roadCandidates.splice(index,1)[0];
+          return createChest(point,rand,chest);
+        });
+
+        const occupied = {};
+        keptChests.concat(movedChests).forEach(function(chest){ occupied[chest.id] = true; });
+        Object.keys(S.hexMap.photos || {}).forEach(function(id){ occupied[id] = true; });
+        occupied[anchorId] = true;
+
+        const keptHotspots = currentHotspots.filter(function(hotspot){ return !!claimed[hotspot.id]; });
+        const activeHotspots = currentHotspots.filter(function(hotspot){ return !claimed[hotspot.id]; });
+        keptHotspots.forEach(function(hotspot){ occupied[hotspot.id] = true; });
+
+        let hotspotCandidates = disk(anchorId,13).filter(function(id){
+          return !occupied[id] && !oldActiveIds[id];
+        });
+        if(hotspotCandidates.length < activeHotspots.length){
+          throw new Error('Der er ikke nok nye hotspot-placeringer i området');
+        }
+
+        const movedHotspots = activeHotspots.map(function(hotspot){
+          const index = Math.floor(rand() * hotspotCandidates.length);
+          const id = hotspotCandidates.splice(index,1)[0];
+          occupied[id] = true;
+          return Object.assign({},hotspot,{id:id});
+        });
+
+        S.hexMap.lootReroll = rerollNumber;
+        S.hexMap.daily = {
+          day:todayKey(),
+          anchorId:anchorId,
+          roadVersion:ROAD_DATA_VERSION,
+          chests:keptChests.concat(movedChests)
+        };
+        S.hexMap.hotspots = Object.assign({},S.hexMap.hotspots,{
+          anchorId:anchorId,
+          items:keptHotspots.concat(movedHotspots),
+          claimed:claimed
+        });
+
+        save();
+        redraw();
+        if(window.renderMiniCaptureMap) window.renderMiniCaptureMap();
+        try{ SFX.magic(); }catch(error){ try{ SFX.swipe(); }catch(innerError){} }
+        vibrate([16,24,28,24,46]);
+        toast(
+          movedChests.length + ' pengepunge flyttet til offentlige veje · ' +
+          movedHotspots.length + ' hotspots flyttet'
+        );
+        return true;
+      })
+      .catch(function(error){
+        toast(error && error.message ? error.message : 'Kunne ikke rerolle pengepunge lige nu');
+        return false;
+      })
+      .then(function(result){
+        if(button){
+          button.disabled = false;
+          button.classList.remove('loading');
+          button.innerHTML = icon('sparkle',14) + ' Reroll bags';
+        }
+        return result;
+      });
   }
 
   function focus(photo){
@@ -20200,6 +20556,7 @@ const MapView = (function(){
     focus:focus,
     focusAt:focusAt,
     fitAll:fitAll,
+    rerollBags:rerollBags,
     setTheme:setTheme,
     hexForLatLng:hexForLatLng,
     centerForId:centerForId,
@@ -22495,6 +22852,7 @@ $('friendSearchInput').addEventListener('keydown', function(e){
 /* ---------- map buttons ---------- */
 $('followBtn').addEventListener('click', function(){ SFX.pop(); MapView.setFollow(!MapView.follow); });
 $('fitBtn').addEventListener('click', function(){ SFX.swipe(); MapView.fitAll(); });
+$('rerollBagsBtn').addEventListener('click', function(){ MapView.rerollBags(); });
 
 /* ===================================================================
    TABS — direction-aware morph, interruptible
