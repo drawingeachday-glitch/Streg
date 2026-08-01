@@ -3226,6 +3226,211 @@ body.purchase-cutscene-open{
   box-shadow:0 7px 16px rgba(79,109,82,.18);
 }
 
+/* ---------- live theme preview ---------- */
+#tab-shop .shop-theme-actions{
+  width:100%;
+  display:grid;
+  grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);
+  gap:7px;
+}
+#tab-shop .shop-theme-actions .shop-btn{
+  width:100%;
+  min-width:0;
+  padding-inline:6px;
+}
+#tab-shop .shop-btn.preview{
+  color:var(--ink-2);
+  background:linear-gradient(180deg,var(--card),var(--paper-2));
+  border:1px solid var(--line-2);
+  box-shadow:0 6px 14px rgba(22,36,43,.09);
+}
+#tab-shop .shop-btn.preview:active{transform:scale(.96);}
+body.theme-preview-open{overflow:hidden;}
+.theme-preview-overlay[hidden]{display:none!important;}
+.theme-preview-overlay{
+  position:fixed;
+  inset:0;
+  z-index:1000005;
+  display:grid;
+  place-items:center;
+  padding:max(22px,env(safe-area-inset-top)) 18px max(22px,env(safe-area-inset-bottom));
+  color:var(--ink);
+  background:color-mix(in srgb,var(--paper) 76%,rgba(5,9,12,.68));
+  backdrop-filter:blur(20px) saturate(145%);
+  -webkit-backdrop-filter:blur(20px) saturate(145%);
+  opacity:0;
+  visibility:hidden;
+  transition:opacity .26s ease,visibility .26s ease;
+}
+.theme-preview-overlay.open{
+  opacity:1;
+  visibility:visible;
+}
+.theme-preview-shell{
+  position:relative;
+  width:min(100%,430px);
+  max-height:min(760px,calc(100dvh - 44px));
+  overflow:auto;
+  padding:22px;
+  border:1px solid var(--line);
+  border-radius:30px;
+  color:var(--ink);
+  background:
+    radial-gradient(circle at 88% 8%,color-mix(in srgb,var(--amber) 17%,transparent),transparent 28%),
+    var(--paper);
+  box-shadow:var(--shadow-l);
+  transform:translateY(18px) scale(.97);
+  transition:transform .34s var(--glide);
+}
+.theme-preview-overlay.open .theme-preview-shell{transform:none;}
+.theme-preview-close-x{
+  position:absolute;
+  top:14px;
+  right:14px;
+  width:34px;
+  height:34px;
+  display:grid;
+  place-items:center;
+  border:1px solid var(--line);
+  border-radius:50%;
+  color:var(--ink);
+  background:var(--card);
+  font:800 19px/1 var(--font-body);
+  cursor:pointer;
+}
+.theme-preview-kicker{
+  margin:2px 42px 5px 0;
+  color:var(--amber);
+  font:900 9px/1 var(--font-body);
+  letter-spacing:.18em;
+  text-transform:uppercase;
+}
+.theme-preview-title{
+  margin:0 42px 18px 0;
+  font:800 30px/1.05 var(--font-display);
+  color:var(--ink);
+}
+.theme-preview-device{
+  padding:15px;
+  border:1px solid var(--line);
+  border-radius:24px;
+  background:var(--paper-2);
+  box-shadow:inset 0 1px rgba(255,255,255,.18);
+}
+.theme-preview-demo-top{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:13px;
+}
+.theme-preview-demo-avatar{
+  width:38px;
+  height:38px;
+  display:grid;
+  place-items:center;
+  flex:0 0 auto;
+  border-radius:50%;
+  color:#fff;
+  background:linear-gradient(135deg,var(--moss),var(--sky));
+  font:900 10px/1 var(--font-body);
+  box-shadow:var(--shadow-s);
+}
+.theme-preview-demo-top b{
+  display:block;
+  color:var(--ink);
+  font:800 16px/1 var(--font-display);
+}
+.theme-preview-demo-top small{
+  display:block;
+  margin-top:4px;
+  color:var(--ink-soft);
+  font:700 9px/1 var(--font-body);
+}
+.theme-preview-stats{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:7px;
+  margin-bottom:9px;
+}
+.theme-preview-stat,
+.theme-preview-card{
+  border:1px solid var(--line);
+  border-radius:16px;
+  background:var(--card);
+  box-shadow:var(--shadow-s);
+}
+.theme-preview-stat{
+  padding:11px 5px;
+  text-align:center;
+}
+.theme-preview-stat strong{
+  display:block;
+  color:var(--ink);
+  font:850 17px/1 var(--font-display);
+}
+.theme-preview-stat span{
+  display:block;
+  margin-top:5px;
+  color:var(--ink-soft);
+  font:800 7px/1 var(--font-body);
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+.theme-preview-card{padding:14px;}
+.theme-preview-card-label{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:9px;
+  color:var(--ink);
+  font:800 12px/1.2 var(--font-body);
+}
+.theme-preview-card-label span:last-child{color:var(--amber);}
+.theme-preview-progress{
+  height:7px;
+  overflow:hidden;
+  border-radius:999px;
+  background:var(--line);
+}
+.theme-preview-progress span{
+  display:block;
+  width:72%;
+  height:100%;
+  border-radius:inherit;
+  background:linear-gradient(90deg,var(--moss),var(--amber));
+}
+.theme-preview-demo-action{
+  width:100%;
+  margin-top:10px;
+  padding:11px;
+  border:0;
+  border-radius:14px;
+  color:#fff;
+  background:linear-gradient(135deg,var(--amber),var(--amber-2));
+  font:850 11px/1 var(--font-body);
+  pointer-events:none;
+}
+.theme-preview-note{
+  margin:13px 0 11px;
+  color:var(--ink-soft);
+  font:650 10px/1.45 var(--font-body);
+  text-align:center;
+}
+.theme-preview-done{
+  width:100%;
+  min-height:42px;
+  border:0;
+  border-radius:15px;
+  color:#fff;
+  background:linear-gradient(135deg,var(--moss),var(--moss-dark));
+  font:850 12px/1 var(--font-body);
+  box-shadow:0 9px 20px color-mix(in srgb,var(--moss) 25%,transparent);
+  cursor:pointer;
+}
+@media(prefers-reduced-motion:reduce){
+  .theme-preview-overlay,.theme-preview-shell{transition:none;}
+}
+
 /* ---------- coin-spend feedback ---------- */
 #homeStatCoinsWrap.coin-spending{
   animation:coinWalletHit .72s cubic-bezier(.18,.88,.24,1);
@@ -16886,6 +17091,81 @@ const Shop = (function(){
   ].filter(function(entry){return !!entry.item;});
 
   let lastRenderKey = '';
+  let themePreviewOverlay = null;
+  let themePreviewHideTimer = null;
+
+  function closeThemePreview(){
+    if(!themePreviewOverlay) return;
+    clearTimeout(themePreviewHideTimer);
+    themePreviewOverlay.classList.remove('open');
+    themePreviewOverlay.setAttribute('aria-hidden','true');
+    document.body.classList.remove('theme-preview-open');
+    Settings.applyTheme();
+    themePreviewHideTimer = setTimeout(function(){
+      themePreviewOverlay.hidden = true;
+    },280);
+  }
+
+  function ensureThemePreviewOverlay(){
+    if(themePreviewOverlay) return themePreviewOverlay;
+    const overlay = document.createElement('div');
+    overlay.className = 'theme-preview-overlay';
+    overlay.hidden = true;
+    overlay.setAttribute('role','dialog');
+    overlay.setAttribute('aria-modal','true');
+    overlay.setAttribute('aria-hidden','true');
+    overlay.setAttribute('aria-labelledby','themePreviewTitle');
+    overlay.innerHTML =
+      '<section class="theme-preview-shell">' +
+        '<button class="theme-preview-close-x" type="button" aria-label="Luk preview">×</button>' +
+        '<div class="theme-preview-kicker">Live tema-preview</div>' +
+        '<h2 class="theme-preview-title" id="themePreviewTitle">Tema</h2>' +
+        '<div class="theme-preview-device">' +
+          '<div class="theme-preview-demo-top">' +
+            '<span class="theme-preview-demo-avatar">DIG</span>' +
+            '<span><b>Din STREG</b><small>Sådan føles temaet i appen</small></span>' +
+          '</div>' +
+          '<div class="theme-preview-stats">' +
+            '<div class="theme-preview-stat"><strong>12</strong><span>Streg</span></div>' +
+            '<div class="theme-preview-stat"><strong>48</strong><span>Billeder</span></div>' +
+            '<div class="theme-preview-stat"><strong>920</strong><span>Mønter</span></div>' +
+          '</div>' +
+          '<div class="theme-preview-card">' +
+            '<div class="theme-preview-card-label"><span>Dagens challenge</span><span>72%</span></div>' +
+            '<div class="theme-preview-progress"><span></span></div>' +
+            '<button class="theme-preview-demo-action" type="button" tabindex="-1">Tag dagens billede</button>' +
+          '</div>' +
+        '</div>' +
+        '<p class="theme-preview-note">Kun preview — temaet bliver ikke købt eller gemt.</p>' +
+        '<button class="theme-preview-done" type="button">Luk preview</button>' +
+      '</section>';
+    document.body.appendChild(overlay);
+    overlay.querySelector('.theme-preview-close-x').addEventListener('click',closeThemePreview);
+    overlay.querySelector('.theme-preview-done').addEventListener('click',closeThemePreview);
+    overlay.addEventListener('click',function(e){
+      if(e.target === overlay) closeThemePreview();
+    });
+    document.addEventListener('keydown',function(e){
+      if(e.key === 'Escape' && themePreviewOverlay && !themePreviewOverlay.hidden) closeThemePreview();
+    });
+    themePreviewOverlay = overlay;
+    return overlay;
+  }
+
+  function previewTheme(item){
+    const overlay = ensureThemePreviewOverlay();
+    clearTimeout(themePreviewHideTimer);
+    document.documentElement.setAttribute('data-style',item.id);
+    overlay.querySelector('.theme-preview-title').textContent = item.name;
+    overlay.hidden = false;
+    overlay.setAttribute('aria-hidden','false');
+    document.body.classList.add('theme-preview-open');
+    void overlay.offsetWidth;
+    overlay.classList.add('open');
+    try{ SFX.magic(); vibrate(18); }catch(error){}
+    const closeButton = overlay.querySelector('.theme-preview-done');
+    try{ closeButton.focus({preventScroll:true}); }catch(error){}
+  }
 
   function shopRenderKey(){
     const shop = S.shop || {};
@@ -17059,6 +17339,11 @@ const Shop = (function(){
     const btnCls = equipped ? 'equipped' : owned ? 'equip' : canAfford ? 'buy' : 'poor';
     const btnText = equipped ? icon('check',11) + ' I brug' : owned ? 'Brug' : canAfford ? 'Køb Black Hole' : 'Ikke nok Fragments';
 
+    const primaryButton = '<button class="shop-btn ' + btnCls + (entry.kind === 'theme' ? ' shop-theme-primary-btn' : '') + '">' + btnText + '</button>';
+    const actions = entry.kind === 'theme'
+      ? '<div class="shop-theme-actions"><button class="shop-btn preview shop-theme-preview-btn" type="button">Preview</button>' + primaryButton + '</div>'
+      : primaryButton;
+
     el.innerHTML =
       '<span class="shop-state-chip ' + statusCls + '">' + statusText + '</span>' +
       fragmentPreview(entry) +
@@ -17066,12 +17351,18 @@ const Shop = (function(){
       '<div class="shop-item-price"><span class="fragment-symbol small"></span>' +
         (owned ? (equipped ? 'I brug' : 'Ejet') : cost + ' Fragments') +
       '</div>' +
-      '<button class="shop-btn ' + btnCls + '">' + btnText + '</button>';
+      actions;
 
-    el.querySelector('.shop-btn').addEventListener('click',function(){
+    el.querySelector(entry.kind === 'theme' ? '.shop-theme-primary-btn' : '.shop-btn').addEventListener('click',function(){
       SFX.unlock();
       buyFragmentItem(entry);
     });
+    if(entry.kind === 'theme'){
+      el.querySelector('.shop-theme-preview-btn').addEventListener('click',function(){
+        SFX.unlock();
+        previewTheme(item);
+      });
+    }
     return el;
   }
 
@@ -17206,10 +17497,17 @@ const Shop = (function(){
       '<div class="shop-preview sw-' + item.sw + '"></div>' +
       '<div class="shop-item-name">' + item.name + '</div>' +
       '<div class="shop-item-price">' + (owned ? (equipped ? 'I brug' : 'Ejet') : item.cost + ' ' + icon('coin',11)) + '</div>' +
-      '<button class="shop-btn ' + btnCls + '">' +
-        (equipped ? icon('check',11) + ' I brug' : owned ? 'Brug' : canAfford ? 'Køb' : 'Ikke nok mønter') +
-      '</button>';
-    el.querySelector('.shop-btn').addEventListener('click', function(){ buyOrEquipTheme(item); });
+      '<div class="shop-theme-actions">' +
+        '<button class="shop-btn preview shop-theme-preview-btn" type="button">Preview</button>' +
+        '<button class="shop-btn ' + btnCls + ' shop-theme-primary-btn">' +
+          (equipped ? icon('check',11) + ' I brug' : owned ? 'Brug' : canAfford ? 'Køb' : 'Ikke nok mønter') +
+        '</button>' +
+      '</div>';
+    el.querySelector('.shop-theme-preview-btn').addEventListener('click',function(){
+      SFX.unlock();
+      previewTheme(item);
+    });
+    el.querySelector('.shop-theme-primary-btn').addEventListener('click',function(){ buyOrEquipTheme(item); });
     return el;
   }
 
