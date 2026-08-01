@@ -852,6 +852,57 @@ button:focus-visible{outline:2px solid var(--amber);outline-offset:2px;}
 @keyframes ring{0%,100%{transform:scale(1);opacity:.4;}50%{transform:scale(1.08);opacity:.1;}}
 .p-name{font-family:var(--font-display);font-size:20px;font-weight:600;}
 .p-title{font-size:12.5px;color:var(--ink-soft);margin-top:3px;font-weight:600;}
+
+/* ============ NAME BADGES ============ */
+.identity-name-row{display:flex;align-items:center;gap:7px;min-width:0;}
+.profile-name-row{justify-content:center;}
+.topbar-name-row{gap:5px;}
+.home-name-row{max-width:100%;}
+.home-name-row .home-greet-text{max-width:210px;}
+.f-name-row{display:flex;align-items:center;gap:5px;min-width:0;}
+.name-badge-host:empty{display:none;}
+.name-badge{
+  --badge-a:#6E93A6;--badge-b:#31424A;
+  display:inline-flex;align-items:center;justify-content:center;gap:3px;
+  height:21px;min-width:21px;padding:0 6px;border-radius:999px;flex:0 0 auto;color:#fff;
+  background:linear-gradient(135deg,var(--badge-a),var(--badge-b));
+  border:1px solid rgba(255,255,255,.48);
+  box-shadow:0 3px 10px color-mix(in srgb,var(--badge-a) 34%,transparent),inset 0 1px rgba(255,255,255,.32);
+  font:800 8px/1 var(--font-ui);letter-spacing:.055em;text-transform:uppercase;vertical-align:middle;
+}
+.name-badge-symbol{font-size:11px;line-height:1;letter-spacing:0;}
+.name-badge[data-badge="starter"]{--badge-a:#8EA2AD;--badge-b:#52636B;}
+.name-badge[data-badge="first_photo"]{--badge-a:#5EC8E8;--badge-b:#347DB5;}
+.name-badge[data-badge="streak_3"]{--badge-a:#FFB24D;--badge-b:#D85A2E;}
+.name-badge[data-badge="week_fire"]{--badge-a:#FFCC3E;--badge-b:#E04828;}
+.name-badge[data-badge="scout"]{--badge-a:#70B676;--badge-b:#315C3D;}
+.name-badge[data-badge="level_10"]{--badge-a:#69A9FF;--badge-b:#6B50C7;}
+.name-badge[data-badge="collector"]{--badge-a:#F3CD68;--badge-b:#A66B14;}
+.name-badge[data-badge="century"]{--badge-a:#FF5A6B;--badge-b:#70142A;}
+.name-badge[data-badge="void"]{--badge-a:#A25EFF;--badge-b:#09030F;box-shadow:0 0 13px rgba(162,94,255,.58),inset 0 1px rgba(255,255,255,.28);}
+.topbar-name-row .name-badge,.f-name-row .name-badge{height:18px;min-width:18px;padding:0 5px;font-size:7px;}
+.topbar-name-row .name-badge-label{display:none;}
+.badge-profile-card{
+  margin:14px auto 0;max-width:440px;padding:13px 14px;text-align:left;
+  background:var(--card);border:1px solid var(--line);border-radius:var(--r-m);box-shadow:var(--shadow-s);
+}
+.badge-profile-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:10px;}
+.badge-profile-title{font-size:12px;font-weight:800;}
+.badge-profile-sub{font-size:9.5px;color:var(--ink-soft);margin-top:2px;line-height:1.35;}
+.badge-unlock-count{flex:0 0 auto;font-size:9px;font-weight:800;color:var(--moss-dark);background:var(--moss-soft);padding:5px 8px;border-radius:999px;}
+.badge-picker{display:flex;gap:8px;overflow-x:auto;padding:2px 1px 5px;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+.badge-picker::-webkit-scrollbar{display:none;}
+.badge-choice{
+  flex:0 0 92px;min-height:72px;padding:9px 7px;border:1px solid var(--line);
+  border-radius:14px;background:var(--paper-2);color:var(--ink);cursor:pointer;text-align:center;
+  transition:transform .15s var(--spring),border-color .2s,background .2s,opacity .2s;
+}
+.badge-choice:active{transform:scale(.95);}
+.badge-choice.on{border-color:var(--amber);background:var(--amber-soft);box-shadow:0 0 0 1px var(--amber);}
+.badge-choice.locked{opacity:.45;filter:grayscale(.78);}
+.badge-choice .name-badge{margin:0 auto 7px;}
+.badge-choice-name{display:block;font-size:9.5px;font-weight:800;line-height:1.15;}
+.badge-choice-state{display:block;font-size:8px;color:var(--ink-soft);margin-top:3px;line-height:1.15;}
 .stat-grid{display:flex;background:var(--card);border:1px solid var(--line);border-radius:var(--r-m);margin-bottom:12px;overflow:hidden;box-shadow:var(--shadow-s);}
 .stat-cell{flex:1;text-align:center;padding:14px 3px;border-right:1px solid var(--line);}
 .stat-cell:last-child{border-right:none;}
@@ -14182,7 +14233,10 @@ body.startup-revealing .onb{
   <div class="topbar" id="topbar">
     <div class="topbar-avatar" id="topAvatar">DIG</div>
     <div class="topbar-info">
-      <div class="topbar-name" id="topName">Dig</div>
+      <div class="identity-name-row topbar-name-row">
+        <div class="topbar-name" id="topName">Dig</div>
+        <span class="name-badge-host" id="topNameBadge"></span>
+      </div>
       <div class="topbar-stats">
         <span class="topbar-stat" id="topStreakWrap"><svg class="icn" width="14" height="14" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><path d="M12 2.8c-.6 3.5-3.8 4.9-3.8 8.5 0 1.8 1.4 3.2 3.1 3.2 1.8 0 3.1-1.4 3.1-3.1 0-.9-.4-1.8-1.1-2.6 2.5 1 4.1 3.2 4.1 5.9 0 3.6-2.8 6.4-6.4 6.4s-6.4-2.8-6.4-6.4c0-4.6 3.1-6.8 4.6-10.3.7.4 1.7 1.6 2.8 3.2Z" fill="#FFB24D" stroke="#D56E23" stroke-width="1.15" stroke-linejoin="round"/><path d="M12.4 8.5c.9 1 1.5 1.9 1.5 3 0 1.6-1.2 2.8-2.8 2.8" stroke="#FFF2CE" stroke-width="1.35" stroke-linecap="round" opacity=".8"/></svg> <b id="topStreak">0</b></span>
         <span class="topbar-stat" id="topLevelWrap"><svg class="icn" width="13" height="13" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><path d="M12 3.6 14 8l4.8.7-3.5 3.4.8 4.8-4.1-2.3-4.1 2.3.8-4.8L5.2 8.7 10 8l2-4.4Z" fill="#C5E8FF" stroke="#5897D3" stroke-width="1.2" stroke-linejoin="round"/><circle cx="12" cy="11" r="2.1" fill="#FFF8DC" stroke="#D3A83A" stroke-width="1"/></svg> <b id="topLevel">1</b></span>
@@ -14197,7 +14251,10 @@ body.startup-revealing .onb{
         <div class="home-greet-left">
           <div class="home-avatar" id="homeAvatar">DIG</div>
           <div class="home-greet-info">
-            <div class="home-greet-text" id="homeGreetText">Godmorgen, Dig</div>
+            <div class="identity-name-row home-name-row">
+              <div class="home-greet-text" id="homeGreetText">Godmorgen, Dig</div>
+              <span class="name-badge-host" id="homeNameBadge"></span>
+            </div>
             <div class="home-inline-stats" id="homeInlineStats">
               <span class="home-inline-stat" id="homeStatStreakWrap">
                 <svg class="icn" width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2.8c-.6 3.5-3.8 4.9-3.8 8.5 0 1.8 1.4 3.2 3.1 3.2 1.8 0 3.1-1.4 3.1-3.1 0-.9-.4-1.8-1.1-2.6 2.5 1 4.1 3.2 4.1 5.9 0 3.6-2.8 6.4-6.4 6.4s-6.4-2.8-6.4-6.4c0-4.6 3.1-6.8 4.6-10.3.7.4 1.7 1.6 2.8 3.2Z" fill="#FFB24D" stroke="#D56E23" stroke-width="1.15" stroke-linejoin="round"/><path d="M12.4 8.5c.9 1 1.5 1.9 1.5 3 0 1.6-1.2 2.8-2.8 2.8" stroke="#FFF2CE" stroke-width="1.35" stroke-linecap="round" opacity=".8"/></svg>
@@ -14734,8 +14791,21 @@ body.startup-revealing .onb{
             </svg>
           </button>
         </div>
-        <div class="p-name" id="pName">Vælg brugernavn</div>
+        <div class="identity-name-row profile-name-row">
+          <div class="p-name" id="pName">Vælg brugernavn</div>
+          <span class="name-badge-host" id="profileNameBadge"></span>
+        </div>
         <div class="p-title" id="pTitle">Niveau 1 · Nybegynder</div>
+        <div class="badge-profile-card">
+          <div class="badge-profile-head">
+            <div>
+              <div class="badge-profile-title">Badge ved dit navn</div>
+              <div class="badge-profile-sub">Vælg mellem de badges, du har låst op.</div>
+            </div>
+            <span class="badge-unlock-count" id="badgeUnlockCount">1 / 9</span>
+          </div>
+          <div class="badge-picker" id="badgePicker" aria-label="Vælg navnebadge"></div>
+        </div>
         <div class="p-avatar-actions">
           <button class="p-avatar-action primary" id="profileImageTextBtn" type="button">Vælg profilbillede</button>
           <button class="p-avatar-action remove" id="profileImageRemoveBtn" type="button" style="display:none;">Fjern</button>
@@ -15257,6 +15327,7 @@ const KEY_WAS_SECURED = 'streg_v3_was_secured'; // has this browser ever had a r
 const DEFAULTS = {
   photos: [], streak: 0, best: 0, lastDay: null,
   xp: 0, coins: 0, fragments: 0, freezes: 3, username: null, profileImage: null,
+  badges: { unlocked: ['starter'], equipped: 'starter' },
   challenges: { day: null, items: [] },
   weekly: { key: null, items: [], challengesDone: 0 },
   monthly: { key: null, items: [] },
@@ -15305,6 +15376,7 @@ function load(){
       event: Object.assign({}, DEFAULTS.event, p.event || {}),
       events: Object.assign({}, DEFAULTS.events, p.events || {}),
       achievements: p.achievements || [],
+      badges: Object.assign({}, DEFAULTS.badges, p.badges || {}),
       shop: Object.assign({}, DEFAULTS.shop, p.shop || {}),
     });
   }catch(e){ return clone(DEFAULTS); }
@@ -16519,6 +16591,9 @@ function checkAchievements(){
   if(fresh.length){
     save();
     renderAchievements();
+    ensureNameBadgeState(true);
+    renderNameBadges();
+    renderBadgePicker();
     // queue them so multiple unlocks don't stack on top of each other
     let delay = 1100;
     fresh.forEach(function(a){
@@ -16550,6 +16625,128 @@ function renderAchievements(){
     });
     g.appendChild(d);
   });
+}
+
+/* ===================================================================
+   NAME BADGES
+   =================================================================== */
+const NAME_BADGES = [
+  { id:'starter', symbol:'✦', label:'START', name:'Starter', unlock:'Klar fra start', test:function(){ return true; } },
+  { id:'first_photo', symbol:'◉', label:'SNAP', name:'Første foto', unlock:'Tag dit første billede', test:function(){ return S.photos.length >= 1; } },
+  { id:'streak_3', symbol:'🔥', label:'3X', name:'Flamme', unlock:'Nå en streak på 3 dage', test:function(){ return S.best >= 3; } },
+  { id:'week_fire', symbol:'⚡', label:'7X', name:'Ugeild', unlock:'Nå en streak på 7 dage', test:function(){ return S.best >= 7; } },
+  { id:'scout', symbol:'⌖', label:'SCOUT', name:'Spejder', unlock:'Tag 25 billeder', test:function(){ return S.photos.length >= 25; } },
+  { id:'level_10', symbol:'★', label:'LV10', name:'Veteran', unlock:'Nå niveau 10', test:function(){ return levelFor(S.xp).lvl >= 10; } },
+  { id:'collector', symbol:'◆', label:'ELITE', name:'Samler', unlock:'Lås 6 bedrifter op', test:function(){ return S.achievements.length >= 6; } },
+  { id:'century', symbol:'♛', label:'100', name:'Legende', unlock:'Nå en streak på 100 dage', test:function(){ return S.best >= 100; } },
+  { id:'void', symbol:'◉', label:'VOID', name:'Black Hole', unlock:'Saml 100 fragments', test:function(){ return Number(S.fragments || 0) >= 100; } }
+];
+
+function nameBadgeById(id){
+  return NAME_BADGES.find(function(badge){ return badge.id === id; }) || null;
+}
+
+function ensureNameBadgeState(notify){
+  if(!S.badges || typeof S.badges !== 'object') S.badges = {unlocked:['starter'],equipped:'starter'};
+  if(!Array.isArray(S.badges.unlocked)) S.badges.unlocked = ['starter'];
+  if(S.badges.unlocked.indexOf('starter') === -1) S.badges.unlocked.unshift('starter');
+
+  const fresh = [];
+  NAME_BADGES.forEach(function(badge){
+    if(S.badges.unlocked.indexOf(badge.id) !== -1) return;
+    let unlocked = false;
+    try{ unlocked = !!badge.test(); }catch(error){ unlocked = false; }
+    if(unlocked){
+      S.badges.unlocked.push(badge.id);
+      fresh.push(badge);
+    }
+  });
+
+  if(!nameBadgeById(S.badges.equipped) || S.badges.unlocked.indexOf(S.badges.equipped) === -1){
+    S.badges.equipped = 'starter';
+  }
+  if(fresh.length){
+    save();
+    if(notify){
+      const newest = fresh[fresh.length-1];
+      toast('Nyt badge låst op: ' + newest.name);
+      try{ SFX.unlock(); }catch(error){}
+    }
+  }
+  return fresh;
+}
+
+function currentNameBadge(){
+  ensureNameBadgeState(false);
+  return nameBadgeById(S.badges.equipped) || NAME_BADGES[0];
+}
+
+function nameBadgeMarkup(badge,extraClass){
+  if(!badge) return '';
+  return '<span class="name-badge ' + (extraClass || '') + '" data-badge="' + badge.id +
+    '" title="' + badge.name + ': ' + badge.unlock + '" aria-label="' + badge.name + '">' +
+      '<span class="name-badge-symbol">' + badge.symbol + '</span>' +
+      '<span class="name-badge-label">' + badge.label + '</span>' +
+    '</span>';
+}
+
+function renderNameBadges(){
+  const badge = currentNameBadge();
+  ['homeNameBadge','profileNameBadge','topNameBadge'].forEach(function(id){
+    const host = $(id);
+    if(host) host.innerHTML = nameBadgeMarkup(badge);
+  });
+}
+
+function renderBadgePicker(){
+  const picker = $('badgePicker');
+  if(!picker) return;
+  ensureNameBadgeState(false);
+  picker.innerHTML = '';
+
+  NAME_BADGES.forEach(function(badge){
+    const unlocked = S.badges.unlocked.indexOf(badge.id) !== -1;
+    const selected = S.badges.equipped === badge.id;
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'badge-choice' + (selected ? ' on' : '') + (unlocked ? '' : ' locked');
+    button.dataset.badgeChoice = badge.id;
+    button.setAttribute('aria-pressed',selected ? 'true' : 'false');
+    button.setAttribute('aria-disabled',unlocked ? 'false' : 'true');
+    button.innerHTML =
+      nameBadgeMarkup(badge,'picker-preview') +
+      '<span class="badge-choice-name">' + badge.name + '</span>' +
+      '<span class="badge-choice-state">' + (unlocked ? (selected ? 'Valgt' : 'Tryk for at vælge') : badge.unlock) + '</span>';
+    picker.appendChild(button);
+  });
+
+  const count = $('badgeUnlockCount');
+  if(count){
+    const unlockedCount = NAME_BADGES.filter(function(badge){
+      return S.badges.unlocked.indexOf(badge.id) !== -1;
+    }).length;
+    count.textContent = unlockedCount + ' / ' + NAME_BADGES.length;
+  }
+  if(!picker.dataset.bound){
+    picker.dataset.bound = '1';
+    picker.addEventListener('click',function(event){
+      const button = event.target.closest('[data-badge-choice]');
+      if(!button) return;
+      const badge = nameBadgeById(button.dataset.badgeChoice);
+      if(!badge) return;
+      if(S.badges.unlocked.indexOf(badge.id) === -1){
+        SFX.tap();
+        toast('Låst: ' + badge.unlock);
+        return;
+      }
+      S.badges.equipped = badge.id;
+      save();
+      SFX.pop();
+      vibrate(14);
+      renderAll();
+      toast(badge.name + ' vises nu ved dit navn');
+    });
+  }
 }
 
 /* ===================================================================
@@ -17372,6 +17569,7 @@ function renderFeaturedChallenge(){
 
 function renderAll(){
   const lv = levelFor(S.xp);
+  ensureNameBadgeState(true);
 
   const el = $('streakNum');
   const prev = parseInt(el.textContent, 10) || 0;
@@ -17411,6 +17609,9 @@ function renderAll(){
   $('topLevel').textContent = lv.lvl;
   countTo($('topCoins'), S.coins, 600);
   countTo($('topFragments'), S.fragments || 0, 600);
+
+  renderNameBadges();
+  renderBadgePicker();
 
   countTo($('pStreak'), S.streak, 500);
   countTo($('pPhotos'), S.photos.length, 500);
@@ -17509,11 +17710,11 @@ function renderFriends(){
   const base = Geo.last || { lat: 55.6761, lng: 12.5683 };
   // fixed small offsets so "local" distances stay stable between renders
   const demo = [
-    { n:'Mikkel', s:'Niveau 9 · Bjergbestiger', k:88, c:'#4F6D52', i:'MK', dLat: 0.004,  dLng: 0.006  },
-    { n:'Laura',  s:'Niveau 8 · Stifinder',     k:61, c:'#6E93A6', i:'LA', dLat:-0.002,  dLng: 0.011  },
-    { n:'Sofie',  s:'Niveau 5 · Vandrer',       k:33, c:'#B79A75', i:'SO', dLat: 0.018,  dLng:-0.009  },
-    { n:'Jonas',  s:'Niveau 6 · Skovvandrer',   k:41, c:'#C1503F', i:'JO', dLat:-0.021,  dLng:-0.004  },
-    { n:'Emma',   s:'Niveau 7 · Naturmester',   k:52, c:'#D6A343', i:'EM', dLat: 0.031,  dLng: 0.018  },
+    { n:'Mikkel', s:'Niveau 9 · Bjergbestiger', k:88, c:'#4F6D52', i:'MK', badge:'collector', dLat: 0.004,  dLng: 0.006  },
+    { n:'Laura',  s:'Niveau 8 · Stifinder',     k:61, c:'#6E93A6', i:'LA', badge:'week_fire', dLat:-0.002,  dLng: 0.011  },
+    { n:'Sofie',  s:'Niveau 5 · Vandrer',       k:33, c:'#B79A75', i:'SO', badge:'scout', dLat: 0.018,  dLng:-0.009  },
+    { n:'Jonas',  s:'Niveau 6 · Skovvandrer',   k:41, c:'#C1503F', i:'JO', badge:'streak_3', dLat:-0.021,  dLng:-0.004  },
+    { n:'Emma',   s:'Niveau 7 · Naturmester',   k:52, c:'#D6A343', i:'EM', badge:'collector', dLat: 0.031,  dLng: 0.018  },
   ];
   demo.forEach(function(f){
     f.lat = base.lat + f.dLat; f.lng = base.lng + f.dLng;
@@ -17557,6 +17758,7 @@ function renderFriends(){
     row.style.animationDelay = (i * 60) + 'ms';
     const nameCls = f.me ? currentNameClass() : '';
     const frameCls = f.me ? currentFrameClass() : '';
+    const friendBadge = f.me ? currentNameBadge() : nameBadgeById(f.badge);
     const rightVal = leaderboardMode === 'local'
       ? (f.me ? 'Dig' : (f.dist < 1000 ? Math.round(f.dist) + ' m' : (f.dist/1000).toFixed(1) + ' km'))
       : f.k;
@@ -17565,7 +17767,9 @@ function renderFriends(){
       '<div class="avatar ' + frameCls + '" style="' +
         (f.img ? 'background-image:url(' + f.img + ');' : 'background:' + f.c + ';') +
       '">' + (f.img ? '' : f.i) + '</div>' +
-      '<div style="min-width:0"><div class="f-name ' + nameCls + '">' + f.n + '</div><div class="f-sub">' + f.s + '</div></div>' +
+      '<div style="min-width:0"><div class="f-name-row"><div class="f-name ' + nameCls + '">' + f.n + '</div>' +
+        nameBadgeMarkup(friendBadge,'friend-badge') +
+      '</div><div class="f-sub">' + f.s + '</div></div>' +
       '<div class="f-streak">' + rightVal + '</div>' +
       (f.real ? '<button class="lb-btn" data-act="friend-gallery" style="width:auto;margin:0 0 0 8px;padding:6px 9px;background:var(--paper-2);color:var(--ink);"><svg class="icn" width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M4 8.5C4 7.4 4.9 6.5 6 6.5h2l1-2h6l1 2h2c1.1 0 2 .9 2 2V17c0 1.1-.9 2-2 2H6c-1.1 0-2-.9-2-2V8.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="12" cy="13" r="3.1" stroke="currentColor" stroke-width="1.5"/></svg></button>' : '');
     if(f.real){
@@ -17915,6 +18119,14 @@ const Cloud = (function(){
             if(S.settings.style === 'nature' && c.style) S.settings.style = c.style;
             if(S.settings.font === 'default' && c.font) S.settings.font = c.font;
             if(!S.profileImage && c.profileImage) S.profileImage = c.profileImage;
+            if(c.badges && typeof c.badges === 'object'){
+              const remoteBadges = c.badges;
+              S.badges = S.badges || {unlocked:['starter'],equipped:'starter'};
+              S.badges.unlocked = union(S.badges.unlocked,remoteBadges.unlocked);
+              if((!S.badges.equipped || S.badges.equipped === 'starter') && remoteBadges.equipped){
+                S.badges.equipped = remoteBadges.equipped;
+              }
+            }
             S.fragments = Math.max(S.fragments || 0, Number(c.fragments) || 0);
           }catch(e){ console.warn('Cloud: could not parse cosmetics', e); }
         }
@@ -17980,6 +18192,7 @@ const Cloud = (function(){
             style:S.settings.style,
             font:S.settings.font,
             profileImage:S.profileImage || null,
+            badges:S.badges,
             fragments:S.fragments || 0
           }),
         };
