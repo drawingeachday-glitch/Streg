@@ -3895,6 +3895,336 @@ body.photo-celebration-open{
 }
 @keyframes psSkip{to{opacity:1;}}
 
+/* =========================================================
+   PHOTO CELEBRATION V2 — STREAK CHARGE + IMPACT
+   ========================================================= */
+.ps-content{z-index:5;}
+.ps-aurora{
+  position:absolute;
+  inset:-45%;
+  z-index:-3;
+  pointer-events:none;
+  opacity:0;
+  background:
+    conic-gradient(from 180deg at 50% 50%,
+      transparent 0 10%,
+      rgba(77,203,255,.28) 17%,
+      transparent 28% 43%,
+      rgba(255,111,55,.32) 51%,
+      transparent 62% 76%,
+      rgba(190,92,255,.27) 84%,
+      transparent 95%);
+  filter:blur(48px) saturate(1.35);
+  mix-blend-mode:screen;
+}
+.photo-success-cutscene.active .ps-aurora{
+  animation:psAuroraIn 6.2s .05s cubic-bezier(.18,.72,.2,1) both;
+}
+@keyframes psAuroraIn{
+  0%{opacity:0;transform:scale(.45) rotate(-35deg);}
+  18%{opacity:.52;}
+  55%{opacity:.72;transform:scale(.88) rotate(28deg);}
+  100%{opacity:.18;transform:scale(1.15) rotate(75deg);}
+}
+
+.ps-speed-lines{
+  position:absolute;
+  inset:-35%;
+  z-index:2;
+  pointer-events:none;
+  opacity:0;
+  background:repeating-conic-gradient(
+    from 0deg at 50% 50%,
+    transparent 0 4.2deg,
+    rgba(255,255,255,.42) 4.35deg 4.52deg,
+    transparent 4.7deg 9deg
+  );
+  -webkit-mask-image:radial-gradient(circle,transparent 0 15%,#000 28%,transparent 72%);
+  mask-image:radial-gradient(circle,transparent 0 15%,#000 28%,transparent 72%);
+}
+.photo-success-cutscene.streak-upgraded .ps-speed-lines{
+  animation:psSpeedImpact .82s cubic-bezier(.12,.78,.18,1) both;
+}
+@keyframes psSpeedImpact{
+  0%{opacity:0;transform:scale(.18) rotate(-16deg);}
+  18%{opacity:.92;}
+  100%{opacity:0;transform:scale(1.45) rotate(11deg);}
+}
+
+.ps-scene-flash{
+  position:absolute;
+  inset:0;
+  z-index:8;
+  pointer-events:none;
+  opacity:0;
+  background:
+    radial-gradient(circle at 50% 60%,#FFF9DA 0,rgba(255,211,125,.88) 9%,rgba(241,154,71,.25) 28%,transparent 58%);
+  mix-blend-mode:screen;
+}
+.photo-success-cutscene.streak-upgraded .ps-scene-flash{
+  animation:psSceneFlash .7s ease-out both;
+}
+@keyframes psSceneFlash{
+  0%{opacity:0;}
+  9%{opacity:1;}
+  24%{opacity:.62;}
+  100%{opacity:0;}
+}
+
+.ps-impact-field{
+  position:absolute;
+  inset:0;
+  z-index:7;
+  pointer-events:none;
+  overflow:hidden;
+}
+.ps-impact-spark{
+  position:absolute;
+  left:50%;
+  top:60%;
+  width:var(--w);
+  height:var(--h);
+  border-radius:999px;
+  opacity:0;
+  background:linear-gradient(90deg,#FFF7D6,var(--c),transparent);
+  box-shadow:0 0 12px var(--c);
+  transform-origin:left center;
+}
+.photo-success-cutscene.streak-upgraded .ps-impact-spark{
+  animation:psImpactSpark var(--d) var(--delay) cubic-bezier(.1,.76,.18,1) both;
+}
+@keyframes psImpactSpark{
+  0%{opacity:0;transform:rotate(var(--a)) translateX(18px) scaleX(.1);}
+  12%{opacity:1;}
+  100%{opacity:0;transform:rotate(var(--a)) translateX(var(--travel)) scaleX(1.1);}
+}
+
+.ps-streak-stage{
+  position:relative;
+  width:min(88vw,390px);
+  box-sizing:border-box;
+  margin-top:12px;
+  padding:13px 20px 16px;
+  border-radius:26px;
+  border:1px solid rgba(255,211,125,.2);
+  background:
+    linear-gradient(145deg,rgba(255,255,255,.1),rgba(255,255,255,.025)),
+    radial-gradient(circle at 50% 130%,rgba(241,154,71,.24),transparent 58%);
+  box-shadow:
+    inset 0 1px rgba(255,255,255,.1),
+    0 16px 44px rgba(0,0,0,.26);
+  backdrop-filter:blur(18px);
+  opacity:0;
+  isolation:isolate;
+}
+.photo-success-cutscene.active .ps-streak-stage{
+  animation:psStreakStageIn .65s 1.14s cubic-bezier(.16,.88,.22,1.08) both;
+}
+@keyframes psStreakStageIn{
+  0%{opacity:0;transform:translateY(26px) scale(.78);filter:blur(10px);}
+  68%{opacity:1;transform:translateY(-3px) scale(1.025);filter:none;}
+  100%{opacity:1;transform:none;}
+}
+
+.ps-streak-kicker{
+  color:rgba(255,255,255,.58);
+  font:900 9px/1 Inter,sans-serif;
+  letter-spacing:.26em;
+  text-transform:uppercase;
+}
+.ps-streak-row{
+  position:relative;
+  z-index:3;
+  min-height:72px;
+  margin-top:1px;
+  gap:11px;
+  opacity:1;
+}
+.photo-success-cutscene.active .ps-streak-row{
+  animation:none;
+  opacity:1;
+}
+.ps-streak-flame .icn{
+  width:48px!important;
+  height:48px!important;
+  filter:
+    drop-shadow(0 0 12px rgba(241,154,71,.75))
+    drop-shadow(0 0 30px rgba(255,103,38,.35));
+}
+.ps-streak-count{
+  min-width:1.3ch;
+  font-size:clamp(54px,16vw,76px);
+  line-height:.9;
+  letter-spacing:-.065em;
+  text-shadow:
+    0 0 12px rgba(255,211,125,.65),
+    0 0 34px rgba(241,154,71,.5),
+    0 12px 28px rgba(0,0,0,.5);
+  transform-style:preserve-3d;
+}
+.ps-streak-label{
+  align-self:flex-end;
+  margin-bottom:12px;
+  font-size:9px;
+}
+.ps-streak-gain{
+  position:absolute;
+  right:5px;
+  top:2px;
+  min-width:42px;
+  padding:7px 10px;
+  border-radius:999px;
+  color:#172027;
+  background:linear-gradient(135deg,#FFF4BE,#FFAE50);
+  box-shadow:0 0 0 1px rgba(255,255,255,.55),0 0 28px rgba(255,154,71,.55);
+  font:950 13px/1 Inter,sans-serif;
+  opacity:0;
+  transform:translateY(12px) scale(.2) rotate(12deg);
+}
+
+.ps-streak-charge{
+  position:relative;
+  width:min(64vw,230px);
+  height:5px;
+  margin:0 auto;
+  overflow:hidden;
+  border-radius:999px;
+  background:rgba(255,255,255,.09);
+  box-shadow:inset 0 1px 2px rgba(0,0,0,.35);
+}
+.ps-streak-charge span{
+  position:absolute;
+  inset:0;
+  transform:scaleX(0);
+  transform-origin:left;
+  border-radius:inherit;
+  background:linear-gradient(90deg,#FF7B3C,#FFD37D 58%,#FFFBE4);
+  box-shadow:0 0 15px #F19A47;
+}
+.photo-success-cutscene.streak-charging .ps-streak-charge span{
+  animation:psChargeBar .82s cubic-bezier(.18,.75,.2,1) both;
+}
+@keyframes psChargeBar{
+  0%{transform:scaleX(0);}
+  72%{transform:scaleX(.93);}
+  100%{transform:scaleX(1);}
+}
+.photo-success-cutscene.streak-charging .ps-streak-flame{
+  animation:psFlameCharge .48s ease-in-out infinite alternate;
+}
+@keyframes psFlameCharge{
+  from{transform:scale(.96) rotate(-3deg);filter:brightness(1);}
+  to{transform:scale(1.15) rotate(4deg);filter:brightness(1.55) drop-shadow(0 0 18px #FF8C42);}
+}
+
+.ps-streak-energy{
+  position:absolute;
+  left:50%;
+  top:52%;
+  z-index:-1;
+  width:92px;
+  aspect-ratio:1;
+  transform:translate(-50%,-50%);
+  pointer-events:none;
+}
+.ps-streak-energy i{
+  position:absolute;
+  inset:0;
+  border:2px solid rgba(255,211,125,.9);
+  border-radius:50%;
+  opacity:0;
+  box-shadow:0 0 25px rgba(241,154,71,.45),inset 0 0 18px rgba(255,211,125,.18);
+}
+.photo-success-cutscene.streak-upgraded .ps-streak-energy i:nth-child(1){
+  animation:psEnergyRing .9s 0s ease-out both;
+}
+.photo-success-cutscene.streak-upgraded .ps-streak-energy i:nth-child(2){
+  animation:psEnergyRing 1.05s .08s ease-out both;
+}
+.photo-success-cutscene.streak-upgraded .ps-streak-energy i:nth-child(3){
+  animation:psEnergyRing 1.2s .16s ease-out both;
+}
+@keyframes psEnergyRing{
+  0%{opacity:0;transform:scale(.25);}
+  16%{opacity:1;}
+  100%{opacity:0;transform:scale(6.8);border-width:.5px;}
+}
+
+.ps-streak-row.counting .ps-streak-count{
+  animation:psCountFlip .7s cubic-bezier(.16,.82,.22,1) both;
+}
+@keyframes psCountFlip{
+  0%{opacity:1;transform:translateY(0) rotateX(0) scale(1);}
+  43%{opacity:0;transform:translateY(-24px) rotateX(82deg) scale(.58);}
+  44%{opacity:0;transform:translateY(25px) rotateX(-82deg) scale(.58);}
+  100%{opacity:1;transform:translateY(0) rotateX(0) scale(1.15);}
+}
+.ps-streak-row.counted .ps-streak-count{
+  animation:psCountSettle .7s cubic-bezier(.12,.88,.2,1.12) both;
+}
+@keyframes psCountSettle{
+  0%{transform:scale(1.42);filter:brightness(2.4);}
+  52%{transform:scale(.94);}
+  100%{transform:none;filter:none;}
+}
+.photo-success-cutscene.streak-upgraded .ps-streak-gain{
+  animation:psGainPop .75s .18s cubic-bezier(.12,.88,.2,1.25) both;
+}
+@keyframes psGainPop{
+  0%{opacity:0;transform:translateY(15px) scale(.15) rotate(18deg);}
+  62%{opacity:1;transform:translateY(-4px) scale(1.12) rotate(-4deg);}
+  100%{opacity:1;transform:none;}
+}
+.photo-success-cutscene.streak-upgraded .ps-streak-stage{
+  animation:psStreakImpact .9s cubic-bezier(.12,.88,.2,1.12) both;
+}
+@keyframes psStreakImpact{
+  0%{opacity:1;transform:none;box-shadow:inset 0 1px rgba(255,255,255,.1),0 16px 44px rgba(0,0,0,.26);}
+  16%{transform:scale(1.08);border-color:rgba(255,238,174,.8);box-shadow:0 0 0 1px #FFD37D,0 0 80px rgba(241,154,71,.72);}
+  42%{transform:scale(.98);}
+  100%{opacity:1;transform:none;border-color:rgba(255,211,125,.35);box-shadow:0 18px 60px rgba(0,0,0,.32),0 0 36px rgba(241,154,71,.25);}
+}
+.photo-success-cutscene.streak-upgraded .ps-title{
+  animation:psTitleImpact .78s cubic-bezier(.12,.88,.2,1.12) both;
+}
+@keyframes psTitleImpact{
+  0%{opacity:1;transform:scale(.86);filter:brightness(2.8) blur(4px);}
+  38%{transform:scale(1.1);filter:brightness(1.6);}
+  100%{opacity:1;transform:none;filter:none;}
+}
+.photo-success-cutscene.streak-upgraded .ps-stage{
+  animation:psPhotoKick .8s cubic-bezier(.12,.85,.2,1) both;
+}
+@keyframes psPhotoKick{
+  0%{transform:none;}
+  20%{transform:translateY(-8px) scale(1.025) rotate(-1deg);}
+  100%{transform:none;}
+}
+
+.photo-success-cutscene.active .ps-rewards{
+  animation:psRise .55s 2.9s cubic-bezier(.18,.88,.24,1) both;
+}
+.photo-success-cutscene.active .ps-distance{
+  animation:psRise .45s 3.08s ease-out both;
+}
+.photo-success-cutscene.active .ps-skip{
+  animation:psSkip .4s 2.45s ease-out both;
+}
+
+@media(max-width:420px){
+  .ps-streak-stage{width:min(91vw,360px);padding-inline:15px;}
+  .ps-streak-count{font-size:58px;}
+  .ps-streak-flame .icn{width:42px!important;height:42px!important;}
+  .ps-streak-gain{right:2px;top:0;}
+}
+@media(orientation:landscape) and (max-height:540px){
+  .ps-streak-stage{grid-column:2;grid-row:2;margin-top:0;width:min(46vw,410px);}
+  .ps-streak-row{grid-column:auto;grid-row:auto;}
+}
+@media(prefers-reduced-motion:reduce){
+  .ps-aurora,.ps-speed-lines,.ps-scene-flash,.ps-impact-field,.ps-streak-energy{display:none!important;}
+}
+
 /* Reward particles flying to top counters */
 .reward-fly{
   position:fixed;
@@ -14758,8 +15088,12 @@ body.startup-revealing .onb{
 
 <div class="photo-success-cutscene" id="photoSuccessCutscene" aria-hidden="true">
   <div class="ps-grid"></div>
+  <div class="ps-aurora"></div>
   <div class="ps-radar"></div>
+  <div class="ps-speed-lines"></div>
+  <div class="ps-scene-flash"></div>
   <div class="ps-ember-field" id="psEmberField"></div>
+  <div class="ps-impact-field" id="psImpactField"></div>
   <button class="ps-skip" id="psSkip" type="button">SPRING OVER</button>
 
   <div class="ps-content">
@@ -14782,10 +15116,16 @@ body.startup-revealing .onb{
 
     <div class="ps-title" id="psTitle">STREG FORLÆNGET</div>
 
-    <div class="ps-streak-row" id="psStreakRow">
-      <span class="ps-streak-flame" id="psStreakFlame"></span>
-      <span class="ps-streak-count" id="psStreakCount">1</span>
-      <span class="ps-streak-label">DAGE</span>
+    <div class="ps-streak-stage" id="psStreakStage">
+      <div class="ps-streak-energy" aria-hidden="true"><i></i><i></i><i></i></div>
+      <div class="ps-streak-kicker" id="psStreakKicker">TIDLIGERE STREAK</div>
+      <div class="ps-streak-row" id="psStreakRow">
+        <span class="ps-streak-flame" id="psStreakFlame"></span>
+        <span class="ps-streak-count" id="psStreakCount">1</span>
+        <span class="ps-streak-label">DAGE</span>
+        <span class="ps-streak-gain" id="psStreakGain">+1</span>
+      </div>
+      <div class="ps-streak-charge" aria-hidden="true"><span></span></div>
     </div>
 
     <div class="ps-rewards">
@@ -19944,23 +20284,39 @@ const PhotoCelebration = (function(){
   const titleEl = $('psTitle');
   const countEl = $('psStreakCount');
   const rowEl = $('psStreakRow');
+  const streakStageEl = $('psStreakStage');
+  const streakKickerEl = $('psStreakKicker');
+  const streakGainEl = $('psStreakGain');
   const coordEl = $('psCoordinate');
   const distanceEl = $('psDistance');
   const xpEl = $('psXpReward');
   const coinEl = $('psCoinReward');
   const stampEl = $('psStamp');
   const emberField = $('psEmberField');
+  const impactField = $('psImpactField');
   const skip = $('psSkip');
 
   let closeTimer = null;
   let unlockTimer = null;
   let canClose = false;
   let current = null;
+  let stageTimers = [];
+
+  function schedule(fn,delay){
+    const id = setTimeout(fn,delay);
+    stageTimers.push(id);
+    return id;
+  }
+
+  function clearStageTimers(){
+    stageTimers.forEach(clearTimeout);
+    stageTimers = [];
+  }
 
   function makeEmbers(){
     emberField.innerHTML = '';
     const colors = ['#F19A47','#FFD37D','#FF6E49','#78DDB0','#A7E9FF'];
-    const total = window.innerWidth < 520 ? 44 : 64;
+    const total = window.innerWidth < 520 ? 58 : 86;
     for(let i = 0; i < total; i++){
       const e = document.createElement('span');
       e.className = 'ps-ember';
@@ -19976,17 +20332,34 @@ const PhotoCelebration = (function(){
     }
   }
 
+  function makeImpactSparks(){
+    impactField.innerHTML = '';
+    const colors = ['#FFF7D6','#FFD37D','#FF8A42','#82E8FF','#C68CFF'];
+    const total = window.innerWidth < 520 ? 54 : 82;
+    for(let i = 0; i < total; i++){
+      const spark = document.createElement('i');
+      spark.className = 'ps-impact-spark';
+      spark.style.setProperty('--a',((360 / total) * i + (Math.random() * 8 - 4)).toFixed(1) + 'deg');
+      spark.style.setProperty('--travel',(120 + Math.random() * Math.max(window.innerWidth,window.innerHeight) * .46).toFixed(1) + 'px');
+      spark.style.setProperty('--w',(18 + Math.random() * 42).toFixed(1) + 'px');
+      spark.style.setProperty('--h',(1.5 + Math.random() * 3.5).toFixed(1) + 'px');
+      spark.style.setProperty('--d',(.55 + Math.random() * .55).toFixed(2) + 's');
+      spark.style.setProperty('--delay',(Math.random() * .16).toFixed(2) + 's');
+      spark.style.setProperty('--c',colors[i % colors.length]);
+      impactField.appendChild(spark);
+    }
+  }
+
   function countInside(from,to){
     countEl.textContent = from;
-    const start = performance.now();
-    const duration = 720;
-    (function step(now){
-      const t = Math.min(1,(now - start) / duration);
-      const eased = 1 - Math.pow(1 - t,3);
-      countEl.textContent = Math.round(from + (to - from) * eased);
-      if(t < 1) requestAnimationFrame(step);
-      else countEl.textContent = to;
-    })(start);
+    rowEl.classList.remove('counting','counted');
+    void rowEl.offsetWidth;
+    rowEl.classList.add('counting');
+    schedule(function(){
+      countEl.textContent = to;
+      rowEl.classList.remove('counting');
+      rowEl.classList.add('counted');
+    },310);
   }
 
   function restoreTopCounters(data){
@@ -20076,6 +20449,7 @@ const PhotoCelebration = (function(){
 
     clearTimeout(closeTimer);
     clearTimeout(unlockTimer);
+    clearStageTimers();
     restoreTopCounters(current);
 
     overlay.classList.add('closing');
@@ -20083,10 +20457,12 @@ const PhotoCelebration = (function(){
     canClose = false;
 
     setTimeout(function(){
-      overlay.classList.remove('active','closing','extra');
+      overlay.classList.remove('active','closing','extra','streak-charging','streak-upgraded');
       overlay.setAttribute('aria-hidden','true');
       document.body.classList.remove('photo-celebration-open');
+      rowEl.classList.remove('counting','counted');
       emberField.innerHTML = '';
+      impactField.innerHTML = '';
       if(photoId) landPhoto(photoId);
       current = null;
     },320);
@@ -20098,7 +20474,8 @@ const PhotoCelebration = (function(){
 
     clearTimeout(closeTimer);
     clearTimeout(unlockTimer);
-    overlay.classList.remove('active','closing','extra');
+    clearStageTimers();
+    overlay.classList.remove('active','closing','extra','streak-charging','streak-upgraded');
     void overlay.offsetWidth;
     overlay.classList.add('active');
     if(!data.isDaily) overlay.classList.add('extra');
@@ -20106,14 +20483,18 @@ const PhotoCelebration = (function(){
     document.body.classList.add('photo-celebration-open');
 
     photoEl.src = data.photo.img || '';
-    titleEl.textContent = data.shieldUsed ? 'STREG REDDET' : data.isDaily ? 'STREG FORLÆNGET' : 'NYT STED GEMT';
+    titleEl.textContent = data.isDaily ? 'BILLEDE VERIFICERET' : 'NYT STED GEMT';
     coordEl.textContent = Number(data.photo.lat).toFixed(5) + ', ' + Number(data.photo.lng).toFixed(5);
     distanceEl.textContent = data.distanceText || 'Nyt sted verificeret';
     stampEl.innerHTML = icon(data.shieldUsed ? 'shield' : data.isDaily ? 'flame' : 'pin',44);
     xpEl.innerHTML = '+' + data.rewardXp + ' XP';
     coinEl.innerHTML = data.rewardCoins > 0 ? '+' + data.rewardCoins + ' ' + icon('coin',14) : icon('pin',14) + ' GEMT';
 
-    rowEl.style.display = data.isDaily ? 'flex' : 'none';
+    streakStageEl.style.display = data.isDaily ? 'block' : 'none';
+    rowEl.style.display = 'flex';
+    rowEl.classList.remove('counting','counted');
+    streakKickerEl.textContent = 'TIDLIGERE STREAK';
+    streakGainEl.textContent = '+' + Math.max(0,data.newStreak - data.oldStreak);
     countEl.textContent = data.oldStreak;
 
     if($('topStreak')) $('topStreak').textContent = data.oldStreak;
@@ -20121,29 +20502,47 @@ const PhotoCelebration = (function(){
     if($('topLevel')) $('topLevel').textContent = levelFor(data.oldXp).lvl;
 
     makeEmbers();
+    makeImpactSparks();
     try{
       SFX.unlock();
       SFX.open();
-      setTimeout(function(){ SFX.streakFire(); },380);
-      setTimeout(function(){ SFX.success(); },760);
+      schedule(function(){ SFX.streakFire(); },380);
+      schedule(function(){ SFX.success(); },760);
       vibrate([30,25,55,30,105]);
     }catch(e){}
 
     if(data.isDaily){
-      setTimeout(function(){
+      schedule(function(){
+        overlay.classList.add('streak-charging');
+        try{
+          SFX.streakFire();
+          vibrate([22,18,35,18,55]);
+        }catch(e){}
+      },1540);
+
+      schedule(function(){
+        overlay.classList.remove('streak-charging');
+        overlay.classList.add('streak-upgraded');
+        streakKickerEl.textContent = 'NY STREAK';
+        titleEl.textContent = data.shieldUsed ? 'STREG REDDET' : 'STREG FORLÆNGET';
         countInside(data.oldStreak,data.newStreak);
-        try{ vibrate([25,20,70]); }catch(e){}
-      },1420);
+        try{
+          SFX.levelup();
+          schedule(function(){ SFX.magic(); },180);
+          vibrate([45,25,85,35,145]);
+        }catch(e){}
+        confetti(145,window.innerWidth / 2,window.innerHeight * .58);
+      },2350);
     }
 
-    setTimeout(function(){
+    schedule(function(){
       flyRewards(data);
-      confetti(data.isDaily ? 90 : 45,window.innerWidth / 2,window.innerHeight * .48);
-    },1850);
+      confetti(data.isDaily ? 110 : 45,window.innerWidth / 2,window.innerHeight * .48);
+    },data.isDaily ? 3250 : 1850);
 
     canClose = false;
-    unlockTimer = setTimeout(function(){ canClose = true; },1550);
-    closeTimer = setTimeout(function(){ canClose = true; close(true); },4300);
+    unlockTimer = setTimeout(function(){ canClose = true; },data.isDaily ? 2600 : 1550);
+    closeTimer = setTimeout(function(){ canClose = true; close(true); },data.isDaily ? 6200 : 4300);
   }
 
   if(overlay){
