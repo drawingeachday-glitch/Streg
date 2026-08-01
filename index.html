@@ -14707,6 +14707,7 @@ body.startup-revealing .onb{
 </style>
 <link rel="stylesheet" href="event-command-center.css">
 <link rel="stylesheet" href="journey-story.css">
+<link rel="stylesheet" href="streak-route.css">
 <!-- topbar removed + top content lowered -->
 <style id="hex-photo-rule-styles">
   .onb-hex-rule{
@@ -14978,9 +14979,10 @@ body.startup-revealing .onb{
     <div class="tab-content active" id="tab-home">
 
 
-      <div class="hero hero-lr">
+      <div class="hero hero-lr streak-command-hero" id="streakCommandHero">
         <div class="hero-glow"></div>
         <div class="hero-glow two"></div>
+        <div class="streak-hero-atmosphere" aria-hidden="true"></div>
         <div class="hero-flame-outline">
 <svg viewBox="0 0 120 140" aria-hidden="true">
   <defs>
@@ -15007,6 +15009,44 @@ body.startup-revealing .onb{
           <div class="hero-lr-title">Streak</div>
           <div class="hero-lr-sub">dage i træk</div>
           <div class="hero-lr-desc" id="streakSub">Ét billede hver dag, altid et nyt sted.</div>
+          <div class="streak-hero-meta" data-i18n-skip>
+            <span class="streak-hero-chip" title="Personligt bedste">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m12 3.7 2.2 4.5 4.9.7-3.5 3.4.8 4.9-4.4-2.3-4.4 2.3.8-4.9-3.5-3.4 4.9-.7L12 3.7Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+              <b id="streakHeroBest">0</b>
+              <span id="streakHeroBestLabel">bedste</span>
+            </span>
+            <span class="streak-hero-chip" title="Streak-skjolde">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3.3 19 6v5.2c0 4.3-2.7 7.6-7 9.5-4.3-1.9-7-5.2-7-9.5V6l7-2.7Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="m9.2 11.9 1.8 1.8 3.8-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <b id="streakHeroShields">0</b>
+              <span id="streakHeroShieldsLabel">skjolde</span>
+            </span>
+          </div>
+        </div>
+
+        <div class="streak-route-panel" id="streakRoutePanel" data-i18n-skip>
+          <div class="streak-route-head">
+            <div class="streak-route-copy">
+              <span class="streak-route-kicker" id="streakRouteKicker">NÆSTE MILEPÆL</span>
+              <strong class="streak-route-target" id="streakRouteTarget">Første Flamme · dag 7</strong>
+            </div>
+            <span class="streak-route-remaining" id="streakRouteRemaining">7 dage igen</span>
+          </div>
+
+          <div class="streak-route" id="streakRoute" role="img" aria-label="Streak-rute">
+            <div class="streak-route-line" aria-hidden="true"><span class="streak-route-fill" id="streakRouteFill"></span></div>
+            <div class="streak-route-nodes" id="streakRouteNodes"></div>
+          </div>
+
+          <div class="streak-route-footer">
+            <span class="streak-today-status" id="streakTodayStatus">
+              <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="6.5" stroke="currentColor" stroke-width="1.8"/><path d="m7.2 10.1 1.8 1.8 3.9-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span id="streakTodayStatusText">Dagens foto venter</span>
+            </span>
+            <button class="streak-journey-link" id="streakJourneyLink" type="button">
+              <span id="streakJourneyLabel">Se din rejse</span>
+              <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="m7.5 5 5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -25789,6 +25829,7 @@ try{
 </script>
 
 <script src="journey-story.js"></script>
+<script src="streak-route.js"></script>
 
 </body>
 </html>
