@@ -1,0 +1,101 @@
+/* STREG offline shell. Same-origin app files are refreshed from the network
+   when possible and fall back to the last good cached version outdoors. */
+const VERSION = 'streg-v3';
+const SHELL = VERSION + '-shell';
+const LIBS = VERSION + '-libs';
+
+const SHELL_URLS = [
+  './',
+  './index.html',
+  './manifest.json',
+  './icon.svg',
+  './icon-192.png',
+  './icon-512.png',
+  './apple-touch-icon.png',
+  './achievement-vault.css',
+  './event-command-center.css',
+  './haptics-engine.js',
+  './journey-story.css',
+  './journey-story.js',
+  './streak-route.css',
+  './streak-route.js',
+  './tutorial-cinematic.css',
+  './tutorial-cinematic.js'
+];
+
+self.addEventListener('install', function(event){
+  event.waitUntil(
+    caches.open(SHELL).then(function(cache){
+      return Promise.all(SHELL_URLS.map(function(url){
+        return cache.add(url).catch(function(){ return null; });
+      }));
+    }).then(function(){ return self.skipWaiting(); })
+  );
+});
+
+self.addEventListener('activate', function(event){
+  event.waitUntil(
+    caches.keys().then(function(names){
+      return Promise.all(names.map(function(name){
+        if(name !== SHELL && name !== LIBS) return caches.delete(name);
+        return null;
+      }));
+    }).then(function(){ return self.clients.claim(); })
+  );
+});
+
+function isLibrary(url){
+  return url.hostname === 'cdnjs.cloudflare.com' ||
+    url.hostname === 'cdn.jsdelivr.net' ||
+    url.hostname === 'unpkg.com';
+}
+
+function isLiveOnly(url){
+  return url.hostname.indexOf('supabase.co') !== -1 ||
+    url.hostname.indexOf('tile.openstreetmap.org') !== -1 ||
+    url.hostname.indexOf('opentopomap.org') !== -1 ||
+    url.hostname.indexOf('basemaps.cartocdn.com') !== -1 ||
+    url.hostname.indexOf('arcgisonline.com') !== -1 ||
+    url.hostname.indexOf('accounts.google.com') !== -1;
+}
+
+self.addEventListener('fetch', function(event){
+  const request = event.request;
+  if(request.method !== 'GET') return;
+
+  let url;
+  try{ url = new URL(request.url); }catch(error){ return; }
+  if(isLiveOnly(url)) return;
+
+  if(isLibrary(url)){
+    event.respondWith(
+      caches.match(request).then(function(cached){
+        if(cached) return cached;
+        return fetch(request).then(function(response){
+          if(response && response.ok){
+            const copy = response.clone();
+            caches.open(LIBS).then(function(cache){ return cache.put(request,copy); });
+          }
+          return response;
+        });
+      })
+    );
+    return;
+  }
+
+  if(request.mode === 'navigate' || url.origin === self.location.origin){
+    event.respondWith(
+      fetch(request).then(function(response){
+        if(response && response.ok){
+          const copy = response.clone();
+          caches.open(SHELL).then(function(cache){ return cache.put(request,copy); });
+        }
+        return response;
+      }).catch(function(){
+        return caches.match(request).then(function(cached){
+          return cached || caches.match('./index.html') || caches.match('./');
+        });
+      })
+    );
+  }
+});

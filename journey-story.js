@@ -91,6 +91,8 @@
     el('journeyPrevMonth').setAttribute('aria-label', tr('Forrige måned', 'Previous month'));
     el('journeyNextMonth').setAttribute('aria-label', tr('Næste måned', 'Next month'));
     el('journeyMonthGrid').setAttribute('aria-label', tr('Dine fotodage', 'Your photo days'));
+    var stats = root.querySelector('.journey-stats');
+    if(stats) stats.setAttribute('aria-label', tr('Rejsestatistik', 'Journey statistics'));
     el('journeyLegendToday').textContent = tr('I dag', 'Today');
     el('journeyLegendPhoto').textContent = tr('Fotodag', 'Photo day');
     el('journeyLegendEmpty').textContent = tr('Rolig dag', 'Quiet day');

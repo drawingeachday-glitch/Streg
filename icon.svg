@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">STREG</title>
+  <desc id="desc">A glowing flame inside a hexagon.</desc>
+  <defs>
+    <linearGradient id="bg" x1="62" y1="38" x2="454" y2="486" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#150923"/>
+      <stop offset="0.5" stop-color="#3B1464"/>
+      <stop offset="1" stop-color="#8A2AC0"/>
+    </linearGradient>
+    <linearGradient id="hex" x1="116" y1="98" x2="399" y2="421" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F1D8FF"/>
+      <stop offset="0.48" stop-color="#B66CFF"/>
+      <stop offset="1" stop-color="#67E8F9"/>
+    </linearGradient>
+    <linearGradient id="flame" x1="226" y1="157" x2="298" y2="361" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF"/>
+      <stop offset="0.38" stop-color="#E7B8FF"/>
+      <stop offset="0.72" stop-color="#A855F7"/>
+      <stop offset="1" stop-color="#22D3EE"/>
+    </linearGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="14" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <rect width="512" height="512" rx="116" fill="url(#bg)"/>
+  <circle cx="256" cy="250" r="178" fill="#A855F7" opacity="0.12"/>
+  <path d="M256 76 411 166v180L256 436 101 346V166L256 76Z" fill="none" stroke="url(#hex)" stroke-width="18" stroke-linejoin="round" opacity="0.94" filter="url(#glow)"/>
+  <path d="M272 137c17 48-10 76 24 110 22 22 39 43 39 81 0 52-36 91-82 91s-82-39-82-91c0-35 15-59 37-83 35-38 41-64 64-108Z" fill="url(#flame)" filter="url(#glow)"/>
+  <path d="M254 263c22 22 32 39 32 61 0 24-15 43-36 43-20 0-36-19-36-43 0-17 7-31 21-48" fill="#240C3D" opacity="0.78"/>
+  <circle cx="391" cy="121" r="10" fill="#FFFFFF" opacity="0.9"/>
+  <circle cx="416" cy="145" r="5" fill="#67E8F9" opacity="0.9"/>
+</svg>
