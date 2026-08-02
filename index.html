@@ -14708,6 +14708,7 @@ body.startup-revealing .onb{
 <link rel="stylesheet" href="event-command-center.css">
 <link rel="stylesheet" href="journey-story.css">
 <link rel="stylesheet" href="streak-route.css">
+<link rel="stylesheet" href="achievement-vault.css">
 <!-- topbar removed + top content lowered -->
 <style id="hex-photo-rule-styles">
   .onb-hex-rule{
@@ -17770,71 +17771,288 @@ function addXp(n){
 /* ===================================================================
    ACHIEVEMENTS
    =================================================================== */
+const ACHIEVEMENT_RARITIES = [
+  { id:'common',    da:'COMMON',    en:'COMMON',    icon:'seedling' },
+  { id:'rare',      da:'RARE',      en:'RARE',      icon:'gem' },
+  { id:'epic',      da:'EPIC',      en:'EPIC',      icon:'sparkle' },
+  { id:'legendary', da:'LEGENDARY', en:'LEGENDARY', icon:'crown' },
+  { id:'secret',    da:'SECRET',    en:'SECRET',    icon:'owl' }
+];
+
+function achievementLanguage(){
+  return window.I18n && typeof window.I18n.getLanguage === 'function' && window.I18n.getLanguage() === 'en' ? 'en' : 'da';
+}
+
+function achievementText(achievement, field){
+  const language = achievementLanguage();
+  if(language === 'en' && achievement[field + 'En']) return achievement[field + 'En'];
+  return achievement[field] || '';
+}
+
+function achievementPhotos(){
+  return Array.isArray(S.photos) ? S.photos : [];
+}
+
+function achievementPhotoDays(){
+  const seen = {};
+  achievementPhotos().forEach(function(photo){
+    if(!photo || !photo.ts) return;
+    seen[new Date(photo.ts).toISOString().slice(0,10)] = true;
+  });
+  return Object.keys(seen);
+}
+
+function achievementHexCount(){
+  const photos = S.hexMap && S.hexMap.photos ? S.hexMap.photos : {};
+  return Object.keys(photos).length;
+}
+
+function achievementOpenedBags(){
+  const opened = S.hexMap && S.hexMap.chestOpened ? S.hexMap.chestOpened : {};
+  let total = 0;
+  Object.keys(opened).forEach(function(day){
+    const dayItems = opened[day];
+    if(!dayItems || typeof dayItems !== 'object') return;
+    Object.keys(dayItems).forEach(function(id){ if(dayItems[id]) total += 1; });
+  });
+  return total;
+}
+
+function achievementCompletedChallenges(){
+  let total = S.weekly && Number(S.weekly.challengesDone) ? Number(S.weekly.challengesDone) : 0;
+  const daily = S.challenges && Array.isArray(S.challenges.items) ? S.challenges.items : [];
+  total += daily.filter(function(item){ return item && item.done; }).length;
+  return total;
+}
+
+function achievementShopItems(){
+  const shop = S.shop || {};
+  return ['titles','colors','frames','fonts','themes'].reduce(function(total,key){
+    return total + (Array.isArray(shop[key]) ? shop[key].length : 0);
+  },0);
+}
+
+function achievementEventXp(){
+  let highest = S.event && Number(S.event.xp) ? Number(S.event.xp) : 0;
+  const events = S.events || {};
+  Object.keys(events).forEach(function(key){
+    highest = Math.max(highest,Number(events[key] && events[key].xp) || 0);
+  });
+  return highest;
+}
+
+function achievementHasPhotoAt(test){
+  return achievementPhotos().some(function(photo){
+    if(!photo || !photo.ts) return false;
+    return test(new Date(photo.ts).getHours(),new Date(photo.ts));
+  });
+}
+
+function achievementFarFromFirst(meters){
+  const photos = achievementPhotos();
+  if(photos.length < 2) return false;
+  const first = photos[0];
+  return photos.some(function(photo){
+    return Number.isFinite(first.lat) && Number.isFinite(first.lng) &&
+      Number.isFinite(photo.lat) && Number.isFinite(photo.lng) &&
+      haversine(first.lat,first.lng,photo.lat,photo.lng) >= meters;
+  });
+}
+
+function achievementWeekdayCoverage(){
+  const days = {};
+  achievementPhotos().forEach(function(photo){
+    if(photo && photo.ts) days[new Date(photo.ts).getDay()] = true;
+  });
+  return Object.keys(days).length;
+}
+
+function achievementHasSevenDayRun(){
+  const days = achievementPhotoDays().sort();
+  let run = 1;
+  for(let index=1;index<days.length;index++){
+    const previous = Date.parse(days[index - 1] + 'T00:00:00Z');
+    const current = Date.parse(days[index] + 'T00:00:00Z');
+    if(current - previous === 86400000) run += 1;
+    else run = 1;
+    if(run >= 7) return true;
+  }
+  return false;
+}
+
+function achievementBestMonth(){
+  const months = {};
+  achievementPhotos().forEach(function(photo){
+    if(!photo || !photo.ts) return;
+    const key = new Date(photo.ts).toISOString().slice(0,7);
+    months[key] = (months[key] || 0) + 1;
+  });
+  return Object.keys(months).reduce(function(best,key){ return Math.max(best,months[key]); },0);
+}
+
 const ACHIEVEMENTS = [
-  { id:'first',    icon:'seedling',  name:'Første skridt',  sub:'1 billede',      test:function(){ return S.photos.length >= 1; } },
-  { id:'s3',       icon:'flame',     name:'Tre i træk',     sub:'3 dages streg',  test:function(){ return S.best >= 3; } },
-  { id:'s7',       icon:'bolt',      name:'Ugen ud',        sub:'7 dages streg',  test:function(){ return S.best >= 7; } },
-  { id:'s30',      icon:'crown',     name:'Månedsmester',   sub:'30 dages streg', test:function(){ return S.best >= 30; } },
-  { id:'s100',     icon:'gem',       name:'Hundrede',       sub:'100 dages streg',test:function(){ return S.best >= 100; } },
-  { id:'p10',      icon:'camera',    name:'Samler',         sub:'10 billeder',    test:function(){ return S.photos.length >= 10; } },
-  { id:'p50',      icon:'map',       name:'Kartograf',      sub:'50 billeder',    test:function(){ return S.photos.length >= 50; } },
-  { id:'lvl5',     icon:'tag',       name:'Erfaren',        sub:'Niveau 5',       test:function(){ return levelFor(S.xp).lvl >= 5; } },
-  { id:'rich',     icon:'coin',      name:'Møntjæger',      sub:'500 mønter',     test:function(){ return S.coins >= 500; } },
-  { id:'night',    icon:'owl',       name:'Natteravn',      sub:'Foto efter 22',  test:function(){ return S.photos.some(function(p){ return new Date(p.ts).getHours() >= 22; }); } },
-  { id:'early',    icon:'sunrise',   name:'Morgenfugl',     sub:'Foto før 07',    test:function(){ return S.photos.some(function(p){ return new Date(p.ts).getHours() < 7; }); } },
-  { id:'far',      icon:'walk',      name:'Langtursgænger', sub:'1 km fra start', test:function(){
-      if(S.photos.length < 2) return false;
-      const a = S.photos[0];
-      return S.photos.some(function(p){ return haversine(a.lat, a.lng, p.lat, p.lng) >= 1000; });
-    } },
+  { id:'first',       rarity:'common',    icon:'seedling',      name:'Første skridt',          nameEn:'First Step',             sub:'Tag dit første billede',                 subEn:'Take your first photo',                    test:function(){ return achievementPhotos().length >= 1; } },
+  { id:'p3',          rarity:'common',    icon:'camera',        name:'Tre øjeblikke',          nameEn:'Three Moments',          sub:'Tag 3 billeder',                          subEn:'Take 3 photos',                            test:function(){ return achievementPhotos().length >= 3; } },
+  { id:'s3',          rarity:'common',    icon:'flame',         name:'Gnisten tændt',          nameEn:'Spark Lit',              sub:'Nå en streak på 3 dage',                  subEn:'Reach a 3-day streak',                     test:function(){ return Number(S.best) >= 3; } },
+  { id:'hex3',        rarity:'common',    icon:'map',           name:'Første territorium',     nameEn:'First Territory',        sub:'Udforsk 3 hexagoner',                     subEn:'Explore 3 hexagons',                       test:function(){ return achievementHexCount() >= 3; } },
+  { id:'coins100',    rarity:'common',    icon:'coin',          name:'Lommepenge',             nameEn:'Pocket Change',          sub:'Hav 100 mønter',                          subEn:'Hold 100 coins',                           test:function(){ return Number(S.coins) >= 100; } },
+  { id:'chall1',      rarity:'common',    icon:'target',        name:'Udfordring accepteret',  nameEn:'Challenge Accepted',     sub:'Klar din første challenge',               subEn:'Complete your first challenge',            test:function(){ return achievementCompletedChallenges() >= 1; } },
+  { id:'early',       rarity:'common',    icon:'sunrise',       name:'Morgenfugl',             nameEn:'Early Bird',             sub:'Tag et foto før kl. 07',                  subEn:'Take a photo before 07:00',                 test:function(){ return achievementHasPhotoAt(function(hour){ return hour < 7; }); } },
+  { id:'night',       rarity:'common',    icon:'moon',          name:'Aftenlys',               nameEn:'Evening Light',          sub:'Tag et foto efter kl. 20',                subEn:'Take a photo after 20:00',                  test:function(){ return achievementHasPhotoAt(function(hour){ return hour >= 20; }); } },
+  { id:'days3',       rarity:'common',    icon:'calWeek',       name:'Tre dages historie',     nameEn:'Three-Day Story',        sub:'Tag billeder på 3 forskellige dage',     subEn:'Take photos on 3 different days',          test:function(){ return achievementPhotoDays().length >= 3; } },
+  { id:'far',         rarity:'common',    icon:'walk',          name:'Langtursgænger',         nameEn:'Long Walker',            sub:'Kom 1 km fra dit første sted',            subEn:'Travel 1 km from your first place',        test:function(){ return achievementFarFromFirst(1000); } },
+
+  { id:'p10',         rarity:'rare',      icon:'photo',         name:'Samler',                 nameEn:'Collector',              sub:'Tag 10 billeder',                         subEn:'Take 10 photos',                           test:function(){ return achievementPhotos().length >= 10; } },
+  { id:'s7',          rarity:'rare',      icon:'bolt',          name:'Ugeild',                 nameEn:'Weekfire',               sub:'Nå en streak på 7 dage',                  subEn:'Reach a 7-day streak',                     test:function(){ return Number(S.best) >= 7; } },
+  { id:'hex10',       rarity:'rare',      icon:'tree',          name:'Stifinder',              nameEn:'Trailblazer',            sub:'Udforsk 10 hexagoner',                    subEn:'Explore 10 hexagons',                      test:function(){ return achievementHexCount() >= 10; } },
+  { id:'bags3',       rarity:'rare',      icon:'bag',           name:'Pungejæger',             nameEn:'Bag Hunter',             sub:'Åbn 3 pengepunge',                        subEn:'Open 3 coin bags',                         test:function(){ return achievementOpenedBags() >= 3; } },
+  { id:'lvl5',        rarity:'rare',      icon:'tag',           name:'Erfaren',                nameEn:'Experienced',            sub:'Nå niveau 5',                             subEn:'Reach level 5',                            test:function(){ return levelFor(Number(S.xp) || 0).lvl >= 5; } },
+  { id:'rich',        rarity:'rare',      icon:'gem',           name:'Møntjæger',              nameEn:'Coin Hunter',            sub:'Hav 500 mønter',                          subEn:'Hold 500 coins',                           test:function(){ return Number(S.coins) >= 500; } },
+  { id:'freeze5',     rarity:'rare',      icon:'shield',        name:'Beskyttet',              nameEn:'Protected',              sub:'Hav 5 streak-skjolde',                    subEn:'Hold 5 streak shields',                    test:function(){ return Number(S.freezes) >= 5; } },
+  { id:'far5',        rarity:'rare',      icon:'globe',         name:'Langt væk',              nameEn:'Far From Home',          sub:'Kom 5 km fra dit første sted',            subEn:'Travel 5 km from your first place',        test:function(){ return achievementFarFromFirst(5000); } },
+  { id:'shop1',       rarity:'rare',      icon:'palette',       name:'Første stil',            nameEn:'First Style',            sub:'Lås en shop-genstand op',                 subEn:'Unlock a shop item',                       test:function(){ return achievementShopItems() >= 2; } },
+  { id:'frag10',      rarity:'rare',      icon:'fragment',      name:'Fragmentfinder',         nameEn:'Fragment Finder',        sub:'Saml 10 fragmenter',                      subEn:'Collect 10 fragments',                     test:function(){ return Number(S.fragments) >= 10; } },
+
+  { id:'p50',         rarity:'epic',      icon:'cloud',         name:'Levende arkiv',          nameEn:'Living Archive',         sub:'Tag 50 billeder',                         subEn:'Take 50 photos',                           test:function(){ return achievementPhotos().length >= 50; } },
+  { id:'s30',         rarity:'epic',      icon:'crown',         name:'Månedsmester',           nameEn:'Monthly Master',         sub:'Nå en streak på 30 dage',                 subEn:'Reach a 30-day streak',                    test:function(){ return Number(S.best) >= 30; } },
+  { id:'hex30',       rarity:'epic',      icon:'treeRound',     name:'Territorievogter',       nameEn:'Territory Keeper',       sub:'Udforsk 30 hexagoner',                    subEn:'Explore 30 hexagons',                      test:function(){ return achievementHexCount() >= 30; } },
+  { id:'bags10',      rarity:'epic',      icon:'tools',         name:'Pungemester',            nameEn:'Bag Master',             sub:'Åbn 10 pengepunge',                       subEn:'Open 10 coin bags',                        test:function(){ return achievementOpenedBags() >= 10; } },
+  { id:'lvl10',       rarity:'epic',      icon:'ladder',        name:'Bjergbestiger',          nameEn:'Summit Climber',         sub:'Nå niveau 10',                            subEn:'Reach level 10',                           test:function(){ return levelFor(Number(S.xp) || 0).lvl >= 10; } },
+  { id:'coins2000',   rarity:'epic',      icon:'ring',          name:'Skatkammer',             nameEn:'Treasure Chamber',       sub:'Hav 2.000 mønter',                        subEn:'Hold 2,000 coins',                         test:function(){ return Number(S.coins) >= 2000; } },
+  { id:'days30',      rarity:'epic',      icon:'calMonth',      name:'En måned af minder',     nameEn:'A Month of Memories',    sub:'Tag billeder på 30 forskellige dage',    subEn:'Take photos on 30 different days',         test:function(){ return achievementPhotoDays().length >= 30; } },
+  { id:'shop10',      rarity:'epic',      icon:'font',          name:'Stilikon',               nameEn:'Style Icon',             sub:'Ej 10 shop-genstande',                    subEn:'Own 10 shop items',                        test:function(){ return achievementShopItems() >= 10; } },
+  { id:'event500',    rarity:'epic',      icon:'sparkle',       name:'Eventgnist',             nameEn:'Event Spark',            sub:'Saml 500 Event-XP i ét event',            subEn:'Earn 500 Event XP in one event',           test:function(){ return achievementEventXp() >= 500; } },
+  { id:'weekdays7',   rarity:'epic',      icon:'flower',        name:'Alle ugens ansigter',    nameEn:'Every Face of the Week', sub:'Tag billeder på alle 7 ugedage',          subEn:'Take photos on all 7 weekdays',            test:function(){ return achievementWeekdayCoverage() >= 7; } },
+
+  { id:'p100',        rarity:'legendary', icon:'confetti',      name:'Hundrede øjeblikke',     nameEn:'One Hundred Moments',    sub:'Tag 100 billeder',                        subEn:'Take 100 photos',                          test:function(){ return achievementPhotos().length >= 100; } },
+  { id:'s100',        rarity:'legendary', icon:'sun',           name:'Hundrede',               nameEn:'Century Flame',          sub:'Nå en streak på 100 dage',                subEn:'Reach a 100-day streak',                   test:function(){ return Number(S.best) >= 100; } },
+  { id:'hex75',       rarity:'legendary', icon:'building',      name:'Verdenskortlægger',      nameEn:'World Mapper',           sub:'Udforsk 75 hexagoner',                    subEn:'Explore 75 hexagons',                      test:function(){ return achievementHexCount() >= 75; } },
+  { id:'bags25',      rarity:'legendary', icon:'downloadArrow', name:'Loot-legende',           nameEn:'Loot Legend',            sub:'Åbn 25 pengepunge',                       subEn:'Open 25 coin bags',                        test:function(){ return achievementOpenedBags() >= 25; } },
+  { id:'lvl20',       rarity:'legendary', icon:'uploadArrow',   name:'Toppen',                 nameEn:'The Summit',             sub:'Nå niveau 20',                            subEn:'Reach level 20',                           test:function(){ return levelFor(Number(S.xp) || 0).lvl >= 20; } },
+  { id:'coins5000',   rarity:'legendary', icon:'mirror',        name:'Det gyldne hvælv',       nameEn:'The Golden Vault',       sub:'Hav 5.000 mønter',                        subEn:'Hold 5,000 coins',                         test:function(){ return Number(S.coins) >= 5000; } },
+  { id:'days100',     rarity:'legendary', icon:'shareArrow',    name:'Hundrede fotodage',      nameEn:'One Hundred Photo Days', sub:'Tag billeder på 100 forskellige dage',   subEn:'Take photos on 100 different days',        test:function(){ return achievementPhotoDays().length >= 100; } },
+  { id:'event2000',   rarity:'legendary', icon:'moonNew',       name:'Eventtitan',             nameEn:'Event Titan',            sub:'Saml 2.000 Event-XP i ét event',          subEn:'Earn 2,000 Event XP in one event',         test:function(){ return achievementEventXp() >= 2000; } },
+  { id:'shop20',      rarity:'legendary', icon:'people',        name:'Garderobelegende',       nameEn:'Wardrobe Legend',        sub:'Ej 20 shop-genstande',                    subEn:'Own 20 shop items',                        test:function(){ return achievementShopItems() >= 20; } },
+  { id:'far25',       rarity:'legendary', icon:'arrowRight',    name:'Horisontjæger',          nameEn:'Horizon Chaser',         sub:'Kom 25 km fra dit første sted',           subEn:'Travel 25 km from your first place',       test:function(){ return achievementFarFromFirst(25000); } },
+
+  { id:'midnight',    rarity:'secret',    icon:'owl',           name:'Midnatssignalet',        nameEn:'The Midnight Signal',    sub:'Tag et foto mellem 00 og 01',             subEn:'Take a photo between 00:00 and 01:00',     test:function(){ return achievementHasPhotoAt(function(hour){ return hour === 0; }); } },
+  { id:'before5',     rarity:'secret',    icon:'musicNote',     name:'Før verden vågner',      nameEn:'Before the World Wakes', sub:'Tag et foto før kl. 05',                  subEn:'Take a photo before 05:00',                 test:function(){ return achievementHasPhotoAt(function(hour){ return hour < 5; }); } },
+  { id:'p365',        rarity:'secret',    icon:'unlock',        name:'Årbogen',                nameEn:'The Yearbook',           sub:'Tag 365 billeder',                        subEn:'Take 365 photos',                          test:function(){ return achievementPhotos().length >= 365; } },
+  { id:'zeroCoins',   rarity:'secret',    icon:'trash',         name:'Tomme lommer',           nameEn:'Empty Pockets',          sub:'Hav 0 mønter efter 10 billeder',          subEn:'Have 0 coins after taking 10 photos',      test:function(){ return achievementPhotos().length >= 10 && Number(S.coins) === 0; } },
+  { id:'run7',        rarity:'secret',    icon:'shuffle',       name:'Ubrudt uge',             nameEn:'Unbroken Week',          sub:'Tag et billede 7 kalenderdage i træk',    subEn:'Take a photo on 7 consecutive days',       test:function(){ return achievementHasSevenDayRun(); } },
+  { id:'far50',       rarity:'secret',    icon:'arrowLeft',     name:'På den anden side',      nameEn:'Beyond the Horizon',     sub:'Kom 50 km fra dit første sted',           subEn:'Travel 50 km from your first place',       test:function(){ return achievementFarFromFirst(50000); } },
+  { id:'month10',     rarity:'secret',    icon:'magnifier',     name:'Den perfekte måned',     nameEn:'The Perfect Month',      sub:'Tag 10 billeder i samme kalendermåned',   subEn:'Take 10 photos in one calendar month',      test:function(){ return achievementBestMonth() >= 10; } },
+  { id:'identity',    rarity:'secret',    icon:'gear',          name:'Sand identitet',         nameEn:'True Identity',          sub:'Vælg dit eget brugernavn',                subEn:'Choose your own username',                 test:function(){ return typeof S.username === 'string' && S.username.trim().length >= 3; } },
+  { id:'s365',        rarity:'secret',    icon:'flask',         name:'Evig flamme',            nameEn:'Eternal Flame',          sub:'Nå en streak på 365 dage',                subEn:'Reach a 365-day streak',                   test:function(){ return Number(S.best) >= 365; } },
+  { id:'vault45',     rarity:'secret',    icon:'check',         name:'Hvælvbryder',            nameEn:'Vault Breaker',          sub:'Lås 45 andre bedrifter op',               subEn:'Unlock 45 other achievements',             test:function(){ return S.achievements.length >= 45; } }
 ];
 
 function checkAchievements(){
   const fresh = [];
-  for(let i = 0; i < ACHIEVEMENTS.length; i++){
-    const a = ACHIEVEMENTS[i];
-    if(S.achievements.indexOf(a.id) !== -1) continue;
-    let ok = false;
-    try{ ok = a.test(); }catch(e){ ok = false; }
-    if(ok){ S.achievements.push(a.id); fresh.push(a); }
+  for(let i=0;i<ACHIEVEMENTS.length;i++){
+    const achievement = ACHIEVEMENTS[i];
+    if(S.achievements.indexOf(achievement.id) !== -1) continue;
+    let unlocked = false;
+    try{ unlocked = achievement.test(); }catch(error){ unlocked = false; }
+    if(unlocked){
+      S.achievements.push(achievement.id);
+      fresh.push(achievement);
+    }
   }
+
   if(fresh.length){
     save();
     renderAchievements();
     ensureNameBadgeState(true);
     renderNameBadges();
     renderBadgePicker();
-    // queue them so multiple unlocks don't stack on top of each other
-    let delay = 1100;
-    fresh.forEach(function(a){
-      setTimeout(function(){
-        SFX.achievement(); vibrate([30,50,30]);
-        confetti(50);
-        showModal(a.icon, 'Bedrift låst op!', a.name + ' — ' + a.sub, 'Sejt!', true);
-      }, delay);
-      delay += 2600;
-    });
+
+    const language = achievementLanguage();
+    const highest = fresh.slice().sort(function(a,b){
+      const order = { common:0,rare:1,epic:2,legendary:3,secret:4 };
+      return order[b.rarity] - order[a.rarity];
+    })[0];
+
+    setTimeout(function(){
+      SFX.achievement();
+      vibrate(fresh.length > 1 ? [30,35,30,50,55] : [30,50,30]);
+      confetti(Math.min(110,48 + fresh.length * 8));
+      if(fresh.length === 1){
+        showModal(highest.icon,language === 'en' ? 'Achievement unlocked!' : 'Bedrift låst op!',achievementText(highest,'name') + ' — ' + achievementText(highest,'sub'),language === 'en' ? 'Awesome!' : 'Sejt!',true);
+      }else{
+        const title = language === 'en' ? fresh.length + ' achievements unlocked!' : fresh.length + ' bedrifter låst op!';
+        const names = fresh.slice(0,3).map(function(item){ return achievementText(item,'name'); }).join(' · ');
+        const rest = fresh.length > 3 ? (language === 'en' ? ' and ' + (fresh.length - 3) + ' more' : ' og ' + (fresh.length - 3) + ' mere') : '';
+        showModal(highest.icon,title,names + rest,language === 'en' ? 'View vault' : 'Se samlingen',true);
+      }
+    },750);
   }
+
   if(typeof MonthlyChallenges !== 'undefined') MonthlyChallenges.checkProgress();
 }
 
 function renderAchievements(){
-  const g = $('achGrid');
-  if(!g) return;
-  g.innerHTML = '';
-  ACHIEVEMENTS.forEach(function(a){
-    const has = S.achievements.indexOf(a.id) !== -1;
-    const d = document.createElement('div');
-    d.className = 'ach ' + (has ? 'unlocked' : 'locked');
-    d.innerHTML = '<span class="ach-emoji">' + icon(has ? a.icon : 'lock', 26) + '</span>' +
-                  '<div class="ach-name">' + a.name + '</div>' +
-                  '<div class="ach-sub">' + a.sub + '</div>';
-    d.addEventListener('click', function(){
-      SFX.tap();
-      toast(has ? (a.name + ' — låst op!') : ('Låst: ' + a.sub));
+  const root = $('achGrid');
+  if(!root) return;
+  const language = achievementLanguage();
+  root.innerHTML = '';
+  root.className = 'ach-grid ach-vault';
+
+  ACHIEVEMENT_RARITIES.forEach(function(rarity){
+    const achievements = ACHIEVEMENTS.filter(function(item){ return item.rarity === rarity.id; });
+    const unlocked = achievements.filter(function(item){ return S.achievements.indexOf(item.id) !== -1; }).length;
+    const section = document.createElement('section');
+    section.className = 'ach-rarity-section';
+    section.dataset.rarity = rarity.id;
+
+    const heading = document.createElement('div');
+    heading.className = 'ach-rarity-head';
+    heading.innerHTML =
+      '<span class="ach-rarity-emblem">' + icon(rarity.icon,18) + '</span>' +
+      '<div class="ach-rarity-copy"><strong>' + rarity[language] + '</strong><span>' +
+      (language === 'en' ? unlocked + ' of ' + achievements.length + ' unlocked' : unlocked + ' af ' + achievements.length + ' låst op') +
+      '</span></div>' +
+      '<span class="ach-rarity-progress"><i style="width:' + ((unlocked / achievements.length) * 100) + '%"></i></span>';
+
+    const grid = document.createElement('div');
+    grid.className = 'ach-rarity-grid';
+
+    achievements.forEach(function(achievement){
+      const has = S.achievements.indexOf(achievement.id) !== -1;
+      const hiddenSecret = achievement.rarity === 'secret' && !has;
+      const card = document.createElement('button');
+      card.type = 'button';
+      card.className = 'ach ' + (has ? 'unlocked' : 'locked');
+      card.dataset.rarity = achievement.rarity;
+      card.setAttribute('aria-label',hiddenSecret ? (language === 'en' ? 'Secret achievement, locked' : 'Hemmelig bedrift, låst') : achievementText(achievement,'name'));
+
+      const name = hiddenSecret ? (language === 'en' ? 'Secret achievement' : 'Hemmelig bedrift') : achievementText(achievement,'name');
+      const description = hiddenSecret ? '••••••' : achievementText(achievement,'sub');
+
+      card.innerHTML =
+        '<span class="ach-rarity-tag">' + rarity[language] + '</span>' +
+        '<span class="ach-emoji"><span class="ach-icon-shell">' + icon(achievement.icon,28) + '</span></span>' +
+        '<span class="ach-name">' + name + '</span>' +
+        '<span class="ach-sub">' + description + '</span>' +
+        (!has ? '<span class="ach-lock-mark">' + icon('lock',10) + '</span>' : '<span class="ach-unlocked-mark">' + icon('check',10) + '</span>');
+
+      card.addEventListener('click',function(){
+        SFX.tap();
+        if(hiddenSecret){
+          toast(language === 'en' ? 'Secret achievement — keep exploring' : 'Hemmelig bedrift — bliv ved med at udforske');
+        }else{
+          toast(has ? (achievementText(achievement,'name') + (language === 'en' ? ' — unlocked!' : ' — låst op!')) : ((language === 'en' ? 'Locked: ' : 'Låst: ') + achievementText(achievement,'sub')));
+        }
+      });
+      grid.appendChild(card);
     });
-    g.appendChild(d);
+
+    section.appendChild(heading);
+    section.appendChild(grid);
+    root.appendChild(section);
   });
+
+  if(typeof window.renderJourneyStory === 'function') window.renderJourneyStory();
 }
 
 /* ===================================================================

@@ -1,0 +1,307 @@
+/* Achievement Vault: 50 achievements across five rarities */
+#tab-journey .ach-grid.ach-vault{
+  display:block;
+  width:100%;
+}
+
+.ach-rarity-section{
+  --rarity:#93A39A;
+  --rarity-deep:#54655B;
+  --rarity-soft:rgba(147,163,154,.13);
+  position:relative;
+  margin:0 0 19px;
+  padding:12px;
+  border:1px solid color-mix(in srgb,var(--rarity) 24%,var(--line));
+  border-radius:20px;
+  background:
+    radial-gradient(circle at 91% 2%,color-mix(in srgb,var(--rarity) 13%,transparent),transparent 34%),
+    color-mix(in srgb,var(--rarity) 3%,var(--card));
+  overflow:hidden;
+}
+
+.ach-rarity-section[data-rarity="rare"]{
+  --rarity:#4FA7FF;
+  --rarity-deep:#176BB7;
+  --rarity-soft:rgba(79,167,255,.14);
+}
+
+.ach-rarity-section[data-rarity="epic"]{
+  --rarity:#A875FF;
+  --rarity-deep:#6840BD;
+  --rarity-soft:rgba(168,117,255,.14);
+}
+
+.ach-rarity-section[data-rarity="legendary"]{
+  --rarity:#F3B94D;
+  --rarity-deep:#A76C0C;
+  --rarity-soft:rgba(243,185,77,.16);
+}
+
+.ach-rarity-section[data-rarity="secret"]{
+  --rarity:#FF5A91;
+  --rarity-deep:#8F204A;
+  --rarity-soft:rgba(255,90,145,.13);
+  background:
+    linear-gradient(125deg,rgba(255,90,145,.055),transparent 42%),
+    radial-gradient(circle at 90% 0%,rgba(159,99,255,.16),transparent 36%),
+    color-mix(in srgb,#17121f 6%,var(--card));
+}
+
+.ach-rarity-section:last-child{margin-bottom:2px}
+
+.ach-rarity-head{
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr) minmax(70px,130px);
+  align-items:center;
+  gap:9px;
+  margin-bottom:11px;
+  padding:0 2px;
+}
+
+.ach-rarity-emblem{
+  display:grid;
+  place-items:center;
+  width:32px;
+  height:32px;
+  border:1px solid color-mix(in srgb,var(--rarity) 32%,transparent);
+  border-radius:11px;
+  color:var(--rarity-deep);
+  background:linear-gradient(145deg,color-mix(in srgb,var(--rarity) 23%,var(--card)),var(--card));
+  box-shadow:0 6px 15px -10px var(--rarity),inset 0 1px rgba(255,255,255,.42);
+}
+
+.ach-rarity-copy{
+  display:flex;
+  min-width:0;
+  flex-direction:column;
+  gap:2px;
+}
+
+.ach-rarity-copy strong{
+  color:var(--rarity-deep);
+  font-size:10px;
+  font-weight:950;
+  letter-spacing:.14em;
+}
+
+.ach-rarity-copy span{
+  color:var(--ink-soft);
+  font-size:8px;
+  font-weight:750;
+}
+
+.ach-rarity-progress{
+  height:6px;
+  overflow:hidden;
+  border-radius:999px;
+  background:color-mix(in srgb,var(--rarity) 11%,var(--paper-2));
+  box-shadow:inset 0 1px 2px rgba(0,0,0,.08);
+}
+
+.ach-rarity-progress i{
+  display:block;
+  height:100%;
+  border-radius:inherit;
+  background:linear-gradient(90deg,var(--rarity-deep),var(--rarity));
+  box-shadow:0 0 10px color-mix(in srgb,var(--rarity) 50%,transparent);
+  transition:width .6s cubic-bezier(.22,.8,.2,1);
+}
+
+.ach-rarity-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:8px;
+}
+
+#tab-journey .journey-achievements-panel .ach-rarity-grid .ach{
+  appearance:none;
+  width:100%;
+  min-height:128px;
+  margin:0;
+  padding:27px 7px 11px;
+  border:1px solid color-mix(in srgb,var(--rarity) 18%,var(--line));
+  border-radius:17px;
+  color:var(--ink);
+  background:
+    linear-gradient(155deg,color-mix(in srgb,var(--rarity) 8%,var(--card)),var(--card) 66%);
+  box-shadow:0 10px 20px -18px rgba(0,0,0,.62),inset 0 1px rgba(255,255,255,.45);
+  font:inherit;
+  cursor:pointer;
+  isolation:isolate;
+}
+
+#tab-journey .journey-achievements-panel .ach-rarity-grid .ach.locked{
+  opacity:.72;
+  filter:none;
+}
+
+#tab-journey .journey-achievements-panel .ach-rarity-grid .ach.unlocked{
+  opacity:1;
+  border-color:color-mix(in srgb,var(--rarity) 66%,var(--line));
+  box-shadow:
+    0 13px 26px -19px color-mix(in srgb,var(--rarity) 88%,transparent),
+    0 0 0 1px color-mix(in srgb,var(--rarity) 13%,transparent),
+    inset 0 1px rgba(255,255,255,.52);
+}
+
+#tab-journey .journey-achievements-panel .ach-rarity-grid .ach.unlocked::before{
+  inset:-35%;
+  opacity:.34;
+  background:conic-gradient(from 0deg,transparent 0 38%,color-mix(in srgb,var(--rarity) 23%,transparent) 45%,transparent 53% 100%);
+}
+
+.ach-rarity-tag{
+  position:absolute;
+  z-index:3;
+  top:7px;
+  right:7px;
+  max-width:calc(100% - 14px);
+  overflow:hidden;
+  padding:3px 5px;
+  border:1px solid color-mix(in srgb,var(--rarity) 28%,transparent);
+  border-radius:999px;
+  color:var(--rarity-deep);
+  background:color-mix(in srgb,var(--rarity) 10%,var(--card));
+  font-size:5.8px;
+  font-weight:950;
+  letter-spacing:.075em;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+#tab-journey .journey-achievements-panel .ach-rarity-grid .ach-emoji{
+  position:relative;
+  z-index:2;
+  display:grid;
+  place-items:center;
+  margin:0 0 9px;
+  color:var(--rarity-deep);
+}
+
+.ach-icon-shell{
+  display:grid;
+  place-items:center;
+  width:48px;
+  height:48px;
+  border:1px solid color-mix(in srgb,var(--rarity) 32%,transparent);
+  border-radius:16px;
+  color:var(--rarity-deep);
+  background:
+    radial-gradient(circle at 35% 25%,rgba(255,255,255,.72),transparent 38%),
+    linear-gradient(145deg,color-mix(in srgb,var(--rarity) 25%,var(--card)),color-mix(in srgb,var(--rarity) 7%,var(--card)));
+  box-shadow:
+    0 8px 17px -12px color-mix(in srgb,var(--rarity) 92%,transparent),
+    inset 0 1px rgba(255,255,255,.62);
+}
+
+.ach.locked .ach-icon-shell{
+  opacity:.66;
+  color:color-mix(in srgb,var(--rarity) 55%,var(--ink-soft));
+  filter:saturate(.65);
+}
+
+.ach.unlocked .ach-icon-shell{
+  animation:achievementIconFloat 3.4s ease-in-out infinite;
+  box-shadow:
+    0 10px 22px -12px color-mix(in srgb,var(--rarity) 100%,transparent),
+    0 0 14px color-mix(in srgb,var(--rarity) 15%,transparent),
+    inset 0 1px rgba(255,255,255,.72);
+}
+
+#tab-journey .journey-achievements-panel .ach-rarity-grid .ach-name{
+  position:relative;
+  z-index:2;
+  display:block;
+  min-height:24px;
+  color:var(--ink);
+  font-size:9px;
+  font-weight:900;
+  line-height:1.25;
+}
+
+#tab-journey .journey-achievements-panel .ach-rarity-grid .ach-sub{
+  position:relative;
+  z-index:2;
+  display:block;
+  margin-top:4px;
+  color:var(--ink-soft);
+  font-size:7px;
+  font-weight:650;
+  line-height:1.3;
+}
+
+.ach-lock-mark,
+.ach-unlocked-mark{
+  position:absolute;
+  z-index:4;
+  top:8px;
+  left:8px;
+  display:grid;
+  place-items:center;
+  width:18px;
+  height:18px;
+  border-radius:7px;
+}
+
+.ach-lock-mark{
+  color:var(--ink-soft);
+  background:color-mix(in srgb,var(--ink-soft) 9%,var(--card));
+  border:1px solid color-mix(in srgb,var(--ink-soft) 18%,transparent);
+}
+
+.ach-unlocked-mark{
+  color:var(--rarity-deep);
+  background:color-mix(in srgb,var(--rarity) 15%,var(--card));
+  border:1px solid color-mix(in srgb,var(--rarity) 34%,transparent);
+  box-shadow:0 0 10px color-mix(in srgb,var(--rarity) 18%,transparent);
+}
+
+.ach-rarity-section[data-rarity="legendary"] .ach.unlocked .ach-icon-shell{
+  animation:achievementLegendaryFloat 3.1s ease-in-out infinite;
+}
+
+.ach-rarity-section[data-rarity="secret"] .ach.locked{
+  background:
+    repeating-linear-gradient(135deg,transparent 0 9px,rgba(255,255,255,.018) 9px 10px),
+    linear-gradient(155deg,color-mix(in srgb,var(--rarity) 5%,var(--card)),var(--card));
+}
+
+.ach-rarity-section[data-rarity="secret"] .ach.locked .ach-name{
+  letter-spacing:.02em;
+}
+
+@keyframes achievementIconFloat{
+  0%,100%{transform:translateY(0) rotate(0deg)}
+  50%{transform:translateY(-3px) rotate(2deg)}
+}
+
+@keyframes achievementLegendaryFloat{
+  0%,100%{transform:translateY(0) scale(1);filter:brightness(1)}
+  50%{transform:translateY(-4px) scale(1.035);filter:brightness(1.12)}
+}
+
+@media(max-width:390px){
+  .ach-rarity-section{padding:10px}
+  .ach-rarity-head{grid-template-columns:auto minmax(0,1fr) 74px}
+  .ach-rarity-grid{gap:7px}
+  #tab-journey .journey-achievements-panel .ach-rarity-grid .ach{
+    min-height:122px;
+    padding-left:5px;
+    padding-right:5px;
+  }
+  .ach-icon-shell{width:44px;height:44px;border-radius:14px}
+  .ach-rarity-tag{font-size:5.2px}
+}
+
+@media(max-width:330px){
+  .ach-rarity-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .ach.unlocked .ach-icon-shell,
+  .ach-rarity-section[data-rarity="legendary"] .ach.unlocked .ach-icon-shell,
+  .ach.unlocked::before{
+    animation:none !important;
+  }
+  .ach-rarity-progress i{transition:none}
+}
