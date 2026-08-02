@@ -14709,6 +14709,7 @@ body.startup-revealing .onb{
 <link rel="stylesheet" href="journey-story.css">
 <link rel="stylesheet" href="streak-route.css">
 <link rel="stylesheet" href="achievement-vault.css">
+<link rel="stylesheet" href="tutorial-cinematic.css">
 <!-- topbar removed + top content lowered -->
 <style id="hex-photo-rule-styles">
   .onb-hex-rule{
@@ -15900,7 +15901,7 @@ body.startup-revealing .onb{
           <button class="btn-outline danger" id="devClearPhotos"><svg class="icn" width="13" height="13" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><path d="M5 7h14M9.5 7V5a1.5 1.5 0 0 1 1.5-1.5h2A1.5 1.5 0 0 1 14.5 5v2M7 7l1 12.5a1.5 1.5 0 0 0 1.5 1.4h5a1.5 1.5 0 0 0 1.5-1.4L18 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Slet alle billeder</button>
         </div>
 
-        <button class="btn-outline" id="tourBtn" style="margin-top:18px;">Vis introduktion igen</button>
+        <button class="btn-outline" id="tourBtn" style="margin-top:18px;">Afspil den store tutorial</button>
         <button class="btn-outline" id="exportBtn">Eksportér mine data</button>
         <button class="btn-outline danger" id="resetBtn">Nulstil alt</button>
         <p class="hint" style="display:block;text-align:center;margin:16px 0 20px;">STREG Alpha 3.53 · ingen reklamer, aldrig</p>
@@ -24455,7 +24456,11 @@ const Settings = (function(){
     toast(S.settings.habit ? 'Vane gemt — nu en daglig challenge' : 'Vane fjernet');
   });
 
-  $('tourBtn').addEventListener('click', function(){ SFX.tap(); Onb.start(); });
+  $('tourBtn').addEventListener('click', function(){
+    SFX.tap();
+    if(window.STREG_TUTORIAL && typeof window.STREG_TUTORIAL.start === 'function') window.STREG_TUTORIAL.start();
+    else Onb.start();
+  });
 
   $('exportBtn').addEventListener('click', function(){
     SFX.pop();
@@ -26037,6 +26042,7 @@ try{
 <script src="journey-story.js"></script>
 <script src="streak-route.js"></script>
 <script src="haptics-engine.js"></script>
+<script src="tutorial-cinematic.js"></script>
 
 </body>
 </html>
