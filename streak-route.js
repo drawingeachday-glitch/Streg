@@ -187,6 +187,9 @@
   }
 
   function install(){
+    var reminder = document.querySelector('.next-photo-sub');
+    if(reminder) reminder.remove();
+
     var link = document.getElementById('streakJourneyLink');
     if(link && !link.dataset.streakRouteBound){
       link.dataset.streakRouteBound = 'true';
