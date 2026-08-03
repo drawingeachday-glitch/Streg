@@ -14016,9 +14016,314 @@ body.bh-preview-open{overflow:hidden;}
   }
 }
 
+/* Minimal welcome screen — one message, one primary action. */
+body.guest-start-open{overflow:hidden!important;}
+.guest-start[hidden]{display:none!important;}
+.guest-start{
+  --guest-gold:#F0A33A;
+  --guest-ink:#07090C;
+  --guest-purple:#171126;
+  position:fixed;
+  inset:0;
+  z-index:29000;
+  display:block;
+  overflow:hidden;
+  padding:max(24px,env(safe-area-inset-top)) 24px max(18px,env(safe-area-inset-bottom));
+  color:#F7F5EF;
+  background:
+    radial-gradient(ellipse at 86% 18%,rgba(213,131,56,.10),transparent 34%),
+    radial-gradient(ellipse at 9% 88%,rgba(102,58,171,.16),transparent 38%),
+    linear-gradient(160deg,#080A0D 0%,#08090E 58%,#100B1A 100%);
+  isolation:isolate;
+  opacity:0;
+  visibility:hidden;
+  transition:opacity .45s ease,visibility .45s ease;
+}
+.guest-start.open{opacity:1;visibility:visible;}
+.guest-start::before{
+  content:"";
+  position:absolute;
+  inset:-12% -42% auto 24%;
+  height:58%;
+  z-index:-2;
+  opacity:.42;
+  border-radius:50%;
+  background:conic-gradient(from 212deg,transparent 0 65%,rgba(244,164,63,.38) 73%,rgba(158,85,48,.08) 79%,transparent 86%);
+  filter:blur(34px);
+  transform:rotate(-9deg);
+  animation:guestMinimalArc 13s ease-in-out infinite alternate;
+}
+.guest-start::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:20;
+  pointer-events:none;
+  background:
+    linear-gradient(180deg,rgba(0,0,0,.16),transparent 20% 76%,rgba(0,0,0,.22)),
+    radial-gradient(ellipse at center,transparent 52%,rgba(0,0,0,.23) 100%);
+}
+.guest-start-aurora{
+  position:absolute;
+  z-index:-3;
+  border-radius:50%;
+  opacity:.16;
+  filter:blur(72px);
+  mix-blend-mode:screen;
+  pointer-events:none;
+}
+.guest-start-aurora.a{
+  width:62vmax;
+  height:62vmax;
+  left:auto;
+  right:-51vmax;
+  top:-35vmax;
+  background:#B86E34;
+  animation:guestMinimalAurora 16s ease-in-out infinite alternate;
+}
+.guest-start-aurora.b{
+  width:70vmax;
+  height:70vmax;
+  right:auto;
+  left:-58vmax;
+  bottom:-47vmax;
+  background:#6F3DB4;
+  animation:guestMinimalAurora 19s -5s ease-in-out infinite alternate-reverse;
+}
+.guest-start-panel{
+  width:min(100%,390px);
+  height:100%;
+  max-height:none;
+  margin:0 auto;
+  padding:clamp(60px,10vh,92px) 0 clamp(10px,2vh,22px);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  overflow:visible;
+  border:0;
+  border-radius:0;
+  background:transparent;
+  box-shadow:none;
+  backdrop-filter:none;
+  -webkit-backdrop-filter:none;
+  transform:translateY(18px);
+}
+.guest-start.open .guest-start-panel{
+  animation:guestMinimalPanel .8s cubic-bezier(.18,.8,.24,1) .06s forwards;
+}
+.guest-start-mark{
+  position:relative;
+  width:94px;
+  height:104px;
+  display:grid;
+  place-items:center;
+  margin:0 0 24px;
+  flex:0 0 auto;
+}
+.guest-start-mark::before{
+  content:"";
+  position:absolute;
+  inset:-34px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(240,163,58,.28),rgba(240,163,58,.06) 46%,transparent 72%);
+  filter:blur(7px);
+  animation:guestMarkBreath 4.8s ease-in-out infinite;
+}
+.guest-start-emblem{
+  position:relative;
+  left:auto;
+  top:auto;
+  width:78px;
+  height:88px;
+  display:grid;
+  place-items:center;
+  transform:none;
+  clip-path:polygon(24% 3%,76% 3%,100% 50%,76% 97%,24% 97%,0 50%);
+  color:#111015;
+  background:linear-gradient(145deg,#FFD477 0%,#F3A73D 55%,#D47A28 100%);
+  box-shadow:0 18px 40px rgba(0,0,0,.34),0 0 32px rgba(240,163,58,.2),inset 0 1px rgba(255,255,255,.62);
+  animation:none;
+}
+.guest-start-emblem::before{
+  content:"";
+  position:absolute;
+  inset:4px;
+  clip-path:inherit;
+  border:1px solid rgba(255,255,255,.22);
+  border-color:rgba(255,255,255,.22);
+}
+.guest-start-emblem svg{
+  width:38px;
+  height:44px;
+  display:block;
+  filter:drop-shadow(0 1px 0 rgba(255,255,255,.1));
+}
+.guest-start-title{
+  margin:0;
+  color:#F7F5EF;
+  font-family:var(--font-display);
+  text-align:center;
+  letter-spacing:-.035em;
+  opacity:0;
+  transform:translateY(10px);
+}
+.guest-start-title strong{
+  display:block;
+  margin:0 0 clamp(38px,6.4vh,54px);
+  color:var(--guest-gold);
+  background:none;
+  -webkit-background-clip:initial;
+  background-clip:initial;
+  filter:drop-shadow(0 6px 18px rgba(240,163,58,.16));
+  font:820 24px/1 var(--font-display);
+  letter-spacing:.24em;
+  text-indent:.24em;
+}
+.guest-start-title span{
+  display:block;
+  color:#F8F6F1;
+  font:850 clamp(31px,8.3vw,37px)/1.12 var(--font-display);
+  letter-spacing:-.045em;
+}
+.guest-start.open .guest-start-title{animation:guestMinimalCopy .65s .28s ease forwards;}
+.guest-start-copy{
+  max-width:310px;
+  margin:17px auto 0;
+  color:rgba(222,215,231,.64);
+  font:650 13px/1.5 var(--font-body);
+  letter-spacing:-.005em;
+  opacity:0;
+  transform:translateY(8px);
+}
+.guest-start.open .guest-start-copy{animation:guestMinimalCopy .65s .38s ease forwards;}
+.guest-google-btn{
+  width:100%;
+  min-height:58px;
+  margin-top:clamp(48px,8vh,68px);
+  gap:12px;
+  border:1px solid rgba(255,255,255,.76);
+  border-radius:20px;
+  color:#17161A;
+  background:#F8F8F7;
+  box-shadow:0 18px 46px rgba(0,0,0,.36),inset 0 1px #fff;
+  font:820 15px/1 var(--font-body);
+  letter-spacing:-.01em;
+  transition:transform .18s ease,box-shadow .22s ease,background .22s ease;
+}
+.guest-start.open .guest-google-btn{animation:guestMinimalCopy .66s .48s ease forwards;}
+.guest-google-btn::after{display:none;}
+.guest-google-btn:hover{
+  background:#fff;
+  transform:translateY(-2px);
+  box-shadow:0 22px 52px rgba(0,0,0,.42),0 0 0 4px rgba(255,255,255,.05);
+}
+.guest-google-btn:focus-visible,
+.guest-continue-btn:focus-visible{
+  outline:3px solid rgba(240,163,58,.56);
+  outline-offset:4px;
+}
+.guest-google-btn:active{transform:scale(.975);}
+.guest-google-btn:disabled{cursor:wait;filter:saturate(.35);opacity:.64!important;}
+.guest-google-icon{
+  width:26px;
+  height:26px;
+  box-shadow:none;
+}
+.guest-google-icon svg{width:18px;height:18px;display:block;}
+.guest-google-spinner{
+  width:16px;
+  height:16px;
+  display:none;
+  border:2px solid rgba(29,36,34,.2);
+  border-top-color:#2C6BCF;
+  border-radius:50%;
+  animation:guestSpin .7s linear infinite;
+}
+.guest-google-btn.loading .guest-google-icon{display:none;}
+.guest-google-btn.loading .guest-google-spinner{display:block;}
+.guest-continue-btn{
+  appearance:none;
+  -webkit-appearance:none;
+  width:auto;
+  min-height:44px;
+  margin-top:10px;
+  padding:0 18px;
+  border:0;
+  border-radius:14px;
+  color:rgba(205,190,223,.78);
+  background:transparent;
+  box-shadow:none;
+  font:750 12px/1 var(--font-body);
+  letter-spacing:.005em;
+  cursor:pointer;
+}
+.guest-start.open .guest-continue-btn{animation:guestMinimalCopy .64s .58s ease forwards;}
+.guest-continue-btn:hover{color:#F4EFFA;}
+.guest-auth-status{
+  width:100%;
+  min-height:28px;
+  margin-top:2px;
+  color:rgba(219,203,230,.48);
+  font:650 9.5px/1.4 var(--font-body);
+  letter-spacing:.01em;
+}
+.guest-start.open .guest-auth-status{animation:guestMinimalCopy .58s .66s ease forwards;}
+@keyframes guestMinimalPanel{
+  from{opacity:0;transform:translateY(18px)}
+  to{opacity:1;transform:none}
+}
+@keyframes guestMinimalCopy{
+  to{opacity:1;transform:none}
+}
+@keyframes guestMarkBreath{
+  0%,100%{opacity:.58;transform:scale(.94)}
+  50%{opacity:1;transform:scale(1.08)}
+}
+@keyframes guestMinimalArc{
+  to{transform:rotate(-3deg) translate3d(-2%,3%,0);opacity:.52}
+}
+@keyframes guestMinimalAurora{
+  to{transform:translate3d(7vmax,-3vmax,0) scale(1.08)}
+}
+@keyframes guestSpin{to{transform:rotate(360deg)}}
+@media(max-height:720px){
+  .guest-start-panel{padding-top:24px;padding-bottom:4px}
+  .guest-start-mark{width:72px;height:80px;margin-bottom:14px}
+  .guest-start-emblem{width:62px;height:70px}
+  .guest-start-emblem svg{width:31px;height:36px}
+  .guest-start-title strong{margin-bottom:25px;font-size:20px}
+  .guest-start-title span{font-size:29px}
+  .guest-start-copy{margin-top:11px;font-size:11px}
+  .guest-google-btn{min-height:52px;margin-top:31px}
+  .guest-continue-btn{min-height:38px;margin-top:5px}
+  .guest-auth-status{min-height:20px}
+}
+@media(max-width:360px){
+  .guest-start{padding-inline:20px}
+  .guest-start-panel{padding-inline:0;border-radius:0}
+  .guest-start-title span{font-size:30px}
+}
+@media(prefers-reduced-motion:reduce){
+  .guest-start::before,
+  .guest-start-aurora,
+  .guest-start-mark::before{animation:none!important;}
+  .guest-start.open .guest-start-panel,
+  .guest-start.open .guest-start-title,
+  .guest-start.open .guest-start-copy,
+  .guest-start.open .guest-google-btn,
+  .guest-start.open .guest-continue-btn,
+  .guest-start.open .guest-auth-status{
+    animation:none!important;
+    opacity:1;
+    transform:none;
+  }
+}
+
 /* =========================================================
    GUEST START MENU — CINEMATIC AUTH GATE
    ========================================================= */
+@media(max-width:0px){
 body.guest-start-open{overflow:hidden!important;}
 .guest-start[hidden]{display:none!important;}
 .guest-start{
@@ -14395,6 +14700,7 @@ body.guest-start-open{overflow:hidden!important;}
     transform:none;
     filter:none;
   }
+}
 }
 
 /* =========================================================
@@ -14808,38 +15114,17 @@ body.startup-revealing .onb{
 <div class="guest-start" id="guestStart" hidden aria-hidden="true" aria-label="Velkommen til STREG">
   <div class="guest-start-aurora a" aria-hidden="true"></div>
   <div class="guest-start-aurora b" aria-hidden="true"></div>
-  <div class="guest-start-scan" aria-hidden="true"></div>
-  <div class="guest-start-stars" aria-hidden="true">
-    <i style="--sx:8%;--sy:18%;--sd:.2s;--ss:2px"></i>
-    <i style="--sx:18%;--sy:72%;--sd:1.1s;--ss:3px"></i>
-    <i style="--sx:29%;--sy:10%;--sd:2.2s;--ss:2px"></i>
-    <i style="--sx:38%;--sy:88%;--sd:.7s;--ss:2px"></i>
-    <i style="--sx:49%;--sy:16%;--sd:1.7s;--ss:3px"></i>
-    <i style="--sx:58%;--sy:79%;--sd:2.6s;--ss:2px"></i>
-    <i style="--sx:70%;--sy:7%;--sd:.9s;--ss:2px"></i>
-    <i style="--sx:78%;--sy:66%;--sd:1.4s;--ss:3px"></i>
-    <i style="--sx:91%;--sy:23%;--sd:2.8s;--ss:2px"></i>
-    <i style="--sx:95%;--sy:83%;--sd:.4s;--ss:2px"></i>
-    <i style="--sx:4%;--sy:48%;--sd:2s;--ss:2px"></i>
-    <i style="--sx:84%;--sy:42%;--sd:1.9s;--ss:2px"></i>
-  </div>
   <main class="guest-start-panel">
-    <div class="guest-start-orbit-stage" aria-hidden="true">
-      <div class="guest-start-orbit">
-        <i class="guest-start-orbit-dot d1"></i>
-        <i class="guest-start-orbit-dot d2"></i>
-        <i class="guest-start-orbit-dot d3"></i>
+    <div class="guest-start-mark" aria-hidden="true">
+      <div class="guest-start-emblem">
+        <svg viewBox="0 0 56 64" fill="none">
+          <path d="M31.7 3.8c1.5 9.4-8.6 13.1-8.6 22.5 0 4.5 3.4 8 7.8 8 4.5 0 7.9-3.4 7.9-7.8 0-2.4-1.1-4.7-2.9-6.8 8.1 3.2 13.5 10.2 13.5 19 0 12-9.4 21.1-21.4 21.1S6.6 50.7 6.6 38.7c0-15.2 10.3-22.7 15.3-34.2 2.2 1.2 5.8 5.3 9.8 11.1Z" fill="currentColor"/>
+          <path d="M27.7 31.1c-1.1 5.2-5.8 7.7-5.8 13 0 3.7 2.7 6.6 6.4 6.6 4 0 6.8-2.9 6.8-6.8 0-3-1.8-5.7-4.4-7.7.2 4.4-2 6.1-4.4 6.1-2.1 0-3.8-1.7-3.8-3.9 0-2.8 2.3-4.7 5.2-7.3Z" fill="#F5A63B"/>
+        </svg>
       </div>
-      <div class="guest-start-emblem">S</div>
     </div>
-    <div class="guest-start-kicker">Din verden · din streg</div>
-    <h1 class="guest-start-title"><span>Start noget, der vokser</span><strong>STREG</strong></h1>
-    <p class="guest-start-copy">Ét billede om dagen bliver til steder, minder, streaks og en verden, der kun er din.</p>
-    <div class="guest-start-features" aria-label="App-funktioner">
-      <span class="guest-start-feature">DAGLIGE BILLEDER</span>
-      <span class="guest-start-feature">LEVENDE KORT</span>
-      <span class="guest-start-feature">STREAKS & REWARDS</span>
-    </div>
+    <h1 class="guest-start-title"><strong>STREG</strong><span>Ét billede. Hver dag.<br>Et nyt sted.</span></h1>
+    <p class="guest-start-copy">Byg din streak ét sted ad gangen.</p>
     <button class="guest-google-btn" id="guestGoogleBtn" type="button" disabled>
       <span class="guest-google-icon" aria-hidden="true">
         <svg viewBox="0 0 24 24">
@@ -14852,7 +15137,7 @@ body.startup-revealing .onb{
       <span class="guest-google-spinner" aria-hidden="true"></span>
       <span class="guest-google-label">Log ind med Google</span>
     </button>
-    <button class="guest-continue-btn" id="guestContinueBtn" type="button">Fortsæt uden login</button>
+    <button class="guest-continue-btn" id="guestContinueBtn" type="button">Fortsæt som gæst</button>
     <div class="guest-auth-status" id="guestAuthStatus" role="status">Forbinder sikkert…</div>
   </main>
 </div>
@@ -16108,6 +16393,11 @@ body.startup-revealing .onb{
   const EN = Object.freeze({"— dage":"— days","⬢ Din nuværende hex er tydeligst og følger dig":"⬢ Your current hex is brightest and follows you","⬢ Ny hexagon":"⬢ New hex","0 / 4 hentet":"0 / 4 collected","0 / 5 hentet":"0 / 5 collected","0 / 5 klaret":"0 / 5 completed","0 billeder":"0 photos","0 dage":"0 days","0 udforskede hexes":"0 explored hexes","5 udvalgt til i dag":"5 selected for today","Afventer svar":"Awaiting response","Aktivt event":"Active event","Alle almindelige skrifttyper":"All standard fonts","Almindelige mønter kan ikke bruges her. Fragment-items er ultra-eksklusive og meget svære at få fat i.":"Regular coins cannot be used here. Fragment items are ultra-exclusive and extremely hard to obtain.","Andre kan finde og tilføje dig med det — kun bogstaver, tal og understreg.":"Others can find and add you with it — letters, numbers, and underscores only.","Anmodninger til dig":"Requests for you","Appen tvinger dig udenfor. Det er hele pointen.":"The app pushes you outdoors. That is the whole point.","Badge ved dit navn":"Badge next to your name","Bedrifter":"Achievements","Beskyt din streg":"Protect your streak","Betalt":"Paid","Billeder":"Photos","Bliver en daglig challenge":"Becomes a daily challenge","Breddegrad":"Latitude","Brug disse koordinater som min position":"Use these coordinates as my position","Brug knapperne til hurtigt at teste milestones og cutscenes.":"Use the buttons to quickly test milestones and cutscenes.","brugt":"spent","Butik":"Shop","CHALLENGE KLARET":"CHALLENGE COMPLETE","Challenges giver kun Event-XP. Rewards sidder direkte på XP-baren og låses automatisk op, så snart du rammer deres milestone. Eventet nulstilles automatisk ved en ny måned.":"Challenges only grant Event XP. Rewards sit directly on the XP bar and unlock automatically when you reach their milestone. The event resets automatically each month.","DAGE":"DAYS","dage":"days","DAGE I TRÆK":"DAY STREAK","dage i træk":"day streak","Dagens event-challenges":"Today's event challenges","Dagens kister loader…":"Loading today's money bags…","Daglige":"Daily","DAGLIGE BILLEDER":"DAILY PHOTOS","Denne uge":"This week","Der er ikke længere et meterkrav. Gå bare ind i en ny, uudforsket hexagon, når du vil tage dit næste billede.":"There is no distance requirement anymore. Just enter a new unexplored hex when you want to take your next photo.","Diamant":"Diamond","DIG":"YOU","Dig":"You","Din konto er lige nu kun gemt på denne telefon. Log ind for at sikre den — dit data flytter med, intet nulstilles.":"Your account is currently stored only on this phone. Sign in to secure it — your data moves with you and nothing is reset.","Din konto er sikret — data følger dig selv hvis du skifter telefon":"Your account is secured — your data follows you even if you change phones","Din nuværende streak":"Your current streak","Din rejse":"Your journey","Din vane":"Your habit","Din vane bliver en daglig challenge. Du kan altid ændre den senere.":"Your habit becomes a daily challenge. You can always change it later.","Din verden · din streg":"Your world · your streak","Din verden bliver tegnet":"Your world is being drawn","Du holder din STREG i live — nu starter de rigtige milestones.":"You are keeping your STREG alive — now the real milestones begin.","Du kan altid skifte senere i Indstillinger. Tryk for at se det live.":"You can always switch later in Settings. Tap to preview it live.","Eksklusive event-rewards":"Exclusive event rewards","Eksklusive skrifttyper":"Exclusive fonts","Eksportér mine data":"Export my data","Ét billede hver dag — men aldrig samme sted to gange.":"One photo every day — but never in the same place twice.","Ét billede hver dag, altid et nyt sted.":"One photo every day, always somewhere new.","Ét billede om dagen bliver til steder, minder, streaks og en verden, der kun er din.":"One photo a day becomes places, memories, streaks, and a world that is yours alone.","Ét billede pr. hexagon":"One photo per hex","Ét billede. Ét sted. Én streg ad gangen.":"One photo. One place. One streak at a time.","Et skjold bliver brugt automatisk, hvis du misser en dag.":"A shield is used automatically if you miss a day.","Event challenge klaret":"Event challenge complete","Event progress":"Event progress","Event-XP samlet":"Event XP collected","Farve på dit navn og din profil":"Color for your name and profile","Farver":"Colors","Farverige faner":"Colorful tabs","Fedt!":"Awesome!","Filmiske milestone-cutscenes":"Cinematic milestone cutscenes","Finder din placering…":"Finding your location…","Fjern":"Remove","Forbinder sikkert…":"Connecting securely…","Forbinder til sky…":"Connecting to cloud…","Forrige":"Previous","Fortsæt":"Continue","Fortsæt uden login":"Continue without signing in","Fotoregel":"Photo rule","Fotos":"Photos","Fragments er den sjældneste valuta i hele STREG. De findes kun i hemmelige fragment-hotspots og de vildeste rewards — og bruges kun på Black Hole-items, som skal føles så eksklusive, at de ligner noget man ville betale rigtige penge for.":"Fragments are the rarest currency in STREG. They are only found in secret fragment hotspots and the wildest rewards — and are only used for Black Hole items designed to feel truly premium.","Frysere":"Freezes","Første Flamme":"First Flame","Gade":"Street","Galleri":"Gallery","Gem brugernavn":"Save username","Gem ændringer":"Save changes","Godmorgen, Dig":"Good morning, You","GPS VERIFICERET":"GPS VERIFIED","Guld":"Gold","Haptisk feedback":"Haptic feedback","Hex-kort":"Hex map","Hold streaken i live!":"Keep the streak alive!","Hvad vil du blive bedre til?":"What do you want to improve?","Hver fane får sin egen farve når den er aktiv":"Each tab gets its own color when active","Hver store streak-dag får sin egen cinematic cutscene. Jo højere milestone, jo vildere bliver effekterne — helt op til dag 365.":"Every major streak day gets its own cinematic cutscene. The higher the milestone, the wilder the effects — all the way to day 365.","Hvert event har sit eget XP, sine egne rewards og sin egen daglige progression. Du kan skifte frit i denne prototype.":"Each event has its own XP, rewards, and daily progression. You can switch freely in this prototype.","Hvert rigtigt billede skal tages i en ny, uudforsket hexagon":"Every real photo must be taken in a new unexplored hex","i dag":"today","Indstillinger":"Settings","Ingen billeder endnu.":"No photos yet.","Ingen hex valgt":"No hex selected","Inviter venner":"Invite friends","Klar daglige event-challenges, saml Event-XP og lås rewards op automatisk direkte på baren, så snart du rammer deres XP-krav.":"Complete daily event challenges, collect Event XP, and automatically unlock rewards on the bar as soon as you reach their XP requirement.","Klar til dagens billede?":"Ready for today's photo?","Klik, jingles og fejllyde":"Clicks, jingles, and error sounds","Konto":"Account","Kort":"Map","Kort-tema":"Map theme","Kræver det matchende tema":"Requires the matching theme","Kun Black Hole Fragments.":"Black Hole Fragments only.","Kun til test. Ændrer du tal her, er dine retention-tal ikke længere ægte data. Fjern hele denne sektion før en rigtig beta.":"Testing only. Changing values here makes retention data unreliable. Remove this entire section before a real beta.","Køb · 150":"Buy · 150","Lav delbart kort til TikTok":"Create a shareable TikTok card","Layout":"Layout","LEVENDE KORT":"LIVE MAP","Log ind i Profil → Indstillinger for at tilføje rigtige venner.":"Sign in under Profile → Settings to add real friends.","Log ind med Google":"Sign in with Google","Log ud":"Sign out","Lokalt":"Local","Lunar-font":"Lunar font","Lyd":"Sound","Længdegrad":"Longitude","Lås alle bedrifter op":"Unlock all achievements","Lås dagens billede op igen":"Unlock today's photo again","LÅST OP":"UNLOCKED","maks. 5":"max. 5","Minimalistisk giver mere luft og roligere bevægelse":"Minimal mode adds more space and calmer motion","Mønter":"Coins","Mørkt tema":"Dark theme","MÅNEDENS EVENT":"EVENT OF THE MONTH","Månedlige":"Monthly","MÅNEDLIGT TESTEVENT":"MONTHLY TEST EVENT","Nat · nebula":"Night · nebula","Natur":"Nature","Nemmere for øjnene om aftenen":"Easier on the eyes at night","Niveau 1 · Nybegynder":"Level 1 · Beginner","Nogle af listen ovenfor er demo — dine rigtige venner dukker op når I har tilføjet hinanden.":"Some entries above are demos — your real friends appear after you add each other.","Nulstil alt":"Reset everything","Nulstilles den 1. i hver måned":"Resets on the first day of each month","NULSTILLES HVER DAG":"RESETS DAILY","Nulstilles hver mandag":"Resets every Monday","Nye":"New","Nyt item":"New item","Næste":"Next","Næste billede om":"Next photo in","Næste reward":"Next reward","Næste reward ved 400 XP":"Next reward at 400 XP","Næste reward:":"Next reward:","Offline — dine billeder gemmes og synkroniseres når du er online igen":"Offline — your photos are saved and synced when you are online again","Pengepunge og hotspots spawner tilfældigt på kortet. Brug “Reroll bags” for at flytte alle aktive placeringer.":"Money bags and hotspots spawn randomly on the map. Use “Reroll bags” to move all active locations.","Planter · vækst":"Plants · growth","Premium-temaer købes i Butikken":"Premium themes are purchased in the Shop","Profil":"Profile","Prototype-test":"Prototype test","Rejse":"Journey","Rekord":"Best","Ring rundt om dit profilbillede":"Ring around your profile picture","Ringe":"Rings","S&R Diamant":"B&R Diamond","Saml Event-XP og lås et komplet nebula-look op.":"Collect Event XP and unlock a complete nebula look.","Se alle":"See all","Send":"Send","Seneste billeder":"Recent photos","Skifter hele appens udseende":"Changes the entire app's appearance","Skitsebog":"Sketchbook","Skrifttyper":"Fonts","Slet alle billeder":"Delete all photos","Slet dette billede":"Delete this photo","Sol · energi":"Sun · energy","SPRING OVER":"SKIP","Spring over":"Skip","Start noget, der vokser":"Start something that grows","Streak milestones":"Streak milestones","Streak test":"Streak test","STREAKS & REWARDS":"STREAKS & REWARDS","Streg (dage)":"Streak (days)","STREG Alpha 3.53 · ingen reklamer, aldrig":"STREG Alpha 3.53 · no ads, ever","STREG FORLÆNGET":"STREAK EXTENDED","Streg-friskere":"Streak refreshers","Streg-frysere":"Streak freezes","Søg":"Search","Sølv":"Silver","Sådan virker eventet":"How the event works","Tag 2 billeder i dag":"Take 2 photos today","Tag billede":"Take photo","Tag dagens billede uden kamera":"Take today's photo without a camera","Tag dagens billede, så dukker det op her.":"Take today's photo and it will appear here.","Tag dit første, så bygger rejsen sig selv.":"Take your first one and the journey builds itself.","Tekst":"Text","Temaer":"Themes","Test dag 100":"Test day 100","Test dag 14":"Test day 14","Test dag 150":"Test day 150","Test dag 200":"Test day 200","Test dag 250":"Test day 250","Test dag 30":"Test day 30","Test dag 300":"Test day 300","Test dag 365":"Test day 365","Test dag 50":"Test day 50","Test dag 7":"Test day 7","Testpanel":"Test panel","TIDLIGERE STREAK":"PREVIOUS STREAK","Tilbage":"Back","tilbage":"remaining","Tilbage til galleri":"Back to gallery","Tilføj":"Add","Tilføj 5 test-billeder":"Add 5 test photos","Titel":"Title","Titler":"Titles","TRYK FOR AT FORTSÆTTE":"TAP TO CONTINUE","Tryk hvor som helst for at lukke":"Tap anywhere to close","Tryk på en hex for at markere, hvor du står.":"Tap a hex to mark where you are.","Udfordring fuldført":"Challenge complete","Udseende":"Appearance","Udseende af kortet":"Map appearance","Udvikler":"Developer","Udvikler-værktøjer":"Developer tools","Ugentlige":"Weekly","Ultra-eksklusiv valuta":"Ultra-exclusive currency","Ultra-sjældne black hole-ringe, farver, titler, font og tema":"Ultra-rare Black Hole rings, colors, titles, font, and theme","Upload billede fra galleri":"Upload photo from gallery","Uploadede billeder bruger din placering lige nu — ikke der hvor billedet blev taget.":"Uploaded photos use your current location — not where the photo was taken.","ved 400 XP":"at 400 XP","Velkommen til STREG":"Welcome to STREG","Venner":"Friends","Vibration":"Vibration","Videre":"Continue","Vis introduktion igen":"Show introduction again","Vis på kort":"Show on map","Vises under dit navn":"Shown under your name","Visning":"Display","Vækker kortet…":"Waking the map…","Vælg brugernavn":"Choose username","Vælg dit udseende":"Choose your look","Vælg en hex":"Choose a hex","Vælg et brugernavn":"Choose a username","Vælg mellem de badges, du har låst op.":"Choose from the badges you have unlocked.","Vælg profilbillede":"Choose profile picture","Åbn event":"Open event","1 billede":"1 photo","10 billeder":"10 photos","100 dages streg":"100-day streak","12 Streg":"12 Streak","3 dages streg":"3-day streak","30 dages streg":"30-day streak","48 Billeder":"48 Photos","5 test-billeder tilføjet":"5 test photos added","50 billeder":"50 photos","500 mønter":"500 coins","7 dages streg":"7-day streak","920 Mønter":"920 Coins","af 56 dage":"of 56 days","Alle bedrifter låst op":"All achievements unlocked","Alle billeder slettet":"All photos deleted","billede":"photo","billeder":"photos","BLACK HOLE-FARVE LÅST OP":"BLACK HOLE COLOR UNLOCKED","BLACK HOLE-FONT LÅST OP":"BLACK HOLE FONT UNLOCKED","BLACK HOLE-RING LÅST OP":"BLACK HOLE RING UNLOCKED","BLACK HOLE-TEMA LÅST OP":"BLACK HOLE THEME UNLOCKED","BLACK HOLE-TITEL LÅST OP":"BLACK HOLE TITLE UNLOCKED","Brug":"Use","Bær":"Wear","dage i træk — ét billede hver dag, altid et nyt sted":"day streak — one photo every day, always somewhere new","Din streak og dine billeder følger med på alle enheder.":"Your streak and photos follow you across all devices.","Din STREG Sådan føles temaet i appen":"Your STREG This is how the theme feels in the app","Du er nu":"You are now","Du sendes sikkert videre til Google.":"You will be redirected securely to Google.","FARVE LÅST OP":"COLOR UNLOCKED","Foto før 07":"Photo before 7 AM","FRYSER LÅST OP":"FREEZE UNLOCKED","Første skridt":"First step","gem":"gem","Google-login kræver internet — du kan fortsætte som gæst.":"Google sign-in requires internet — you can continue as a guest.","GPS: adgang nægtet — tillad lokation":"GPS: access denied — allow location","GPS: ikke understøttet":"GPS: not supported","GPS: position utilgængelig":"GPS: position unavailable","Håndskrift":"Handwriting","I brug":"Equipped","Ikke nok Fragments":"Not enough Fragments","Ikke nok mønter":"Not enough coins","Ingen aktive challenges lige nu":"No active challenges right now","Klar til køb":"Ready to buy","Klaret!":"Complete!","Kræver":"Requires","Kun preview — temaet bliver ikke købt eller gemt.":"Preview only — the theme will not be purchased or saved.","Køb":"Buy","Køb Black Hole":"Buy Black Hole","købt!":"purchased!","Langtursgænger":"Long-distance walker","Luk preview":"Close preview","Løvkrans":"Leaf Crown","Låst":"Locked","mønter":"coins","Møntjæger":"Coin Hunter","Månedsmester":"Monthly Master","Månering":"Moon Ring","Natteglød":"Nightglow","Niveau":"Level","Niveau 5":"Level 5","Niveau 5 · Vandrer":"Level 5 · Wanderer","Niveau 6 · Skovvandrer":"Level 6 · Forest Wanderer","Niveau 7 · Naturmester":"Level 7 · Nature Master","Niveau 8 · Stifinder":"Level 8 · Pathfinder","Niveau 9 · Bjergbestiger":"Level 9 · Mountaineer","Prøv Google-login igen":"Try Google sign-in again","Rigtig ven":"Real friend","RING LÅST OP":"RING UNLOCKED","Skjold købt!":"Shield purchased!","Slet ALLE billeder? Streak og XP beholdes.":"Delete ALL photos? Streak and XP are kept.","Solbærer":"Sunbearer","Solstråle":"Sunbeam","Sort & Rød Diamant":"Black & Red Diamond","Streg-skjold":"Streak shield","Tag dagens billede":"Take today's photo","Taget i brug":"Equipped","taget i brug":"equipped","TEMA LÅST OP":"THEME UNLOCKED","TITEL LÅST OP":"TITLE UNLOCKED","Tre i træk":"Three in a row","udforsket hex":"explored hex","Vildmarksånd":"Wilderness Spirit","Åbn det fulde kort":"Open the full map","Åbner Google…":"Opening Google…","Sprog":"Language","Appens sprog":"Language used throughout the app","Dansk":"Danish","Engelsk":"English","Sprog skiftet til engelsk":"Language changed to English","Sprog skiftet til dansk":"Language changed to Danish","fx spis et æble":"e.g. eat an apple","Skriv en besked…":"Write a message…","BLACK HOLE LÅST OP":"BLACK HOLE UNLOCKED",". Bliv ved — næste titel venter.":". Keep going — the next title awaits.","Du har allerede maks (":"You already have the maximum (","GPS: aktiv · nøjagtighed ±":"GPS: active · accuracy ±","GPS: fejl":"GPS: error","Ikke nok Fragments — mangler":"Not enough Fragments — missing","Ikke nok mønter — mangler":"Not enough coins — missing","købt for":"purchased for","købt og taget i brug!":"purchased and equipped!","Skjold købt! Du har nu":"Shield purchased! You now have","X/Y dage":"X/Y days","Klar!":"Ready!","Afventer…":"Pending…","Fundet loot":"Loot found","LOOT FUNDET":"LOOT FOUND","Tryk for at åbne":"Tap to open","+5 Fragments tilføjet til test":"+5 Fragments added for testing","Aktivt event:":"Active event:","Alt er nulstillet":"Everything has been reset","Anmodning afvist":"Request declined","Anmodning sendt til @":"Request sent to @","Behandler billede…":"Processing photo…","Billede slettet":"Photo deleted","Billeder gemmes ikke i skyen lige nu (":"Photos are not being saved to the cloud right now (","Challenge er ikke klar endnu":"Challenge is not ready yet","Dagens billede er allerede taget — kom igen i morgen":"Today's photo has already been taken — come back tomorrow","Dagens billede er taget — brug \"Lås dagens billede op igen\" først":"Today's photo has been taken — use “Unlock today's photo again” first","Dagens billede er taget — challenges er stadig åbne":"Today's photo has been taken — challenges are still open","Dagens billede låst op":"Today's photo unlocked","Data eksporteret (uden billeder)":"Data exported (without photos)","Deling blev afbrudt":"Sharing was cancelled","Deling virker ikke i denne browser":"Sharing is not supported in this browser","Den Google-konto findes allerede som en STREG-konto — logger dig ind på den i stedet…":"That Google account already exists as a STREG account — signing you into it instead…","Denne hex er allerede udforsket":"This hex has already been explored","Denne hex er allerede udforsket — gå ind i en ny hexagon":"This hex has already been explored — enter a new hex","Denne pengepung er allerede åbnet i dag":"This money bag has already been opened today","Der er ikke nok nye hotspot-placeringer i området":"There are not enough new hotspot locations in the area","Der er ikke nok nye placeringer i området":"There are not enough new locations in the area","Dette hotspot er allerede hentet":"This hotspot has already been collected","Fuldført! +":"Completed! +","Gemt!":"Saved!","Google-fejl:":"Google error:","I er nu venner!":"You are now friends!","Ingen hexes eller kister at vise endnu":"No hexes or money bags to show yet","Kunne ikke finde denne hex":"Could not find this hex","Kunne ikke finde en ledig test-hex i nærheden":"Could not find an available test hex nearby","Kunne ikke hente din placering":"Could not get your location","Kunne ikke hente GPS — upload kræver placering":"Could not get GPS — uploads require a location","Kunne ikke lave kortet":"Could not create the card","Kunne ikke logge ud:":"Could not sign out:","Kunne ikke læse billedet":"Could not read the photo","Kunne ikke sende beskeden — prøv igen":"Could not send the message — try again","Køb dette tema i Butikken først":"Buy this theme in the Shop first","Lageret er fuldt — ældste billeder ryddet":"Storage is full — oldest photos cleared","Log ud? Din konto og data er sikret i skyen, men denne telefon nulstilles til en frisk, tom start indtil du logger ind igen.":"Sign out? Your account and data are secured in the cloud, but this phone will reset to a fresh empty start until you sign in again.","Logget ud — klar til en ny konto":"Signed out — ready for a new account","Lyd fra":"Sound off","Lyd til":"Sound on","Låst:":"Locked:","Nulstil ALT? Streg, billeder, XP og mønter slettes permanent.":"Reset EVERYTHING? Streak, photos, XP, and coins will be permanently deleted.","Nye challenges rullet ind":"New challenges rolled in","Nyt badge låst op:":"New badge unlocked:","Online igen — synkroniserer":"Back online — syncing","Position sat til":"Position set to","Profilbillede fjernet":"Profile picture removed","Profilbillede gemt":"Profile picture saved","Skriv en gyldig email-adresse":"Enter a valid email address","Slet dette billede permanent?":"Delete this photo permanently?","Stats opdateret":"Stats updated","Streak +":"Streak +","Så er du i gang — god fornøjelse!":"You are all set — have fun!","Tema:":"Theme:","Ugyldige koordinater":"Invalid coordinates","Venter på din kortplacering":"Waiting for your map location","Allerede hentet":"Already collected","Billede gemt!":"Photo saved!","Billede kan blive taget her":"A photo can be taken here","Billede kan ikke tages endnu — gå ind i hexen for at tage det.":"A photo cannot be taken yet — enter the hex to take it.","Brugernavn gemt! Andre kan nu finde dig som @":"Username saved! Others can now find you as @","Denne hex er udforsket — gå ind i en ny hexagon":"This hex is explored — enter a new hex","Denne sjældne reward er allerede hentet. Nye hotspots kommer ved næste rotation.":"This rare reward has already been collected. New hotspots arrive with the next rotation.","FEJL:":"ERROR:","Find en ny hex":"Find a new hex","Finder din hexagon…":"Finding your hex…","Gå ind i en ny hexagon for at tage billedet":"Enter a new hex to take the photo","Gå ind i en ny hexagon for at tage dit næste billede.":"Enter a new hex to take your next photo.","Gå ind i hexen":"Enter the hex","Henter placering…":"Getting location…","Hexagon allerede udforsket":"Hex already explored","Hotspot hentet":"Hotspot collected","Ingen beskeder endnu — sig hej!":"No messages yet — say hello!","Ingen billeder endnu":"No photos yet","Ingen fundet":"None found","Ingen placering":"No location","Ingen sky-forbindelse":"No cloud connection","Kisten er allerede åbnet i dag, men du kan stadig tage et billede i denne hex.":"The money bag has already been opened today, but you can still take a photo in this hex.","Kortet kunne ikke indlæses. Tjek internetforbindelsen.":"The map could not be loaded. Check your internet connection.","Kunne ikke hente beskeder":"Could not load messages","Kunne ikke hente billeder":"Could not load photos","Kunne ikke hente GPS — tjek tilladelser":"Could not get GPS — check permissions","Kunne ikke sende linket lige nu. Prøv igen om lidt.":"Could not send the link right now. Try again shortly.","Ny hexagon — klar til dagens billede":"New hex — ready for today's photo","NY STREAK":"NEW STREAK","Tag et billede for at gøre hexen rød og claim området.":"Take a photo to turn the hex red and claim the area.","Tag et billede her og åbn kisten for at få +":"Take a photo here and open the money bag to get +","Tjek din indbakke — vi har sendt et login-link til":"Check your inbox — we sent a sign-in link to","Tryk på en hex på kortet.":"Tap a hex on the map.","100 dage. Du har bygget noget, som de fleste aldrig når. Nu begynder legendariske milestones.":"100 days. You have built something most people never reach. Legendary milestones begin now.","150 dage. Din streak roterer videre som sit eget system — ren fremdrift, ren respekt.":"150 days. Your streak keeps turning like its own system — pure momentum, pure respect.","200 dage. Her går det fra stærkt til absurd. Nu føles det som en hel film, ikke bare en animation.":"200 days. This is where strong becomes absurd. It now feels like a full movie, not just an animation.","250 dage. Farverne åbner sig, lyset bliver større, og din streak har nu sin egen aura.":"250 days. The colors open up, the light grows, and your streak now has its own aura.","30 dage. Nu begynder cutscenes, rewards og prestige at føles større og mere filmiske.":"30 days. Cutscenes, rewards, and prestige now begin to feel bigger and more cinematic.","300 dage. Alt skrues op: større lys, tungere punch og ren prestige på hver frame.":"300 days. Everything turns up: bigger lights, heavier impact, and pure prestige in every frame.","365 dage. Et helt år. Den ultimative STREG-milestone — bygget til at føles som finalen i en film.":"365 days. A full year. The ultimate STREG milestone — built to feel like a movie finale.","50 dage uden at falde af. Din streak er varm, hurtig og virkelig svær at stoppe nu.":"50 days without falling off. Your streak is hot, fast, and genuinely hard to stop now.","Billede med en ven":"Photo with a friend","Byg en vækststreak på 5 dage":"Build a five-day growth streak","Den grønneste ting du kan finde":"The greenest thing you can find","Din første store streak er nået. STREG begynder at føles som en rigtig vane.":"Your first major streak has been reached. STREG is starting to feel like a real habit.","Din vane:":"Your habit:","Erfaren":"Experienced","Et sted hvor du kun hører natur":"A place where you only hear nature","Find noget rødt":"Find something red","Fuldfør 3 daglige challenges":"Complete 3 daily challenges","Første foto":"First photo","Glødende profilring":"Glowing profile ring","Grøn gradientfarve":"Green gradient color","Hav mindst 200 mønter":"Have at least 200 coins","Hav mindst 300 mønter":"Have at least 300 coins","Hold en streak på mindst 3 dage":"Maintain a streak of at least 3 days","Hold en streak på mindst 7 dage":"Maintain a streak of at least 7 days","Klar 1 normal daglig challenge":"Complete 1 regular daily challenge","Klar 3 normale daglige challenges":"Complete 3 regular daily challenges","Klar fra start":"Ready from the start","Kom 1 km fra et af dine steder":"Get 1 km away from one of your places","Krams et træ (bevis det)":"Hug a tree (prove it)","Levende grøn profilring":"Vivid green profile ring","Lås 3 bedrifter op":"Unlock 3 achievements","Lås 5 bedrifter op":"Unlock 5 achievements","Lås 6 bedrifter op":"Unlock 6 achievements","Morgenfugl":"Early Bird","Måned 1":"Month 1","MÅNEDLIGT NATEVENT":"MONTHLY NIGHT EVENT","MÅNEDLIGT SOLAREVENT":"MONTHLY SOLAR EVENT","MÅNEDLIGT VÆKSTEVENT":"MONTHLY GROWTH EVENT","Måneglød":"Moonlight","Natteravn":"Night Owl","Noget mindre end din tommelfinger":"Something smaller than your thumb","Noget ældre end dig":"Something older than you","Nå en streak på 100 dage":"Reach a 100-day streak","Nå en streak på 3 dage":"Reach a 3-day streak","Nå en streak på 7 dage":"Reach a 7-day streak","Nå en streg på 15 dage":"Reach a 15-day streak","Nå en streg på 25 dage":"Reach a 25-day streak","Nå en streg på 5 dage":"Reach a 5-day streak","Nå niveau 10":"Reach level 10","Nå niveau 5":"Reach level 5","Samler":"Collector","Stabil Glød":"Steady Glow","Tag 15 billeder denne måned":"Take 15 photos this month","Tag 25 billeder":"Take 25 photos","Tag 25 billeder denne måned":"Take 25 photos this month","Tag 5 billeder denne uge":"Take 5 photos this week","Tag dagens STREG-billede":"Take today's STREG photo","Tag dit første billede":"Take your first photo","Tag et billede af vand":"Take a photo of water","Tag et billede efter kl. 18":"Take a photo after 6 PM","Tag et billede efter kl. 20":"Take a photo after 8 PM","Tag et billede før kl. 10":"Take a photo before 10 AM","Tag et billede før kl. 9":"Take a photo before 9 AM","Tag et billede i dagtimerne":"Take a photo during daylight","Tag et billede lige opad":"Take a photo straight up","Tag et billede mellem kl. 11 og 15":"Take a photo between 11 AM and 3 PM","Tag mindst ét billede alle 7 dage":"Take at least one photo on all 7 days","Tag noget fra butikken i brug":"Equip something from the shop","To uger i træk. Nu ser din streak ikke bare heldig ud — den ser stabil ud.":"Two weeks in a row. Your streak no longer looks lucky — it looks stable.","Udforsk 3 nye steder i dag":"Explore 3 new places today","Ugen ud":"Full Week","Nybegynder":"Beginner","Vandrer":"Wanderer","Stifinder":"Pathfinder","Skovvandrer":"Forest Wanderer","Opdagelsesrejsende":"Explorer","Bjergbestiger":"Mountaineer","Naturmester":"Nature Master","Legende":"Legend","Hundrede":"One Hundred","Kartograf":"Cartographer","Foto efter 22":"Photo after 10 PM","1 km fra start":"1 km from the start","Bedrift låst op!":"Achievement unlocked!","Sejt!":"Awesome!","Spejder":"Scout","Flamme":"Flame","Ugeild":"Weekfire","Sti-legende":"Trail Legend","Allerede forbundet, eller anmodning er sendt":"Already connected or a request has been sent","Brug 3-20 bogstaver, tal eller understreg (ingen mellemrum)":"Use 3–20 letters, numbers, or underscores (no spaces)","Byg solenergi og lås et varmt, eksplosivt reward-sæt op.":"Build solar energy and unlock a warm, explosive reward set.","Challenges giver kun Event-XP. Rewards låses automatisk op ved deres milestone, og Midnight-progressionen gemmes separat.":"Challenges only grant Event XP. Rewards unlock automatically at their milestone, and Midnight progression is stored separately.","Det brugernavn er allerede taget":"That username is already taken","EVENT REWARD LÅST OP":"EVENT REWARD UNLOCKED","Fang dagslys, hold din streak og saml Solar Event-XP gennem en glødende reward path.":"Capture daylight, maintain your streak, and collect Solar Event XP through a glowing reward path.","Jeg er på":"I am on","Klar natlige event-challenges, saml Event-XP og lås kosmiske rewards op direkte på baren.":"Complete nightly event challenges, collect Event XP, and unlock cosmic rewards directly on the bar.","Komplet event-tema":"Complete event theme","Komplet plante-tema":"Complete plant theme","Komplet solar-tema":"Complete solar theme","natteravn":"night owl","Ny hexagon udforsket":"New hex explored","Plant Bloom har sin egen Event-XP og daglige progression. Skift tilbage senere uden at miste din vækst.":"Plant Bloom has its own Event XP and daily progression. Switch back later without losing your growth.","Saml vækst-XP gennem billeder, streaks og udforskning. Hver milestone får eventet til at gro videre.":"Collect growth XP through photos, streaks, and exploration. Each milestone makes the event grow further.","SKRIFTTYPE LÅST OP":"FONT UNLOCKED","Solar Flare gemmer sin progression separat. Dine Solar-rewards forbliver ejet, selv når du skifter event.":"Solar Flare stores its progression separately. Your Solar rewards remain owned even when you switch events.","Solar-ring":"Solar ring","Udforsk nye steder og dyrk et levende grønt reward-sæt.":"Explore new places and grow a vivid green reward set.","VÆKST":"GROWTH","din@email.dk":"you@example.com","Indlæser appen":"Loading the app","Luk":"Close","Misser du en dag, bruges et skjold automatisk, så din streg ikke nulstilles.":"If you miss a day, a shield is used automatically so your streak is not reset.","Profilting, temaer og skrifttyper er kosmetiske. Frysere beskytter din streg.":"Profile items, themes, and fonts are cosmetic. Freezes protect your streak.","Se billeder":"View photos","STREG indlæser":"STREG is loading","Søg efter brugernavn…":"Search by username…","Vælg navnebadge":"Choose name badge","Åbn Midnight Bloom-eventet":"Open the Midnight Bloom event","i går":"yesterday","i morgen":"tomorrow","dag":"day","timer":"hours","minutter":"minutes","sekunder":"seconds","åben":"open","lukket":"closed","Ny hexagon":"New hex","App-sprog":"App language","Kom igen i morgen":"Come back tomorrow","Kompas blokeret":"Compass blocked","maks.":"max.","GPS: manuelt sat (dev) ·":"GPS: manually set (dev) ·","Send login-link":"Send login link","Sender…":"Sending…","Kun":"Only","Tag et ekstra":"Take another","Finder GPS…":"Finding GPS…","Fang solnedgangen":"Capture the sunset","Find en trappe":"Find a staircase","Find spor af et dyr":"Find traces of an animal","Find en blomst":"Find a flower","En sky der ligner noget":"A cloud that looks like something","En sej skygge":"A cool shadow","Noget perfekt symmetrisk":"Something perfectly symmetrical","Giv plante-eventet 3 nye steder":"Give the plant event 3 new places","Solfanger":"Sun Catcher","Regnvejrskriger":"Rain Warrior","Kilometerkonge":"Kilometre King","Vild Gartner":"Wild Gardener","Solnedgang":"Sunset","Nordlys":"Northern Lights","Klorofyl":"Chlorophyll","Guldring":"Gold Ring","Ildring":"Fire Ring","Stjerneglimt":"Starlight","Vinranke":"Vine","Klassisk":"Classic","Rund":"Rounded","Skarp":"Sharp","Krom":"Chrome","Organisk event-font":"Organic event font","Kraftig solar-font":"Bold solar font","Varm solar-gradient":"Warm solar gradient","SLUTTER OM":"ENDS IN","SÆSON-PROGRESSION":"SEASON PROGRESS","RANG I":"RANK I","FREMSKRIDT":"PROGRESS","DAGLIGE KLARE":"DAILY READY","REWARDS LÅST OP":"REWARDS UNLOCKED","DAGE IGEN":"DAYS LEFT","EVENTOVERSIGT":"EVENT OVERVIEW","Eventet er komplet":"The event is complete"});
   const DA = Object.freeze({"Streak":"Streg","Test photo":"Testbillede","Challenges":"Udfordringer","Fragments":"Fragmenter","BLACK HOLE FRAGMENTS":"BLACK HOLE-FRAGMENTER","Black Hole Vault":"Black Hole-boks","Reroll bags":"Genplacér pengepunge","REWARD PATH":"BELØNNINGSSTI","Connections":"Forbindelser","Challenge complete":"Udfordring klaret","UNLOCKED":"LÅST OP","NEW DROP":"NYT DROP","COINS":"MØNTER","STREAK MILESTONE":"STREG-MILEPÆL","BLACK HOLE ITEM ACQUIRED":"BLACK HOLE-GENSTAND MODTAGET","Reward":"Belønning","STREG EVENT SERIES · 01":"STREG EVENTSERIE · 01"});
   const DIRECT_EN = Object.freeze({
+    "Ét billede. Hver dag. Et nyt sted.":"One photo. Every day. Somewhere new.",
+    "Ét billede. Hver dag.":"One photo. Every day.",
+    "Et nyt sted.":"Somewhere new.",
+    "Byg din streak ét sted ad gangen.":"Build your streak one place at a time.",
+    "Fortsæt som gæst":"Continue as guest",
     "Genplacér pengepunge":"Reroll money bags",
     "Vis pengepunge":"Show money bags",
     "Dagens pengepunge loader…":"Loading today's money bags…",
