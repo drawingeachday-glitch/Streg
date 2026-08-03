@@ -1,3 +1,11 @@
+/* Default Nature theme streak flame: warm fire, not green */
+:root[data-style="nature"]{
+  --streak-flame-main:#FF7A2F;
+  --streak-flame-dark:#B82518;
+  --streak-flame-light:#FFD66B;
+  --streak-flame-glow:rgba(255,82,31,.48);
+}
+
 /* Home streak command card */
 .streak-command-hero{
   --streak-route-text:#fffaf4;
