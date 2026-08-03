@@ -22,7 +22,6 @@
       day:'dag',
       reward:'BELØNNING',
       journey:'Se din rejse',
-      challengeReady:'Klar til nogle udfordringer?',
       route:function(start,end){ return 'Streak-rute fra dag ' + start + ' til dag ' + end; },
       node:function(day,state){ return 'Dag ' + day + ', ' + state; },
       completed:'klaret',
@@ -37,7 +36,6 @@
       day:'day',
       reward:'REWARD',
       journey:'See your journey',
-      challengeReady:'Ready for some challenges?',
       route:function(start,end){ return 'Streak route from day ' + start + ' to day ' + end; },
       node:function(day,state){ return 'Day ' + day + ', ' + state; },
       completed:'complete',
@@ -59,15 +57,6 @@
       if(typeof S !== 'undefined' && S) return S;
     }catch(error){}
     return {};
-  }
-
-  function isDailyPhotoDone(){
-    try{
-      if(typeof dailyDone === 'function') return !!dailyDone();
-    }catch(error){}
-    var state = getState();
-    var today = new Date().toISOString().slice(0,10);
-    return state.lastDay === today;
   }
 
   function getTarget(streak){
@@ -124,91 +113,37 @@
 
     var style = document.createElement('style');
     style.id = 'streakRouteRewardStyles';
-    style.textContent = `
-      #streakRouteKicker,#streakRouteRemaining,.streak-today-status{display:none!important;}
-      .streak-command-hero{grid-template-columns:132px minmax(175px,.72fr) minmax(292px,1.28fr)!important;}
-      .streak-command-hero .hero-flame-outline{width:128px!important;height:142px!important;margin-left:-10px!important;}
-      .streak-command-hero .hero-flame-num{font-size:46px!important;padding-top:18px!important;}
-      .streak-command-hero .hero-lr-title{font-size:34px!important;line-height:1.04!important;letter-spacing:-.025em;}
-      .streak-route-head{justify-content:flex-start!important;}
-      .streak-route-footer{justify-content:center!important;margin-top:10px;}
-      .streak-journey-link{display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:5px!important;width:150px!important;min-height:32px!important;padding:6px 12px!important;border:1px solid rgba(255,255,255,.14)!important;border-radius:999px!important;color:var(--streak-route-text)!important;background:linear-gradient(145deg,rgba(255,255,255,.13),rgba(255,255,255,.055))!important;box-shadow:inset 0 1px rgba(255,255,255,.1),0 7px 15px rgba(0,0,0,.14)!important;font-size:11px!important;font-weight:950!important;letter-spacing:.01em;opacity:1!important;backdrop-filter:blur(10px);}
-      .streak-journey-link:hover{transform:translateY(-1px)!important;box-shadow:inset 0 1px rgba(255,255,255,.14),0 9px 18px rgba(0,0,0,.2),0 0 12px color-mix(in srgb,var(--streak-flame-main) 16%,transparent)!important;}
-      .streak-journey-link svg{width:12px!important;height:12px!important;}
-      .streak-journey-link span{display:inline!important;}
-      .streak-route-node.is-milestone-reward{padding-bottom:13px;}
-      .streak-route-reward-badge{position:absolute;z-index:4;top:-7px;left:calc(50% + 4px);display:grid;place-items:center;width:17px;height:17px;border:1px solid rgba(255,255,255,.55);border-radius:50%;color:#24130a;background:linear-gradient(145deg,#fff0a7,#f6b73f 52%,#e47a20);box-shadow:0 0 0 2px rgba(255,255,255,.08),0 0 15px rgba(255,184,63,.52),0 4px 10px rgba(0,0,0,.3);animation:streakRewardPulse 2.2s ease-in-out infinite;}
-      .streak-route-reward-badge svg{width:10px;height:10px;stroke-width:2.2;}
-      .streak-route-reward-label{display:block;margin-top:-2px;color:#ffd978;font-size:6.5px;font-weight:950;letter-spacing:.11em;line-height:1;text-transform:uppercase;text-shadow:0 0 8px rgba(255,190,72,.35);}
-
-      .capture-slider>.capture-panel:first-child{position:relative!important;padding:0!important;overflow:visible!important;}
-      #capIcon:has(#miniRealMapCard){width:min(100%,980px)!important;height:430px!important;max-width:none!important;margin:0 auto!important;border:0!important;border-radius:28px!important;overflow:hidden!important;box-shadow:0 28px 68px rgba(11,18,24,.3)!important;}
-      #capIcon:has(#miniRealMapCard) .mini-real-map-card{border-radius:inherit!important;}
-      #capIcon:has(#miniRealMapCard) .mini-real-map-shade{background:linear-gradient(to top,rgba(7,10,15,.88) 0%,rgba(7,10,15,.34) 36%,transparent 68%)!important;}
-      #capIcon:has(#miniRealMapCard)~#capTitle,#capIcon:has(#miniRealMapCard)~#capHint{display:none!important;}
-      #capIcon:has(#miniRealMapCard) .mini-real-map-open{display:none!important;}
-      #capIcon:has(#miniRealMapCard) .mini-real-map-bottom{top:14px!important;right:auto!important;bottom:auto!important;left:14px!important;width:auto!important;padding:7px 11px!important;border-radius:999px!important;background:rgba(6,10,15,.58)!important;box-shadow:0 8px 22px rgba(0,0,0,.22)!important;backdrop-filter:blur(12px);}
-      #capIcon:has(#miniRealMapCard) .mini-real-map-copy{color:#fff!important;text-shadow:0 1px 6px rgba(0,0,0,.75)!important;}
-      #capIcon:has(#miniRealMapCard)~.capture-actions{position:absolute!important;z-index:12!important;left:50%!important;bottom:24px!important;display:flex!important;justify-content:center!important;gap:12px!important;width:max-content!important;max-width:calc(100% - 32px)!important;margin:0!important;transform:translateX(-50%)!important;}
-      #capIcon:has(#miniRealMapCard)~.capture-actions .btn{min-width:138px!important;padding:14px 25px!important;border-radius:14px!important;box-shadow:0 13px 30px rgba(0,0,0,.32)!important;}
-      #capIcon:has(#miniRealMapCard)~.capture-actions .btn-test-photo{background:rgba(255,255,255,.92)!important;backdrop-filter:blur(12px);}
-
-      .capture.ring-mode{margin-bottom:0!important;padding:0!important;overflow:visible!important;border:1px solid var(--line)!important;border-bottom:0!important;border-radius:var(--r-l) var(--r-l) 0 0!important;background:var(--card)!important;box-shadow:none!important;}
-      .capture.ring-mode .capture-slider{overflow:visible!important;}
-      .capture.ring-mode .next-photo-panel{display:grid!important;grid-template-columns:64px minmax(0,1fr)!important;grid-template-rows:auto auto!important;column-gap:15px!important;row-gap:2px!important;align-items:center!important;width:100%!important;padding:18px 20px 16px!important;box-sizing:border-box!important;text-align:left!important;}
-      .capture.ring-mode .next-photo-panel::before{content:attr(data-challenge-ready);grid-column:2;grid-row:1;color:var(--ink);font-family:var(--font-display);font-size:22px;font-weight:800;line-height:1.08;letter-spacing:-.02em;}
-      .capture.ring-mode .ring-wrap{grid-column:1;grid-row:1 / span 2;width:58px!important;height:58px!important;}
-      .capture.ring-mode .next-photo-text{grid-column:2;grid-row:2;display:flex!important;align-items:baseline!important;gap:7px!important;min-width:0;}
-      .capture.ring-mode .next-photo-label{font-size:10.5px!important;font-weight:700!important;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap;}
-      .capture.ring-mode .next-photo-time{margin:0!important;font-size:16px!important;font-weight:850!important;line-height:1!important;}
-      .capture.ring-mode .next-photo-sub{display:none!important;}
-      body:has(.capture.ring-mode) .section-head:has(+ #featuredChallengeCard){display:none!important;}
-      body:has(.capture.ring-mode) #featuredChallengeCard.featured-challenge,
-      body:has(.capture.ring-mode) #featuredChallengeCard.featured-challenge-empty{margin-top:-1px!important;margin-bottom:18px!important;padding:16px 20px 18px!important;border:1px solid var(--line)!important;border-top:1px solid color-mix(in srgb,var(--line) 72%,transparent)!important;border-radius:0 0 var(--r-l) var(--r-l)!important;background:var(--card)!important;box-shadow:var(--shadow-m)!important;}
-      body:has(.capture.ring-mode) #featuredChallengeCard.featured-challenge{gap:14px!important;}
-      body:has(.capture.ring-mode) #featuredChallengeCard .featured-challenge-title{font-size:15.5px!important;font-weight:750!important;}
-      body:has(.capture.ring-mode) #featuredChallengeCard .featured-challenge-icon,
-      body:has(.capture.ring-mode) #featuredChallengeCard .featured-challenge-icon img{width:58px!important;height:58px!important;}
-
-      @keyframes streakRewardPulse{0%,100%{transform:translateY(0) scale(1);filter:brightness(1)}50%{transform:translateY(-1px) scale(1.08);filter:brightness(1.12)}}
-
-      @media(max-width:720px){
-        .streak-command-hero{grid-template-columns:112px minmax(0,1fr)!important}
-        .streak-command-hero .hero-flame-outline{width:112px!important;height:126px!important;margin-left:-6px!important}
-        .streak-command-hero .hero-flame-num{font-size:40px!important;padding-top:16px!important}
-        .streak-command-hero .hero-lr-title{font-size:29px!important}
-        .streak-journey-link{width:150px!important;font-size:11px!important;min-height:32px!important}
-        .streak-route-reward-badge{top:-6px;width:15px;height:15px}
-        .streak-route-reward-badge svg{width:9px;height:9px}
-        .streak-route-reward-label{font-size:6px}
-        #capIcon:has(#miniRealMapCard){height:360px!important;border-radius:24px!important}
-        #capIcon:has(#miniRealMapCard)~.capture-actions{bottom:20px!important}
-        #capIcon:has(#miniRealMapCard)~.capture-actions .btn{min-width:124px!important;padding:13px 20px!important}
-      }
-
-      @media(max-width:430px){
-        .streak-command-hero{grid-template-columns:96px minmax(0,1fr)!important}
-        .streak-command-hero .hero-flame-outline{width:104px!important;height:118px!important;margin-left:-7px!important}
-        .streak-command-hero .hero-flame-num{font-size:38px!important;padding-top:15px!important}
-        .streak-command-hero .hero-lr-title{font-size:26px!important}
-        .streak-route-footer{margin-top:9px!important}
-        .streak-journey-link{width:145px!important;min-height:30px!important;padding:5px 10px!important;font-size:10.5px!important}
-        .streak-journey-link svg{width:12px!important;height:12px!important}
-        #capIcon:has(#miniRealMapCard){height:310px!important;border-radius:22px!important}
-        #capIcon:has(#miniRealMapCard) .mini-real-map-bottom{top:11px!important;left:11px!important}
-        #capIcon:has(#miniRealMapCard)~.capture-actions{bottom:16px!important;gap:9px!important;max-width:calc(100% - 22px)!important}
-        #capIcon:has(#miniRealMapCard)~.capture-actions .btn{min-width:112px!important;padding:12px 16px!important;font-size:13px!important;border-radius:13px!important}
-        .capture.ring-mode .next-photo-panel{grid-template-columns:52px minmax(0,1fr)!important;column-gap:12px!important;padding:15px 15px 13px!important}
-        .capture.ring-mode .ring-wrap{width:48px!important;height:48px!important}
-        .capture.ring-mode .next-photo-panel::before{font-size:18px!important}
-        .capture.ring-mode .next-photo-label{font-size:9px!important}
-        .capture.ring-mode .next-photo-time{font-size:14px!important}
-        body:has(.capture.ring-mode) #featuredChallengeCard.featured-challenge,
-        body:has(.capture.ring-mode) #featuredChallengeCard.featured-challenge-empty{padding:14px 15px 16px!important}
-        body:has(.capture.ring-mode) #featuredChallengeCard .featured-challenge-icon,
-        body:has(.capture.ring-mode) #featuredChallengeCard .featured-challenge-icon img{width:52px!important;height:52px!important}
-      }
-    `;
+    style.textContent = [
+      '#streakRouteKicker,#streakRouteRemaining,.streak-today-status{display:none!important;}',
+      '.streak-command-hero{grid-template-columns:132px minmax(175px,.72fr) minmax(292px,1.28fr)!important;}',
+      '.streak-command-hero .hero-flame-outline{width:128px!important;height:142px!important;margin-left:-10px!important;}',
+      '.streak-command-hero .hero-flame-num{font-size:46px!important;padding-top:18px!important;}',
+      '.streak-command-hero .hero-lr-title{font-size:34px!important;line-height:1.04!important;letter-spacing:-.025em;}',
+      '.streak-route-head{justify-content:flex-start!important;}',
+      '.streak-route-footer{justify-content:center!important;margin-top:10px;}',
+      '.streak-journey-link{display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:5px!important;width:150px!important;min-height:32px!important;padding:6px 12px!important;border:1px solid rgba(255,255,255,.14)!important;border-radius:999px!important;color:var(--streak-route-text)!important;background:linear-gradient(145deg,rgba(255,255,255,.13),rgba(255,255,255,.055))!important;box-shadow:inset 0 1px rgba(255,255,255,.1),0 7px 15px rgba(0,0,0,.14)!important;font-size:11px!important;font-weight:950!important;letter-spacing:.01em;opacity:1!important;backdrop-filter:blur(10px);}',
+      '.streak-journey-link:hover{transform:translateY(-1px)!important;box-shadow:inset 0 1px rgba(255,255,255,.14),0 9px 18px rgba(0,0,0,.2),0 0 12px color-mix(in srgb,var(--streak-flame-main) 16%,transparent)!important;}',
+      '.streak-journey-link svg{width:12px!important;height:12px!important;}',
+      '.streak-journey-link span{display:inline!important;}',
+      '.streak-route-node.is-milestone-reward{padding-bottom:13px;}',
+      '.streak-route-reward-badge{position:absolute;z-index:4;top:-7px;left:calc(50% + 4px);display:grid;place-items:center;width:17px;height:17px;border:1px solid rgba(255,255,255,.55);border-radius:50%;color:#24130a;background:linear-gradient(145deg,#fff0a7,#f6b73f 52%,#e47a20);box-shadow:0 0 0 2px rgba(255,255,255,.08),0 0 15px rgba(255,184,63,.52),0 4px 10px rgba(0,0,0,.3);animation:streakRewardPulse 2.2s ease-in-out infinite;}',
+      '.streak-route-reward-badge svg{width:10px;height:10px;stroke-width:2.2;}',
+      '.streak-route-reward-label{display:block;margin-top:-2px;color:#ffd978;font-size:6.5px;font-weight:950;letter-spacing:.11em;line-height:1;text-transform:uppercase;text-shadow:0 0 8px rgba(255,190,72,.35);}',
+      '.capture-slider>.capture-panel:first-child{position:relative!important;padding:0!important;overflow:visible!important;}',
+      '#capIcon:has(#miniRealMapCard){width:min(100%,980px)!important;height:430px!important;max-width:none!important;margin:0 auto!important;border:0!important;border-radius:28px!important;overflow:hidden!important;box-shadow:0 28px 68px rgba(11,18,24,.3)!important;}',
+      '#capIcon:has(#miniRealMapCard) .mini-real-map-card{border-radius:inherit!important;}',
+      '#capIcon:has(#miniRealMapCard) .mini-real-map-shade{background:linear-gradient(to top,rgba(7,10,15,.88) 0%,rgba(7,10,15,.34) 36%,transparent 68%)!important;}',
+      '#capIcon:has(#miniRealMapCard)~#capTitle,#capIcon:has(#miniRealMapCard)~#capHint{display:none!important;}',
+      '#capIcon:has(#miniRealMapCard) .mini-real-map-open{display:none!important;}',
+      '#capIcon:has(#miniRealMapCard) .mini-real-map-bottom{top:14px!important;right:auto!important;bottom:auto!important;left:14px!important;width:auto!important;padding:7px 11px!important;border-radius:999px!important;background:rgba(6,10,15,.58)!important;box-shadow:0 8px 22px rgba(0,0,0,.22)!important;backdrop-filter:blur(12px);}',
+      '#capIcon:has(#miniRealMapCard) .mini-real-map-copy{color:#fff!important;text-shadow:0 1px 6px rgba(0,0,0,.75)!important;}',
+      '#capIcon:has(#miniRealMapCard)~.capture-actions{position:absolute!important;z-index:12!important;left:50%!important;bottom:24px!important;display:flex!important;justify-content:center!important;gap:12px!important;width:max-content!important;max-width:calc(100% - 32px)!important;margin:0!important;transform:translateX(-50%)!important;}',
+      '#capIcon:has(#miniRealMapCard)~.capture-actions .btn{min-width:138px!important;padding:14px 25px!important;border-radius:14px!important;box-shadow:0 13px 30px rgba(0,0,0,.32)!important;}',
+      '#capIcon:has(#miniRealMapCard)~.capture-actions .btn-test-photo{background:rgba(255,255,255,.92)!important;backdrop-filter:blur(12px);}',
+      '@keyframes streakRewardPulse{0%,100%{transform:translateY(0) scale(1);filter:brightness(1)}50%{transform:translateY(-1px) scale(1.08);filter:brightness(1.12)}}',
+      '@media(max-width:720px){.streak-command-hero{grid-template-columns:112px minmax(0,1fr)!important}.streak-command-hero .hero-flame-outline{width:112px!important;height:126px!important;margin-left:-6px!important}.streak-command-hero .hero-flame-num{font-size:40px!important;padding-top:16px!important}.streak-command-hero .hero-lr-title{font-size:29px!important}.streak-journey-link{width:150px!important;font-size:11px!important;min-height:32px!important}.streak-route-reward-badge{top:-6px;width:15px;height:15px}.streak-route-reward-badge svg{width:9px;height:9px}.streak-route-reward-label{font-size:6px}#capIcon:has(#miniRealMapCard){height:360px!important;border-radius:24px!important}#capIcon:has(#miniRealMapCard)~.capture-actions{bottom:20px!important}#capIcon:has(#miniRealMapCard)~.capture-actions .btn{min-width:124px!important;padding:13px 20px!important}}',
+      '@media(max-width:430px){.streak-command-hero{grid-template-columns:96px minmax(0,1fr)!important}.streak-command-hero .hero-flame-outline{width:104px!important;height:118px!important;margin-left:-7px!important}.streak-command-hero .hero-flame-num{font-size:38px!important;padding-top:15px!important}.streak-command-hero .hero-lr-title{font-size:26px!important}.streak-route-footer{margin-top:9px!important}.streak-journey-link{width:145px!important;min-height:30px!important;padding:5px 10px!important;font-size:10.5px!important}.streak-journey-link svg{width:12px!important;height:12px!important}#capIcon:has(#miniRealMapCard){height:310px!important;border-radius:22px!important}#capIcon:has(#miniRealMapCard) .mini-real-map-bottom{top:11px!important;left:11px!important}#capIcon:has(#miniRealMapCard)~.capture-actions{bottom:16px!important;gap:9px!important;max-width:calc(100% - 22px)!important}#capIcon:has(#miniRealMapCard)~.capture-actions .btn{min-width:112px!important;padding:12px 16px!important;font-size:13px!important;border-radius:13px!important}}'
+    ].join('');
     document.head.appendChild(style);
   }
 
@@ -231,17 +166,6 @@
     }
   }
 
-  function syncCompletedChallengePrompt(){
-    var capture = document.querySelector('.capture');
-    if(!capture) return;
-
-    if(isDailyPhotoDone()){
-      capture.setAttribute('data-challenge-ready',copy[getLanguage()].challengeReady);
-    }else{
-      capture.removeAttribute('data-challenge-ready');
-    }
-  }
-
   function createRewardBadge(label){
     var badge = document.createElement('span');
     badge.className = 'streak-route-reward-badge';
@@ -259,7 +183,6 @@
     installRewardStyles();
     updateHeroCopy();
     simplifyRouteChrome();
-    syncCompletedChallengePrompt();
 
     var hero = document.getElementById('streakCommandHero');
     var nodes = document.getElementById('streakRouteNodes');
@@ -355,7 +278,6 @@
     installRewardStyles();
     updateHeroCopy();
     simplifyRouteChrome();
-    syncCompletedChallengePrompt();
 
     var link = document.getElementById('streakJourneyLink');
     if(link && !link.dataset.streakRouteBound){
