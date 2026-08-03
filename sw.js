@@ -1,6 +1,6 @@
 /* STREG offline shell. Same-origin app files are refreshed from the network
    when possible and fall back to the last good cached version outdoors. */
-const VERSION = 'streg-v3';
+const VERSION = 'streg-v4';
 const SHELL = VERSION + '-shell';
 const LIBS = VERSION + '-libs';
 
@@ -27,7 +27,7 @@ self.addEventListener('install', function(event){
   event.waitUntil(
     caches.open(SHELL).then(function(cache){
       return Promise.all(SHELL_URLS.map(function(url){
-        return cache.add(url).catch(function(){ return null; });
+        return cache.add(new Request(url,{cache:'reload'})).catch(function(){ return null; });
       }));
     }).then(function(){ return self.skipWaiting(); })
   );
@@ -84,8 +84,9 @@ self.addEventListener('fetch', function(event){
   }
 
   if(request.mode === 'navigate' || url.origin === self.location.origin){
+    const freshRequest = new Request(request,{cache:'no-store'});
     event.respondWith(
-      fetch(request).then(function(response){
+      fetch(freshRequest).then(function(response){
         if(response && response.ok){
           const copy = response.clone();
           caches.open(SHELL).then(function(cache){ return cache.put(request,copy); });
