@@ -18,14 +18,9 @@
     da:{
       best:'bedste',
       shields:'skjolde',
-      milestone:'NÆSTE MILEPÆL',
-      checkpoint:'NÆSTE CHECKPOINT',
       checkpointName:'Checkpoint',
       day:'dag',
-      daysLeft:function(value){ return value === 1 ? '1 dag igen' : value + ' dage igen'; },
-      done:'Dagens foto er sikret',
-      waiting:'Dagens foto venter',
-      start:'Start din streak i dag',
+      reward:'BELØNNING',
       journey:'Se din rejse',
       route:function(start,end){ return 'Streak-rute fra dag ' + start + ' til dag ' + end; },
       node:function(day,state){ return 'Dag ' + day + ', ' + state; },
@@ -37,14 +32,9 @@
     en:{
       best:'best',
       shields:'shields',
-      milestone:'NEXT MILESTONE',
-      checkpoint:'NEXT CHECKPOINT',
       checkpointName:'Checkpoint',
       day:'day',
-      daysLeft:function(value){ return value === 1 ? '1 day left' : value + ' days left'; },
-      done:"Today's photo is secured",
-      waiting:"Today's photo is waiting",
-      start:'Start your streak today',
+      reward:'REWARD',
       journey:'See your journey',
       route:function(start,end){ return 'Streak route from day ' + start + ' to day ' + end; },
       node:function(day,state){ return 'Day ' + day + ', ' + state; },
@@ -67,14 +57,6 @@
       if(typeof S !== 'undefined' && S) return S;
     }catch(error){}
     return {};
-  }
-
-  function isTodayDone(state){
-    try{
-      if(typeof dailyDone === 'function') return !!dailyDone();
-    }catch(error){}
-    var now = new Date().toISOString().slice(0,10);
-    return state.lastDay === now;
   }
 
   function getTarget(streak){
@@ -126,8 +108,61 @@
     }
   }
 
+  function installRewardStyles(){
+    if(document.getElementById('streakRouteRewardStyles')) return;
+
+    var style = document.createElement('style');
+    style.id = 'streakRouteRewardStyles';
+    style.textContent = [
+      '#streakRouteKicker,#streakRouteRemaining,.streak-today-status{display:none!important;}',
+      '.streak-route-head{justify-content:flex-start!important;}',
+      '.streak-route-footer{justify-content:flex-end!important;}',
+      '.streak-route-node.is-milestone-reward{padding-bottom:13px;}',
+      '.streak-route-reward-badge{position:absolute;z-index:4;top:-7px;left:calc(50% + 4px);display:grid;place-items:center;width:17px;height:17px;border:1px solid rgba(255,255,255,.55);border-radius:50%;color:#24130a;background:linear-gradient(145deg,#fff0a7,#f6b73f 52%,#e47a20);box-shadow:0 0 0 2px rgba(255,255,255,.08),0 0 15px rgba(255,184,63,.52),0 4px 10px rgba(0,0,0,.3);animation:streakRewardPulse 2.2s ease-in-out infinite;}',
+      '.streak-route-reward-badge svg{width:10px;height:10px;stroke-width:2.2;}',
+      '.streak-route-reward-label{display:block;margin-top:-2px;color:#ffd978;font-size:6.5px;font-weight:950;letter-spacing:.11em;line-height:1;text-transform:uppercase;text-shadow:0 0 8px rgba(255,190,72,.35);}',
+      '@keyframes streakRewardPulse{0%,100%{transform:translateY(0) scale(1);filter:brightness(1)}50%{transform:translateY(-1px) scale(1.08);filter:brightness(1.12)}}',
+      '@media(max-width:720px){.streak-route-reward-badge{top:-6px;width:15px;height:15px}.streak-route-reward-badge svg{width:9px;height:9px}.streak-route-reward-label{font-size:6px}}'
+    ].join('');
+    document.head.appendChild(style);
+  }
+
+  function simplifyRouteChrome(){
+    var kicker = document.getElementById('streakRouteKicker');
+    var remaining = document.getElementById('streakRouteRemaining');
+    var status = document.querySelector('.streak-today-status');
+
+    if(kicker){
+      kicker.hidden = true;
+      kicker.setAttribute('aria-hidden','true');
+    }
+    if(remaining){
+      remaining.hidden = true;
+      remaining.setAttribute('aria-hidden','true');
+    }
+    if(status){
+      status.hidden = true;
+      status.setAttribute('aria-hidden','true');
+    }
+  }
+
+  function createRewardBadge(label){
+    var badge = document.createElement('span');
+    badge.className = 'streak-route-reward-badge';
+    badge.setAttribute('aria-hidden','true');
+    badge.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12v10H4V12"/><path d="M2 7h20v5H2z"/><path d="M12 7v15"/><path d="M12 7H7.5A2.5 2.5 0 1 1 10 4.5L12 7Zm0 0h4.5A2.5 2.5 0 1 0 14 4.5L12 7Z"/></svg>';
+
+    var text = document.createElement('span');
+    text.className = 'streak-route-reward-label';
+    text.textContent = label;
+
+    return {badge:badge,text:text};
+  }
+
   function renderRoute(){
+    installRewardStyles();
     updateHeroCopy();
+    simplifyRouteChrome();
 
     var hero = document.getElementById('streakCommandHero');
     var nodes = document.getElementById('streakRouteNodes');
@@ -140,10 +175,8 @@
     var streak = Math.max(0,Number(state.streak) || 0);
     var best = Math.max(streak,Number(state.best) || 0);
     var shields = Math.max(0,Number(state.freezes) || 0);
-    var done = isTodayDone(state);
     var target = getTarget(streak);
     var start = Math.max(1,target.day - 6);
-    var remaining = Math.max(0,target.day - streak);
     var targetName = target.milestone ? target.milestone[language] : t.checkpointName;
     var progress = target.day === start ? 100 : Math.max(0,Math.min(100,((streak - start) / (target.day - start)) * 100));
 
@@ -151,13 +184,9 @@
     setText('streakHeroBestLabel',t.best);
     setText('streakHeroShields',String(shields));
     setText('streakHeroShieldsLabel',t.shields);
-    setText('streakRouteKicker',target.milestone ? t.milestone : t.checkpoint);
     setText('streakRouteTarget',targetName + ' · ' + t.day + ' ' + target.day);
-    setText('streakRouteRemaining',t.daysLeft(remaining));
-    setText('streakTodayStatusText',streak === 0 && !done ? t.start : (done ? t.done : t.waiting));
     setText('streakJourneyLabel',t.journey);
 
-    hero.classList.toggle('is-today-complete',done);
     fill.style.width = progress.toFixed(2) + '%';
 
     var route = document.getElementById('streakRoute');
@@ -196,6 +225,15 @@
 
       item.appendChild(dot);
       item.appendChild(label);
+
+      if(day === target.day && target.milestone){
+        var reward = createRewardBadge(t.reward);
+        item.classList.add('is-milestone-reward');
+        item.appendChild(reward.badge);
+        item.appendChild(reward.text);
+        item.setAttribute('aria-label',t.node(day,stateLabel) + ', ' + t.reward.toLowerCase());
+      }
+
       fragment.appendChild(item);
     }
 
@@ -217,7 +255,9 @@
     var reminder = document.querySelector('.next-photo-sub');
     if(reminder) reminder.remove();
 
+    installRewardStyles();
     updateHeroCopy();
+    simplifyRouteChrome();
 
     var link = document.getElementById('streakJourneyLink');
     if(link && !link.dataset.streakRouteBound){
