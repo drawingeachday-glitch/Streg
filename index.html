@@ -5633,93 +5633,7 @@ body.photo-celebration-open{
 /* =========================================================
    HOME EVENT SHORTCUT — PROMINENT MONTHLY EVENT ENTRY
    ========================================================= */
-.home-event-card{
-  position:relative;
-  isolation:isolate;
-  overflow:hidden;
-  min-height:272px;
-  margin:18px 0 22px;
-  padding:17px;
-  border-radius:27px;
-  color:#fff;
-  cursor:pointer;
-  background:
-    radial-gradient(circle at 85% 13%,rgba(231,139,255,.38),transparent 25%),
-    radial-gradient(circle at 13% 86%,rgba(255,100,222,.3),transparent 30%),
-    radial-gradient(circle at 53% 43%,rgba(139,92,255,.36),transparent 37%),
-    linear-gradient(145deg,#090317 0%,#221043 42%,#4B1870 72%,#1A0A32 100%);
-  border:1px solid rgba(238,187,255,.17);
-  box-shadow:
-    0 25px 52px -29px rgba(119,47,193,.76),
-    0 12px 30px -22px rgba(255,104,219,.55),
-    inset 0 1px 0 rgba(255,255,255,.1);
-  transform:translateZ(0);
-  transition:
-    transform .22s var(--spring),
-    box-shadow .22s ease,
-    filter .22s ease;
-}
-.home-event-card:active{
-  transform:scale(.985);
-}
-.home-event-card:focus-visible{
-  outline:3px solid rgba(224,145,255,.55);
-  outline-offset:3px;
-}
-.home-event-card::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  z-index:-2;
-  pointer-events:none;
-  background:
-    linear-gradient(120deg,transparent 18%,rgba(255,255,255,.045) 42%,transparent 65%);
-}
-.home-event-card::after{
-  content:"";
-  position:absolute;
-  inset:-30%;
-  z-index:-4;
-  pointer-events:none;
-  opacity:.28;
-  background:
-    conic-gradient(from 210deg,
-      transparent 0 18%,
-      rgba(205,106,255,.32) 26%,
-      rgba(255,106,219,.2) 34%,
-      transparent 46% 62%,
-      rgba(120,93,255,.22) 72%,
-      transparent 83%);
-  filter:blur(32px);
-  animation:homeEventGalaxySpin 18s linear infinite;
-}
-@keyframes homeEventGalaxySpin{
-  to{transform:rotate(360deg) scale(1.06);}
-}
 
-.home-event-nebula{
-  position:absolute;
-  z-index:-3;
-  width:120%;
-  height:115px;
-  left:-10%;
-  border-radius:50%;
-  filter:blur(28px);
-  opacity:.58;
-  pointer-events:none;
-}
-.home-event-nebula.nebula-one{
-  top:19%;
-  background:linear-gradient(90deg,transparent,#8E54FF 24%,#EF6DFF 55%,#FF75C8 76%,transparent);
-  transform:rotate(-12deg);
-  animation:homeNebulaOne 8s ease-in-out infinite alternate;
-}
-.home-event-nebula.nebula-two{
-  top:53%;
-  background:linear-gradient(90deg,transparent,#5B3DD2 15%,#B64CFF 51%,#FF65D2 82%,transparent);
-  transform:rotate(8deg);
-  animation:homeNebulaTwo 10s ease-in-out infinite alternate;
-}
 @keyframes homeNebulaOne{
   from{transform:translateX(-8%) rotate(-12deg) scaleX(.92);}
   to{transform:translateX(8%) rotate(-5deg) scaleX(1.12);}
@@ -5729,265 +5643,20 @@ body.photo-celebration-open{
   to{transform:translateX(-9%) rotate(3deg) scaleX(.9);}
 }
 
-.home-event-stars{
-  position:absolute;
-  inset:0;
-  z-index:-1;
-  pointer-events:none;
-  opacity:.82;
-  background-image:
-    radial-gradient(circle at 7% 17%,rgba(255,255,255,.95) 0 1px,transparent 1.8px),
-    radial-gradient(circle at 18% 68%,rgba(255,255,255,.8) 0 1px,transparent 1.7px),
-    radial-gradient(circle at 31% 28%,rgba(250,229,255,.95) 0 1.1px,transparent 1.9px),
-    radial-gradient(circle at 46% 76%,rgba(255,255,255,.82) 0 1px,transparent 1.8px),
-    radial-gradient(circle at 58% 16%,rgba(255,255,255,.95) 0 1px,transparent 1.8px),
-    radial-gradient(circle at 72% 58%,rgba(249,226,255,.92) 0 1px,transparent 1.8px),
-    radial-gradient(circle at 86% 26%,rgba(255,255,255,.98) 0 1.2px,transparent 2px),
-    radial-gradient(circle at 79% 84%,rgba(255,255,255,.9) 0 1px,transparent 1.8px),
-    radial-gradient(circle at 93% 48%,rgba(255,255,255,.9) 0 1px,transparent 1.8px);
-}
-.home-event-orbit{
-  position:absolute;
-  right:-68px;
-  top:42px;
-  z-index:-1;
-  width:190px;
-  height:190px;
-  border-radius:50%;
-  border:1px solid rgba(244,211,255,.12);
-  box-shadow:
-    0 0 0 22px rgba(219,136,255,.035),
-    0 0 0 50px rgba(154,91,255,.025);
-  transform:rotate(-18deg);
-}
 
-.home-event-top{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-  margin-bottom:15px;
-}
-.home-event-live{
-  display:inline-flex;
-  align-items:center;
-  gap:7px;
-  color:#F5DFFF;
-  font:900 9px/1 Inter,sans-serif;
-  letter-spacing:.2em;
-}
-.home-event-live-dot{
-  width:7px;
-  height:7px;
-  border-radius:50%;
-  background:#FF88DF;
-  box-shadow:0 0 0 4px rgba(255,136,223,.12),0 0 15px rgba(255,116,220,.85);
-  animation:homeEventLivePulse 1.8s ease-in-out infinite;
-}
-@keyframes homeEventLivePulse{
-  50%{transform:scale(1.25);box-shadow:0 0 0 7px rgba(255,136,223,0),0 0 18px rgba(255,116,220,.95);}
-}
-.home-event-days{
-  flex:0 0 auto;
-  padding:7px 10px;
-  border-radius:999px;
-  color:#F6E9FF;
-  background:rgba(12,4,25,.35);
-  border:1px solid rgba(255,255,255,.13);
-  backdrop-filter:blur(12px);
-  font:850 9.5px/1 Inter,sans-serif;
-}
 
-.home-event-main{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:14px;
-}
-.home-event-copy{
-  min-width:0;
-  max-width:70%;
-}
-.home-event-title{
-  margin-bottom:7px;
-  font:950 clamp(25px,7vw,34px)/.92 Inter,sans-serif;
-  letter-spacing:-.055em;
-  text-shadow:
-    0 0 18px rgba(222,138,255,.34),
-    0 7px 24px rgba(0,0,0,.3);
-}
-.home-event-sub{
-  color:rgba(255,255,255,.69);
-  font:680 11px/1.45 Inter,sans-serif;
-  max-width:280px;
-}
 
-.home-event-reward-orb{
-  position:relative;
-  flex:0 0 76px;
-  width:76px;
-  height:76px;
-  display:grid;
-  place-items:center;
-}
-.home-event-orb-core{
-  position:relative;
-  z-index:2;
-  width:54px;
-  height:54px;
-  display:grid;
-  place-items:center;
-  border-radius:50%;
-  color:#fff;
-  background:
-    radial-gradient(circle at 35% 28%,#FFD7FF 0 5%,#D988FF 25%,#8A5EFF 62%,#49277D 100%);
-  box-shadow:
-    inset -9px -9px 18px rgba(38,9,76,.34),
-    0 0 17px rgba(225,128,255,.75),
-    0 0 38px rgba(146,84,255,.58);
-  font-size:23px;
-  animation:homeEventOrbFloat 3.2s ease-in-out infinite;
-}
-.home-event-orb-ring{
-  position:absolute;
-  inset:7px;
-  border-radius:50%;
-  border:1px solid rgba(244,210,255,.34);
-}
-.home-event-orb-ring.ring-a{
-  transform:rotateX(65deg) rotateZ(18deg);
-  animation:homeEventRingA 5s linear infinite;
-}
-.home-event-orb-ring.ring-b{
-  inset:2px;
-  border-color:rgba(195,145,255,.18);
-  transform:rotateY(68deg) rotateZ(-21deg);
-  animation:homeEventRingB 6.5s linear infinite reverse;
-}
-@keyframes homeEventOrbFloat{
-  50%{transform:translateY(-5px) scale(1.04);filter:brightness(1.12);}
-}
-@keyframes homeEventRingA{
-  to{transform:rotateX(65deg) rotateZ(378deg);}
-}
-@keyframes homeEventRingB{
-  to{transform:rotateY(68deg) rotateZ(339deg);}
-}
 
-.home-event-next{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-  margin:17px 0 9px;
-  color:rgba(255,255,255,.53);
-  font:760 9.5px/1 Inter,sans-serif;
-}
-.home-event-next strong{
-  min-width:0;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;
-  color:#F5DFFF;
-  font-weight:900;
-}
 
-.home-event-progress-track{
-  position:relative;
-  height:11px;
-  border-radius:999px;
-  background:rgba(9,3,20,.48);
-  border:1px solid rgba(255,255,255,.12);
-  box-shadow:inset 0 2px 7px rgba(0,0,0,.35);
-}
-.home-event-progress-fill{
-  position:absolute;
-  inset:0 auto 0 0;
-  width:0%;
-  border-radius:inherit;
-  background:linear-gradient(90deg,#805CFF,#D46EFF 54%,#FF8CD8);
-  box-shadow:0 0 20px rgba(212,105,255,.55);
-  transition:width .75s cubic-bezier(.16,.84,.24,1);
-}
-.home-event-progress-star{
-  position:absolute;
-  left:0%;
-  top:50%;
-  width:24px;
-  height:24px;
-  display:grid;
-  place-items:center;
-  transform:translate(-50%,-50%);
-  color:#fff;
-  text-shadow:0 0 7px #fff,0 0 16px #E175FF;
-  font-size:15px;
-  transition:left .75s cubic-bezier(.16,.84,.24,1);
-}
-.home-event-progress-meta{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  margin-top:8px;
-  color:rgba(255,255,255,.45);
-  font:760 9px/1 Inter,sans-serif;
-}
-.home-event-progress-meta strong{
-  color:#F2DEFF;
-  font-weight:900;
-}
 
-.home-event-open{
-  width:100%;
-  margin-top:14px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:7px;
-  border:1px solid rgba(255,255,255,.16);
-  border-radius:15px;
-  padding:11px 13px;
-  color:#fff;
-  background:linear-gradient(135deg,rgba(190,91,255,.9),rgba(119,81,235,.92));
-  box-shadow:
-    0 10px 24px rgba(82,31,145,.32),
-    inset 0 1px rgba(255,255,255,.15);
-  font:900 11px/1 Inter,sans-serif;
-  cursor:pointer;
-}
-.home-event-open svg{
-  width:15px;
-  height:15px;
-  transition:transform .18s ease;
-}
-.home-event-card:hover .home-event-open svg{
-  transform:translateX(3px);
-}
 
 @media(max-width:370px){
-  .home-event-card{
-    min-height:260px;
-    padding:15px;
-  }
-  .home-event-reward-orb{
-    flex-basis:66px;
-    width:66px;
-    height:66px;
-  }
-  .home-event-orb-core{
-    width:48px;
-    height:48px;
-  }
-  .home-event-copy{max-width:74%;}
 }
 @media(prefers-reduced-motion:reduce){
   .home-event-card::after,
   .home-event-nebula,
   .home-event-live-dot,
   .home-event-orb-core,
-  .home-event-orb-ring{
-    animation:none!important;
-  }
 }
 
 
@@ -8623,14 +8292,6 @@ body.photo-celebration-open{
 [data-active-event="solar"] .event-daily-action.ready,
 [data-active-event="solar"] .event-reward-btn.use{background:linear-gradient(135deg,#DF4C13,#FFAD2C)}
 
-.home-event-card[data-event-theme="plant"]{
-  background:radial-gradient(circle at 76% 10%,rgba(205,255,114,.28),transparent 25%),radial-gradient(circle at 15% 88%,rgba(70,213,92,.22),transparent 30%),linear-gradient(145deg,#07190D,#1C5628 60%,#36742D)!important;
-}
-.home-event-card[data-event-theme="solar"]{
-  background:radial-gradient(circle at 76% 10%,rgba(255,244,126,.46),transparent 25%),radial-gradient(circle at 15% 88%,rgba(255,85,24,.25),transparent 30%),linear-gradient(145deg,#351006,#9A3109 58%,#F07A18)!important;
-}
-.home-event-card[data-event-theme="plant"] .home-event-orb-core{background:linear-gradient(145deg,#CFF47A,#4FAE5C)!important;color:#153C1E!important}
-.home-event-card[data-event-theme="solar"] .home-event-orb-core{background:linear-gradient(145deg,#FFF3A0,#FF9424)!important;color:#742108!important}
 
 .event-theme-mini.event-theme-mini-plant,
 .sw-eventplant{
@@ -9705,162 +9366,36 @@ html[data-compass-active="true"] .mini-map-compass-badge{
    PLANT BLOOM HOME EVENT CARD — REMOVE PURPLE ACCENTS
    ========================================================= */
 
-.home-event-card[data-event-theme="plant"] .home-event-nebula.nebula-one{
-  background:
-    radial-gradient(circle at 50% 50%, rgba(194,255,133,.22) 0%, rgba(194,255,133,.12) 32%, transparent 68%),
-    linear-gradient(90deg, transparent, rgba(126,224,110,.40), rgba(219,255,166,.34), transparent) !important;
-  filter: blur(8px) !important;
-  opacity: .9 !important;
-}
 
-.home-event-card[data-event-theme="plant"] .home-event-nebula.nebula-two{
-  background:
-    radial-gradient(circle at 50% 50%, rgba(89,188,91,.18) 0%, rgba(89,188,91,.10) 35%, transparent 72%),
-    linear-gradient(90deg, transparent, rgba(60,149,67,.40), rgba(157,220,105,.26), transparent) !important;
-  filter: blur(10px) !important;
-  opacity: .78 !important;
-}
 
-.home-event-card[data-event-theme="plant"] .home-event-orbit{
-  border-color: rgba(171,238,121,.24) !important;
-  box-shadow: inset 0 0 36px rgba(76,164,87,.16) !important;
-}
 
-.home-event-card[data-event-theme="plant"] .home-event-orb-ring{
-  border-color: rgba(173,238,108,.42) !important;
-  box-shadow:
-    0 0 0 1px rgba(118,208,95,.14),
-    0 0 24px rgba(135,221,96,.18) !important;
-}
 
-.home-event-card[data-event-theme="plant"] .home-event-live-dot{
-  background: #CFFF8A !important;
-  box-shadow: 0 0 12px rgba(214,255,137,.95), 0 0 24px rgba(100,198,83,.52) !important;
-}
 
-.home-event-card[data-event-theme="plant"] .home-event-next strong{
-  color:#E5FFC2 !important;
-}
 
-.home-event-card[data-event-theme="plant"] .home-event-progress-track{
-  background: rgba(9, 28, 12, .42) !important;
-  border-color: rgba(213,255,181,.13) !important;
-}
 
-.home-event-card[data-event-theme="plant"] .home-event-progress-fill{
-  background: linear-gradient(90deg,#3D9B54,#79CF60 52%,#D2EF6B) !important;
-  box-shadow: 0 0 22px rgba(111,213,91,.46) !important;
-}
 
-.home-event-card[data-event-theme="plant"] .home-event-progress-star{
-  color:#FAFFE8 !important;
-  text-shadow: 0 0 7px #fff, 0 0 16px #A3F05D !important;
-}
 
-.home-event-card[data-event-theme="plant"] .home-event-progress-meta strong{
-  color:#EBFFD1 !important;
-}
 
-.home-event-card[data-event-theme="plant"] .home-event-open{
-  background: linear-gradient(135deg,#3A9D53,#78CD5D 55%,#C7EA72) !important;
-  color:#15311C !important;
-  border-color: rgba(233,255,205,.24) !important;
-  box-shadow:
-    0 10px 24px rgba(38,98,48,.28),
-    inset 0 1px rgba(255,255,255,.26) !important;
-}
 
-.home-event-card[data-event-theme="plant"] .home-event-open svg{
-  color:#1C4325 !important;
-  filter:none !important;
-}
 
-.home-event-card[data-event-theme="plant"] .home-event-days{
-  color:#EEFFD8 !important;
-  background: rgba(23, 56, 28, .66) !important;
-  border-color: rgba(217,255,178,.16) !important;
-}
 
 
 /* =========================================================
    SOLAR FLARE HOME EVENT CARD — REMOVE PURPLE ACCENTS
    ========================================================= */
 
-.home-event-card[data-event-theme="solar"] .home-event-nebula.nebula-one{
-  background:
-    radial-gradient(circle at 50% 50%, rgba(255,239,132,.24) 0%, rgba(255,239,132,.10) 32%, transparent 68%),
-    linear-gradient(90deg, transparent, rgba(255,198,76,.34), rgba(255,137,36,.44), transparent) !important;
-  filter: blur(8px) !important;
-  opacity: .92 !important;
-}
 
-.home-event-card[data-event-theme="solar"] .home-event-nebula.nebula-two{
-  background:
-    radial-gradient(circle at 50% 50%, rgba(255,138,45,.18) 0%, rgba(255,138,45,.10) 35%, transparent 72%),
-    linear-gradient(90deg, transparent, rgba(255,108,32,.38), rgba(255,218,91,.26), transparent) !important;
-  filter: blur(10px) !important;
-  opacity: .80 !important;
-}
 
-.home-event-card[data-event-theme="solar"] .home-event-orbit{
-  border-color: rgba(255,209,99,.26) !important;
-  box-shadow: inset 0 0 36px rgba(233,114,31,.18) !important;
-}
 
-.home-event-card[data-event-theme="solar"] .home-event-orb-ring{
-  border-color: rgba(255,207,90,.44) !important;
-  box-shadow:
-    0 0 0 1px rgba(255,154,48,.16),
-    0 0 24px rgba(255,195,71,.22) !important;
-}
 
-.home-event-card[data-event-theme="solar"] .home-event-live-dot{
-  background: #FFE57A !important;
-  box-shadow: 0 0 12px rgba(255,228,120,.95), 0 0 24px rgba(255,137,42,.58) !important;
-}
 
-.home-event-card[data-event-theme="solar"] .home-event-next strong{
-  color:#FFF0B3 !important;
-}
 
-.home-event-card[data-event-theme="solar"] .home-event-progress-track{
-  background: rgba(53, 16, 6, .42) !important;
-  border-color: rgba(255,225,163,.15) !important;
-}
 
-.home-event-card[data-event-theme="solar"] .home-event-progress-fill{
-  background: linear-gradient(90deg,#E34F14,#FF9125 52%,#FFE36B) !important;
-  box-shadow: 0 0 22px rgba(255,164,54,.48) !important;
-}
 
-.home-event-card[data-event-theme="solar"] .home-event-progress-star{
-  color:#FFFBE8 !important;
-  text-shadow: 0 0 7px #fff, 0 0 16px #FFC44A !important;
-}
 
-.home-event-card[data-event-theme="solar"] .home-event-progress-meta strong{
-  color:#FFF3C8 !important;
-}
 
-.home-event-card[data-event-theme="solar"] .home-event-open{
-  background: linear-gradient(135deg,#E35516,#FF9425 58%,#FFE36B) !important;
-  color:#5A2207 !important;
-  border-color: rgba(255,236,183,.26) !important;
-  box-shadow:
-    0 10px 24px rgba(142,56,14,.28),
-    inset 0 1px rgba(255,255,255,.26) !important;
-}
 
-.home-event-card[data-event-theme="solar"] .home-event-open svg{
-  color:#6F2B08 !important;
-  filter:none !important;
-}
 
-.home-event-card[data-event-theme="solar"] .home-event-days{
-  color:#FFF3CF !important;
-  background: rgba(74, 28, 9, .60) !important;
-  border-color: rgba(255,220,159,.18) !important;
-}
 
 
 /* =========================================================
@@ -14486,56 +14021,7 @@ body.startup-revealing .onb{
       </div>
 
 
-      <section class="home-event-card" id="homeEventCard" data-event-theme="midnight" role="button" tabindex="0" aria-label="Åbn Midnight Bloom-eventet">
-        <div class="home-event-nebula nebula-one"></div>
-        <div class="home-event-nebula nebula-two"></div>
-        <div class="home-event-stars"></div>
-        <div class="home-event-orbit"></div>
-
-        <div class="home-event-top">
-          <div class="home-event-live">
-            <span class="home-event-live-dot"></span>
-            MÅNEDENS EVENT
-          </div>
-          <div class="home-event-days" id="homeEventDays">— dage</div>
-        </div>
-
-        <div class="home-event-main">
-          <div class="home-event-copy">
-            <div class="home-event-title" id="homeEventTitle">MIDNIGHT BLOOM</div>
-            <div class="home-event-sub" id="homeEventSub">Saml Event-XP og lås et komplet nebula-look op.</div>
-          </div>
-
-          <div class="home-event-reward-orb" id="homeEventRewardOrb">
-            <div class="home-event-orb-core">✦</div>
-            <div class="home-event-orb-ring ring-a"></div>
-            <div class="home-event-orb-ring ring-b"></div>
-          </div>
-        </div>
-
-        <div class="home-event-next">
-          <span>Næste reward</span>
-          <strong id="homeEventNextReward">Lunar-font</strong>
-        </div>
-
-        <div class="home-event-progress">
-          <div class="home-event-progress-track">
-            <div class="home-event-progress-fill" id="homeEventProgressFill"></div>
-            <div class="home-event-progress-star" id="homeEventProgressStar">✦</div>
-          </div>
-          <div class="home-event-progress-meta">
-            <strong id="homeEventXp">0 / 3600 Event-XP</strong>
-            <span id="homeEventRewardProgress">0 / 5 rewards</span>
-          </div>
-        </div>
-
-        <button class="home-event-open" id="homeEventOpenBtn" type="button">
-          Åbn event
-          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path d="m9 5 7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </button>
-      </section>
+      
 
 
       <div class="section-head">
@@ -23637,8 +23123,6 @@ const MonthlyEvent = (function(){
     SFX.magic();vibrate([16,24,16]);toast('Aktivt event: '+config().shortName);
   }
 
-  $('homeEventCard').addEventListener('click',function(e){if(e.target.closest('#homeEventOpenBtn'))e.preventDefault();openEvent()});
-  $('homeEventCard').addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();openEvent()}});
   $('eventTestXpBtn').addEventListener('click',function(){
     const st=ensure(),before=st.xp;st.xp=Math.min(MAX_XP,st.xp+250);save();animateEventXp(st.xp-before,this);autoUnlockReachedRewards({silent:false});confetti(18);render();
   });
