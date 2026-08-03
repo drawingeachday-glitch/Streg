@@ -101,7 +101,34 @@
     if(element) element.textContent = value;
   }
 
+  function updateHeroCopy(){
+    var hero = document.getElementById('streakCommandHero');
+    if(!hero) return;
+
+    var title = hero.querySelector('.hero-lr-title');
+    if(title){
+      title.textContent = 'Daily Streak';
+      title.setAttribute('data-i18n-skip','');
+    }
+
+    var subtitle = hero.querySelector('.hero-lr-sub');
+    if(subtitle){
+      subtitle.textContent = '';
+      subtitle.hidden = true;
+      subtitle.setAttribute('aria-hidden','true');
+    }
+
+    var description = document.getElementById('streakSub');
+    if(description){
+      description.textContent = '';
+      description.hidden = true;
+      description.setAttribute('aria-hidden','true');
+    }
+  }
+
   function renderRoute(){
+    updateHeroCopy();
+
     var hero = document.getElementById('streakCommandHero');
     var nodes = document.getElementById('streakRouteNodes');
     var fill = document.getElementById('streakRouteFill');
@@ -189,6 +216,8 @@
   function install(){
     var reminder = document.querySelector('.next-photo-sub');
     if(reminder) reminder.remove();
+
+    updateHeroCopy();
 
     var link = document.getElementById('streakJourneyLink');
     if(link && !link.dataset.streakRouteBound){
