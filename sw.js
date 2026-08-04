@@ -1,6 +1,6 @@
 /* STREG offline shell. Same-origin app files are refreshed from the network
    when possible and fall back to the last good cached version outdoors. */
-const VERSION = 'streg-v4';
+const VERSION = 'streg-v5';
 const SHELL = VERSION + '-shell';
 const LIBS = VERSION + '-libs';
 
@@ -20,7 +20,15 @@ const SHELL_URLS = [
   './streak-route.css',
   './streak-route.js',
   './tutorial-cinematic.css',
-  './tutorial-cinematic.js'
+  './tutorial-cinematic.js',
+  './app-audio.js',
+  './SoundsForStreg/Coin collect.mp3',
+  './SoundsForStreg/Navigation sound.mp3',
+  './SoundsForStreg/Startup App.mp3',
+  './SoundsForStreg/collecting reward from challenges.mp3',
+  './SoundsForStreg/level up.mp3',
+  './SoundsForStreg/purchasing.mp3',
+  './SoundsForStreg/switch tab.mp3'
 ];
 
 self.addEventListener('install', function(event){
@@ -59,6 +67,34 @@ function isLiveOnly(url){
     url.hostname.indexOf('accounts.google.com') !== -1;
 }
 
+function injectAudioEngine(response){
+  const type = response.headers.get('content-type') || '';
+  if(!type.includes('text/html')) return Promise.resolve(response);
+
+  return response.text().then(function(html){
+    if(html.includes('app-audio.js')){
+      return new Response(html,{
+        status:response.status,
+        statusText:response.statusText,
+        headers:response.headers
+      });
+    }
+
+    const tag = '<script src="./app-audio.js" defer></script>';
+    const injected = html.includes('</body>')
+      ? html.replace('</body>',tag + '</body>')
+      : html + tag;
+
+    const headers = new Headers(response.headers);
+    headers.delete('content-length');
+    return new Response(injected,{
+      status:response.status,
+      statusText:response.statusText,
+      headers:headers
+    });
+  });
+}
+
 self.addEventListener('fetch', function(event){
   const request = event.request;
   if(request.method !== 'GET') return;
@@ -91,10 +127,14 @@ self.addEventListener('fetch', function(event){
           const copy = response.clone();
           caches.open(SHELL).then(function(cache){ return cache.put(request,copy); });
         }
-        return response;
+        return request.mode === 'navigate' ? injectAudioEngine(response) : response;
       }).catch(function(){
         return caches.match(request).then(function(cached){
-          return cached || caches.match('./index.html') || caches.match('./');
+          if(cached) return request.mode === 'navigate' ? injectAudioEngine(cached) : cached;
+          return caches.match('./index.html').then(function(fallback){
+            if(!fallback) return caches.match('./');
+            return injectAudioEngine(fallback);
+          });
         });
       })
     );
