@@ -1,6 +1,6 @@
 /* STREG offline shell. Same-origin app files are refreshed from the network
    when possible and fall back to the last good cached version outdoors. */
-const VERSION = 'streg-v5';
+const VERSION = 'streg-v6';
 const SHELL = VERSION + '-shell';
 const LIBS = VERSION + '-libs';
 
@@ -28,7 +28,9 @@ const SHELL_URLS = [
   './SoundsForStreg/collecting reward from challenges.mp3',
   './SoundsForStreg/level up.mp3',
   './SoundsForStreg/purchasing.mp3',
-  './SoundsForStreg/switch tab.mp3'
+  './SoundsForStreg/switch tab.mp3',
+  './SoundsForStreg/nature-ambient.mp3.mp3',
+  './SoundsForStreg/fireplace.mp3.mp3'
 ];
 
 self.addEventListener('install', function(event){
