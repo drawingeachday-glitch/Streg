@@ -59,6 +59,18 @@
     return {};
   }
 
+  function isTodayDone(state){
+    try{
+      if(typeof dailyDone === 'function') return !!dailyDone();
+    }catch(error){}
+
+    var now = new Date();
+    var today = now.getFullYear() + '-' +
+      String(now.getMonth() + 1).padStart(2,'0') + '-' +
+      String(now.getDate()).padStart(2,'0');
+    return state.lastDay === today;
+  }
+
   function getTarget(streak){
     var milestoneDays = Object.keys(milestoneNames).map(Number).sort(function(a,b){ return a-b; });
     var nextMilestone = null;
@@ -118,6 +130,10 @@
       '.streak-command-hero{grid-template-columns:132px minmax(175px,.72fr) minmax(292px,1.28fr)!important;}',
       '.streak-command-hero .hero-flame-outline{width:128px!important;height:142px!important;margin-left:-10px!important;}',
       '.streak-command-hero .hero-flame-num{font-size:46px!important;padding-top:18px!important;}',
+      '#streakCommandHero .hero-flame-outline{transition:filter .35s ease,opacity .35s ease;}',
+      '#streakCommandHero.streak-photo-pending .hero-flame-outline{filter:grayscale(1) saturate(0) brightness(.74)!important;opacity:.8!important;}',
+      '#streakCommandHero.streak-photo-complete .hero-flame-outline{filter:none!important;opacity:1!important;}',
+      '#streakCommandHero.streak-photo-pending .hero-flame-outline,#streakCommandHero.streak-photo-pending .hero-flame-outline::before,#streakCommandHero.streak-photo-pending .hero-flame-outline::after,#streakCommandHero.streak-photo-pending .hero-flame-outline svg,#streakCommandHero.streak-photo-pending .hero-flame-outline svg *,#streakCommandHero.streak-photo-pending .hero-flame-num{animation:none!important;}',
       '.streak-command-hero .hero-lr-title{font-size:34px!important;line-height:1.04!important;letter-spacing:-.025em;}',
       '.streak-route-head{justify-content:flex-start!important;}',
       '.streak-route-footer{justify-content:center!important;margin-top:10px;}',
@@ -195,10 +211,14 @@
     var streak = Math.max(0,Number(state.streak) || 0);
     var best = Math.max(streak,Number(state.best) || 0);
     var shields = Math.max(0,Number(state.freezes) || 0);
+    var done = isTodayDone(state);
     var target = getTarget(streak);
     var start = Math.max(1,target.day - 6);
     var targetName = target.milestone ? target.milestone[language] : t.checkpointName;
     var progress = target.day === start ? 100 : Math.max(0,Math.min(100,((streak - start) / (target.day - start)) * 100));
+
+    hero.classList.toggle('streak-photo-pending',!done);
+    hero.classList.toggle('streak-photo-complete',done);
 
     setText('streakHeroBest',String(best));
     setText('streakHeroBestLabel',t.best);
