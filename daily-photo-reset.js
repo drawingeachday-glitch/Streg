@@ -15,6 +15,7 @@
   loadRuntimeFeature('challenge-page-redesign.js','stregChallengePageRedesignRuntime','20260805-2');
   loadRuntimeFeature('daily-challenge-single-target.js','stregDailySingleTargetRuntime','20260805-1');
   loadRuntimeFeature('event-tab-redesign.js','stregEventTabRedesignRuntime','20260805-1');
+  loadRuntimeFeature('inventory.js','stregInventoryRuntime','20260805-1');
 
   function state(){
     try{ return typeof S !== 'undefined' && S ? S : null; }catch(error){ return null; }
