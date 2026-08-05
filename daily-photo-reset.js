@@ -16,6 +16,7 @@
 
   loadRuntimeFeature('home-challenges.js','stregHomeChallengesRuntime','20260805-4');
   loadRuntimeFeature('challenge-page-redesign.js','stregChallengePageRedesignRuntime','20260805-1');
+  loadRuntimeFeature('daily-challenge-single-target.js','stregDailySingleTargetRuntime','20260805-1');
 
   function state(){
     try{ return typeof S !== 'undefined' && S ? S : null; }catch(error){ return null; }
