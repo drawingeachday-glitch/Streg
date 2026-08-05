@@ -1,9 +1,6 @@
 (function(){
   'use strict';
 
-  /* This script is already loaded by older service-worker versions. Use it as
-     a stable runtime loader so newly added features appear on the very first
-     refresh instead of waiting for the next service-worker activation. */
   function loadRuntimeFeature(path,id,version){
     if(document.getElementById(id)) return;
     var script = document.createElement('script');
@@ -15,8 +12,9 @@
   }
 
   loadRuntimeFeature('home-challenges.js','stregHomeChallengesRuntime','20260805-4');
-  loadRuntimeFeature('challenge-page-redesign.js','stregChallengePageRedesignRuntime','20260805-1');
+  loadRuntimeFeature('challenge-page-redesign.js','stregChallengePageRedesignRuntime','20260805-2');
   loadRuntimeFeature('daily-challenge-single-target.js','stregDailySingleTargetRuntime','20260805-1');
+  loadRuntimeFeature('event-tab-redesign.js','stregEventTabRedesignRuntime','20260805-1');
 
   function state(){
     try{ return typeof S !== 'undefined' && S ? S : null; }catch(error){ return null; }
