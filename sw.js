@@ -1,6 +1,6 @@
 /* STREG offline shell. Same-origin app files are refreshed from the network
    when possible and fall back to the last good cached version outdoors. */
-const VERSION = 'streg-v9';
+const VERSION = 'streg-v10';
 const SHELL = VERSION + '-shell';
 const LIBS = VERSION + '-libs';
 
@@ -24,6 +24,7 @@ const SHELL_URLS = [
   './app-audio.js',
   './daily-photo-reset.js',
   './home-challenges.js',
+  './home-milestone-compact.js',
   './SoundsForStreg/Coin collect.mp3',
   './SoundsForStreg/Navigation sound.mp3',
   './SoundsForStreg/Startup App.mp3',
@@ -89,6 +90,7 @@ function injectRuntimeScripts(response){
     if(!html.includes('app-audio.js')) tags.push('<script src="./app-audio.js" defer></script>');
     if(!html.includes('daily-photo-reset.js')) tags.push('<script src="./daily-photo-reset.js" defer></script>');
     if(!html.includes('home-challenges.js')) tags.push('<script src="./home-challenges.js" defer></script>');
+    if(!html.includes('home-milestone-compact.js')) tags.push('<script src="./home-milestone-compact.js" defer></script>');
 
     if(tags.length === 0){
       return new Response(html,{
