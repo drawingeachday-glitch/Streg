@@ -14,7 +14,8 @@
     document.head.appendChild(script);
   }
 
-  loadRuntimeFeature('home-challenges.js','stregHomeChallengesRuntime','20260805-2');
+  loadRuntimeFeature('home-challenges.js','stregHomeChallengesRuntime','20260805-4');
+  loadRuntimeFeature('challenge-page-redesign.js','stregChallengePageRedesignRuntime','20260805-1');
 
   function state(){
     try{ return typeof S !== 'undefined' && S ? S : null; }catch(error){ return null; }
@@ -162,7 +163,6 @@
     var developerHeading = Array.prototype.find.call(pane.querySelectorAll('.eyebrow'),function(el){
       return /Udvikler|Developer/i.test(el.textContent || '');
     });
-    var anchor = developerHeading || pane.lastElementChild;
     if(developerHeading){
       pane.insertBefore(note,developerHeading);
       pane.insertBefore(button,note);
