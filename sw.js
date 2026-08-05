@@ -1,6 +1,6 @@
 /* STREG offline shell. Same-origin app files are refreshed from the network
    when possible and fall back to the last good cached version outdoors. */
-const VERSION = 'streg-v8';
+const VERSION = 'streg-v9';
 const SHELL = VERSION + '-shell';
 const LIBS = VERSION + '-libs';
 
@@ -23,6 +23,7 @@ const SHELL_URLS = [
   './tutorial-cinematic.js',
   './app-audio.js',
   './daily-photo-reset.js',
+  './home-challenges.js',
   './SoundsForStreg/Coin collect.mp3',
   './SoundsForStreg/Navigation sound.mp3',
   './SoundsForStreg/Startup App.mp3',
@@ -54,9 +55,6 @@ self.addEventListener('activate', function(event){
     }).then(function(){
       return self.clients.claim();
     }).then(function(){
-      /* Runtime scripts are injected into navigation responses. Reload open
-         app windows once after this worker takes control so a newly-added
-         runtime feature appears immediately instead of requiring two reloads. */
       return self.clients.matchAll({type:'window',includeUncontrolled:true});
     }).then(function(windowClients){
       return Promise.all(windowClients.map(function(client){
@@ -90,6 +88,7 @@ function injectRuntimeScripts(response){
     const tags = [];
     if(!html.includes('app-audio.js')) tags.push('<script src="./app-audio.js" defer></script>');
     if(!html.includes('daily-photo-reset.js')) tags.push('<script src="./daily-photo-reset.js" defer></script>');
+    if(!html.includes('home-challenges.js')) tags.push('<script src="./home-challenges.js" defer></script>');
 
     if(tags.length === 0){
       return new Response(html,{
