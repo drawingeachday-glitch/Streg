@@ -1,6 +1,6 @@
 /* STREG offline shell. Same-origin app files are refreshed from the network
    when possible and fall back to the last good cached version outdoors. */
-const VERSION = 'streg-v7';
+const VERSION = 'streg-v8';
 const SHELL = VERSION + '-shell';
 const LIBS = VERSION + '-libs';
 
@@ -51,7 +51,19 @@ self.addEventListener('activate', function(event){
         if(name !== SHELL && name !== LIBS) return caches.delete(name);
         return null;
       }));
-    }).then(function(){ return self.clients.claim(); })
+    }).then(function(){
+      return self.clients.claim();
+    }).then(function(){
+      /* Runtime scripts are injected into navigation responses. Reload open
+         app windows once after this worker takes control so a newly-added
+         runtime feature appears immediately instead of requiring two reloads. */
+      return self.clients.matchAll({type:'window',includeUncontrolled:true});
+    }).then(function(windowClients){
+      return Promise.all(windowClients.map(function(client){
+        if(!client.url) return null;
+        return client.navigate(client.url).catch(function(){ return null; });
+      }));
+    })
   );
 });
 
