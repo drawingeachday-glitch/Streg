@@ -1,6 +1,21 @@
 (function(){
   'use strict';
 
+  /* This script is already loaded by older service-worker versions. Use it as
+     a stable runtime loader so newly added features appear on the very first
+     refresh instead of waiting for the next service-worker activation. */
+  function loadRuntimeFeature(path,id,version){
+    if(document.getElementById(id)) return;
+    var script = document.createElement('script');
+    script.id = id;
+    script.src = new URL(path,document.baseURI).href + '?v=' + encodeURIComponent(version);
+    script.defer = true;
+    script.dataset.runtimeFeature = 'true';
+    document.head.appendChild(script);
+  }
+
+  loadRuntimeFeature('home-challenges.js','stregHomeChallengesRuntime','20260805-2');
+
   function state(){
     try{ return typeof S !== 'undefined' && S ? S : null; }catch(error){ return null; }
   }
