@@ -43,12 +43,30 @@
       '.home-extra-challenge.is-event .home-extra-challenge-progress>i{background:linear-gradient(90deg,#735ed7,#35b8d0);}',
       '#homeChallengeHub .is-done .home-extra-challenge-icon{color:var(--moss-dark);background:var(--moss-soft);}',
       '#homeChallengeHub .is-done .home-extra-challenge-progress>i{background:var(--moss);}',
+      '#streakJourneyLink,.streak-journey-link,#streakCommandHero .streak-route-footer{display:none!important;}',
+      '#streakCommandHero .streak-route-panel{padding:11px 15px 7px!important;}',
+      '#streakCommandHero .streak-route{margin:10px 1px 1px!important;}',
+      '#streakCommandHero.streak-command-hero{padding-bottom:12px!important;}',
       '#streakCommandHero.streak-photo-pending .streak-route-node.is-current .streak-route-dot{filter:grayscale(1) saturate(0)!important;color:#c7ccd0!important;background:#343b40!important;border-color:#5f686f!important;box-shadow:none!important;}',
       '#streakCommandHero.streak-photo-pending .streak-route-node.is-current .streak-route-day{color:#7d858b!important;opacity:.72!important;}',
       '#streakCommandHero.streak-photo-pending .streak-route-node.is-current{filter:grayscale(1) saturate(0)!important;}',
-      '@media(max-width:520px){#homeChallengeHub{padding:8px;border-radius:21px}.home-extra-challenge{grid-template-columns:46px minmax(0,1fr) 19px;min-height:84px;padding:11px 12px}.home-extra-challenge-icon{width:44px;height:44px}.home-extra-challenge-icon svg{width:22px;height:22px}.home-extra-challenge-title{font-size:13px}}'
+      '@media(max-width:720px){#streakCommandHero .streak-route-panel{margin-top:0!important;padding:10px 13px 6px!important;}#streakCommandHero .streak-route{margin:9px 0 0!important;}#streakCommandHero.streak-command-hero{padding-bottom:10px!important;}}',
+      '@media(max-width:520px){#homeChallengeHub{padding:8px;border-radius:21px}.home-extra-challenge{grid-template-columns:46px minmax(0,1fr) 19px;min-height:84px;padding:11px 12px}.home-extra-challenge-icon{width:44px;height:44px}.home-extra-challenge-icon svg{width:22px;height:22px}.home-extra-challenge-title{font-size:13px}}',
+      '@media(max-width:430px){#streakCommandHero .streak-route-panel{padding:9px 11px 5px!important;}#streakCommandHero .streak-route{margin:8px 0 0!important;}#streakCommandHero.streak-command-hero{padding-bottom:8px!important;}}'
     ].join('');
     document.head.appendChild(style);
+  }
+
+  function compactMilestone(){
+    var link = document.getElementById('streakJourneyLink') || document.querySelector('.streak-journey-link');
+    if(link) link.remove();
+
+    var footer = document.querySelector('#streakCommandHero .streak-route-footer');
+    if(footer){
+      footer.hidden = true;
+      footer.setAttribute('aria-hidden','true');
+      footer.style.display = 'none';
+    }
   }
 
   function switchToChallenges(){
@@ -222,6 +240,7 @@
 
   function renderHub(){
     installStyles();
+    compactMilestone();
     hideRecentPhotos();
 
     var featured = document.getElementById('featuredChallengeCard');
@@ -243,9 +262,7 @@
       ? appState.challenges.items
       : [];
 
-    /* Featured card + one extra normal card = two normal challenges. */
     hub.appendChild(makeExtraCard(items[1] || null,1,false));
-    /* Third card always represents the active monthly event. */
     hub.appendChild(makeExtraCard(activeEventChallenge(appState),0,true));
   }
 
