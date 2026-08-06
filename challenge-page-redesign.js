@@ -8,6 +8,20 @@
 
   function text(da,en){ return isEnglish() ? en : da; }
 
+  function setText(node,value){
+    if(node && node.textContent !== value) node.textContent = value;
+  }
+
+  function translatedExisting(value,fallbackDa,fallbackEn){
+    var source = String(value || '').trim();
+    if(!source) return text(fallbackDa,fallbackEn);
+    if(!isEnglish()) return source;
+    try{
+      if(window.I18n && typeof window.I18n.t === 'function') return window.I18n.t(source);
+    }catch(error){}
+    return source;
+  }
+
   function parseProgress(value){
     var match = String(value || '').match(/(\d+)\s*\/\s*(\d+)/);
     return match ? {done:Number(match[1]),total:Number(match[2])} : {done:0,total:0};
@@ -49,7 +63,7 @@
       '.challenge-overview-card{display:flex!important;align-items:center!important;justify-content:center!important;gap:8px!important;min-width:0!important;min-height:56px!important;padding:8px 10px!important;border:0!important;border-radius:16px!important;background:color-mix(in srgb,var(--paper-2) 72%,var(--card))!important;box-shadow:none!important;text-align:left!important;}',
       '.challenge-overview-card.primary{display:none!important;}',
       '.challenge-overview-card>span{display:none!important;}',
-      '.challenge-overview-card::before{content:"";flex:0 0 auto;width:22px;height:22px;border-radius:50%;background:var(--overview-color,var(--amber));box-shadow:inset 0 0 0 7px color-mix(in srgb,var(--overview-color,var(--amber)) 18%,var(--card));}',
+      '.challenge-overview-card::before{content:"";flex:0 0 auto;width:10px;height:10px;border-radius:50%;background:var(--overview-color,var(--amber));box-shadow:none;}',
       '.challenge-overview-card:nth-child(3){--overview-color:#735ED7;}',
       '.challenge-overview-card:nth-child(4){--overview-color:#E5A300;}',
       '.challenge-overview-card strong{display:block!important;margin:0!important;color:var(--overview-color,var(--amber-2))!important;font-family:var(--font-body)!important;font-size:18px!important;font-weight:950!important;line-height:1!important;}',
@@ -77,7 +91,7 @@
       '#tab-challenges .stagger>*{animation:challengeCardEnter .42s var(--glide) both;animation-delay:calc(var(--challenge-index,0)*55ms);}',
       '@keyframes challengeCardEnter{from{opacity:0;transform:translateY(10px) scale(.985)}to{opacity:1;transform:none}}',
       '@media(max-width:620px){#tab-challenges{padding-top:2px!important}#tab-challenges>.brandrow.challenge-hub-head{min-height:64px;margin-bottom:12px!important}#tab-challenges .challenge-hub-head h2{font-size:33px!important}#tab-challenges .challenge-hub-head #rerollBtn{width:42px!important;height:42px!important;min-height:42px!important}#challengeSubtabs .ch-subtab{min-height:48px!important;font-size:12px!important}.challenge-overview{padding:8px!important}.challenge-overview-card{min-height:50px!important;padding:7px 6px!important}.challenge-overview-card strong{font-size:16px!important}.challenge-overview-card small{max-width:64px!important;font-size:8px!important}#challengeList>* ,#weeklyList>* ,#monthlyList>*{min-height:92px!important;padding:14px 52px 14px 75px!important;border-radius:21px!important}#challengeList>*::before,#weeklyList>*::before,#monthlyList>*::before{left:16px!important;width:44px!important;height:44px!important}#challengeList>*::after,#weeklyList>*::after,#monthlyList>*::after{right:17px!important;font-size:30px!important}#challengeList>*:first-child{min-height:202px!important;padding:68px 65px 22px 128px!important}#challengeList>*:first-child::before{left:21px!important;width:90px!important;height:90px!important}.challenge-focus-kicker{left:128px!important;top:31px!important}.challenge-event-preview{min-height:172px;padding:26px 72px 25px 24px;border-radius:24px}.challenge-event-title{font-size:24px}.challenge-event-preview::after{right:18px;width:52px;height:52px;font-size:34px}}',
-      '@media(max-width:390px){#challengeSubtabs.ch-subtabs{gap:2px!important;padding:5px!important}#challengeSubtabs .ch-subtab{padding:0 5px!important;font-size:11px!important}.challenge-overview{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:5px!important}.challenge-overview-card::before{width:16px;height:16px}.challenge-overview-card strong{font-size:14px!important}.challenge-overview-card small{display:none!important}#challengeList>*:first-child{padding-left:112px!important}#challengeList>*:first-child::before{left:15px!important;width:82px!important;height:82px!important}.challenge-focus-kicker{left:112px!important}.challenge-event-preview{padding-left:20px}.challenge-event-title{font-size:22px}}'
+      '@media(max-width:390px){#challengeSubtabs.ch-subtabs{gap:2px!important;padding:5px!important}#challengeSubtabs .ch-subtab{padding:0 5px!important;font-size:11px!important}.challenge-overview{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:5px!important}.challenge-overview-card::before{width:9px;height:9px}.challenge-overview-card strong{font-size:14px!important}.challenge-overview-card small{display:none!important}#challengeList>*:first-child{padding-left:112px!important}#challengeList>*:first-child::before{left:15px!important;width:82px!important;height:82px!important}.challenge-focus-kicker{left:112px!important}.challenge-event-preview{padding-left:20px}.challenge-event-title{font-size:22px}}'
     ].join('');
     document.head.appendChild(style);
   }
@@ -99,11 +113,13 @@
         wrap.appendChild(title);
       }
     }
-    if(title) title.textContent = 'Challenges';
+    setText(title,'Challenges');
 
     var button = document.getElementById('rerollBtn');
     if(button){
-      button.innerHTML = '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h3M11 17h9" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><circle cx="16" cy="7" r="2" stroke="currentColor" stroke-width="1.7"/><circle cx="9" cy="17" r="2" stroke="currentColor" stroke-width="1.7"/></svg>';
+      if(!button.querySelector('svg')){
+        button.innerHTML = '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h3M11 17h9" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><circle cx="16" cy="7" r="2" stroke="currentColor" stroke-width="1.7"/><circle cx="9" cy="17" r="2" stroke="currentColor" stroke-width="1.7"/></svg>';
+      }
       button.setAttribute('aria-label',text('Nye challenges','New challenges'));
       button.title = text('Nye challenges','New challenges');
     }
@@ -130,11 +146,12 @@
     var availableDaily = Math.max(0,(daily.total || 0) - daily.done);
     var availableEvent = Math.max(0,(event.total || 0) - event.done);
     var xp = availableDaily * 35 + availableEvent * 100;
-    overview.innerHTML =
+    var markup =
       '<div class="challenge-overview-card primary"></div>' +
       '<div class="challenge-overview-card"><div><strong>' + availableDaily + '</strong><small>' + text('Daglige','Daily') + '</small></div></div>' +
       '<div class="challenge-overview-card"><div><strong>' + availableEvent + '</strong><small>Event</small></div></div>' +
       '<div class="challenge-overview-card"><div><strong>' + xp + '</strong><small>' + text('XP klar','XP available') + '</small></div></div>';
+    if(overview.innerHTML !== markup) overview.innerHTML = markup;
   }
 
   function enhanceTabs(){
@@ -147,8 +164,12 @@
     document.querySelectorAll('#challengeSubtabs .ch-subtab').forEach(function(button){
       var label = map[button.dataset.chPane];
       if(!label) return;
-      button.innerHTML = '<span class="challenge-tab-label">' + label + '</span>';
+      var current = button.querySelector('.challenge-tab-label');
+      if(!current || current.textContent !== label){
+        button.innerHTML = '<span class="challenge-tab-label">' + label + '</span>';
+      }
       button.setAttribute('aria-label',label);
+      button.dataset.challengeLanguage = isEnglish() ? 'en' : 'da';
     });
   }
 
@@ -158,11 +179,14 @@
       if(!list) return;
       Array.prototype.forEach.call(list.children,function(card,index){
         card.style.setProperty('--challenge-index',index);
-        if(id === 'challengeList' && index === 0 && !card.querySelector('.challenge-focus-kicker')){
-          var kicker = document.createElement('span');
-          kicker.className = 'challenge-focus-kicker';
-          kicker.textContent = text('Dagens fokus','Today’s focus');
-          card.appendChild(kicker);
+        if(id === 'challengeList' && index === 0){
+          var kicker = card.querySelector('.challenge-focus-kicker');
+          if(!kicker){
+            kicker = document.createElement('span');
+            kicker.className = 'challenge-focus-kicker';
+            card.appendChild(kicker);
+          }
+          setText(kicker,text('Dagens fokus','Today’s focus'));
         }
       });
     });
@@ -191,12 +215,47 @@
 
     var title = document.getElementById('eventHeroTitle');
     var xpText = document.getElementById('eventNextRewardText');
-    preview.innerHTML =
+    var eventTitle = translatedExisting(title && title.textContent,'Fang magien','Capture the magic');
+    var rewardText = xpText && xpText.textContent ? xpText.textContent : '+100 Event-XP';
+    var markup =
       '<div class="challenge-event-label">✦ ' + text('Event-challenge','Event challenge') + '</div>' +
       '<span class="challenge-event-badge">Event</span>' +
-      '<h3 class="challenge-event-title">' + (title && title.textContent ? title.textContent : text('Fang magien','Capture the magic')) + '</h3>' +
+      '<h3 class="challenge-event-title">' + eventTitle + '</h3>' +
       '<div class="challenge-event-sub">' + text('Klar en event-mission og saml sæson-XP.','Complete an event mission and collect Season XP.') + '</div>' +
-      '<div class="challenge-event-reward">' + (xpText && xpText.textContent ? xpText.textContent : '+100 Event-XP') + '</div>';
+      '<div class="challenge-event-reward">' + rewardText + '</div>';
+    if(preview.innerHTML !== markup) preview.innerHTML = markup;
+  }
+
+  function forceVisibleEnglish(){
+    if(!isEnglish()) return;
+    var tab = document.getElementById('tab-challenges');
+    if(!tab) return;
+    var replacements = {
+      'Daglige':'Daily',
+      'Ugentlige':'Weekly',
+      'Månedlige':'Monthly',
+      'Nye challenges':'New challenges',
+      'Dagens fokus':'Today’s focus',
+      'XP klar':'XP available',
+      'Event-challenge':'Event challenge',
+      'Klar en event-mission og saml sæson-XP.':'Complete an event mission and collect Season XP.',
+      'Fang magien':'Capture the magic',
+      'Tag':'Take',
+      'Tag billede':'Take photo',
+      'Tag et billede':'Take a photo',
+      'Hent':'Claim',
+      'Hent reward':'Claim reward',
+      'Færdig':'Done'
+    };
+    var walker = document.createTreeWalker(tab,NodeFilter.SHOW_TEXT);
+    var node;
+    while((node = walker.nextNode())){
+      var clean = String(node.data || '').trim();
+      if(!Object.prototype.hasOwnProperty.call(replacements,clean)) continue;
+      var leading = String(node.data).match(/^\s*/)[0];
+      var trailing = String(node.data).match(/\s*$/)[0];
+      node.data = leading + replacements[clean] + trailing;
+    }
   }
 
   function refresh(){
@@ -206,6 +265,9 @@
     updateOverview();
     markCards();
     eventPreview();
+    forceVisibleEnglish();
+    setTimeout(forceVisibleEnglish,0);
+    setTimeout(forceVisibleEnglish,120);
   }
 
   var observer;
@@ -226,7 +288,11 @@
   }
 
   window.refreshChallengeRedesign = refresh;
-  window.addEventListener('streg:languagechange',queueRefresh);
+  window.addEventListener('streg:languagechange',function(){
+    queueRefresh();
+    setTimeout(queueRefresh,40);
+    setTimeout(queueRefresh,180);
+  });
   window.addEventListener('streg:startup-complete',queueRefresh);
   if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded',install,{once:true});
   else install();
