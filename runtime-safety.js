@@ -6,6 +6,7 @@
 
   var lightboxPhotoId = null;
   var lastGeoUpdateAt = 0;
+  var friendObserver = null;
   var MAX_GEO_FALLBACK_AGE = 20000;
 
   function devMode(){
@@ -120,6 +121,15 @@
         Geo.__stregFreshnessWatching = true;
         Geo.onUpdate(function(){ lastGeoUpdateAt = Date.now(); });
       }
+      if(typeof Geo.override === 'function' && !Geo.override.__stregDevOnly){
+        var originalOverride = Geo.override;
+        var guardedOverride = function(){
+          if(!devMode()) return false;
+          return originalOverride.apply(Geo,arguments);
+        };
+        guardedOverride.__stregDevOnly = true;
+        Geo.override = guardedOverride;
+      }
       if(typeof Geo.current !== 'function' || Geo.current.__stregFreshFallbackGuard) return;
 
       var original = Geo.current;
@@ -192,9 +202,6 @@
     var button = document.getElementById('lbDel');
     if(!button || button.dataset.stregCloudDeleteBridge === 'true') return;
     button.dataset.stregCloudDeleteBridge = 'true';
-    /* The core delete listener was registered before this runtime. By the time
-       this listener runs, a confirmed deletion has already removed the photo
-       from S. A cancelled confirm leaves it in S and therefore does nothing. */
     button.addEventListener('click',function(){
       setTimeout(deleteCloudPhotoIfLocalGone,0);
     });
@@ -206,12 +213,12 @@
       if(RewardFlight.fly.__stregSuppressionAware) return true;
 
       var original = RewardFlight.fly;
-      /* Wait for app-audio to finish its normal RewardFlight wrapper first, so
-         non-challenge flights keep their existing coin-arrival audio. */
       if(!original.__stregFileAudio) return false;
 
       var wrapped = function(options){
-        if(document.documentElement.classList.contains('streg-suppress-legacy-reward-flight')){
+        var challengeOverlay = document.getElementById('challengeRewardCutscene');
+        if(document.documentElement.classList.contains('streg-suppress-legacy-reward-flight') ||
+           (challengeOverlay && challengeOverlay.classList.contains('active'))){
           return null;
         }
         return original.apply(this,arguments);
@@ -248,9 +255,6 @@
             var daily = S.challenges && Array.isArray(S.challenges.items) ? S.challenges.items : [];
             todayCount = daily.filter(function(item){ return item && item.done; }).length;
           }catch(error){}
-          /* Today's completed challenges are already included in the weekly
-             counter. max() preserves older/migrated saves without adding the
-             same completion twice. */
           return Math.max(weeklyCount,todayCount);
         };
         safeChallengeCount.__stregNoDoubleCount = true;
@@ -258,6 +262,29 @@
         try{ achievementCompletedChallenges = safeChallengeCount; }catch(error){}
       }
     }catch(error){}
+  }
+
+  function removeDemoFriendRows(){
+    if(devMode()) return;
+    var list = document.getElementById('friendList');
+    if(!list) return;
+    Array.prototype.slice.call(list.children).forEach(function(row){
+      if(row.classList.contains('me-row')) return;
+      if(row.querySelector('[data-act="friend-gallery"]')) return;
+      row.remove();
+    });
+  }
+
+  function guardDemoFriends(){
+    if(devMode()) return;
+    var list = document.getElementById('friendList');
+    if(!list) return;
+    removeDemoFriendRows();
+    if(friendObserver) return;
+    friendObserver = new MutationObserver(function(){
+      removeDemoFriendRows();
+    });
+    friendObserver.observe(list,{childList:true});
   }
 
   function install(){
@@ -268,6 +295,7 @@
     installCloudDeleteBridge();
     guardLegacyRewardFlights();
     cleanAchievementInputs();
+    guardDemoFriends();
   }
 
   window.StregRuntimeSafety = {
