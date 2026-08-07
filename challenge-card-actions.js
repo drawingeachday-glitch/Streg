@@ -4,6 +4,8 @@
   var pendingRewardSource = null;
   var overlayObserver = null;
   var fallbackTimer = null;
+  var lastCompactAt = 0;
+  var handlingOverlay = false;
   var reduceMotion = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
 
   function isEnglish(){
@@ -12,7 +14,12 @@
   }
 
   function rectCopy(rect){
-    return rect ? {left:rect.left,top:rect.top,width:rect.width,height:rect.height} : null;
+    return rect ? {
+      left:Number(rect.left) || 0,
+      top:Number(rect.top) || 0,
+      width:Number(rect.width) || 0,
+      height:Number(rect.height) || 0
+    } : null;
   }
 
   function actionFor(card){
@@ -58,14 +65,22 @@
   function rememberSource(card){
     if(!card) return null;
     var reward = rewardNumbers(card);
-    pendingRewardSource = {
+    var source = {
       rect:rectCopy(card.getBoundingClientRect()),
       xp:reward.xp,
       coins:reward.coins,
       at:Date.now(),
       type:card.classList.contains('ch-card') ? 'daily' : card.classList.contains('event-daily-card') ? 'event' : 'claim'
     };
-    return pendingRewardSource;
+    pendingRewardSource = source;
+
+    try{
+      if(window.StregXpBar && window.StregXpBar.setSourceRect){
+        window.StregXpBar.setSourceRect(source.rect);
+      }
+    }catch(error){}
+
+    return source;
   }
 
   function decorateCard(card){
@@ -109,18 +124,20 @@
     return !!(interactive && interactive !== card);
   }
 
+  function scheduleDirectClaimFallback(source){
+    if(!source || source.type === 'daily') return;
+    clearTimeout(fallbackTimer);
+    fallbackTimer = setTimeout(function(){
+      if(pendingRewardSource === source) playPendingCompact(false);
+    },140);
+  }
+
   function runCardAction(card){
     var action = actionFor(card);
     if(!action) return false;
     var source = rememberSource(card);
     action.click();
-
-    if(source && source.type !== 'daily'){
-      clearTimeout(fallbackTimer);
-      fallbackTimer = setTimeout(function(){
-        if(pendingRewardSource === source) playPendingCompact();
-      },90);
-    }
+    scheduleDirectClaimFallback(source);
     return true;
   }
 
@@ -131,7 +148,6 @@
     var style = document.createElement('style');
     style.id = 'challengeCardActionStyles';
     style.textContent = [
-      /* The old full-screen challenge cutscene is intentionally retired. */
       '#challengeRewardCutscene,.challenge-reward-cutscene{display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important;}',
       '#tab-challenges .streg-card-actionable{cursor:pointer!important;-webkit-tap-highlight-color:transparent;}',
       '#tab-challenges .streg-card-actionable:focus-visible{outline:2px solid color-mix(in srgb,var(--amber) 72%,#fff)!important;outline-offset:3px!important;}',
@@ -161,28 +177,33 @@
     ghost.style.height = rect.height + 'px';
     ghost.innerHTML = '<span class="streg-claim-check">✓</span>';
     document.body.appendChild(ghost);
-    ghost.animate([
+
+    var animation = ghost.animate([
       {transform:'scale(1)',opacity:.98},
       {transform:'scale(1.018)',opacity:1,offset:.35},
       {transform:'scale(.995)',opacity:1,offset:.72},
       {transform:'scale(.985)',opacity:0}
-    ],{duration:760,easing:'cubic-bezier(.18,.82,.22,1)',fill:'forwards'}).finished.catch(function(){}).then(function(){ ghost.remove(); });
+    ],{duration:760,easing:'cubic-bezier(.18,.82,.22,1)',fill:'forwards'});
+
+    animation.finished.catch(function(){}).then(function(){ ghost.remove(); });
   }
 
   function flyCoins(rect,amount){
     if(!rect || !amount || reduceMotion) return;
     var targetEl = document.getElementById('homeStatCoinsWrap') || document.getElementById('topCoinsWrap');
     if(!targetEl) return;
+
     var target = targetEl.getBoundingClientRect();
     var tx = target.left + target.width*.5;
     var ty = target.top + target.height*.5;
-    var count = Math.max(5,Math.min(10,Math.round(amount/10)+4));
+    var count = Math.max(5,Math.min(9,Math.round(amount/12)+4));
 
     for(var i=0;i<count;i+=1){
       (function(index){
         var coin = document.createElement('span');
         coin.className = 'streg-reward-coin';
         document.body.appendChild(coin);
+
         var sx = rect.left + rect.width*(.2 + Math.random()*.6) - 8;
         var sy = rect.top + rect.height*(.45 + Math.random()*.28) - 8;
         var popX = (Math.random()-.5)*(60 + rect.width*.18);
@@ -190,19 +211,20 @@
         var midX = sx + (tx-sx)*.55 + (Math.random()-.5)*60;
         var midY = sy + (ty-sy)*.48 - 18 - Math.random()*30;
         var delay = 45 + index*48 + Math.random()*30;
-        coin.animate([
+
+        var animation = coin.animate([
           {transform:'translate3d('+sx+'px,'+sy+'px,0) scale(.2) rotate(0deg)',opacity:0},
           {transform:'translate3d('+(sx+popX)+'px,'+(sy+popY)+'px,0) scale(1.08) rotate('+(120+Math.random()*140)+'deg)',opacity:1,offset:.22},
           {transform:'translate3d('+midX+'px,'+midY+'px,0) scale(.88) rotate('+(260+Math.random()*120)+'deg)',opacity:1,offset:.68},
           {transform:'translate3d('+(tx-8)+'px,'+(ty-8)+'px,0) scale(.18) rotate(520deg)',opacity:0}
-        ],{duration:650+Math.random()*180,delay:delay,easing:'cubic-bezier(.18,.76,.18,1)',fill:'forwards'}).finished.catch(function(){}).then(function(){ coin.remove(); });
+        ],{duration:650+Math.random()*180,delay:delay,easing:'cubic-bezier(.18,.76,.18,1)',fill:'forwards'});
+
+        animation.finished.catch(function(){}).then(function(){ coin.remove(); });
       })(i);
     }
   }
 
   function sourceFromLegacyOverlay(){
-    var overlay = document.getElementById('challengeRewardCutscene');
-    if(!overlay) return null;
     var title = document.getElementById('crTitle');
     var wanted = title ? String(title.textContent || '').trim().toLowerCase() : '';
     var cards = document.querySelectorAll('#challengeList .ch-card,#weeklyList .prog-card,#monthlyList .prog-card');
@@ -212,7 +234,10 @@
       Array.prototype.some.call(cards,function(card){
         var node = card.querySelector('.ch-title,.prog-title>span:last-child');
         var value = node ? String(node.textContent || '').trim().toLowerCase() : '';
-        if(value && value === wanted){ matched = card; return true; }
+        if(value && value === wanted){
+          matched = card;
+          return true;
+        }
         return false;
       });
     }
@@ -220,8 +245,8 @@
     if(!matched){
       matched = document.querySelector('#challengeList .ch-card.justDone,#weeklyList .prog-card.done,#monthlyList .prog-card.done');
     }
-
     if(!matched) return null;
+
     return {
       rect:rectCopy(matched.getBoundingClientRect()),
       xp:numberFrom(document.getElementById('crXp') && document.getElementById('crXp').textContent,/([0-9]+)/),
@@ -232,7 +257,12 @@
   }
 
   function playCompact(source){
-    if(!source || !source.rect) return;
+    if(!source || !source.rect) return false;
+
+    var now = Date.now();
+    if(now - lastCompactAt < 1100) return false;
+    lastCompactAt = now;
+
     animateGhost(source.rect);
     flyCoins(source.rect,source.coins);
 
@@ -245,36 +275,60 @@
     try{
       if(typeof SFX !== 'undefined' && SFX){
         if(typeof SFX.success === 'function') SFX.success();
-        setTimeout(function(){
-          if(source.coins && typeof SFX.coins === 'function') SFX.coins(Math.min(4,source.coins));
-        },180);
+        if(source.coins && typeof SFX.coins === 'function'){
+          setTimeout(function(){ SFX.coins(Math.min(3,source.coins)); },190);
+        }
       }
     }catch(error){}
+
+    return true;
   }
 
-  function playPendingCompact(){
-    var source = pendingRewardSource;
-    if(source && Date.now() - source.at > 600000) source = null;
-    pendingRewardSource = null;
+  function playPendingCompact(allowOverlayFallback){
     clearTimeout(fallbackTimer);
-    if(!source) source = sourceFromLegacyOverlay();
+    var source = pendingRewardSource;
+    pendingRewardSource = null;
+
+    if(source && Date.now() - source.at > 10 * 60 * 1000) source = null;
+    if(!source && allowOverlayFallback && Date.now() - lastCompactAt >= 1100){
+      source = sourceFromLegacyOverlay();
+    }
     if(source) playCompact(source);
+  }
+
+  function forceCloseLegacyOverlay(overlay){
+    if(!overlay) return;
+    overlay.classList.remove('active','closing');
+    overlay.setAttribute('aria-hidden','true');
   }
 
   function suppressLegacyOverlay(){
     var overlay = document.getElementById('challengeRewardCutscene');
     if(!overlay) return;
-    overlay.setAttribute('aria-hidden','true');
 
-    if(!overlayObserver){
-      overlayObserver = new MutationObserver(function(){
-        if(overlay.classList.contains('active')){
-          playPendingCompact();
-          overlay.setAttribute('aria-hidden','true');
+    forceCloseLegacyOverlay(overlay);
+
+    if(overlayObserver) return;
+    overlayObserver = new MutationObserver(function(){
+      if(handlingOverlay || !overlay.classList.contains('active')) return;
+
+      handlingOverlay = true;
+      try{
+        forceCloseLegacyOverlay(overlay);
+        if(Date.now() - lastCompactAt >= 1100){
+          playPendingCompact(true);
+        }else{
+          pendingRewardSource = null;
+          clearTimeout(fallbackTimer);
         }
-      });
-      overlayObserver.observe(overlay,{attributes:true,attributeFilter:['class','aria-hidden']});
-    }
+      }finally{
+        handlingOverlay = false;
+      }
+    });
+
+    /* Important: observe ONLY the class. Never observe aria-hidden here,
+       because this code writes aria-hidden itself. */
+    overlayObserver.observe(overlay,{attributes:true,attributeFilter:['class']});
   }
 
   document.addEventListener('click',function(event){
@@ -285,12 +339,7 @@
       var childAction = actionFor(card);
       if(childAction && (event.target === childAction || childAction.contains(event.target))){
         var source = rememberSource(card);
-        if(source && source.type !== 'daily'){
-          clearTimeout(fallbackTimer);
-          fallbackTimer = setTimeout(function(){
-            if(pendingRewardSource === source) playPendingCompact();
-          },90);
-        }
+        scheduleDirectClaimFallback(source);
       }
       return;
     }
@@ -305,15 +354,15 @@
     if(runCardAction(card)) event.preventDefault();
   });
 
-  var observer = null;
+  var cardObserver = null;
   var queued = false;
+
   function queueDecorate(){
     if(queued) return;
     queued = true;
     requestAnimationFrame(function(){
       queued = false;
       decorate();
-      suppressLegacyOverlay();
     });
   }
 
@@ -323,14 +372,14 @@
     suppressLegacyOverlay();
 
     var tab = document.getElementById('tab-challenges');
-    if(tab && !observer){
-      observer = new MutationObserver(queueDecorate);
-      observer.observe(tab,{childList:true,subtree:true,attributes:true,attributeFilter:['class','disabled']});
+    if(tab && !cardObserver){
+      cardObserver = new MutationObserver(queueDecorate);
+      cardObserver.observe(tab,{childList:true,subtree:true,attributes:true,attributeFilter:['class','disabled']});
     }
   }
 
   window.refreshChallengeCardActions = decorate;
-  window.addEventListener('streg:startup-complete',function(){ queueDecorate(); suppressLegacyOverlay(); });
+  window.addEventListener('streg:startup-complete',install);
   window.addEventListener('streg:languagechange',queueDecorate);
 
   if(document.readyState === 'loading'){
@@ -338,6 +387,6 @@
   }else{
     install();
   }
+
   setTimeout(install,500);
-  setTimeout(suppressLegacyOverlay,900);
 })();
