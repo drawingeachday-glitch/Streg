@@ -1,6 +1,6 @@
 /* STREG offline shell. Same-origin app files are refreshed from the network
    when possible and fall back to the last good cached version outdoors. */
-const VERSION = 'streg-v15';
+const VERSION = 'streg-v16';
 const SHELL = VERSION + '-shell';
 const LIBS = VERSION + '-libs';
 
