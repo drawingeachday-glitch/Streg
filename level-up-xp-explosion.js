@@ -1,6 +1,9 @@
 (function(){
   'use strict';
 
+  if(window.__stregLevelExplosionInstalled) return;
+  window.__stregLevelExplosionInstalled = true;
+
   var lastLevel = null;
   var pendingLevels = [];
   var installedFill = null;
@@ -8,7 +11,6 @@
   var suppressLegacyConfettiUntil = 0;
   var originalShowModal = null;
   var originalConfetti = null;
-  var originalLevelupSound = null;
   var reduceMotion = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
 
   function state(){
@@ -46,6 +48,7 @@
         copyFunctionState(originalShowModal,guardedModal);
         guardedModal.__stregXpLevelGuard = true;
         window.showModal = guardedModal;
+        try{ showModal = guardedModal; }catch(error){}
       }
     }catch(error){}
 
@@ -59,20 +62,13 @@
         };
         guardedConfetti.__stregXpLevelGuard = true;
         window.confetti = guardedConfetti;
+        try{ confetti = guardedConfetti; }catch(error){}
       }
     }catch(error){}
 
-    try{
-      if(typeof SFX !== 'undefined' && SFX && typeof SFX.levelup === 'function' && !SFX.levelup.__stregXpLevelGuard){
-        originalLevelupSound = SFX.levelup;
-        var guardedLevelup = function(){
-          suppressLegacyConfettiUntil = Date.now() + 1500;
-          return originalLevelupSound.apply(this,arguments);
-        };
-        guardedLevelup.__stregXpLevelGuard = true;
-        SFX.levelup = guardedLevelup;
-      }
-    }catch(error){}
+    /* SFX.levelup is deliberately NOT wrapped here. uploaded-ui-sounds.js is
+       the single owner of the uploaded level-up sound. Two runtimes repeatedly
+       wrapping the same function caused an unnecessary background tug-of-war. */
   }
 
   function installStyles(){
@@ -177,6 +173,10 @@
 
   function armLevels(oldLevel,newLevel){
     if(newLevel <= oldLevel) return;
+    /* The core level-up visual is delayed by 480ms. Open the suppression
+       window as soon as XP crosses the threshold so its old center confetti is
+       filtered even though SFX.levelup is no longer used as a signalling hack. */
+    suppressLegacyConfettiUntil = Date.now() + 2200;
     for(var level=oldLevel+1;level<=newLevel;level+=1) pendingLevels.push(level);
     clearTimeout(fallbackTimer);
     fallbackTimer = setTimeout(function(){
@@ -196,7 +196,10 @@
       return;
     }
     if(currentLevel > lastLevel) armLevels(lastLevel,currentLevel);
-    else if(currentLevel < lastLevel) pendingLevels.length = 0;
+    else if(currentLevel < lastLevel){
+      pendingLevels.length = 0;
+      clearTimeout(fallbackTimer);
+    }
     lastLevel = currentLevel;
   }
 
@@ -240,8 +243,7 @@
 
   setTimeout(install,700);
   setInterval(function(){
-    installLegacyGuards();
     bindFill();
     checkLevel();
-  },120);
+  },180);
 })();
