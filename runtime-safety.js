@@ -195,12 +195,37 @@
     });
   }
 
+  function guardLegacyRewardFlights(){
+    try{
+      if(typeof RewardFlight === 'undefined' || !RewardFlight || typeof RewardFlight.fly !== 'function') return false;
+      if(RewardFlight.fly.__stregSuppressionAware) return true;
+
+      var original = RewardFlight.fly;
+      /* Wait for app-audio to finish its normal RewardFlight wrapper first, so
+         non-challenge flights keep their existing coin-arrival audio. */
+      if(!original.__stregFileAudio) return false;
+
+      var wrapped = function(options){
+        if(document.documentElement.classList.contains('streg-suppress-legacy-reward-flight')){
+          return null;
+        }
+        return original.apply(this,arguments);
+      };
+      wrapped.__stregSuppressionAware = true;
+      wrapped.__stregFileAudio = true;
+      wrapped.__stregOriginal = original;
+      RewardFlight.fly = wrapped;
+      return true;
+    }catch(error){ return false; }
+  }
+
   function install(){
     installProductionUiGuard();
     guardTestCaptures();
     watchGeoFreshness();
     wrapLightbox();
     installCloudDeleteBridge();
+    guardLegacyRewardFlights();
   }
 
   window.StregRuntimeSafety = {
@@ -216,4 +241,5 @@
   }
   setTimeout(install,450);
   setTimeout(install,1200);
+  setTimeout(install,1900);
 })();
