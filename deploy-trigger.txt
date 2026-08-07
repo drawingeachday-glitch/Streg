@@ -1,4 +1,4 @@
 STREG deployment trigger
-2026-08-06T20:17:00+02:00
+2026-08-07T09:35:00+02:00
 
-Trigger after resetting GitHub Pages source to main / root.
+Fresh trigger after GitHub resolved the Actions and Pages incident.
