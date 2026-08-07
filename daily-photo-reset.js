@@ -36,6 +36,7 @@
     loadRuntimeFeature('level-up-xp-explosion.js','stregLevelUpXpExplosionRuntime','20260807-2');
     loadRuntimeFeature('uploaded-ui-sounds.js','stregUploadedUiSoundsRuntime','20260807-3');
     loadRuntimeFeature('inventory.js','stregInventoryRuntime','20260805-1');
+    loadRuntimeFeature('inventory-clean.js','stregInventoryCleanRuntime','20260807-1');
     loadRuntimeFeature('theme-audio.js','stregThemeAudioRuntime','20260807-4');
   }
 
