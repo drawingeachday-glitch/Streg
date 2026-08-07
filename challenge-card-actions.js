@@ -4,6 +4,7 @@
   var pendingRewardSource = null;
   var overlayObserver = null;
   var fallbackTimer = null;
+  var legacyFlightSuppressTimer = null;
   var lastCompactAt = 0;
   var handlingOverlay = false;
   var reduceMotion = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
@@ -20,6 +21,16 @@
       width:Number(rect.width) || 0,
       height:Number(rect.height) || 0
     } : null;
+  }
+
+  function suppressLegacyRewardFlights(duration){
+    var root = document.documentElement;
+    if(!root) return;
+    root.classList.add('streg-suppress-legacy-reward-flight');
+    clearTimeout(legacyFlightSuppressTimer);
+    legacyFlightSuppressTimer = setTimeout(function(){
+      root.classList.remove('streg-suppress-legacy-reward-flight');
+    },Math.max(800,Number(duration) || 2400));
   }
 
   function actionFor(card){
@@ -73,6 +84,8 @@
       type:card.classList.contains('ch-card') ? 'daily' : card.classList.contains('event-daily-card') ? 'event' : 'claim'
     };
     pendingRewardSource = source;
+
+    suppressLegacyRewardFlights(2800);
 
     try{
       if(window.StregXpBar && window.StregXpBar.setSourceRect){
@@ -149,6 +162,8 @@
     style.id = 'challengeCardActionStyles';
     style.textContent = [
       '#challengeRewardCutscene,.challenge-reward-cutscene{display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important;}',
+      '.streg-suppress-legacy-reward-flight .reward-fly{display:none!important;visibility:hidden!important;opacity:0!important;}',
+      '.streg-suppress-legacy-reward-flight .reward-target-hit{animation:none!important;}',
       '#tab-challenges .streg-card-actionable{cursor:pointer!important;-webkit-tap-highlight-color:transparent;}',
       '#tab-challenges .streg-card-actionable:focus-visible{outline:2px solid color-mix(in srgb,var(--amber) 72%,#fff)!important;outline-offset:3px!important;}',
       '#tab-challenges .prog-card.streg-card-actionable:focus-visible,#tab-challenges .event-daily-card.streg-card-actionable:focus-visible{outline-color:color-mix(in srgb,var(--moss) 72%,#fff)!important;}',
@@ -263,14 +278,19 @@
     if(now - lastCompactAt < 1100) return false;
     lastCompactAt = now;
 
+    suppressLegacyRewardFlights(2800);
     animateGhost(source.rect);
     flyCoins(source.rect,source.coins);
 
-    try{
-      if(window.StregXpBar && window.StregXpBar.setSourceRect){
-        window.StregXpBar.setSourceRect(source.rect);
-      }
-    }catch(error){}
+    /* Normal challenge claims already seed the XP source in rememberSource().
+       Only a legacy fallback discovered after the fact needs to seed it here. */
+    if(source.type === 'fallback'){
+      try{
+        if(window.StregXpBar && window.StregXpBar.setSourceRect){
+          window.StregXpBar.setSourceRect(source.rect);
+        }
+      }catch(error){}
+    }
 
     try{
       if(typeof SFX !== 'undefined' && SFX){
@@ -314,6 +334,7 @@
 
       handlingOverlay = true;
       try{
+        suppressLegacyRewardFlights(2800);
         forceCloseLegacyOverlay(overlay);
         if(Date.now() - lastCompactAt >= 1100){
           playPendingCompact(true);
@@ -326,8 +347,6 @@
       }
     });
 
-    /* Important: observe ONLY the class. Never observe aria-hidden here,
-       because this code writes aria-hidden itself. */
     overlayObserver.observe(overlay,{attributes:true,attributeFilter:['class']});
   }
 
