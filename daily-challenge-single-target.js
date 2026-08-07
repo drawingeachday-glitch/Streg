@@ -4,6 +4,14 @@
   if(window.__stregSingleTargetCleanupInstalled) return;
   window.__stregSingleTargetCleanupInstalled = true;
 
+  function installStyles(){
+    if(document.getElementById('stregSingleTargetCountStyles')) return;
+    var style = document.createElement('style');
+    style.id = 'stregSingleTargetCountStyles';
+    style.textContent = '.home-extra-challenge-count{display:none!important;}';
+    document.head.appendChild(style);
+  }
+
   function isSingleTargetCount(value){
     var text = String(value || '')
       .replace(/\u00a0/g,' ')
@@ -46,19 +54,7 @@
     });
   }
 
-  function cleanHomeDailyCards(){
-    var hub = document.getElementById('homeChallengeHub');
-    if(!hub) return;
-
-    Array.prototype.forEach.call(
-      hub.querySelectorAll('.home-extra-challenge:not(.is-event),.home-extra-challenge[data-challenge-type="normal"]'),
-      function(card){
-        var count = card.querySelector('.home-extra-challenge-count');
-        if(count) hideCountElement(count);
-        removeStandaloneCounts(card);
-      }
-    );
-
+  function cleanFeatured(){
     var featured = document.getElementById('featuredChallengeCard');
     if(featured) removeStandaloneCounts(featured);
   }
@@ -72,14 +68,15 @@
   }
 
   function clean(){
-    cleanHomeDailyCards();
+    installStyles();
+    cleanFeatured();
     cleanDailyChallengeTab();
   }
 
   var observers = [];
   var queued = false;
   function queueClean(){
-    if(queued) return;
+    if(queued || document.hidden) return;
     queued = true;
     requestAnimationFrame(function(){
       queued = false;
@@ -97,7 +94,9 @@
 
   function install(){
     clean();
-    observeRoot(document.getElementById('homeChallengeHub'));
+    /* Home extra-card counts are hidden by CSS, so there is no reason to watch
+       the entire Home challenge hub. Only the two small roots whose text can
+       actually need cleanup are observed. */
     observeRoot(document.getElementById('featuredChallengeCard'));
     observeRoot(document.getElementById('challengeList'));
   }
