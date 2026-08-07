@@ -151,9 +151,6 @@
   }
 
   function replaceGenericTabSound(name){
-    /* app-audio listens on document capture before the button itself receives
-       the event. Queueing this work lets its generic sound start first, then
-       immediately removes it so only the dedicated uploaded tab sound remains. */
     Promise.resolve().then(function(){
       stopGenericTabSound();
       play(name,{restart:true,volume:.9});
@@ -212,8 +209,6 @@
           total = Math.max(total,delay + duration);
         });
       }catch(error){}
-      /* Play right as the bundle is reaching the XP bar, matching the coin
-         arrival rhythm instead of sounding when the particle first appears. */
       setTimeout(playXpBundle,Math.max(80,total-95));
     });
   }
@@ -234,6 +229,16 @@
       });
     });
     xpObserver.observe(document.body,{childList:true,subtree:true});
+  }
+
+  function silenceLegacyLevelTrigger(){
+    try{
+      if(typeof SFX === 'undefined' || !SFX || typeof SFX.levelup !== 'function') return;
+      if(SFX.levelup.__stregUploadedLevelSilence) return;
+      var silent = function(){};
+      silent.__stregUploadedLevelSilence = true;
+      SFX.levelup = silent;
+    }catch(error){}
   }
 
   function playLevelUp(){
@@ -261,18 +266,17 @@
     Object.keys(FILES).forEach(function(name){ load(name); });
   }
 
-  function unlock(){
-    boot();
-  }
+  function unlock(){ boot(); }
 
   function install(){
     bindTabButtons();
     watchXpBundles();
+    silenceLegacyLevelTrigger();
     watchLevelExplosion();
   }
 
   window.StregUploadedSounds = {
-    version:'1.0.0',
+    version:'1.1.0',
     play:play,
     stop:stop,
     xp:playXpBundle,
@@ -294,5 +298,5 @@
     preload();
   }
 
-  setInterval(install,700);
+  setInterval(install,250);
 })();
