@@ -16,7 +16,7 @@
   loadRuntimeFeature('daily-challenge-single-target.js','stregDailySingleTargetRuntime','20260805-1');
   loadRuntimeFeature('event-tab-redesign.js','stregEventTabRedesignRuntime','20260805-1');
   loadRuntimeFeature('challenge-event-polish.js','stregChallengeEventPolishRuntime','20260807-1');
-  loadRuntimeFeature('challenge-card-actions.js','stregChallengeCardActionsRuntime','20260807-4');
+  loadRuntimeFeature('challenge-card-actions.js','stregChallengeCardActionsRuntime','20260807-5');
   loadRuntimeFeature('xp-liquid-bar.js','stregXpLiquidBarRuntime','20260807-2');
   loadRuntimeFeature('inventory.js','stregInventoryRuntime','20260805-1');
   loadRuntimeFeature('challenge-circle-fix.js','stregChallengeCircleFixRuntime','20260807-2');
