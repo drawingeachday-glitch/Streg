@@ -17,7 +17,7 @@
   loadRuntimeFeature('event-tab-redesign.js','stregEventTabRedesignRuntime','20260805-1');
   loadRuntimeFeature('inventory.js','stregInventoryRuntime','20260805-1');
   loadRuntimeFeature('challenge-circle-fix.js','stregChallengeCircleFixRuntime','20260807-1');
-  loadRuntimeFeature('theme-audio.js','stregThemeAudioRuntime','20260807-1');
+  loadRuntimeFeature('theme-audio.js','stregThemeAudioRuntime','20260807-3');
 
   function state(){
     try{ return typeof S !== 'undefined' && S ? S : null; }catch(error){ return null; }
