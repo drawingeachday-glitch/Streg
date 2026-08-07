@@ -26,13 +26,18 @@
     style.id = 'stregProductionSafetyStyles';
     style.textContent = [
       'html[data-streg-dev="false"] #devHead,',
+      'html[data-streg-dev="false"] #devBody,',
       'html[data-streg-dev="false"] #devApply,',
       'html[data-streg-dev="false"] #devUnlock,',
       'html[data-streg-dev="false"] #devFake,',
       'html[data-streg-dev="false"] #devAch,',
       'html[data-streg-dev="false"] #devClearPhotos,',
       'html[data-streg-dev="false"] #devTestPhoto,',
+      'html[data-streg-dev="false"] #devLoc,',
       'html[data-streg-dev="false"] #fragmentTestAdd,',
+      'html[data-streg-dev="false"] #eventTestXpBtn,',
+      'html[data-streg-dev="false"] #testPhotoBtn,',
+      'html[data-streg-dev="false"] .btn-test-photo,',
       'html[data-streg-dev="false"] #devSetLoc,',
       'html[data-streg-dev="false"] #devLat,',
       'html[data-streg-dev="false"] #devLng,',
@@ -219,6 +224,42 @@
     }catch(error){ return false; }
   }
 
+  function cleanAchievementInputs(){
+    try{
+      if(typeof achievementPhotos === 'function' && !achievementPhotos.__stregIgnoresTestCaptures){
+        var safePhotos = function(){
+          var photos = [];
+          try{ photos = typeof S !== 'undefined' && Array.isArray(S.photos) ? S.photos : []; }catch(error){}
+          return photos.filter(function(photo){ return photo && !photo.testCapture && !photo.transient; });
+        };
+        safePhotos.__stregIgnoresTestCaptures = true;
+        window.achievementPhotos = safePhotos;
+        try{ achievementPhotos = safePhotos; }catch(error){}
+      }
+    }catch(error){}
+
+    try{
+      if(typeof achievementCompletedChallenges === 'function' && !achievementCompletedChallenges.__stregNoDoubleCount){
+        var safeChallengeCount = function(){
+          var weeklyCount = 0;
+          var todayCount = 0;
+          try{ weeklyCount = S.weekly && Number(S.weekly.challengesDone) ? Number(S.weekly.challengesDone) : 0; }catch(error){}
+          try{
+            var daily = S.challenges && Array.isArray(S.challenges.items) ? S.challenges.items : [];
+            todayCount = daily.filter(function(item){ return item && item.done; }).length;
+          }catch(error){}
+          /* Today's completed challenges are already included in the weekly
+             counter. max() preserves older/migrated saves without adding the
+             same completion twice. */
+          return Math.max(weeklyCount,todayCount);
+        };
+        safeChallengeCount.__stregNoDoubleCount = true;
+        window.achievementCompletedChallenges = safeChallengeCount;
+        try{ achievementCompletedChallenges = safeChallengeCount; }catch(error){}
+      }
+    }catch(error){}
+  }
+
   function install(){
     installProductionUiGuard();
     guardTestCaptures();
@@ -226,6 +267,7 @@
     wrapLightbox();
     installCloudDeleteBridge();
     guardLegacyRewardFlights();
+    cleanAchievementInputs();
   }
 
   window.StregRuntimeSafety = {
