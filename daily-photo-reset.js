@@ -18,31 +18,27 @@
     var script = document.createElement('script');
     script.id = id;
     script.src = new URL(path,document.baseURI).href + '?v=' + encodeURIComponent(version);
-    /* Dynamically inserted scripts are async by default. Explicit async=false
-       preserves this dependency order; `defer` does not order dynamic scripts. */
     script.async = false;
     script.dataset.runtimeFeature = 'true';
     document.head.appendChild(script);
   }
 
   function loadFeatureStack(){
+    loadRuntimeFeature('performance-runtime.js','stregPerformanceRuntime','20260807-1');
     loadRuntimeFeature('runtime-safety.js','stregRuntimeSafetyRuntime','20260807-5');
     loadRuntimeFeature('home-challenges.js','stregHomeChallengesRuntime','20260807-1');
     loadRuntimeFeature('challenge-page-redesign.js','stregChallengePageRedesignRuntime','20260807-6');
-    loadRuntimeFeature('daily-challenge-single-target.js','stregDailySingleTargetRuntime','20260807-2');
+    loadRuntimeFeature('daily-challenge-single-target.js','stregDailySingleTargetRuntime','20260807-3');
     loadRuntimeFeature('event-tab-redesign.js','stregEventTabRedesignRuntime','20260805-1');
     loadRuntimeFeature('challenge-event-polish.js','stregChallengeEventPolishRuntime','20260807-1');
     loadRuntimeFeature('challenge-card-actions.js','stregChallengeCardActionsRuntime','20260807-6');
     loadRuntimeFeature('xp-liquid-bar.js','stregXpLiquidBarRuntime','20260807-2');
     loadRuntimeFeature('level-up-xp-explosion.js','stregLevelUpXpExplosionRuntime','20260807-2');
-    loadRuntimeFeature('uploaded-ui-sounds.js','stregUploadedUiSoundsRuntime','20260807-2');
+    loadRuntimeFeature('uploaded-ui-sounds.js','stregUploadedUiSoundsRuntime','20260807-3');
     loadRuntimeFeature('inventory.js','stregInventoryRuntime','20260805-1');
     loadRuntimeFeature('theme-audio.js','stregThemeAudioRuntime','20260807-4');
   }
 
-  /* Waiting until the parser has finished means we can see scripts injected by
-     the previous service worker and avoid loading a second copy during the
-     one-page v11 -> v12 upgrade transition. */
   if(document.readyState === 'loading'){
     document.addEventListener('DOMContentLoaded',loadFeatureStack,{once:true});
   }else{
