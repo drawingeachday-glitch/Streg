@@ -17,7 +17,7 @@
   loadRuntimeFeature('event-tab-redesign.js','stregEventTabRedesignRuntime','20260805-1');
   loadRuntimeFeature('inventory.js','stregInventoryRuntime','20260805-1');
   loadRuntimeFeature('challenge-circle-fix.js','stregChallengeCircleFixRuntime','20260807-1');
-  loadRuntimeFeature('theme-audio.js','stregThemeAudioRuntime','20260807-1');
+  loadRuntimeFeature('theme-audio.js','stregThemeAudioRuntime','20260807-2');
 
   function state(){
     try{ return typeof S !== 'undefined' && S ? S : null; }catch(error){ return null; }
@@ -58,127 +58,64 @@
     if(icon) icon.classList.remove('big');
     var title = document.getElementById('capTitle');
     if(title) title.textContent = 'Klar til dagens billede?';
+
+    try{
+      if(window.I18n && typeof window.I18n.apply === 'function') window.I18n.apply(document.body);
+    }catch(error){}
   }
 
-  function recomputeStreaks(appState){
-    var days = Object.create(null);
-    (appState.photos || []).forEach(function(photo){
-      var key = photoDay(photo);
-      if(key) days[key] = true;
-    });
-
-    var cursor = new Date();
-    cursor.setDate(cursor.getDate() - 1);
-    var current = 0;
-    while(days[dayKey(cursor)]){
-      current += 1;
-      cursor.setDate(cursor.getDate() - 1);
-    }
-    appState.streak = current;
-
-    var sorted = Object.keys(days).sort();
-    var best = 0;
-    var run = 0;
-    var previous = null;
-    sorted.forEach(function(key){
-      var date = new Date(key + 'T12:00:00');
-      if(previous){
-        var diff = Math.round((date - previous) / 86400000);
-        run = diff === 1 ? run + 1 : 1;
-      }else{
-        run = 1;
-      }
-      if(run > best) best = run;
-      previous = date;
-    });
-    appState.best = Math.max(best,appState.streak);
-  }
-
-  function resetToday(){
-    var appState = state();
-    if(!appState) return;
+  function clearDailyPhoto(){
+    var app = state();
+    if(!app) return false;
 
     var today = todayKey();
-    var before = Array.isArray(appState.photos) ? appState.photos.length : 0;
-    var removedIds = Object.create(null);
+    app.lastDay = yesterdayKey();
 
-    appState.photos = (appState.photos || []).filter(function(photo){
-      if(photoDay(photo) !== today) return true;
-      if(photo && photo.id != null) removedIds[String(photo.id)] = true;
-      return false;
-    });
+    if(app.challenges && app.challenges.day === today){
+      app.challenges.day = null;
+    }
 
-    if(appState.hexMap && appState.hexMap.photos && typeof appState.hexMap.photos === 'object'){
-      Object.keys(appState.hexMap.photos).forEach(function(hexId){
-        var entry = appState.hexMap.photos[hexId];
-        var shouldRemove = entry && (
-          photoDay(entry) === today ||
-          (entry.photoId != null && removedIds[String(entry.photoId)])
-        );
-        if(shouldRemove) delete appState.hexMap.photos[hexId];
+    if(app.events && typeof app.events === 'object'){
+      Object.keys(app.events).forEach(function(key){
+        var event = app.events[key];
+        if(event && event.day === today){
+          event.day = null;
+        }
       });
     }
 
-    appState.lastDay = yesterdayKey();
-    recomputeStreaks(appState);
     saveAndRefresh();
+    return true;
+  }
 
-    try{
-      if(typeof SFX !== 'undefined' && SFX && typeof SFX.chime === 'function') SFX.chime();
-    }catch(error){}
-
-    var removed = before - appState.photos.length;
-    try{
-      if(typeof toast === 'function'){
-        toast(removed > 0 ? 'Dagens billede er nulstillet' : 'Dagens fotostatus er nulstillet');
-      }
-    }catch(error){}
+  function applyButton(button){
+    if(!button) return;
+    if(button.dataset.dailyResetBound === '1') return;
+    button.dataset.dailyResetBound = '1';
+    button.addEventListener('click',function(){
+      if(!clearDailyPhoto()) return;
+      try{ if(typeof SFX !== 'undefined' && SFX.pop) SFX.pop(); }catch(error){}
+      try{ if(typeof vibrate === 'function') vibrate([20,24,46]); }catch(error){}
+      try{ if(typeof toast === 'function') toast('Dagens billede er låst op igen'); }catch(error){}
+    });
   }
 
   function install(){
-    if(document.getElementById('resetDailyPhotoFull')) return;
+    applyButton(document.getElementById('devUnlock'));
 
-    var pane = document.getElementById('pane-settings');
-    if(!pane) return;
-
-    var button = document.createElement('button');
-    button.type = 'button';
-    button.id = 'resetDailyPhotoFull';
-    button.className = 'btn-outline danger';
-    button.style.marginTop = '12px';
-    button.innerHTML = '<svg class="icn" width="14" height="14" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px"><path d="M4 12a8 8 0 1 0 2.3-5.7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M4 5v5h5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg> Nulstil dagens billede';
-    button.setAttribute('aria-label','Nulstil dagens billede fuldstændigt');
-
-    var note = document.createElement('div');
-    note.className = 'set-sub';
-    note.style.margin = '6px 2px 0';
-    note.textContent = 'Fjerner dagens foto, frigiver hexagonen og gør appen klar til et nyt dagsfoto.';
-
-    button.addEventListener('click',function(){
-      var english = document.documentElement.lang === 'en';
-      var message = english
-        ? 'Reset today’s photo completely? Today’s photo and claimed hex will be removed.'
-        : 'Nulstil dagens billede helt? Dagens foto og den claimed hexagon bliver fjernet.';
-      if(window.confirm(message)) resetToday();
+    var observer = new MutationObserver(function(){
+      applyButton(document.getElementById('devUnlock'));
     });
-
-    var developerHeading = Array.prototype.find.call(pane.querySelectorAll('.eyebrow'),function(el){
-      return /Udvikler|Developer/i.test(el.textContent || '');
-    });
-    if(developerHeading){
-      pane.insertBefore(note,developerHeading);
-      pane.insertBefore(button,note);
-    }else{
-      pane.appendChild(button);
-      pane.appendChild(note);
-    }
+    observer.observe(document.documentElement,{childList:true,subtree:true});
   }
 
-  if(document.readyState === 'loading'){
-    document.addEventListener('DOMContentLoaded',install,{once:true});
-  }else{
-    install();
-  }
-  setTimeout(install,800);
-  setInterval(install,1500);
+  window.STREG_DAILY_PHOTO_RESET = {
+    clear:clearDailyPhoto,
+    dayKey:dayKey,
+    todayKey:todayKey,
+    photoDay:photoDay
+  };
+
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded',install,{once:true});
+  else install();
 })();
