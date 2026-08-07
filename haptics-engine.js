@@ -34,7 +34,7 @@
 
     function loadFeatureRuntime(){
       if(window.__stregDailyRuntimeInstalled) return;
-      addScript('daily-photo-reset.js','stregDailyPhotoRuntime','20260807-6');
+      addScript('daily-photo-reset.js','stregDailyPhotoRuntime','20260807-7');
     }
 
     if(window.StregAudio && window.StregAudio.version){
