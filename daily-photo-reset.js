@@ -19,6 +19,7 @@
   loadRuntimeFeature('challenge-card-actions.js','stregChallengeCardActionsRuntime','20260807-5');
   loadRuntimeFeature('xp-liquid-bar.js','stregXpLiquidBarRuntime','20260807-2');
   loadRuntimeFeature('level-up-xp-explosion.js','stregLevelUpXpExplosionRuntime','20260807-1');
+  loadRuntimeFeature('uploaded-ui-sounds.js','stregUploadedUiSoundsRuntime','20260807-1');
   loadRuntimeFeature('inventory.js','stregInventoryRuntime','20260805-1');
   loadRuntimeFeature('challenge-circle-fix.js','stregChallengeCircleFixRuntime','20260807-2');
   loadRuntimeFeature('theme-audio.js','stregThemeAudioRuntime','20260807-4');
