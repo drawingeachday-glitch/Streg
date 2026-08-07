@@ -12,11 +12,11 @@
   }
 
   loadRuntimeFeature('home-challenges.js','stregHomeChallengesRuntime','20260805-4');
-  loadRuntimeFeature('challenge-page-redesign.js','stregChallengePageRedesignRuntime','20260805-2');
+  loadRuntimeFeature('challenge-page-redesign.js','stregChallengePageRedesignRuntime','20260807-5');
   loadRuntimeFeature('daily-challenge-single-target.js','stregDailySingleTargetRuntime','20260805-1');
   loadRuntimeFeature('event-tab-redesign.js','stregEventTabRedesignRuntime','20260805-1');
   loadRuntimeFeature('inventory.js','stregInventoryRuntime','20260805-1');
-  loadRuntimeFeature('challenge-circle-fix.js','stregChallengeCircleFixRuntime','20260807-1');
+  loadRuntimeFeature('challenge-circle-fix.js','stregChallengeCircleFixRuntime','20260807-2');
   loadRuntimeFeature('theme-audio.js','stregThemeAudioRuntime','20260807-4');
 
   function state(){
