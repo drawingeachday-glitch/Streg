@@ -2,8 +2,8 @@
   'use strict';
 
   var pendingRewardSource = null;
-  var celebrationWrapped = false;
-  var originalCelebrationPlay = null;
+  var overlayObserver = null;
+  var fallbackTimer = null;
   var reduceMotion = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
 
   function isEnglish(){
@@ -41,34 +41,31 @@
     return isEnglish() ? 'Claim this reward' : 'Hent denne belønning';
   }
 
+  function numberFrom(text,pattern){
+    var match = String(text || '').match(pattern);
+    return match ? Number(match[1]) || 0 : 0;
+  }
+
   function rewardNumbers(card){
-    var xp = 0;
-    var coins = 0;
     var reward = card && card.querySelector('.ch-reward,.prog-reward');
     var text = reward ? reward.textContent || '' : '';
-    var xpMatch = text.match(/\+\s*(\d+)\s*XP/i);
-    if(xpMatch) xp = Number(xpMatch[1]) || 0;
-    var coinMatch = text.match(/XP[^\d+]*\+\s*(\d+)/i);
-    if(coinMatch) coins = Number(coinMatch[1]) || 0;
-    return {xp:xp,coins:coins};
+    return {
+      xp:numberFrom(text,/\+\s*(\d+)\s*XP/i),
+      coins:numberFrom(text,/XP[^\d+]*\+\s*(\d+)/i)
+    };
   }
 
   function rememberSource(card){
-    if(!card) return;
+    if(!card) return null;
     var reward = rewardNumbers(card);
     pendingRewardSource = {
       rect:rectCopy(card.getBoundingClientRect()),
       xp:reward.xp,
       coins:reward.coins,
       at:Date.now(),
-      type:card.classList.contains('ch-card') ? 'daily' : 'claim'
+      type:card.classList.contains('ch-card') ? 'daily' : card.classList.contains('event-daily-card') ? 'event' : 'claim'
     };
-
-    try{
-      if(window.StregXpBar && window.StregXpBar.setSourceRect){
-        window.StregXpBar.setSourceRect(pendingRewardSource.rect);
-      }
-    }catch(error){}
+    return pendingRewardSource;
   }
 
   function decorateCard(card){
@@ -115,16 +112,27 @@
   function runCardAction(card){
     var action = actionFor(card);
     if(!action) return false;
-    rememberSource(card);
+    var source = rememberSource(card);
     action.click();
+
+    if(source && source.type !== 'daily'){
+      clearTimeout(fallbackTimer);
+      fallbackTimer = setTimeout(function(){
+        if(pendingRewardSource === source) playPendingCompact();
+      },90);
+    }
     return true;
   }
 
   function installStyles(){
-    if(document.getElementById('challengeCardActionStyles')) return;
+    var old = document.getElementById('challengeCardActionStyles');
+    if(old) old.remove();
+
     var style = document.createElement('style');
     style.id = 'challengeCardActionStyles';
     style.textContent = [
+      /* The old full-screen challenge cutscene is intentionally retired. */
+      '#challengeRewardCutscene,.challenge-reward-cutscene{display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important;}',
       '#tab-challenges .streg-card-actionable{cursor:pointer!important;-webkit-tap-highlight-color:transparent;}',
       '#tab-challenges .streg-card-actionable:focus-visible{outline:2px solid color-mix(in srgb,var(--amber) 72%,#fff)!important;outline-offset:3px!important;}',
       '#tab-challenges .prog-card.streg-card-actionable:focus-visible,#tab-challenges .event-daily-card.streg-card-actionable:focus-visible{outline-color:color-mix(in srgb,var(--moss) 72%,#fff)!important;}',
@@ -192,44 +200,81 @@
     }
   }
 
-  function compactCelebration(data){
-    var source = pendingRewardSource;
-    pendingRewardSource = null;
+  function sourceFromLegacyOverlay(){
+    var overlay = document.getElementById('challengeRewardCutscene');
+    if(!overlay) return null;
+    var title = document.getElementById('crTitle');
+    var wanted = title ? String(title.textContent || '').trim().toLowerCase() : '';
+    var cards = document.querySelectorAll('#challengeList .ch-card,#weeklyList .prog-card,#monthlyList .prog-card');
+    var matched = null;
 
-    if(!source || Date.now() - source.at > 20000){
-      if(originalCelebrationPlay) return originalCelebrationPlay.call(window.ChallengeCelebration,data);
-      return;
+    if(wanted){
+      Array.prototype.some.call(cards,function(card){
+        var node = card.querySelector('.ch-title,.prog-title>span:last-child');
+        var value = node ? String(node.textContent || '').trim().toLowerCase() : '';
+        if(value && value === wanted){ matched = card; return true; }
+        return false;
+      });
     }
 
-    var rect = source.rect;
-    var xp = Number(data && data.xp) || source.xp || 0;
-    var coins = Number(data && data.coins) || source.coins || 0;
+    if(!matched){
+      matched = document.querySelector('#challengeList .ch-card.justDone,#weeklyList .prog-card.done,#monthlyList .prog-card.done');
+    }
 
-    animateGhost(rect);
-    flyCoins(rect,coins);
+    if(!matched) return null;
+    return {
+      rect:rectCopy(matched.getBoundingClientRect()),
+      xp:numberFrom(document.getElementById('crXp') && document.getElementById('crXp').textContent,/([0-9]+)/),
+      coins:numberFrom(document.getElementById('crCoins') && document.getElementById('crCoins').textContent,/([0-9]+)/),
+      at:Date.now(),
+      type:'fallback'
+    };
+  }
+
+  function playCompact(source){
+    if(!source || !source.rect) return;
+    animateGhost(source.rect);
+    flyCoins(source.rect,source.coins);
+
     try{
-      if(window.StregXpBar && window.StregXpBar.setSourceRect) window.StregXpBar.setSourceRect(rect);
+      if(window.StregXpBar && window.StregXpBar.setSourceRect){
+        window.StregXpBar.setSourceRect(source.rect);
+      }
     }catch(error){}
 
     try{
       if(typeof SFX !== 'undefined' && SFX){
         if(typeof SFX.success === 'function') SFX.success();
-        setTimeout(function(){ if(coins && typeof SFX.coins === 'function') SFX.coins(Math.min(4,coins)); },180);
+        setTimeout(function(){
+          if(source.coins && typeof SFX.coins === 'function') SFX.coins(Math.min(4,source.coins));
+        },180);
       }
     }catch(error){}
   }
 
-  function wrapCelebration(){
-    if(celebrationWrapped) return;
-    var celebration = window.ChallengeCelebration;
-    if(!celebration || typeof celebration.play !== 'function') return;
+  function playPendingCompact(){
+    var source = pendingRewardSource;
+    if(source && Date.now() - source.at > 600000) source = null;
+    pendingRewardSource = null;
+    clearTimeout(fallbackTimer);
+    if(!source) source = sourceFromLegacyOverlay();
+    if(source) playCompact(source);
+  }
 
-    originalCelebrationPlay = celebration.play;
-    celebration.play = function(data){
-      if(pendingRewardSource) return compactCelebration(data || {});
-      return originalCelebrationPlay.apply(this,arguments);
-    };
-    celebrationWrapped = true;
+  function suppressLegacyOverlay(){
+    var overlay = document.getElementById('challengeRewardCutscene');
+    if(!overlay) return;
+    overlay.setAttribute('aria-hidden','true');
+
+    if(!overlayObserver){
+      overlayObserver = new MutationObserver(function(){
+        if(overlay.classList.contains('active')){
+          playPendingCompact();
+          overlay.setAttribute('aria-hidden','true');
+        }
+      });
+      overlayObserver.observe(overlay,{attributes:true,attributeFilter:['class','aria-hidden']});
+    }
   }
 
   document.addEventListener('click',function(event){
@@ -238,7 +283,15 @@
 
     if(clickedInteractiveChild(event.target,card)){
       var childAction = actionFor(card);
-      if(childAction && (event.target === childAction || childAction.contains(event.target))) rememberSource(card);
+      if(childAction && (event.target === childAction || childAction.contains(event.target))){
+        var source = rememberSource(card);
+        if(source && source.type !== 'daily'){
+          clearTimeout(fallbackTimer);
+          fallbackTimer = setTimeout(function(){
+            if(pendingRewardSource === source) playPendingCompact();
+          },90);
+        }
+      }
       return;
     }
 
@@ -260,14 +313,14 @@
     requestAnimationFrame(function(){
       queued = false;
       decorate();
-      wrapCelebration();
+      suppressLegacyOverlay();
     });
   }
 
   function install(){
     installStyles();
     decorate();
-    wrapCelebration();
+    suppressLegacyOverlay();
 
     var tab = document.getElementById('tab-challenges');
     if(tab && !observer){
@@ -277,7 +330,7 @@
   }
 
   window.refreshChallengeCardActions = decorate;
-  window.addEventListener('streg:startup-complete',function(){ queueDecorate(); wrapCelebration(); });
+  window.addEventListener('streg:startup-complete',function(){ queueDecorate(); suppressLegacyOverlay(); });
   window.addEventListener('streg:languagechange',queueDecorate);
 
   if(document.readyState === 'loading'){
@@ -285,6 +338,6 @@
   }else{
     install();
   }
-  setTimeout(install,700);
-  setTimeout(wrapCelebration,1200);
+  setTimeout(install,500);
+  setTimeout(suppressLegacyOverlay,900);
 })();
