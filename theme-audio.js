@@ -1,12 +1,17 @@
 (function(){
   'use strict';
 
-  var SPACE_PATH = 'SoundsForStreg/space-song.mp3';
-  var MAP_PATH = 'SoundsForStreg/map-switch.mp3';
+  if(window.__stregThemeAudioInstalled) return;
+  window.__stregThemeAudioInstalled = true;
+
+  var SPACE_PATH = 'SoundsForStreg/space-song.mp3?v=20260807-3';
+  var MAP_PATH = 'SoundsForStreg/map-switch.mp3?v=20260807-3';
+
+  var NativeAudio = window.Audio;
+  var trackedAudio = [];
   var spaceAudio = null;
   var mapAudio = null;
-  var originalMusicVolume = null;
-  var midnightWasActive = false;
+  var spacePrimed = false;
   var lastMapSoundAt = 0;
 
   function clamp(value,min,max){
@@ -32,23 +37,69 @@
         return window.StregAudio.getVolumes();
       }
     }catch(error){}
+
     var app = state();
     var settings = app && app.settings || {};
     return {
       master:Number.isFinite(Number(settings.masterVolume)) ? Number(settings.masterVolume) : 1,
-      music:originalMusicVolume != null ? originalMusicVolume : (Number.isFinite(Number(settings.musicVolume)) ? Number(settings.musicVolume) : .65),
+      music:Number.isFinite(Number(settings.musicVolume)) ? Number(settings.musicVolume) : .65,
       effects:Number.isFinite(Number(settings.effectsVolume)) ? Number(settings.effectsVolume) : .9
     };
   }
 
+  function currentStyle(){
+    var domStyle = String(document.documentElement.dataset.style || '').toLowerCase();
+    var app = state();
+    var savedStyle = String(app && app.settings && app.settings.style || '').toLowerCase();
+    return domStyle || savedStyle;
+  }
+
   function isSpaceTheme(){
-    var style = String(document.documentElement.dataset.style || '').toLowerCase();
-    return style === 'event_midnight' || /nebula|galaxy|cosmic|space/.test(style);
+    var style = currentStyle();
+    return style === 'event_midnight' ||
+      /midnight|nebula|galaxy|moonlight|lunar|cosmic|space/.test(style);
+  }
+
+  /* Track Audio objects created after this script loads. app-audio creates the
+     bird/nature element on the first user interaction, so we can mute only that
+     exact media element while the space theme is active without touching or
+     saving the user's music-volume setting. */
+  function installAudioTracking(){
+    if(!NativeAudio || window.Audio.__stregThemeAudioTracker) return;
+
+    function TrackedAudio(src){
+      var audio = arguments.length ? new NativeAudio(src) : new NativeAudio();
+      trackedAudio.push(audio);
+      return audio;
+    }
+
+    try{ TrackedAudio.prototype = NativeAudio.prototype; }catch(error){}
+    try{ Object.setPrototypeOf(TrackedAudio,NativeAudio); }catch(error){}
+    TrackedAudio.__stregThemeAudioTracker = true;
+    TrackedAudio.__nativeAudio = NativeAudio;
+    window.Audio = TrackedAudio;
+  }
+
+  function natureAudios(){
+    return trackedAudio.filter(function(audio){
+      try{
+        var src = String(audio.currentSrc || audio.src || '').toLowerCase();
+        return src.indexOf('nature-ambient') !== -1;
+      }catch(error){
+        return false;
+      }
+    });
+  }
+
+  function syncNatureMute(active){
+    natureAudios().forEach(function(audio){
+      try{ audio.muted = !!active; }catch(error){}
+    });
   }
 
   function ensureSpace(){
     if(spaceAudio) return spaceAudio;
-    spaceAudio = new Audio(new URL(SPACE_PATH,document.baseURI).href);
+    spaceAudio = new NativeAudio(new URL(SPACE_PATH,document.baseURI).href);
     spaceAudio.loop = true;
     spaceAudio.preload = 'auto';
     spaceAudio.playsInline = true;
@@ -58,118 +109,150 @@
 
   function ensureMap(){
     if(mapAudio) return mapAudio;
-    mapAudio = new Audio(new URL(MAP_PATH,document.baseURI).href);
+    mapAudio = new NativeAudio(new URL(MAP_PATH,document.baseURI).href);
     mapAudio.preload = 'auto';
     mapAudio.playsInline = true;
     return mapAudio;
   }
 
-  function playSafe(audio){
-    if(!audio || !audio.paused) return;
-    try{
-      var p = audio.play();
-      if(p && p.catch) p.catch(function(){});
-    }catch(error){}
-  }
+  function primeSpaceFromGesture(){
+    if(spacePrimed || !NativeAudio) return;
+    var audio = ensureSpace();
+    audio.volume = 0;
 
-  function setNativeMusicVolume(value){
-    var app = state();
-    if(!app) return;
-    if(!app.settings) app.settings = {};
-    app.settings.musicVolume = clamp(value,0,1);
     try{
-      if(window.StregAudio && typeof window.StregAudio.setVolume === 'function'){
-        window.StregAudio.setVolume('musicVolume',app.settings.musicVolume,false);
+      var promise = audio.play();
+      if(promise && promise.then){
+        promise.then(function(){
+          spacePrimed = true;
+          syncSpace();
+        }).catch(function(){});
+      }else{
+        spacePrimed = true;
       }
     }catch(error){}
   }
 
-  function enterSpaceTheme(){
-    var app = state();
-    if(app && app.settings && originalMusicVolume == null){
-      var current = Number(app.settings.musicVolume);
-      originalMusicVolume = Number.isFinite(current) ? current : .65;
-    }
-    /* app-audio owns the bird/nature track. Temporarily set only its music
-       channel to zero without saving, then use the remembered level for space. */
-    setNativeMusicVolume(0);
-    midnightWasActive = true;
-  }
-
-  function leaveSpaceTheme(){
-    if(!midnightWasActive) return;
-    if(originalMusicVolume != null) setNativeMusicVolume(originalMusicVolume);
-    midnightWasActive = false;
-    originalMusicVolume = null;
-    if(spaceAudio){
-      spaceAudio.volume = 0;
-      try{ spaceAudio.pause(); }catch(error){}
-    }
-  }
-
   function syncSpace(){
     var active = isSpaceTheme();
-    if(active && !midnightWasActive) enterSpaceTheme();
-    if(!active && midnightWasActive) leaveSpaceTheme();
-    if(!active) return;
+    syncNatureMute(active);
 
-    var app = state();
-    var settings = app && app.settings || {};
-    var master = Number.isFinite(Number(settings.masterVolume)) ? Number(settings.masterVolume) : 1;
-    var music = originalMusicVolume == null ? .65 : originalMusicVolume;
-    var target = soundEnabled() && !document.hidden ? clamp(master * music * .82,0,1) : 0;
     var audio = ensureSpace();
-    audio.volume += (target - audio.volume) * .18;
-    if(Math.abs(target - audio.volume) < .002) audio.volume = target;
-    if(target > 0.002) playSafe(audio);
-    else if(audio.volume < .002){ try{ audio.pause(); }catch(error){} }
+    var v = volumes();
+    var target = active && soundEnabled() && !document.hidden
+      ? clamp(v.master * v.music * .9,0,1)
+      : 0;
+
+    var current = Number(audio.volume) || 0;
+    var next = current + (target - current) * .22;
+    if(Math.abs(target - next) < .002) next = target;
+    audio.volume = clamp(next,0,1);
+
+    if(target > .002 && audio.paused && spacePrimed){
+      try{
+        var promise = audio.play();
+        if(promise && promise.catch) promise.catch(function(){});
+      }catch(error){}
+    }
+  }
+
+  function stopGenericMapClick(){
+    try{
+      if(window.StregAudio && typeof window.StregAudio.stop === 'function'){
+        window.StregAudio.stop('ui');
+      }
+    }catch(error){}
   }
 
   function playMapSwitch(){
     if(!soundEnabled()) return;
+
     var now = Date.now();
-    if(now - lastMapSoundAt < 180) return;
+    if(now - lastMapSoundAt < 170) return;
     lastMapSoundAt = now;
 
-    /* Stop the generic tab click so the map gets its own unique sound. */
-    setTimeout(function(){
-      try{ if(window.StregAudio && window.StregAudio.stop) window.StregAudio.stop('ui'); }catch(error){}
-    },0);
-
-    var v = volumes();
     var audio = ensureMap();
-    audio.volume = clamp(v.master * v.effects * .92,0,1);
+    var v = volumes();
+    audio.volume = clamp(v.master * v.effects,0,1);
+
+    try{ audio.pause(); }catch(error){}
     try{ audio.currentTime = 0; }catch(error){}
-    playSafe(audio);
-  }
 
-  function mapClick(event){
-    var target = event.target && event.target.closest ? event.target.closest('.tabbtn[data-tab="tab-map"]') : null;
-    if(target) playMapSwitch();
-  }
-
-  function wrapSwitchTab(){
     try{
-      var original = window.switchTab;
-      if(typeof original !== 'function' || original.__stregThemeAudio) return;
-      var wrapped = function(id){
-        if(id === 'tab-map') playMapSwitch();
-        return original.apply(this,arguments);
-      };
-      wrapped.__stregThemeAudio = true;
-      window.switchTab = wrapped;
-    }catch(error){}
+      var promise = audio.play();
+      if(promise && promise.catch){
+        promise.catch(function(error){
+          console.warn('STREG map audio could not play',error);
+        });
+      }
+    }catch(error){
+      console.warn('STREG map audio could not play',error);
+    }
+
+    setTimeout(stopGenericMapClick,0);
+    setTimeout(stopGenericMapClick,70);
+  }
+
+  function mapButtonFromEvent(event){
+    return event.target && event.target.closest
+      ? event.target.closest('.tabbtn[data-tab="tab-map"]')
+      : null;
+  }
+
+  function handlePointerDown(event){
+    primeSpaceFromGesture();
+    if(mapButtonFromEvent(event)) playMapSwitch();
+  }
+
+  function handleClick(event){
+    if(mapButtonFromEvent(event)){
+      /* Pointer users already played it on pointerdown. This keeps keyboard
+         activation working too without double-playing the sound. */
+      if(Date.now() - lastMapSoundAt > 170) playMapSwitch();
+      setTimeout(stopGenericMapClick,0);
+    }
+
+    /* Theme equip handlers run during this click. The space track has already
+       been primed by pointerdown, so after the style changes we only need to
+       raise its volume; no autoplay permission is needed here. */
+    setTimeout(syncSpace,0);
+    setTimeout(syncSpace,80);
+  }
+
+  function handleKeyDown(event){
+    if(event.key !== 'Enter' && event.key !== ' ') return;
+    primeSpaceFromGesture();
+    if(mapButtonFromEvent(event)) playMapSwitch();
   }
 
   function install(){
-    document.addEventListener('click',mapClick,true);
-    document.addEventListener('pointerdown',function(){ if(isSpaceTheme()) playSafe(ensureSpace()); },{capture:true,passive:true});
+    installAudioTracking();
+
+    document.addEventListener('pointerdown',handlePointerDown,{capture:true,passive:true});
+    document.addEventListener('click',handleClick,true);
+    document.addEventListener('keydown',handleKeyDown,true);
     document.addEventListener('visibilitychange',syncSpace);
-    wrapSwitchTab();
-    setInterval(function(){ wrapSwitchTab(); syncSpace(); },120);
+
+    try{
+      new MutationObserver(syncSpace).observe(document.documentElement,{
+        attributes:true,
+        attributeFilter:['data-style','data-sound']
+      });
+    }catch(error){}
+
+    setInterval(syncSpace,120);
     syncSpace();
   }
 
-  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded',install,{once:true});
-  else install();
+  window.StregThemeAudio = {
+    sync:syncSpace,
+    playMap:playMapSwitch,
+    prime:primeSpaceFromGesture
+  };
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded',install,{once:true});
+  }else{
+    install();
+  }
 })();
