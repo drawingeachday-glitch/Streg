@@ -233,12 +233,13 @@
 
   function silenceLegacyLevelTrigger(){
     try{
-      if(typeof SFX === 'undefined' || !SFX || typeof SFX.levelup !== 'function') return;
-      if(SFX.levelup.__stregUploadedLevelSilence) return;
+      if(typeof SFX === 'undefined' || !SFX || typeof SFX.levelup !== 'function') return false;
+      if(SFX.levelup.__stregUploadedLevelSilence) return true;
       var silent = function(){};
       silent.__stregUploadedLevelSilence = true;
       SFX.levelup = silent;
-    }catch(error){}
+      return true;
+    }catch(error){ return false; }
   }
 
   function playLevelUp(){
@@ -275,8 +276,18 @@
     watchLevelExplosion();
   }
 
+  function settleInstall(){
+    install();
+    /* app-audio has one delayed SFX setup pass of its own. Re-assert the
+       intentional level-up silence a couple of times during startup only,
+       rather than polling the whole app forever. */
+    setTimeout(install,320);
+    setTimeout(install,1050);
+    setTimeout(install,1750);
+  }
+
   window.StregUploadedSounds = {
-    version:'1.1.0',
+    version:'1.2.0',
     play:play,
     stop:stop,
     xp:playXpBundle,
@@ -289,14 +300,12 @@
   };
 
   document.addEventListener('pointerdown',unlock,{capture:true,passive:true});
-  window.addEventListener('streg:startup-complete',install);
+  window.addEventListener('streg:startup-complete',settleInstall);
 
   if(document.readyState === 'loading'){
-    document.addEventListener('DOMContentLoaded',function(){ install(); preload(); },{once:true});
+    document.addEventListener('DOMContentLoaded',function(){ settleInstall(); preload(); },{once:true});
   }else{
-    install();
+    settleInstall();
     preload();
   }
-
-  setInterval(install,250);
 })();
