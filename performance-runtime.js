@@ -7,6 +7,12 @@
   var nativeSetInterval = window.setInterval.bind(window);
   var pausedAnimations = [];
   var paneObservers = [];
+  var TOP_LEVEL_PANES = [
+    'tab-home','tab-map','tab-challenges','tab-shop','tab-profile','tab-journey','tab-friends'
+  ];
+  var NESTED_CHALLENGE_PANES = [
+    'pane-ch-daily','pane-ch-weekly','pane-ch-monthly','pane-ch-event'
+  ];
 
   function callbackText(callback){
     try{ return Function.prototype.toString.call(callback); }catch(error){ return ''; }
@@ -74,20 +80,32 @@
     element.classList.toggle('streg-perf-paused',!paneIsVisible(element));
   }
 
+  function clearNestedPauseMarkers(){
+    /* The parent Challenges tab already pauses every descendant while hidden.
+       Pausing each inner Daily/Weekly/Monthly/Event pane separately is unsafe:
+       the default Daily pane does not change class when the parent tab opens,
+       so its entrance animation can remain frozen at opacity:0 forever. */
+    NESTED_CHALLENGE_PANES.forEach(function(id){
+      var pane = document.getElementById(id);
+      if(pane) pane.classList.remove('streg-perf-paused');
+    });
+  }
+
   function observePane(element){
     if(!element || element.dataset.stregPerfObserved === 'true') return;
     element.dataset.stregPerfObserved = 'true';
     syncPane(element);
-    var observer = new MutationObserver(function(){ syncPane(element); });
+    var observer = new MutationObserver(function(){
+      syncPane(element);
+      if(element.id === 'tab-challenges') clearNestedPauseMarkers();
+    });
     observer.observe(element,{attributes:true,attributeFilter:['class','style','hidden','aria-hidden']});
     paneObservers.push(observer);
   }
 
   function installPaneObservers(){
-    [
-      'tab-home','tab-map','tab-challenges','tab-shop','tab-profile','tab-journey',
-      'pane-ch-daily','pane-ch-weekly','pane-ch-monthly','pane-ch-event'
-    ].forEach(function(id){ observePane(document.getElementById(id)); });
+    clearNestedPauseMarkers();
+    TOP_LEVEL_PANES.forEach(function(id){ observePane(document.getElementById(id)); });
   }
 
   function pausePageAnimations(){
@@ -114,10 +132,8 @@
       }catch(error){}
     });
     installPaneObservers();
-    [
-      'tab-home','tab-map','tab-challenges','tab-shop','tab-profile','tab-journey',
-      'pane-ch-daily','pane-ch-weekly','pane-ch-monthly','pane-ch-event'
-    ].forEach(function(id){ syncPane(document.getElementById(id)); });
+    TOP_LEVEL_PANES.forEach(function(id){ syncPane(document.getElementById(id)); });
+    clearNestedPauseMarkers();
   }
 
   function syncVisibility(){
@@ -141,7 +157,7 @@
   if(document.hidden) pausePageAnimations();
 
   window.StregPerformance = {
-    version:'1.1.0',
+    version:'1.2.0',
     syncVisibility:syncVisibility,
     syncPanes:installPaneObservers
   };
