@@ -97,17 +97,26 @@ function cachedStatic(request){
   return caches.match(request,{ignoreSearch:true});
 }
 
-/* MapView is still inside the large inline app bundle. Rewriting this single,
-   exact configuration constant lets the real grid become 45 m without a
-   dangerous whole-file replacement. The migration runtime independently
-   verifies that the active grid really is 45 m before touching stored IDs. */
+/* MapView is still inside the large inline app bundle. Rewriting these exact
+   configuration constants lets the real grid become 45 m without a dangerous
+   whole-file replacement. The migration runtime independently verifies that
+   the active grid really is 45 m before touching stored IDs. */
 function rewriteAppHtml(response){
   if(!response || !response.ok) return Promise.resolve(response);
   var type = response.headers.get('content-type') || '';
   if(type.indexOf('text/html') === -1) return Promise.resolve(response);
 
   return response.text().then(function(text){
-    var next = text.replace('const HEX_SIZE_M = 90;','const HEX_SIZE_M = 45;');
+    var next = text
+      .replace('const HEX_SIZE_M = 90;','const HEX_SIZE_M = 45;')
+      .replace(
+        'const HEX_RING_VISIBILITY = [1,.74,.48,.28,.13,.045,0];',
+        'const HEX_RING_VISIBILITY = [1,.86,.74,.61,.48,.38,.28,.20,.13,.085,.045,.02,0];'
+      )
+      .replace(
+        /if\(zoom >= 15\) return 9;\s*return 11;/,
+        'if(zoom >= 15) return 9;\n    return 14;'
+      );
     var headers = new Headers(response.headers);
     headers.delete('content-length');
     headers.delete('content-encoding');
