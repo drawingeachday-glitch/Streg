@@ -1,27 +1,32 @@
 (function(){
   'use strict';
 
+  if(window.__stregDailyRuntimeInstalled) return;
+  window.__stregDailyRuntimeInstalled = true;
+
   function loadRuntimeFeature(path,id,version){
     if(document.getElementById(id)) return;
     var script = document.createElement('script');
     script.id = id;
     script.src = new URL(path,document.baseURI).href + '?v=' + encodeURIComponent(version);
-    script.defer = true;
+    /* Dynamically inserted scripts are async by default. Explicit async=false
+       preserves this dependency order; `defer` does not order dynamic scripts. */
+    script.async = false;
     script.dataset.runtimeFeature = 'true';
     document.head.appendChild(script);
   }
 
-  loadRuntimeFeature('home-challenges.js','stregHomeChallengesRuntime','20260805-4');
-  loadRuntimeFeature('challenge-page-redesign.js','stregChallengePageRedesignRuntime','20260807-5');
-  loadRuntimeFeature('daily-challenge-single-target.js','stregDailySingleTargetRuntime','20260805-1');
+  loadRuntimeFeature('runtime-safety.js','stregRuntimeSafetyRuntime','20260807-1');
+  loadRuntimeFeature('home-challenges.js','stregHomeChallengesRuntime','20260807-1');
+  loadRuntimeFeature('challenge-page-redesign.js','stregChallengePageRedesignRuntime','20260807-6');
+  loadRuntimeFeature('daily-challenge-single-target.js','stregDailySingleTargetRuntime','20260807-2');
   loadRuntimeFeature('event-tab-redesign.js','stregEventTabRedesignRuntime','20260805-1');
   loadRuntimeFeature('challenge-event-polish.js','stregChallengeEventPolishRuntime','20260807-1');
-  loadRuntimeFeature('challenge-card-actions.js','stregChallengeCardActionsRuntime','20260807-5');
+  loadRuntimeFeature('challenge-card-actions.js','stregChallengeCardActionsRuntime','20260807-6');
   loadRuntimeFeature('xp-liquid-bar.js','stregXpLiquidBarRuntime','20260807-2');
-  loadRuntimeFeature('level-up-xp-explosion.js','stregLevelUpXpExplosionRuntime','20260807-1');
-  loadRuntimeFeature('uploaded-ui-sounds.js','stregUploadedUiSoundsRuntime','20260807-1');
+  loadRuntimeFeature('level-up-xp-explosion.js','stregLevelUpXpExplosionRuntime','20260807-2');
+  loadRuntimeFeature('uploaded-ui-sounds.js','stregUploadedUiSoundsRuntime','20260807-2');
   loadRuntimeFeature('inventory.js','stregInventoryRuntime','20260805-1');
-  loadRuntimeFeature('challenge-circle-fix.js','stregChallengeCircleFixRuntime','20260807-2');
   loadRuntimeFeature('theme-audio.js','stregThemeAudioRuntime','20260807-4');
 
   function state(){
@@ -47,6 +52,16 @@
   function photoDay(photo){
     if(!photo) return '';
     return dayKey(photo.ts || photo.takenAt || photo.taken_at || photo.date || photo.createdAt || photo.created_at);
+  }
+
+  function devMode(){
+    var host = String(location.hostname || '').toLowerCase();
+    if(host === 'localhost' || host === '127.0.0.1' || host === '::1') return true;
+    try{
+      var params = new URLSearchParams(location.search);
+      if(params.get('dev') === '1') return true;
+    }catch(error){}
+    try{ return localStorage.getItem('streg_dev_mode') === '1'; }catch(error){ return false; }
   }
 
   function saveAndRefresh(){
@@ -101,7 +116,7 @@
 
   function resetToday(){
     var appState = state();
-    if(!appState) return;
+    if(!appState || !devMode()) return;
 
     var today = todayKey();
     var before = Array.isArray(appState.photos) ? appState.photos.length : 0;
@@ -141,6 +156,11 @@
   }
 
   function install(){
+    if(!devMode()){
+      var existing = document.getElementById('resetDailyPhotoFull');
+      if(existing) existing.remove();
+      return;
+    }
     if(document.getElementById('resetDailyPhotoFull')) return;
 
     var pane = document.getElementById('pane-settings');
@@ -155,6 +175,7 @@
     button.setAttribute('aria-label','Nulstil dagens billede fuldstændigt');
 
     var note = document.createElement('div');
+    note.id = 'resetDailyPhotoFullNote';
     note.className = 'set-sub';
     note.style.margin = '6px 2px 0';
     note.textContent = 'Fjerner dagens foto, frigiver hexagonen og gør appen klar til et nyt dagsfoto.';
@@ -184,6 +205,6 @@
   }else{
     install();
   }
-  setTimeout(install,800);
-  setInterval(install,1500);
+  window.addEventListener('streg:startup-complete',install);
+  setTimeout(install,850);
 })();
