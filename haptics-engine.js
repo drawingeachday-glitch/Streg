@@ -48,7 +48,7 @@
     if(window.__stregPerformanceRuntimeInstalled){
       loadAudioRuntime();
     }else{
-      addScript('performance-runtime.js','stregPerformanceBootstrap','20260807-2',loadAudioRuntime);
+      addScript('performance-runtime.js','stregPerformanceBootstrap','20260807-3',loadAudioRuntime);
     }
   }
 
