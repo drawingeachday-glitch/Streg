@@ -1,6 +1,51 @@
 (function(){
   'use strict';
 
+  /* haptics-engine.js is one of the few enhancement files loaded directly by
+     index.html. Use it as the tiny, reliable bootstrap for audio + runtime
+     patches so a first-ever visit does not depend on a service worker already
+     controlling the page. */
+  function bootstrapRuntime(){
+    if(window.__stregRuntimeBootstrapRequested) return;
+    window.__stregRuntimeBootstrapRequested = true;
+
+    function addScript(path,id,version,done){
+      var existing = document.getElementById(id);
+      if(existing){
+        if(done) setTimeout(done,0);
+        return;
+      }
+      var script = document.createElement('script');
+      script.id = id;
+      script.src = new URL(path,document.baseURI).href + '?v=' + encodeURIComponent(version);
+      script.async = false;
+      script.dataset.runtimeBootstrap = 'true';
+      if(done){
+        var finish = function(){
+          script.removeEventListener('load',finish);
+          script.removeEventListener('error',finish);
+          done();
+        };
+        script.addEventListener('load',finish);
+        script.addEventListener('error',finish);
+      }
+      document.head.appendChild(script);
+    }
+
+    function loadFeatureRuntime(){
+      if(window.__stregDailyRuntimeInstalled) return;
+      addScript('daily-photo-reset.js','stregDailyPhotoRuntime','20260807-6');
+    }
+
+    if(window.StregAudio && window.StregAudio.version){
+      loadFeatureRuntime();
+    }else{
+      addScript('app-audio.js','stregAppAudioRuntime','20260807-3',loadFeatureRuntime);
+    }
+  }
+
+  bootstrapRuntime();
+
   var PATTERNS = {
     light:9,
     selection:12,
