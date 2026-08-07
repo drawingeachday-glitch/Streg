@@ -1,6 +1,6 @@
 /* STREG offline shell. Same-origin app files are refreshed from the network
    when possible and fall back to the last good cached version outdoors. */
-const VERSION = 'streg-v13';
+const VERSION = 'streg-v14';
 const SHELL = VERSION + '-shell';
 const LIBS = VERSION + '-libs';
 
@@ -36,6 +36,7 @@ const SHELL_URLS = [
   './level-up-xp-explosion.js',
   './uploaded-ui-sounds.js',
   './inventory.js',
+  './inventory-clean.js',
   './SoundsForStreg/Coin collect.mp3',
   './SoundsForStreg/Navigation sound.mp3',
   './SoundsForStreg/Startup App.mp3',
