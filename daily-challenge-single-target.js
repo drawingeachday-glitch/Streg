@@ -1,6 +1,9 @@
 (function(){
   'use strict';
 
+  if(window.__stregSingleTargetCleanupInstalled) return;
+  window.__stregSingleTargetCleanupInstalled = true;
+
   function isSingleTargetCount(value){
     var text = String(value || '')
       .replace(/\u00a0/g,' ')
@@ -47,8 +50,6 @@
     var hub = document.getElementById('homeChallengeHub');
     if(!hub) return;
 
-    /* Normal Home challenges are always single-photo missions. The Event card
-       keeps its counter because event challenges may use real progression. */
     Array.prototype.forEach.call(
       hub.querySelectorAll('.home-extra-challenge:not(.is-event),.home-extra-challenge[data-challenge-type="normal"]'),
       function(card){
@@ -63,8 +64,6 @@
   }
 
   function cleanDailyChallengeTab(){
-    /* Only Daily cards lose 0/1. Weekly, Monthly and Event retain their
-       progress counters because those challenges can require several actions. */
     var dailyList = document.getElementById('challengeList');
     if(!dailyList) return;
     Array.prototype.forEach.call(dailyList.children,function(card){
@@ -77,26 +76,41 @@
     cleanDailyChallengeTab();
   }
 
-  var observer;
+  var observers = [];
+  var queued = false;
+  function queueClean(){
+    if(queued) return;
+    queued = true;
+    requestAnimationFrame(function(){
+      queued = false;
+      clean();
+    });
+  }
+
+  function observeRoot(root){
+    if(!root || root.dataset.singleTargetObserved === 'true') return;
+    root.dataset.singleTargetObserved = 'true';
+    var observer = new MutationObserver(queueClean);
+    observer.observe(root,{childList:true,subtree:true,characterData:true});
+    observers.push(observer);
+  }
+
   function install(){
     clean();
-    if(observer) return;
-
-    observer = new MutationObserver(function(){
-      requestAnimationFrame(clean);
-    });
-    observer.observe(document.body,{childList:true,subtree:true,characterData:true});
+    observeRoot(document.getElementById('homeChallengeHub'));
+    observeRoot(document.getElementById('featuredChallengeCard'));
+    observeRoot(document.getElementById('challengeList'));
   }
 
   window.cleanSingleTargetChallengeCounts = clean;
-  window.addEventListener('streg:startup-complete',clean);
-  window.addEventListener('streg:languagechange',clean);
-  document.addEventListener('visibilitychange',function(){ if(!document.hidden) clean(); });
+  window.addEventListener('streg:startup-complete',install);
+  window.addEventListener('streg:languagechange',queueClean);
+  document.addEventListener('visibilitychange',function(){ if(!document.hidden) queueClean(); });
 
   if(document.readyState === 'loading'){
     document.addEventListener('DOMContentLoaded',install,{once:true});
   }else{
     install();
   }
-  setTimeout(install,600);
+  setTimeout(install,650);
 })();
