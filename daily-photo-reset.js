@@ -26,7 +26,7 @@
   }
 
   function loadFeatureStack(){
-    loadRuntimeFeature('runtime-safety.js','stregRuntimeSafetyRuntime','20260807-2');
+    loadRuntimeFeature('runtime-safety.js','stregRuntimeSafetyRuntime','20260807-3');
     loadRuntimeFeature('home-challenges.js','stregHomeChallengesRuntime','20260807-1');
     loadRuntimeFeature('challenge-page-redesign.js','stregChallengePageRedesignRuntime','20260807-6');
     loadRuntimeFeature('daily-challenge-single-target.js','stregDailySingleTargetRuntime','20260807-2');
