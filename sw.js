@@ -1,6 +1,6 @@
 /* STREG offline shell. Same-origin app files are refreshed from the network
    when possible and fall back to the last good cached version outdoors. */
-const VERSION = 'streg-v14';
+const VERSION = 'streg-v15';
 const SHELL = VERSION + '-shell';
 const LIBS = VERSION + '-libs';
 
@@ -25,6 +25,7 @@ const SHELL_URLS = [
   './daily-photo-reset.js',
   './performance-runtime.js',
   './runtime-safety.js',
+  './hex-size-migration.js',
   './theme-audio.js',
   './home-challenges.js',
   './challenge-page-redesign.js',
@@ -96,6 +97,30 @@ function cachedStatic(request){
   return caches.match(request,{ignoreSearch:true});
 }
 
+/* MapView is still inside the large inline app bundle. Rewriting this single,
+   exact configuration constant lets the real grid become 45 m without a
+   dangerous whole-file replacement. The migration runtime independently
+   verifies that the active grid really is 45 m before touching stored IDs. */
+function rewriteAppHtml(response){
+  if(!response || !response.ok) return Promise.resolve(response);
+  var type = response.headers.get('content-type') || '';
+  if(type.indexOf('text/html') === -1) return Promise.resolve(response);
+
+  return response.text().then(function(text){
+    var next = text.replace('const HEX_SIZE_M = 90;','const HEX_SIZE_M = 45;');
+    var headers = new Headers(response.headers);
+    headers.delete('content-length');
+    headers.delete('content-encoding');
+    headers.delete('etag');
+    headers.set('x-streg-hex-size','45');
+    return new Response(next,{
+      status:response.status,
+      statusText:response.statusText,
+      headers:headers
+    });
+  });
+}
+
 function cacheFreshResponse(request,response){
   if(!response || !response.ok) return response;
   var copy = response.clone();
@@ -134,12 +159,16 @@ self.addEventListener('fetch', function(event){
   if(request.mode === 'navigate'){
     event.respondWith(
       fetch(new Request(request,{cache:'no-store'}))
+        .then(rewriteAppHtml)
         .then(function(response){ return cacheFreshResponse(request,response); })
         .catch(function(){
           return cachedStatic(request).then(function(cached){
-            if(cached) return cached;
+            if(cached) return rewriteAppHtml(cached);
             return caches.match('./index.html',{ignoreSearch:true}).then(function(fallback){
-              return fallback || caches.match('./',{ignoreSearch:true});
+              if(fallback) return rewriteAppHtml(fallback);
+              return caches.match('./',{ignoreSearch:true}).then(function(rootFallback){
+                return rootFallback ? rewriteAppHtml(rootFallback) : Response.error();
+              });
             });
           });
         })
