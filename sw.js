@@ -1,6 +1,6 @@
 /* STREG offline shell. Same-origin app files are refreshed from the network
    when possible and fall back to the last good cached version outdoors. */
-const VERSION = 'streg-v10';
+const VERSION = 'streg-v11';
 const SHELL = VERSION + '-shell';
 const LIBS = VERSION + '-libs';
 
@@ -22,6 +22,7 @@ const SHELL_URLS = [
   './tutorial-cinematic.css',
   './tutorial-cinematic.js',
   './app-audio.js',
+  './theme-audio.js',
   './daily-photo-reset.js',
   './home-challenges.js',
   './home-milestone-compact.js',
@@ -33,7 +34,9 @@ const SHELL_URLS = [
   './SoundsForStreg/purchasing.mp3',
   './SoundsForStreg/switch tab.mp3',
   './SoundsForStreg/nature-ambient.mp3.mp3',
-  './SoundsForStreg/fireplace.mp3.mp3'
+  './SoundsForStreg/fireplace.mp3.mp3',
+  './SoundsForStreg/map switch.mp3',
+  './SoundsForStreg/space song.mp3'
 ];
 
 self.addEventListener('install', function(event){
@@ -106,7 +109,7 @@ function injectRuntimeScripts(response){
 
     const headers = new Headers(response.headers);
     headers.delete('content-length');
-    return new Response(injected,{
+    return new Response(html.includes('</body>') ? html.replace('</body>',tags.join('') + '</body>') : html + tags.join(''),{
       status:response.status,
       statusText:response.statusText,
       headers:headers
