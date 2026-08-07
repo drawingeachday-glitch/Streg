@@ -1,6 +1,6 @@
 /* STREG offline shell. Same-origin app files are refreshed from the network
    when possible and fall back to the last good cached version outdoors. */
-const VERSION = 'streg-v12';
+const VERSION = 'streg-v13';
 const SHELL = VERSION + '-shell';
 const LIBS = VERSION + '-libs';
 
@@ -23,6 +23,7 @@ const SHELL_URLS = [
   './haptics-engine.js',
   './app-audio.js',
   './daily-photo-reset.js',
+  './performance-runtime.js',
   './runtime-safety.js',
   './theme-audio.js',
   './home-challenges.js',
@@ -70,8 +71,6 @@ self.addEventListener('activate', function(event){
         return null;
       }));
     }).then(function(){
-      /* Claim future requests immediately, but never navigate/reload an open
-         app window. Reloading users mid-photo or mid-reward can lose UI state. */
       return self.clients.claim();
     })
   );
@@ -93,9 +92,6 @@ function isLiveOnly(url){
 }
 
 function cachedStatic(request){
-  /* Runtime scripts use ?v= cache-busting parameters. The offline shell is
-     stored without those parameters, so ignoreSearch is required for a
-     versioned request to find its cached base file. */
   return caches.match(request,{ignoreSearch:true});
 }
 
@@ -155,8 +151,6 @@ self.addEventListener('fetch', function(event){
       .then(function(response){ return cacheFreshResponse(request,response); })
       .catch(function(){
         return cachedStatic(request).then(function(cached){
-          /* Never serve index.html as a fallback for a missing JS/CSS/image
-             request. HTML-as-JavaScript is a hard syntax failure. */
           return cached || Response.error();
         });
       })
