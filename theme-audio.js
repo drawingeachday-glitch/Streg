@@ -4,14 +4,16 @@
   if(window.__stregThemeAudioInstalled) return;
   window.__stregThemeAudioInstalled = true;
 
-  var SPACE_PATH = 'SoundsForStreg/space-song.mp3?v=20260807-3';
-  var MAP_PATH = 'SoundsForStreg/map-switch.mp3?v=20260807-3';
+  var SPACE_PATH = 'SoundsForStreg/space song.mp3?v=3ae25513';
+  var MAP_PATH = 'SoundsForStreg/map switch.mp3?v=b918b00c';
+  var MUSIC_BACKUP_KEY = 'streg_space_music_backup_v2';
+  var LEGACY_REPAIR_KEY = 'streg_theme_audio_volume_repair_v2';
+  var DEFAULT_MUSIC_VOLUME = 0.65;
 
-  var NativeAudio = window.Audio;
-  var trackedAudio = [];
   var spaceAudio = null;
   var mapAudio = null;
-  var spacePrimed = false;
+  var spaceMode = false;
+  var desiredMusicVolume = null;
   var lastMapSoundAt = 0;
 
   function clamp(value,min,max){
@@ -31,22 +33,6 @@
     return document.documentElement.dataset.sound !== 'off';
   }
 
-  function volumes(){
-    try{
-      if(window.StregAudio && typeof window.StregAudio.getVolumes === 'function'){
-        return window.StregAudio.getVolumes();
-      }
-    }catch(error){}
-
-    var app = state();
-    var settings = app && app.settings || {};
-    return {
-      master:Number.isFinite(Number(settings.masterVolume)) ? Number(settings.masterVolume) : 1,
-      music:Number.isFinite(Number(settings.musicVolume)) ? Number(settings.musicVolume) : .65,
-      effects:Number.isFinite(Number(settings.effectsVolume)) ? Number(settings.effectsVolume) : .9
-    };
-  }
-
   function currentStyle(){
     var domStyle = String(document.documentElement.dataset.style || '').toLowerCase();
     var app = state();
@@ -60,99 +46,222 @@
       /midnight|nebula|galaxy|moonlight|lunar|cosmic|space/.test(style);
   }
 
-  /* Track Audio objects created after this script loads. app-audio creates the
-     bird/nature element on the first user interaction, so we can mute only that
-     exact media element while the space theme is active without touching or
-     saving the user's music-volume setting. */
-  function installAudioTracking(){
-    if(!NativeAudio || window.Audio.__stregThemeAudioTracker) return;
+  function getVolumes(){
+    try{
+      if(window.StregAudio && typeof window.StregAudio.getVolumes === 'function'){
+        return window.StregAudio.getVolumes();
+      }
+    }catch(error){}
 
-    function TrackedAudio(src){
-      var audio = arguments.length ? new NativeAudio(src) : new NativeAudio();
-      trackedAudio.push(audio);
-      return audio;
+    var app = state();
+    var settings = app && app.settings || {};
+    return {
+      master:Number.isFinite(Number(settings.masterVolume)) ? Number(settings.masterVolume) : 1,
+      music:Number.isFinite(Number(settings.musicVolume)) ? Number(settings.musicVolume) : DEFAULT_MUSIC_VOLUME,
+      effects:Number.isFinite(Number(settings.effectsVolume)) ? Number(settings.effectsVolume) : 0.9
+    };
+  }
+
+  function currentMusicVolume(){
+    var app = state();
+    var value = app && app.settings ? Number(app.settings.musicVolume) : NaN;
+    return Number.isFinite(value) ? clamp(value,0,1) : DEFAULT_MUSIC_VOLUME;
+  }
+
+  function setMusicVolume(value){
+    value = clamp(value,0,1);
+    var app = state();
+    if(app){
+      if(!app.settings) app.settings = {};
+      app.settings.musicVolume = value;
+    }
+    try{
+      if(window.StregAudio && typeof window.StregAudio.setVolume === 'function'){
+        window.StregAudio.setVolume('musicVolume',value,false);
+      }
+    }catch(error){}
+    try{
+      if(window.StregAudio && typeof window.StregAudio.updateAmbience === 'function'){
+        window.StregAudio.updateAmbience();
+      }
+    }catch(error){}
+  }
+
+  function persistState(){
+    try{
+      if(typeof save === 'function'){
+        save();
+        return;
+      }
+    }catch(error){}
+    try{
+      var app = state();
+      if(app) localStorage.setItem('streg_v3',JSON.stringify(app));
+    }catch(error){}
+  }
+
+  function readBackup(){
+    try{
+      var raw = localStorage.getItem(MUSIC_BACKUP_KEY);
+      if(raw == null || raw === '') return null;
+      var value = Number(raw);
+      return Number.isFinite(value) ? clamp(value,0,1) : null;
+    }catch(error){
+      return null;
+    }
+  }
+
+  function writeBackup(value){
+    try{ localStorage.setItem(MUSIC_BACKUP_KEY,String(clamp(value,0,1))); }catch(error){}
+  }
+
+  function clearBackup(){
+    try{ localStorage.removeItem(MUSIC_BACKUP_KEY); }catch(error){}
+  }
+
+  function repairLegacyMutedMusic(){
+    var alreadyRepaired = false;
+    try{ alreadyRepaired = localStorage.getItem(LEGACY_REPAIR_KEY) === '1'; }catch(error){}
+    if(alreadyRepaired) return;
+
+    var app = state();
+    if(!app){ return; }
+    if(!app.settings) app.settings = {};
+
+    var current = Number(app.settings.musicVolume);
+    var hasCurrent = Number.isFinite(current);
+
+    /* The first version of the space-theme code muted the bird track by writing
+       musicVolume=0 into S. If the app saved or reloaded while that theme was
+       active, the in-memory backup disappeared and 0 became permanent. Repair
+       that one legacy state once; future deliberate 0% choices are left alone. */
+    if(hasCurrent && current === 0){
+      if(isSpaceTheme()){
+        if(readBackup() == null) writeBackup(DEFAULT_MUSIC_VOLUME);
+        desiredMusicVolume = readBackup();
+      }else{
+        setMusicVolume(DEFAULT_MUSIC_VOLUME);
+        persistState();
+      }
     }
 
-    try{ TrackedAudio.prototype = NativeAudio.prototype; }catch(error){}
-    try{ Object.setPrototypeOf(TrackedAudio,NativeAudio); }catch(error){}
-    TrackedAudio.__stregThemeAudioTracker = true;
-    TrackedAudio.__nativeAudio = NativeAudio;
-    window.Audio = TrackedAudio;
-  }
-
-  function natureAudios(){
-    return trackedAudio.filter(function(audio){
-      try{
-        var src = String(audio.currentSrc || audio.src || '').toLowerCase();
-        return src.indexOf('nature-ambient') !== -1;
-      }catch(error){
-        return false;
-      }
-    });
-  }
-
-  function syncNatureMute(active){
-    natureAudios().forEach(function(audio){
-      try{ audio.muted = !!active; }catch(error){}
-    });
+    try{ localStorage.setItem(LEGACY_REPAIR_KEY,'1'); }catch(error){}
   }
 
   function ensureSpace(){
     if(spaceAudio) return spaceAudio;
-    spaceAudio = new NativeAudio(new URL(SPACE_PATH,document.baseURI).href);
+    spaceAudio = new Audio(new URL(SPACE_PATH,document.baseURI).href);
     spaceAudio.loop = true;
     spaceAudio.preload = 'auto';
     spaceAudio.playsInline = true;
     spaceAudio.volume = 0;
+    spaceAudio.addEventListener('error',function(){
+      console.warn('STREG could not load space audio',spaceAudio.currentSrc || spaceAudio.src);
+    });
     return spaceAudio;
   }
 
   function ensureMap(){
     if(mapAudio) return mapAudio;
-    mapAudio = new NativeAudio(new URL(MAP_PATH,document.baseURI).href);
+    mapAudio = new Audio(new URL(MAP_PATH,document.baseURI).href);
     mapAudio.preload = 'auto';
     mapAudio.playsInline = true;
+    mapAudio.addEventListener('error',function(){
+      console.warn('STREG could not load map audio',mapAudio.currentSrc || mapAudio.src);
+    });
     return mapAudio;
   }
 
-  function primeSpaceFromGesture(){
-    if(spacePrimed || !NativeAudio) return;
+  function playSpace(){
+    if(!spaceMode || !soundEnabled() || document.hidden) return;
     var audio = ensureSpace();
-    audio.volume = 0;
+    var promise;
+    try{ promise = audio.play(); }catch(error){ return; }
+    if(promise && promise.catch){
+      promise.catch(function(error){
+        if(error && error.name !== 'NotAllowedError'){
+          console.warn('STREG space audio could not play',error);
+        }
+      });
+    }
+  }
 
-    try{
-      var promise = audio.play();
-      if(promise && promise.then){
-        promise.then(function(){
-          spacePrimed = true;
-          syncSpace();
-        }).catch(function(){});
-      }else{
-        spacePrimed = true;
-      }
-    }catch(error){}
+  function stopSpace(){
+    if(!spaceAudio) return;
+    try{ spaceAudio.pause(); }catch(error){}
+    try{ spaceAudio.volume = 0; }catch(error){}
+  }
+
+  function enterSpaceTheme(){
+    if(spaceMode) return;
+
+    var backup = readBackup();
+    if(backup == null){
+      backup = currentMusicVolume();
+      writeBackup(backup);
+    }
+    desiredMusicVolume = backup;
+
+    /* Only the normal nature channel is muted through its existing music
+       volume. The desired value is kept separately and survives reloads, so it
+       can always be restored when the user leaves the space theme. */
+    setMusicVolume(0);
+    spaceMode = true;
+  }
+
+  function leaveSpaceTheme(){
+    var backup = readBackup();
+
+    if(backup != null){
+      setMusicVolume(backup);
+      desiredMusicVolume = backup;
+      clearBackup();
+      persistState();
+    }
+
+    spaceMode = false;
+    desiredMusicVolume = null;
+    stopSpace();
   }
 
   function syncSpace(){
     var active = isSpaceTheme();
-    syncNatureMute(active);
 
-    var audio = ensureSpace();
-    var v = volumes();
-    var target = active && soundEnabled() && !document.hidden
-      ? clamp(v.master * v.music * .9,0,1)
+    if(active && !spaceMode) enterSpaceTheme();
+    if(!active && (spaceMode || readBackup() != null)){
+      leaveSpaceTheme();
+      return;
+    }
+    if(!active) return;
+
+    /* If the user changes the Music slider while the space theme is active,
+       remember the new desired level, then keep nature muted at 0. */
+    var liveMusic = currentMusicVolume();
+    if(liveMusic > 0){
+      desiredMusicVolume = liveMusic;
+      writeBackup(liveMusic);
+      setMusicVolume(0);
+    }
+
+    if(desiredMusicVolume == null){
+      desiredMusicVolume = readBackup();
+      if(desiredMusicVolume == null) desiredMusicVolume = DEFAULT_MUSIC_VOLUME;
+    }
+
+    var v = getVolumes();
+    var target = soundEnabled() && !document.hidden
+      ? clamp(v.master * desiredMusicVolume * 0.9,0,1)
       : 0;
-
+    var audio = ensureSpace();
     var current = Number(audio.volume) || 0;
-    var next = current + (target - current) * .22;
-    if(Math.abs(target - next) < .002) next = target;
+    var next = current + (target - current) * 0.2;
+    if(Math.abs(target - next) < 0.002) next = target;
     audio.volume = clamp(next,0,1);
 
-    if(target > .002 && audio.paused && spacePrimed){
-      try{
-        var promise = audio.play();
-        if(promise && promise.catch) promise.catch(function(){});
-      }catch(error){}
+    if(target > 0.002){
+      playSpace();
+    }else if(audio.volume < 0.002){
+      try{ audio.pause(); }catch(error){}
     }
   }
 
@@ -171,8 +280,8 @@
     if(now - lastMapSoundAt < 170) return;
     lastMapSoundAt = now;
 
+    var v = getVolumes();
     var audio = ensureMap();
-    var v = volumes();
     audio.volume = clamp(v.master * v.effects,0,1);
 
     try{ audio.pause(); }catch(error){}
@@ -188,9 +297,6 @@
     }catch(error){
       console.warn('STREG map audio could not play',error);
     }
-
-    setTimeout(stopGenericMapClick,0);
-    setTimeout(stopGenericMapClick,70);
   }
 
   function mapButtonFromEvent(event){
@@ -200,36 +306,35 @@
   }
 
   function handlePointerDown(event){
-    primeSpaceFromGesture();
     if(mapButtonFromEvent(event)) playMapSwitch();
+    if(isSpaceTheme()) playSpace();
   }
 
   function handleClick(event){
     if(mapButtonFromEvent(event)){
-      /* Pointer users already played it on pointerdown. This keeps keyboard
-         activation working too without double-playing the sound. */
       if(Date.now() - lastMapSoundAt > 170) playMapSwitch();
       setTimeout(stopGenericMapClick,0);
+      setTimeout(stopGenericMapClick,80);
     }
 
-    /* Theme equip handlers run during this click. The space track has already
-       been primed by pointerdown, so after the style changes we only need to
-       raise its volume; no autoplay permission is needed here. */
+    /* This listener runs in the bubble phase, after the app's theme controls in
+       normal operation. Recheck immediately and once more after render patches. */
+    syncSpace();
     setTimeout(syncSpace,0);
-    setTimeout(syncSpace,80);
+    setTimeout(syncSpace,120);
   }
 
   function handleKeyDown(event){
     if(event.key !== 'Enter' && event.key !== ' ') return;
-    primeSpaceFromGesture();
     if(mapButtonFromEvent(event)) playMapSwitch();
+    if(isSpaceTheme()) playSpace();
   }
 
   function install(){
-    installAudioTracking();
+    repairLegacyMutedMusic();
 
     document.addEventListener('pointerdown',handlePointerDown,{capture:true,passive:true});
-    document.addEventListener('click',handleClick,true);
+    document.addEventListener('click',handleClick,false);
     document.addEventListener('keydown',handleKeyDown,true);
     document.addEventListener('visibilitychange',syncSpace);
 
@@ -240,14 +345,13 @@
       });
     }catch(error){}
 
-    setInterval(syncSpace,120);
+    setInterval(syncSpace,150);
     syncSpace();
   }
 
   window.StregThemeAudio = {
     sync:syncSpace,
-    playMap:playMapSwitch,
-    prime:primeSpaceFromGesture
+    playMap:playMapSwitch
   };
 
   if(document.readyState === 'loading'){
