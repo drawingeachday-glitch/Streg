@@ -1,6 +1,6 @@
 /* STREG offline shell. Same-origin app files are refreshed from the network
    when possible and fall back to the last good cached version outdoors. */
-const VERSION = 'streg-v11';
+const VERSION = 'streg-v12';
 const SHELL = VERSION + '-shell';
 const LIBS = VERSION + '-libs';
 
@@ -14,23 +14,36 @@ const SHELL_URLS = [
   './apple-touch-icon.png',
   './achievement-vault.css',
   './event-command-center.css',
-  './haptics-engine.js',
   './journey-story.css',
   './journey-story.js',
   './streak-route.css',
   './streak-route.js',
   './tutorial-cinematic.css',
   './tutorial-cinematic.js',
+  './haptics-engine.js',
   './app-audio.js',
-  './theme-audio.js',
   './daily-photo-reset.js',
+  './runtime-safety.js',
+  './theme-audio.js',
   './home-challenges.js',
-  './home-milestone-compact.js',
+  './challenge-page-redesign.js',
+  './daily-challenge-single-target.js',
+  './event-tab-redesign.js',
+  './challenge-event-polish.js',
+  './challenge-card-actions.js',
+  './xp-liquid-bar.js',
+  './level-up-xp-explosion.js',
+  './uploaded-ui-sounds.js',
+  './inventory.js',
   './SoundsForStreg/Coin collect.mp3',
   './SoundsForStreg/Navigation sound.mp3',
   './SoundsForStreg/Startup App.mp3',
   './SoundsForStreg/collecting reward from challenges.mp3',
   './SoundsForStreg/level up.mp3',
+  './SoundsForStreg/xp.mp3',
+  './SoundsForStreg/shop sound.mp3',
+  './SoundsForStreg/journey sound.mp3',
+  './SoundsForStreg/challenge sound.mp3',
   './SoundsForStreg/purchasing.mp3',
   './SoundsForStreg/switch tab.mp3',
   './SoundsForStreg/nature-ambient.mp3.mp3',
@@ -57,14 +70,9 @@ self.addEventListener('activate', function(event){
         return null;
       }));
     }).then(function(){
+      /* Claim future requests immediately, but never navigate/reload an open
+         app window. Reloading users mid-photo or mid-reward can lose UI state. */
       return self.clients.claim();
-    }).then(function(){
-      return self.clients.matchAll({type:'window',includeUncontrolled:true});
-    }).then(function(windowClients){
-      return Promise.all(windowClients.map(function(client){
-        if(!client.url) return null;
-        return client.navigate(client.url).catch(function(){ return null; });
-      }));
     })
   );
 });
@@ -84,37 +92,20 @@ function isLiveOnly(url){
     url.hostname.indexOf('accounts.google.com') !== -1;
 }
 
-function injectRuntimeScripts(response){
-  const type = response.headers.get('content-type') || '';
-  if(!type.includes('text/html')) return Promise.resolve(response);
+function cachedStatic(request){
+  /* Runtime scripts use ?v= cache-busting parameters. The offline shell is
+     stored without those parameters, so ignoreSearch is required for a
+     versioned request to find its cached base file. */
+  return caches.match(request,{ignoreSearch:true});
+}
 
-  return response.text().then(function(html){
-    const tags = [];
-    if(!html.includes('app-audio.js')) tags.push('<script src="./app-audio.js" defer></script>');
-    if(!html.includes('daily-photo-reset.js')) tags.push('<script src="./daily-photo-reset.js" defer></script>');
-    if(!html.includes('home-challenges.js')) tags.push('<script src="./home-challenges.js" defer></script>');
-    if(!html.includes('home-milestone-compact.js')) tags.push('<script src="./home-milestone-compact.js" defer></script>');
-
-    if(tags.length === 0){
-      return new Response(html,{
-        status:response.status,
-        statusText:response.statusText,
-        headers:response.headers
-      });
-    }
-
-    const injected = html.includes('</body>')
-      ? html.replace('</body>',tags.join('') + '</body>')
-      : html + tags.join('');
-
-    const headers = new Headers(response.headers);
-    headers.delete('content-length');
-    return new Response(html.includes('</body>') ? html.replace('</body>',tags.join('') + '</body>') : html + tags.join(''),{
-      status:response.status,
-      statusText:response.statusText,
-      headers:headers
-    });
-  });
+function cacheFreshResponse(request,response){
+  if(!response || !response.ok) return response;
+  var copy = response.clone();
+  caches.open(SHELL).then(function(cache){
+    return cache.put(request,copy);
+  }).catch(function(){});
+  return response;
 }
 
 self.addEventListener('fetch', function(event){
@@ -141,24 +132,33 @@ self.addEventListener('fetch', function(event){
     return;
   }
 
-  if(request.mode === 'navigate' || url.origin === self.location.origin){
-    const freshRequest = new Request(request,{cache:'no-store'});
+  if(url.origin !== self.location.origin) return;
+
+  if(request.mode === 'navigate'){
     event.respondWith(
-      fetch(freshRequest).then(function(response){
-        if(response && response.ok){
-          const copy = response.clone();
-          caches.open(SHELL).then(function(cache){ return cache.put(request,copy); });
-        }
-        return request.mode === 'navigate' ? injectRuntimeScripts(response) : response;
-      }).catch(function(){
-        return caches.match(request).then(function(cached){
-          if(cached) return request.mode === 'navigate' ? injectRuntimeScripts(cached) : cached;
-          return caches.match('./index.html').then(function(fallback){
-            if(!fallback) return caches.match('./');
-            return injectRuntimeScripts(fallback);
+      fetch(new Request(request,{cache:'no-store'}))
+        .then(function(response){ return cacheFreshResponse(request,response); })
+        .catch(function(){
+          return cachedStatic(request).then(function(cached){
+            if(cached) return cached;
+            return caches.match('./index.html',{ignoreSearch:true}).then(function(fallback){
+              return fallback || caches.match('./',{ignoreSearch:true});
+            });
           });
+        })
+    );
+    return;
+  }
+
+  event.respondWith(
+    fetch(new Request(request,{cache:'no-store'}))
+      .then(function(response){ return cacheFreshResponse(request,response); })
+      .catch(function(){
+        return cachedStatic(request).then(function(cached){
+          /* Never serve index.html as a fallback for a missing JS/CSS/image
+             request. HTML-as-JavaScript is a hard syntax failure. */
+          return cached || Response.error();
         });
       })
-    );
-  }
+  );
 });
