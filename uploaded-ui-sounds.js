@@ -216,9 +216,6 @@
   function inspectAddedNode(node){
     if(!node || node.nodeType !== 1) return;
     if(node.matches && node.matches('.streg-xp-bundle')) scheduleXpBundle(node);
-    if(node.querySelectorAll){
-      node.querySelectorAll('.streg-xp-bundle').forEach(scheduleXpBundle);
-    }
   }
 
   function watchXpBundles(){
@@ -228,7 +225,9 @@
         Array.prototype.forEach.call(record.addedNodes,inspectAddedNode);
       });
     });
-    xpObserver.observe(document.body,{childList:true,subtree:true});
+    /* XP bundles are appended directly to document.body. Watching every
+       descendant mutation made unrelated UI work wake the audio observer. */
+    xpObserver.observe(document.body,{childList:true});
   }
 
   function silenceLegacyLevelTrigger(){
@@ -278,16 +277,13 @@
 
   function settleInstall(){
     install();
-    /* app-audio has one delayed SFX setup pass of its own. Re-assert the
-       intentional level-up silence a couple of times during startup only,
-       rather than polling the whole app forever. */
     setTimeout(install,320);
     setTimeout(install,1050);
     setTimeout(install,1750);
   }
 
   window.StregUploadedSounds = {
-    version:'1.2.0',
+    version:'1.3.0',
     play:play,
     stop:stop,
     xp:playXpBundle,
@@ -302,10 +298,18 @@
   document.addEventListener('pointerdown',unlock,{capture:true,passive:true});
   window.addEventListener('streg:startup-complete',settleInstall);
 
+  function preloadWhenIdle(){
+    if('requestIdleCallback' in window){
+      requestIdleCallback(preload,{timeout:2200});
+    }else{
+      setTimeout(preload,1200);
+    }
+  }
+
   if(document.readyState === 'loading'){
-    document.addEventListener('DOMContentLoaded',function(){ settleInstall(); preload(); },{once:true});
+    document.addEventListener('DOMContentLoaded',function(){ settleInstall(); preloadWhenIdle(); },{once:true});
   }else{
     settleInstall();
-    preload();
+    preloadWhenIdle();
   }
 })();
