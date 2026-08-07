@@ -4,8 +4,17 @@
   if(window.__stregDailyRuntimeInstalled) return;
   window.__stregDailyRuntimeInstalled = true;
 
+  function hasScriptPath(path){
+    var target;
+    try{ target = new URL(path,document.baseURI).pathname; }catch(error){ return false; }
+    return Array.prototype.some.call(document.scripts,function(script){
+      if(!script.src) return false;
+      try{ return new URL(script.src,document.baseURI).pathname === target; }catch(error){ return false; }
+    });
+  }
+
   function loadRuntimeFeature(path,id,version){
-    if(document.getElementById(id)) return;
+    if(document.getElementById(id) || hasScriptPath(path)) return;
     var script = document.createElement('script');
     script.id = id;
     script.src = new URL(path,document.baseURI).href + '?v=' + encodeURIComponent(version);
@@ -16,18 +25,29 @@
     document.head.appendChild(script);
   }
 
-  loadRuntimeFeature('runtime-safety.js','stregRuntimeSafetyRuntime','20260807-1');
-  loadRuntimeFeature('home-challenges.js','stregHomeChallengesRuntime','20260807-1');
-  loadRuntimeFeature('challenge-page-redesign.js','stregChallengePageRedesignRuntime','20260807-6');
-  loadRuntimeFeature('daily-challenge-single-target.js','stregDailySingleTargetRuntime','20260807-2');
-  loadRuntimeFeature('event-tab-redesign.js','stregEventTabRedesignRuntime','20260805-1');
-  loadRuntimeFeature('challenge-event-polish.js','stregChallengeEventPolishRuntime','20260807-1');
-  loadRuntimeFeature('challenge-card-actions.js','stregChallengeCardActionsRuntime','20260807-6');
-  loadRuntimeFeature('xp-liquid-bar.js','stregXpLiquidBarRuntime','20260807-2');
-  loadRuntimeFeature('level-up-xp-explosion.js','stregLevelUpXpExplosionRuntime','20260807-2');
-  loadRuntimeFeature('uploaded-ui-sounds.js','stregUploadedUiSoundsRuntime','20260807-2');
-  loadRuntimeFeature('inventory.js','stregInventoryRuntime','20260805-1');
-  loadRuntimeFeature('theme-audio.js','stregThemeAudioRuntime','20260807-4');
+  function loadFeatureStack(){
+    loadRuntimeFeature('runtime-safety.js','stregRuntimeSafetyRuntime','20260807-2');
+    loadRuntimeFeature('home-challenges.js','stregHomeChallengesRuntime','20260807-1');
+    loadRuntimeFeature('challenge-page-redesign.js','stregChallengePageRedesignRuntime','20260807-6');
+    loadRuntimeFeature('daily-challenge-single-target.js','stregDailySingleTargetRuntime','20260807-2');
+    loadRuntimeFeature('event-tab-redesign.js','stregEventTabRedesignRuntime','20260805-1');
+    loadRuntimeFeature('challenge-event-polish.js','stregChallengeEventPolishRuntime','20260807-1');
+    loadRuntimeFeature('challenge-card-actions.js','stregChallengeCardActionsRuntime','20260807-6');
+    loadRuntimeFeature('xp-liquid-bar.js','stregXpLiquidBarRuntime','20260807-2');
+    loadRuntimeFeature('level-up-xp-explosion.js','stregLevelUpXpExplosionRuntime','20260807-2');
+    loadRuntimeFeature('uploaded-ui-sounds.js','stregUploadedUiSoundsRuntime','20260807-2');
+    loadRuntimeFeature('inventory.js','stregInventoryRuntime','20260805-1');
+    loadRuntimeFeature('theme-audio.js','stregThemeAudioRuntime','20260807-4');
+  }
+
+  /* Waiting until the parser has finished means we can see scripts injected by
+     the previous service worker and avoid loading a second copy during the
+     one-page v11 -> v12 upgrade transition. */
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded',loadFeatureStack,{once:true});
+  }else{
+    loadFeatureStack();
+  }
 
   function state(){
     try{ return typeof S !== 'undefined' && S ? S : null; }catch(error){ return null; }
