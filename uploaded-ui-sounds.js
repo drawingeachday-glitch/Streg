@@ -292,6 +292,10 @@
         return result;
       };
       wrapped.__stregUploadedPhotoSound = true;
+      /* runtime-safety owns test-photo protection. Preserve that marker when
+         wrapping its saveSpot so the two runtimes never repeatedly re-wrap one
+         another during their startup settle passes. */
+      if(original.__stregTestCaptureSafe) wrapped.__stregTestCaptureSafe = true;
       wrapped.__stregOriginal = original;
       window.saveSpot = wrapped;
       try{ saveSpot = wrapped; }catch(error){}
@@ -320,7 +324,7 @@
   }
 
   window.StregUploadedSounds = {
-    version:'1.4.0',
+    version:'1.4.1',
     play:play,
     stop:stop,
     xp:playXpBundle,
