@@ -1,6 +1,6 @@
 /* STREG offline shell. Same-origin app files are refreshed from the network
    when possible and fall back to the last good cached version outdoors. */
-const VERSION = 'streg-v18';
+const VERSION = 'streg-v19';
 const SHELL = VERSION + '-shell';
 const LIBS = VERSION + '-libs';
 
@@ -49,6 +49,9 @@ const SHELL_URLS = [
   './SoundsForStreg/shop sound.mp3',
   './SoundsForStreg/journey sound.mp3',
   './SoundsForStreg/challenge sound.mp3',
+  './SoundsForStreg/photo sound.mp3',
+  './SoundsForStreg/connections.mp3',
+  './SoundsForStreg/Profile.mp3',
   './SoundsForStreg/purchasing.mp3',
   './SoundsForStreg/switch tab.mp3',
   './SoundsForStreg/nature-ambient.mp3.mp3',
