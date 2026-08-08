@@ -8,13 +8,19 @@
     xp:'SoundsForStreg/xp.mp3?v=847f950b',
     shop:'SoundsForStreg/shop sound.mp3?v=f7e407d1',
     journey:'SoundsForStreg/journey sound.mp3?v=c9a821f9',
-    challenges:'SoundsForStreg/challenge sound.mp3?v=284ec013'
+    challenges:'SoundsForStreg/challenge sound.mp3?v=284ec013',
+    photo:'SoundsForStreg/photo sound.mp3?v=abaf3bd5',
+    connections:'SoundsForStreg/connections.mp3?v=211d3360',
+    profile:'SoundsForStreg/Profile.mp3?v=bab7bbc0'
   };
 
   var SPECIAL_TABS = {
     'tab-shop':'shop',
     'tab-journey':'journey',
-    'tab-challenges':'challenges'
+    'tab-challenges':'challenges',
+    'tab-home':'photo',
+    'tab-friends':'connections',
+    'tab-profile':'profile'
   };
 
   var AudioContextClass = window.AudioContext || window.webkitAudioContext;
@@ -29,6 +35,7 @@
   var levelObserver = null;
   var lastLevelBoom = false;
   var lastLevelSoundAt = 0;
+  var lastPhotoSuccessAt = 0;
 
   function clamp(value,min,max){
     value = Number(value);
@@ -81,7 +88,7 @@
     if(buffers[name]) return Promise.resolve(buffers[name]);
     if(loading[name]) return loading[name];
     var ctx = boot();
-    if(!ctx) return Promise.resolve(null);
+    if(!ctx || !FILES[name]) return Promise.resolve(null);
 
     loading[name] = fetch(url(name),{cache:'no-store'})
       .then(function(response){
@@ -161,9 +168,15 @@
 
   function onSpecialTab(event){
     var button = event.currentTarget;
-    if(!button || button.classList.contains('active')) return;
-    var name = SPECIAL_TABS[button.getAttribute('data-tab')];
+    if(!button) return;
+    var tabId = button.getAttribute('data-tab');
+    var name = SPECIAL_TABS[tabId];
     if(!name) return;
+
+    /* The center Streg camera button should make its camera sound every time it
+       is pressed, even when Home is already the active tab. Other tab sounds
+       only belong to actual navigation into that tab. */
+    if(tabId !== 'tab-home' && button.classList.contains('active')) return;
     replaceGenericTabSound(name);
   }
 
@@ -225,8 +238,6 @@
         Array.prototype.forEach.call(record.addedNodes,inspectAddedNode);
       });
     });
-    /* XP bundles are appended directly to document.body. Watching every
-       descendant mutation made unrelated UI work wake the audio observer. */
     xpObserver.observe(document.body,{childList:true});
   }
 
@@ -262,6 +273,31 @@
     levelObserver.observe(host,{attributes:true,attributeFilter:['class']});
   }
 
+  function playPhotoSuccess(){
+    var now = Date.now();
+    if(now - lastPhotoSuccessAt < 350) return;
+    lastPhotoSuccessAt = now;
+    play('photo',{restart:true,volume:.96});
+  }
+
+  function wrapSuccessfulPhotoSave(){
+    try{
+      if(typeof saveSpot !== 'function' || saveSpot.__stregUploadedPhotoSound) return;
+      var original = saveSpot;
+      var wrapped = function(){
+        var result = original.apply(this,arguments);
+        if(result && result.photo && !result.photo.testCapture && !result.photo.transient){
+          setTimeout(playPhotoSuccess,0);
+        }
+        return result;
+      };
+      wrapped.__stregUploadedPhotoSound = true;
+      wrapped.__stregOriginal = original;
+      window.saveSpot = wrapped;
+      try{ saveSpot = wrapped; }catch(error){}
+    }catch(error){}
+  }
+
   function preload(){
     Object.keys(FILES).forEach(function(name){ load(name); });
   }
@@ -273,6 +309,7 @@
     watchXpBundles();
     silenceLegacyLevelTrigger();
     watchLevelExplosion();
+    wrapSuccessfulPhotoSave();
   }
 
   function settleInstall(){
@@ -283,11 +320,14 @@
   }
 
   window.StregUploadedSounds = {
-    version:'1.3.0',
+    version:'1.4.0',
     play:play,
     stop:stop,
     xp:playXpBundle,
     levelUp:playLevelUp,
+    photo:function(){ play('photo',{restart:true,volume:.96}); },
+    connections:function(){ play('connections',{restart:true,volume:.9}); },
+    profile:function(){ play('profile',{restart:true,volume:.9}); },
     shop:function(){ play('shop',{restart:true,volume:.9}); },
     journey:function(){ play('journey',{restart:true,volume:.9}); },
     challenges:function(){ play('challenges',{restart:true,volume:.9}); },
