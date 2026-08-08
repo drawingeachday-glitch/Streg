@@ -1,6 +1,6 @@
 /* STREG offline shell. Same-origin app files are refreshed from the network
    when possible and fall back to the last good cached version outdoors. */
-const VERSION = 'streg-v17';
+const VERSION = 'streg-v18';
 const SHELL = VERSION + '-shell';
 const LIBS = VERSION + '-libs';
 
@@ -20,6 +20,8 @@ const SHELL_URLS = [
   './streak-route.js',
   './tutorial-cinematic.css',
   './tutorial-cinematic.js',
+  './startup-cinematic-v2.css',
+  './startup-cinematic-v2.js',
   './haptics-engine.js',
   './app-audio.js',
   './daily-photo-reset.js',

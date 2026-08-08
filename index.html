@@ -13678,6 +13678,7 @@ body.startup-revealing .onb{
 <link rel="stylesheet" href="streak-route.css">
 <link rel="stylesheet" href="achievement-vault.css">
 <link rel="stylesheet" href="tutorial-cinematic.css">
+<link rel="stylesheet" href="startup-cinematic-v2.css">
 <!-- topbar removed + top content lowered -->
 <style id="hex-photo-rule-styles">
   .onb-hex-rule{
@@ -13728,48 +13729,117 @@ body.startup-revealing .onb{
 </head>
 <body class="app-preloading">
 
-<!-- ============ STARTUP HEX CINEMATIC ============ -->
-<div class="startup-loader is-loading" id="startupLoader" role="status" aria-live="polite" aria-label="STREG indlæser">
-  <div class="startup-scan" aria-hidden="true"></div>
+<!-- ============ STARTUP WORLD CINEMATIC V2 ============ -->
+<div class="startup-loader is-loading" id="startupLoader" data-phase="spark" role="status" aria-live="polite" aria-label="STREG indlæser">
+  <canvas class="startup-canvas" aria-hidden="true"></canvas>
+  <div class="startup-aurora one" aria-hidden="true"></div>
+  <div class="startup-aurora two" aria-hidden="true"></div>
+  <div class="startup-gridplane" aria-hidden="true"></div>
   <div class="startup-stage">
-    <div class="startup-hexfield" aria-hidden="true">
-      <span class="startup-hex" style="--x:0px;--y:-108px;--i:0"></span>
-      <span class="startup-hex" style="--x:46px;--y:-81px;--i:1"></span>
-      <span class="startup-hex" style="--x:92px;--y:-54px;--i:2"></span>
-      <span class="startup-hex" style="--x:92px;--y:0px;--i:3"></span>
-      <span class="startup-hex" style="--x:92px;--y:54px;--i:4"></span>
-      <span class="startup-hex" style="--x:46px;--y:81px;--i:5"></span>
-      <span class="startup-hex" style="--x:0px;--y:108px;--i:6"></span>
-      <span class="startup-hex" style="--x:-46px;--y:81px;--i:7"></span>
-      <span class="startup-hex" style="--x:-92px;--y:54px;--i:8"></span>
-      <span class="startup-hex" style="--x:-92px;--y:0px;--i:9"></span>
-      <span class="startup-hex" style="--x:-92px;--y:-54px;--i:10"></span>
-      <span class="startup-hex" style="--x:-46px;--y:-81px;--i:11"></span>
-      <span class="startup-hex" style="--x:0px;--y:-54px;--i:12"></span>
-      <span class="startup-hex" style="--x:46px;--y:-27px;--i:13"></span>
-      <span class="startup-hex" style="--x:46px;--y:27px;--i:14"></span>
-      <span class="startup-hex" style="--x:0px;--y:54px;--i:15"></span>
-      <span class="startup-hex" style="--x:-46px;--y:27px;--i:16"></span>
-      <span class="startup-hex" style="--x:-46px;--y:-27px;--i:17"></span>
-      <span class="startup-hex" style="--x:0px;--y:0px;--i:18"></span>
-      <div class="startup-core">S</div>
+    <div class="startup-wordmark" aria-label="STREG">
+      <span style="--letter:0" aria-hidden="true">S</span>
+      <span style="--letter:1" aria-hidden="true">T</span>
+      <span style="--letter:2" aria-hidden="true">R</span>
+      <span style="--letter:3" aria-hidden="true">E</span>
+      <span style="--letter:4" aria-hidden="true">G</span>
     </div>
+
+    <div class="startup-world" aria-hidden="true">
+      <div class="startup-orbit"></div>
+      <div class="startup-hexfield">
+        <span class="startup-hex" style="--x:0px;--y:-162px;--i:0"></span>
+        <span class="startup-hex" style="--x:46px;--y:-135px;--i:1"></span>
+        <span class="startup-hex" style="--x:92px;--y:-108px;--i:2"></span>
+        <span class="startup-hex" style="--x:138px;--y:-81px;--i:3"></span>
+        <span class="startup-hex" style="--x:138px;--y:-27px;--i:4"></span>
+        <span class="startup-hex" style="--x:138px;--y:27px;--i:5"></span>
+        <span class="startup-hex" style="--x:138px;--y:81px;--i:6"></span>
+        <span class="startup-hex" style="--x:92px;--y:108px;--i:7"></span>
+        <span class="startup-hex" style="--x:46px;--y:135px;--i:8"></span>
+        <span class="startup-hex" style="--x:0px;--y:162px;--i:9"></span>
+        <span class="startup-hex" style="--x:-46px;--y:135px;--i:10"></span>
+        <span class="startup-hex" style="--x:-92px;--y:108px;--i:11"></span>
+        <span class="startup-hex" style="--x:-138px;--y:81px;--i:12"></span>
+        <span class="startup-hex" style="--x:-138px;--y:27px;--i:13"></span>
+        <span class="startup-hex" style="--x:-138px;--y:-27px;--i:14"></span>
+        <span class="startup-hex" style="--x:-138px;--y:-81px;--i:15"></span>
+        <span class="startup-hex" style="--x:-92px;--y:-108px;--i:16"></span>
+        <span class="startup-hex" style="--x:-46px;--y:-135px;--i:17"></span>
+
+        <span class="startup-hex" style="--x:0px;--y:-108px;--i:18"></span>
+        <span class="startup-hex" style="--x:46px;--y:-81px;--i:19"></span>
+        <span class="startup-hex" style="--x:92px;--y:-54px;--i:20"></span>
+        <span class="startup-hex" style="--x:92px;--y:0px;--i:21"></span>
+        <span class="startup-hex" style="--x:92px;--y:54px;--i:22"></span>
+        <span class="startup-hex" style="--x:46px;--y:81px;--i:23"></span>
+        <span class="startup-hex" style="--x:0px;--y:108px;--i:24"></span>
+        <span class="startup-hex" style="--x:-46px;--y:81px;--i:25"></span>
+        <span class="startup-hex" style="--x:-92px;--y:54px;--i:26"></span>
+        <span class="startup-hex" style="--x:-92px;--y:0px;--i:27"></span>
+        <span class="startup-hex" style="--x:-92px;--y:-54px;--i:28"></span>
+        <span class="startup-hex" style="--x:-46px;--y:-81px;--i:29"></span>
+
+        <span class="startup-hex" style="--x:0px;--y:-54px;--i:30"></span>
+        <span class="startup-hex" style="--x:46px;--y:-27px;--i:31"></span>
+        <span class="startup-hex" style="--x:46px;--y:27px;--i:32"></span>
+        <span class="startup-hex" style="--x:0px;--y:54px;--i:33"></span>
+        <span class="startup-hex" style="--x:-46px;--y:27px;--i:34"></span>
+        <span class="startup-hex" style="--x:-46px;--y:-27px;--i:35"></span>
+        <span class="startup-hex" style="--x:0px;--y:0px;--i:36"></span>
+
+        <svg class="startup-energy-route" viewBox="0 0 304 304" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="startupRouteGradient" x1="0" y1="1" x2="1" y2="0">
+              <stop offset="0" stop-color="#54E6FF"/>
+              <stop offset=".48" stop-color="#A75FFF"/>
+              <stop offset="1" stop-color="#FF9A51"/>
+            </linearGradient>
+          </defs>
+          <path class="route-shadow" d="M38 260 71 219 56 184 101 155 84 116 130 91 151 43 176 82 217 68 207 115 256 136 224 170 261 205 211 219 184 270 148 226 108 249 83 216"/>
+          <path class="route-main" d="M38 260 71 219 56 184 101 155 84 116 130 91 151 43 176 82 217 68 207 115 256 136 224 170 261 205 211 219 184 270 148 226 108 249 83 216"/>
+        </svg>
+
+        <div class="startup-core">
+          <span class="startup-core-spark"></span>
+          <svg class="startup-flame" viewBox="0 0 48 60" fill="none">
+            <defs>
+              <linearGradient id="startupFlameGradient" x1="9" y1="54" x2="38" y2="5" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#65E8FF"/>
+                <stop offset=".46" stop-color="#A25CFF"/>
+                <stop offset="1" stop-color="#FF9A50"/>
+              </linearGradient>
+            </defs>
+            <path d="M26 3c-1 11-14 14-14 29 0 8 5 14 13 14 8 0 14-6 14-14 0-6-3-11-8-15 2 8-3 12-7 12-4 0-7-3-7-7 0-6 6-10 9-19Z" fill="url(#startupFlameGradient)"/>
+            <path d="M24 29c-5 5-6 8-6 13 0 7 4 12 10 14-2-3-2-6 1-10 3-4 3-9-1-14-1-1-2-2-4-3Z" fill="#FFF" fill-opacity=".9"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+
     <div class="startup-brand">
-      <div class="startup-kicker">Din verden bliver tegnet</div>
+      <div class="startup-kicker">TÆNDER GNISTEN</div>
       <h1 class="startup-title">STREG</h1>
-      <div class="startup-manifesto">Ét billede. Ét sted. Én streg ad gangen.</div>
+      <div class="startup-manifesto">Hver verden starter med én lille gnist.</div>
     </div>
     <div class="startup-progress">
+      <div class="startup-progress-cells" aria-hidden="true">
+        <span class="startup-progress-cell"></span><span class="startup-progress-cell"></span><span class="startup-progress-cell"></span>
+        <span class="startup-progress-cell"></span><span class="startup-progress-cell"></span><span class="startup-progress-cell"></span>
+        <span class="startup-progress-cell"></span><span class="startup-progress-cell"></span><span class="startup-progress-cell"></span>
+        <span class="startup-progress-cell"></span><span class="startup-progress-cell"></span><span class="startup-progress-cell"></span>
+        <span class="startup-progress-cell"></span>
+      </div>
       <div class="startup-progress-meta">
-        <span id="startupStatus">Vækker kortet…</span>
+        <span id="startupStatus">TÆNDER GNISTEN</span>
         <span class="startup-percent" id="startupPercent">0%</span>
       </div>
-      <div class="startup-track" role="progressbar" aria-label="Indlæser appen" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-        <div class="startup-fill"></div>
-      </div>
+      <div class="startup-track" role="progressbar" aria-label="Indlæser appen" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
     </div>
   </div>
+  <div class="startup-phase-index">AKT I · GNISTEN</div>
+  <div class="startup-reveal-flash" aria-hidden="true"></div>
 </div>
+<script src="startup-cinematic-v2.js"></script>
 
 <!-- ============ GUEST START MENU ============ -->
 <div class="guest-start" id="guestStart" hidden aria-hidden="true" aria-label="Velkommen til STREG">
@@ -24915,6 +24985,7 @@ try{
 
 <script>
 (function(){
+  if(window.__stregStartupV2) return;
   const overlay = document.getElementById('startupLoader');
   const status = document.getElementById('startupStatus');
   const percent = document.getElementById('startupPercent');
