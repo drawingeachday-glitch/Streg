@@ -35,7 +35,7 @@
     loadRuntimeFeature('challenge-card-actions.js','stregChallengeCardActionsRuntime','20260807-6');
     loadRuntimeFeature('xp-liquid-bar.js','stregXpLiquidBarRuntime','20260807-2');
     loadRuntimeFeature('level-up-xp-explosion.js','stregLevelUpXpExplosionRuntime','20260807-2');
-    loadRuntimeFeature('uploaded-ui-sounds.js','stregUploadedUiSoundsRuntime','20260807-3');
+    loadRuntimeFeature('uploaded-ui-sounds.js','stregUploadedUiSoundsRuntime','20260808-1');
     loadRuntimeFeature('inventory.js','stregInventoryRuntime','20260808-1');
     loadRuntimeFeature('inventory-clean.js','stregInventoryCleanRuntime','20260808-1');
     loadRuntimeFeature('theme-audio.js','stregThemeAudioRuntime','20260807-4');
